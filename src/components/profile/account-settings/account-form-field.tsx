@@ -1,0 +1,91 @@
+"use client";
+
+import { Pencil } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+
+interface AccountFormFieldProps {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+  type?: "text" | "email";
+  error?: string;
+  multiline?: boolean;
+  placeholder?: string;
+}
+
+export function AccountFormField({
+  id,
+  label,
+  value,
+  onChange,
+  onBlur,
+  type = "text",
+  error,
+  multiline = false,
+  placeholder,
+}: AccountFormFieldProps) {
+  const invalid = Boolean(error);
+
+  return (
+    <div className="space-y-1.5">
+      <label
+        htmlFor={id}
+        className="block text-[11px] font-medium text-hw-foreground/90 sm:text-xs"
+      >
+        {label}
+      </label>
+      <div className="relative">
+        {multiline ? (
+          <textarea
+            id={id}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onBlur={onBlur}
+            placeholder={placeholder}
+            rows={2}
+            aria-invalid={invalid}
+            className={cn(
+              "min-h-[52px] w-full resize-none rounded-lg border bg-[#262626] px-3 py-2.5 pr-10 text-sm text-hw-foreground transition-colors outline-none placeholder:text-hw-muted/60",
+              "focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20",
+              invalid
+                ? "border-red-500/80 ring-2 ring-red-500/15"
+                : "border-white/15 hover:border-white/25"
+            )}
+          />
+        ) : (
+          <Input
+            id={id}
+            type={type}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onBlur={onBlur}
+            placeholder={placeholder}
+            aria-invalid={invalid}
+            className={cn(
+              "h-10 rounded-lg border bg-[#262626] px-3 pr-10 text-sm text-hw-foreground shadow-none",
+              "focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20",
+              invalid
+                ? "border-red-500/80 ring-2 ring-red-500/15"
+                : "border-white/15 hover:border-white/25"
+            )}
+          />
+        )}
+        <Pencil
+          className="pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-hw-foreground/50"
+          aria-hidden
+        />
+      </div>
+      {error ? (
+        <p
+          role="alert"
+          className="text-[11px] text-red-400 transition-opacity duration-200"
+        >
+          {error}
+        </p>
+      ) : null}
+    </div>
+  );
+}

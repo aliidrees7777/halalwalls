@@ -1,26 +1,60 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-hw-bg: var(--hw-bg);
+  --color-hw-header: var(--hw-header);
+  --color-hw-green: var(--hw-green);
+  --color-hw-yellow: var(--hw-yellow);
+  --color-hw-foreground: var(--hw-foreground);
+  --color-hw-muted: var(--hw-muted);
+  --color-hw-card: var(--hw-card);
+  --color-hw-border: var(--hw-border);
+  --color-hw-purple: var(--hw-purple);
+  --color-hw-surface: var(--hw-surface);
+  --color-hw-search-header: var(--hw-search-header);
+  --color-hw-search-input: var(--hw-search-input);
+  --color-hw-pill: var(--hw-pill);
+  --color-hw-sidebar: var(--hw-sidebar);
+  --color-background: var(--hw-bg);
+  --color-foreground: var(--hw-foreground);
+  --color-card: var(--hw-card);
+  --color-border: var(--hw-border);
+  --color-muted-foreground: var(--hw-muted);
+  --color-primary: var(--hw-green);
+  --color-primary-foreground: var(--hw-bg);
+  --font-sans: var(--font-sans);
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Exact values from screenshot */
+  --hw-bg: #0b0e11;
+  --hw-header: #050505;
+  --hw-search-header: #1a2421;
+  --hw-search-input: #121212;
+  --hw-pill: #1e1e1e;
+  --hw-sidebar: #121212;
+  --hw-green: #00ffa3;
+  --hw-yellow: #f5c518;
+  --hw-foreground: #ffffff;
+  --hw-muted: #a1a1aa;
+  --hw-card: #161920;
+  --hw-border: #252a33;
+  --hw-purple: #8b5cf6;
+  --hw-surface: #111418;
+}
+
+@layer base {
+  * {
+    @apply border-hw-border outline-hw-green/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-hw-bg text-hw-foreground antialiased;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
 }

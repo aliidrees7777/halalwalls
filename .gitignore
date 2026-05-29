@@ -1,6 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# Dependencies
 /node_modules
 /.pnp
 .pnp.*
@@ -10,32 +8,71 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
+# Next.js
 /.next/
 /out/
 
-# production
+# Production / build output
 /build
+/dist
 
-# misc
-.DS_Store
-*.pem
+# Testing
+/coverage
+*.lcov
 
-# debug
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment variables (keep .env.example if you add one)
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel
+
+# Debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# Tooling caches
+.eslintcache
+.turbo
+.swc
 
-# vercel
-.vercel
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# Editor / IDE
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+
+# VS Code — ignore local settings; commit shared config if needed
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Secrets & certificates
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Optional local overrides
+*.local
