@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronDown, Clock, Menu, Search } from "lucide-react";
+import { ChevronDown, Clock, Menu } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +17,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { SearchBox } from "@/components/shared/search-box";
 import { HalalWallsLogo } from "@/components/home/halalwalls-logo";
 import { cn } from "@/lib/utils";
 
@@ -45,16 +45,8 @@ export function ProfileHeaderNav() {
       <div className="mx-auto flex h-[52px] max-w-[1400px] items-center gap-3 px-4 lg:gap-4 lg:px-6">
         <HalalWallsLogo className="shrink-0" />
 
-        <div className="relative hidden min-w-0 flex-1 md:block lg:max-w-[420px] xl:max-w-[520px]">
-          <Input
-            type="search"
-            placeholder="Search for wallpapers..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="h-9 rounded-lg border-[#2a2f2d] bg-hw-search-input pr-10 text-[13px] text-hw-foreground shadow-none placeholder:text-hw-muted focus-visible:border-hw-green/40 focus-visible:ring-hw-green/15"
-            aria-label="Search wallpapers"
-          />
-          <Search className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-hw-foreground/80" />
+        <div className="hidden min-w-0 flex-1 md:block lg:max-w-[420px] xl:max-w-[520px]">
+          <SearchBox value={search} onChange={setSearch} />
         </div>
 
         <nav
@@ -136,13 +128,8 @@ export function ProfileHeaderNav() {
               <SheetHeader>
                 <SheetTitle className="text-hw-foreground">Menu</SheetTitle>
               </SheetHeader>
-              <div className="relative mt-4 md:hidden">
-                <Input
-                  type="search"
-                  placeholder="Search for wallpapers..."
-                  className="h-9 rounded-lg border-[#2a2f2d] bg-hw-search-input pr-10 text-sm"
-                />
-                <Search className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-hw-muted" />
+              <div className="mt-4 md:hidden">
+                <SearchBox />
               </div>
               <nav className="mt-6 flex flex-col gap-1">
                 {navItems.map((item) => (
@@ -177,16 +164,8 @@ export function ProfileHeaderNav() {
       <div className="h-px w-full bg-hw-green" aria-hidden />
 
       <div className="border-b border-[#1a1f1d] px-4 py-2.5 md:hidden">
-        <div className="relative mx-auto max-w-[520px]">
-          <Input
-            type="search"
-            placeholder="Search for wallpapers..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="h-9 rounded-lg border-[#2a2f2d] bg-hw-search-input pr-10 text-[13px] text-hw-foreground shadow-none placeholder:text-hw-muted"
-            aria-label="Search wallpapers"
-          />
-          <Search className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-hw-foreground/80" />
+        <div className="mx-auto max-w-[520px]">
+          <SearchBox value={search} onChange={setSearch} />
         </div>
       </div>
     </header>

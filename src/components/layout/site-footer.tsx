@@ -3,13 +3,13 @@ import Link from "next/link";
 import { Send } from "lucide-react";
 
 const footerLinks = [
-  "Privacy Policy",
-  "Terms of Service",
-  "Disclaimer",
-  "Copyright Policy",
-  "DMCA",
-  "Content Policy",
-  "Contact Us",
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
+  { label: "Disclaimer", href: "/disclaimer" },
+  { label: "Copyright Policy", href: "/copyright-policy" },
+  { label: "DMCA", href: "/dmca" },
+  { label: "Content Policy", href: "/content-policy" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 const socialButtonClass =
@@ -56,17 +56,17 @@ export function SiteFooter() {
           aria-label="Footer"
         >
           {footerLinks.map((link, i) => (
-            <span key={link} className="flex items-center">
+            <span key={link.label} className="flex items-center">
               {i > 0 && (
                 <span className="mx-2 text-[#3a3f3d]" aria-hidden>
                   |
                 </span>
               )}
               <Link
-                href="#"
+                href={link.href}
                 className="transition-colors hover:text-hw-foreground"
               >
-                {link}
+                {link.label}
               </Link>
             </span>
           ))}

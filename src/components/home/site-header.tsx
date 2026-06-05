@@ -80,7 +80,7 @@ export function SiteHeader() {
             Upload
           </Link>
           <Link
-            href="#"
+            href="/premium"
             className="rounded-md px-3 py-2 text-[13px] font-medium text-hw-yellow transition-opacity hover:opacity-90"
           >
             Premium
@@ -148,7 +148,7 @@ export function SiteHeader() {
                   Upload
                 </Link>
                 <Link
-                  href="#"
+                  href="/premium"
                   onClick={() => setOpen(false)}
                   className="rounded-md px-3 py-2 text-sm font-medium text-hw-yellow"
                 >

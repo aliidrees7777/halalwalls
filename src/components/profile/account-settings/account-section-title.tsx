@@ -14,8 +14,8 @@ export function AccountSectionTitle({
   return (
     <h3
       className={cn(
-        "py-1 text-center text-sm font-semibold sm:text-[15px]",
-        variant === "danger" ? "text-red-500" : "text-hw-foreground",
+        "py-1 text-center text-xl font-semibold sm:text-2xl",
+        variant === "danger" ? "text-[#B10000]" : "text-hw-foreground",
         className
       )}
     >
