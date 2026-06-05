@@ -40,10 +40,7 @@ interface AccountSettingsModalProps {
 function VisaBadge() {
   return (
     <span
-      className="inline-flex shrink-0 items-center justify-center rounded px-1.5 py-0.5 text-[11px] font-bold italic tracking-tight text-[#1a1f71]"
-      style={{
-        background: "linear-gradient(135deg, #fff 0%, #e8e8e8 100%)",
-      }}
+      className="inline-flex h-7 w-11 shrink-0 items-center justify-center rounded-[3px] bg-[#0E4595] text-[12px] font-bold italic tracking-tight text-white"
       aria-hidden
     >
       VISA
@@ -121,9 +118,9 @@ export function AccountSettingsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton className="max-w-[640px]">
+      <DialogContent showCloseButton className="max-w-[640px] border-[#05DF8B]">
         <DialogHeader className="shrink-0 border-b border-white/5 pb-4">
-          <DialogTitle>Account Information</DialogTitle>
+          <DialogTitle className="text-xl sm:text-2xl">Account Information</DialogTitle>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-7 sm:py-6">
@@ -195,7 +192,7 @@ export function AccountSettingsModal({
             <AccountSectionTitle>Payment Method</AccountSectionTitle>
             <button
               type="button"
-              className="flex w-full items-center gap-3 rounded-lg border border-white/15 bg-[#262626] px-3 py-2.5 text-left transition-colors duration-200 hover:border-white/25 hover:bg-[#2a2a2a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/40"
+              className="flex w-full items-center gap-3 rounded-[6px] border border-[#B0B0B1]/40 bg-[#181A1B] px-3 py-2.5 text-left transition-colors duration-200 hover:border-[#B0B0B1]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/40"
               onClick={() =>
                 setStatusMessage("Payment editing is available in a future update.")
               }
@@ -216,16 +213,16 @@ export function AccountSettingsModal({
 
             <div
               className={cn(
-                "flex items-center justify-between gap-3 rounded-lg border bg-[#262626]/80 px-3.5 py-2.5 transition-colors duration-200",
+                "flex items-center justify-between gap-3 rounded-[6px] border bg-[#181A1B] px-3.5 py-2.5 transition-colors duration-200",
                 subscriptionActive
-                  ? "border-hw-yellow/70"
-                  : "border-white/15 opacity-70"
+                  ? "border-[#FFD700]"
+                  : "border-[#B0B0B1]/40 opacity-70"
               )}
             >
               <span
                 className={cn(
                   "text-[13px] font-medium sm:text-sm",
-                  subscriptionActive ? "text-hw-yellow" : "text-hw-muted"
+                  subscriptionActive ? "text-[#FFD700]" : "text-hw-muted"
                 )}
               >
                 {subscriptionActive
@@ -238,8 +235,8 @@ export function AccountSettingsModal({
             </div>
 
             {subscriptionActive ? (
-              <div className="flex flex-col gap-3 rounded-lg border border-white/15 bg-[#262626] px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-2.5">
-                <p className="text-[12px] text-hw-foreground/90 sm:text-[13px]">
+              <div className="flex flex-col gap-3 rounded-[6px] border border-[#B0B0B1]/40 bg-[#181A1B] px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-2.5">
+                <p className="text-[12px] text-[#B0B0B1] sm:text-[13px]">
                   Billing period: {values.billingPeriod}
                 </p>
                 {!showCancelSubConfirm ? (
@@ -247,7 +244,7 @@ export function AccountSettingsModal({
                     type="button"
                     variant="secondary"
                     size="sm"
-                    className="h-8 shrink-0 rounded-md border-0 bg-[#d4d4d4] px-3 text-[12px] font-medium text-[#1a1a1a] hover:bg-white sm:text-[13px]"
+                    className="h-8 shrink-0 rounded-[5px] border-0 bg-[#B0B0B1] px-3 text-[12px] font-semibold text-[#181A1B] hover:bg-[#c2c2c2] sm:text-[13px]"
                     onClick={() => setShowCancelSubConfirm(true)}
                   >
                     Cancel Subscription
@@ -295,13 +292,13 @@ export function AccountSettingsModal({
             {!showDeleteConfirm ? (
               <button
                 type="button"
-                className="flex w-full items-center justify-between gap-3 rounded-lg border border-red-500/80 bg-[#262626]/50 px-3.5 py-3 text-left transition-all duration-200 hover:border-red-500 hover:bg-red-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40"
+                className="flex w-full items-center justify-between gap-3 rounded-[6px] border border-[#B10000] bg-[#181A1B]/50 px-3.5 py-3 text-left transition-all duration-200 hover:bg-[#B10000]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B10000]/40"
                 onClick={() => setShowDeleteConfirm(true)}
               >
-                <span className="text-[13px] font-medium text-red-500 sm:text-sm">
+                <span className="text-[13px] font-medium text-[#B10000] sm:text-sm">
                   Delete Account Permanently
                 </span>
-                <Trash2 className="size-4 shrink-0 text-red-500" />
+                <Trash2 className="size-4 shrink-0 text-[#B10000]" />
               </button>
             ) : (
               <motion.div
