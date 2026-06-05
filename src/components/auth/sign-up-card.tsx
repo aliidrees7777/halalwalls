@@ -16,17 +16,33 @@ export function SignUpCard() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agree, setAgree] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   return (
     <div
       className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] p-6 backdrop-blur-md sm:p-7"
       style={{ background: "rgba(24, 26, 27, 0.77)" }}
     >
-      <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setSubmitted(true);
+        }}
+      >
         {/* Title */}
         <h1 className="text-center text-[22px] font-bold leading-tight text-white">
           Join Us in a Snap
         </h1>
+
+        {submitted && (
+          <p
+            role="status"
+            className="rounded-lg border border-[#05DF8B]/40 bg-[#05DF8B]/10 px-3 py-2 text-center text-sm text-[#05DF8B]"
+          >
+            Account created successfully (demo).
+          </p>
+        )}
 
         {/* Fields */}
         <div className="flex flex-col gap-3.5">
@@ -123,8 +139,8 @@ export function SignUpCard() {
             </button>
             <p className="text-[13px] leading-snug text-white">
               I agree to the{" "}
-              <a href="#" className="text-[#69A6D5] underline">Terms of Service</a> and{" "}
-              <a href="#" className="text-[#69A6D5] underline">Privacy Policy</a>
+              <a href="/terms" className="text-[#69A6D5] underline">Terms of Service</a> and{" "}
+              <a href="/privacy" className="text-[#69A6D5] underline">Privacy Policy</a>
             </p>
           </div>
         </div>

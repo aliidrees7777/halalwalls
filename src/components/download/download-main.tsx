@@ -67,7 +67,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
         {wallpaper.tagSlugs.map((slug, index) => (
           <Link
             key={slug}
-            href="#"
+            href="/"
             className="text-[12px] text-hw-muted underline decoration-hw-muted/40 underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
           >
             #{slug}

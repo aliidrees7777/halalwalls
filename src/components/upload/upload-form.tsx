@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
+import NextImage from "next/image";
 import Link from "next/link";
 import ReCAPTCHA from "react-google-recaptcha";
 import { ChevronDown, Plus, Upload, Check } from "lucide-react";
@@ -42,6 +42,7 @@ export function UploadForm() {
   const [category, setCategory] = useState("");
   const [agree, setAgree] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   function handleFile(file: File | undefined) {
     if (!file) return;
@@ -64,7 +65,22 @@ export function UploadForm() {
   const canSubmit = Boolean(preview && category && agree && captchaToken);
 
   return (
-    <form className="flex flex-col gap-7" onSubmit={(e) => e.preventDefault()}>
+    <form
+      className="flex flex-col gap-7"
+      onSubmit={(e) => {
+        e.preventDefault();
+        setSubmitted(true);
+      }}
+    >
+      {submitted && (
+        <p
+          role="status"
+          className="rounded-[7px] border border-[#4D853A]/50 bg-[#4D853A]/15 px-4 py-3 text-sm text-[#7ed957]"
+        >
+          Wallpaper submitted for review (demo).
+        </p>
+      )}
+
       {/* Dropzone */}
       <input
         ref={inputRef}
@@ -83,8 +99,14 @@ export function UploadForm() {
       >
         {preview ? (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={preview} alt="" className="max-h-[60%] rounded-lg object-contain" />
+            <NextImage
+              src={preview}
+              alt="Selected wallpaper preview"
+              width={320}
+              height={200}
+              unoptimized
+              className="max-h-[60%] w-auto rounded-lg object-contain"
+            />
             <p className="max-w-full truncate text-sm text-white">{fileName}</p>
             <p className="text-xs text-white/60">Click to choose a different image</p>
           </>

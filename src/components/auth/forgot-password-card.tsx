@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 /**
  * Forgot Password card.
@@ -12,12 +13,28 @@ import Link from "next/link";
  * primary #05DF8B / text #181A1B · "Log in" link #69A6D5.
  */
 export function ForgotPasswordCard() {
+  const [submitted, setSubmitted] = useState(false);
+
   return (
     <div
       className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] p-6 backdrop-blur-md sm:p-7"
       style={{ background: "rgba(24, 26, 27, 0.77)" }}
     >
-      <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
+      <form
+        className="flex flex-col gap-5"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setSubmitted(true);
+        }}
+      >
+        {submitted && (
+          <p
+            role="status"
+            className="rounded-lg border border-[#05DF8B]/40 bg-[#05DF8B]/10 px-3 py-2 text-center text-sm text-[#05DF8B]"
+          >
+            Recovery link sent (demo). Check your inbox.
+          </p>
+        )}
         {/* Title + description */}
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-center text-[22px] font-bold leading-tight text-white">

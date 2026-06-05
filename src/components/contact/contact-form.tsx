@@ -37,9 +37,25 @@ const fieldBox =
 export function ContactForm() {
   const [reason, setReason] = useState("");
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   return (
-    <form className="flex flex-col gap-7" onSubmit={(e) => e.preventDefault()}>
+    <form
+      className="flex flex-col gap-7"
+      onSubmit={(e) => {
+        e.preventDefault();
+        setSubmitted(true);
+      }}
+    >
+      {submitted && (
+        <p
+          role="status"
+          className="rounded-[7px] border border-[#4D853A]/50 bg-[#4D853A]/15 px-4 py-3 text-sm text-[#7ed957]"
+        >
+          Thanks! Your message has been sent (demo).
+        </p>
+      )}
+
       {/* Copyright notice */}
       <div className="rounded-[7px] border border-[#6C4C0B] bg-[#2F2805] px-5 py-4">
         <p className="text-sm leading-relaxed text-[#C1A36F]">

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ChevronDown, Clock, Menu } from "lucide-react";
+import { ChevronDown, Menu, Moon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,8 +38,13 @@ const navItems = [
 ];
 
 export function DownloadHeader() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+
+  const handleSearch = (q: string) => {
+    if (q.trim()) router.push(`/?q=${encodeURIComponent(q.trim())}`);
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-hw-header">
@@ -46,7 +52,7 @@ export function DownloadHeader() {
         <HalalWallsLogo className="shrink-0" />
 
         <div className="hidden min-w-0 flex-1 md:block lg:max-w-[420px] lg:justify-self-center xl:max-w-[520px]">
-          <SearchBox value={search} onChange={setSearch} />
+          <SearchBox value={search} onChange={setSearch} onSubmit={handleSearch} />
         </div>
 
         <nav
@@ -80,13 +86,13 @@ export function DownloadHeader() {
             </DropdownMenu>
           ))}
           <Link
-            href="#"
+            href="/upload"
             className="rounded-md px-2.5 py-2 text-[13px] text-hw-muted transition-colors hover:text-hw-foreground xl:px-3"
           >
             Upload
           </Link>
           <Link
-            href="#"
+            href="/premium"
             className="rounded-md px-2.5 py-2 text-[13px] font-medium text-hw-yellow transition-opacity hover:opacity-90 xl:px-3"
           >
             Premium
@@ -95,7 +101,7 @@ export function DownloadHeader() {
 
         <div className="ml-auto flex items-center gap-2">
           <Link
-            href="/profile"
+            href="/login"
             className="hidden rounded-lg border border-white/25 px-3.5 py-1.5 text-[13px] font-medium text-hw-foreground transition-colors hover:bg-white/5 sm:inline-block"
           >
             Sign In
@@ -103,9 +109,9 @@ export function DownloadHeader() {
           <button
             type="button"
             className="flex size-9 shrink-0 items-center justify-center rounded-full border border-hw-border text-hw-foreground transition-colors hover:border-hw-muted"
-            aria-label="View history"
+            aria-label="Toggle dark mode"
           >
-            <Clock className="size-[18px]" />
+            <Moon className="size-[18px]" />
           </button>
 
           <Sheet open={open} onOpenChange={setOpen}>
@@ -129,7 +135,14 @@ export function DownloadHeader() {
                 <SheetTitle className="text-hw-foreground">Menu</SheetTitle>
               </SheetHeader>
               <div className="mt-4 md:hidden">
-                <SearchBox />
+                <SearchBox
+                  value={search}
+                  onChange={setSearch}
+                  onSubmit={(q) => {
+                    setOpen(false);
+                    handleSearch(q);
+                  }}
+                />
               </div>
               <nav className="mt-6 flex flex-col gap-1">
                 {navItems.map((item) => (
@@ -140,7 +153,7 @@ export function DownloadHeader() {
                     {item.items.map((sub) => (
                       <Link
                         key={sub}
-                        href="#"
+                        href="/"
                         onClick={() => setOpen(false)}
                         className="block rounded-md px-3 py-2 text-sm text-hw-muted hover:bg-hw-surface hover:text-hw-foreground"
                       >
@@ -150,7 +163,7 @@ export function DownloadHeader() {
                   </div>
                 ))}
                 <Link
-                  href="/profile"
+                  href="/login"
                   onClick={() => setOpen(false)}
                   className="mt-4 inline-flex justify-center rounded-lg border border-white/25 px-4 py-2 text-sm text-hw-foreground"
                 >
@@ -165,7 +178,7 @@ export function DownloadHeader() {
 
       <div className="border-b border-[#1a1f1d] px-4 py-2.5 md:hidden">
         <div className="mx-auto max-w-[520px]">
-          <SearchBox value={search} onChange={setSearch} />
+          <SearchBox value={search} onChange={setSearch} onSubmit={handleSearch} />
         </div>
       </div>
     </header>

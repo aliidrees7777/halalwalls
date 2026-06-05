@@ -73,7 +73,7 @@ export function SiteFooter() {
         </nav>
 
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Link href="#" className={socialButtonClass}>
+          <a href="https://play.google.com/store/apps" target="_blank" rel="noopener noreferrer" className={socialButtonClass}>
             <Image
               src="/google-play-logo.png"
               alt=""
@@ -82,19 +82,19 @@ export function SiteFooter() {
               className="size-[18px] object-contain"
             />
             Google Play
-          </Link>
-          <Link href="#" className={socialButtonClass}>
+          </a>
+          <a href="https://telegram.org" target="_blank" rel="noopener noreferrer" className={socialButtonClass}>
             <Send className="size-4" />
             Telegram
-          </Link>
-          <Link href="#" className={socialButtonClass}>
+          </a>
+          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" className={socialButtonClass}>
             <TikTokIcon className="size-4" />
             TikTok
-          </Link>
-          <Link href="#" className={socialButtonClass}>
+          </a>
+          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className={socialButtonClass}>
             <InstagramIcon className="size-4" />
             Instagram
-          </Link>
+          </a>
         </div>
 
         <p className="text-center text-[13px] text-hw-muted">

@@ -91,7 +91,7 @@ export const profileFavorites: Wallpaper[] = [
     slug: "power-aura",
     title: "Power Aura",
     image:
-      "https://images.unsplash.com/photo-1613376023733-0a73368d0ef4?w=800&h=500&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?w=800&h=500&fit=crop&q=80",
     category: "anime",
     resolution: "3840x2160",
     isFavorite: true,

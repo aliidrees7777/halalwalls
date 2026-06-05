@@ -57,7 +57,7 @@ export const restaurants: Restaurant[] = [
     address: "502 Spice Market Rd",
     city: "Houston, TX",
     distance: "2.1 mi",
-    image: "https://images.unsplash.com/photo-1563379091339-03246963d51c?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?w=800&q=80",
     tags: ["Spicy", "Budget-friendly", "Popular"],
     openNow: false,
     description:
@@ -163,7 +163,7 @@ export const restaurants: Restaurant[] = [
     address: "901 Heritage Ave",
     city: "Atlanta, GA",
     distance: "6.1 mi",
-    image: "https://images.unsplash.com/photo-1601050690597-df0568fa7098?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80",
     tags: ["Injera", "Communal dining", "Unique"],
     openNow: true,
     description:

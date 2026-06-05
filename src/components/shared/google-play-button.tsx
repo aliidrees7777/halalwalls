@@ -12,7 +12,9 @@ export function GooglePlayButton({
 }: GooglePlayButtonProps) {
   return (
     <a
-      href="#"
+      href="https://play.google.com/store/apps"
+      target="_blank"
+      rel="noopener noreferrer"
       className={cn(
         "flex items-center gap-3 rounded-md border border-[#3a3f3d] bg-[#0d0f0e] transition-opacity hover:opacity-90",
         compact ? "px-2.5 py-2" : "px-3 py-2.5",

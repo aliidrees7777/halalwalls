@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -21,7 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} h-full`}>
-      <body className="min-h-full font-sans antialiased">{children}</body>
+      <body className="min-h-full pb-[72px] font-sans antialiased md:pb-0">
+        {children}
+        <MobileBottomNav />
+      </body>
     </html>
   );
 }
