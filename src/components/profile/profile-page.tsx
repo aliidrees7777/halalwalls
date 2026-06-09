@@ -7,6 +7,7 @@ import { ProfileSectionHeader } from "@/components/profile/profile-section-heade
 import { ProfileWallpaperThumb } from "@/components/profile/profile-wallpaper-thumb";
 import { UploadPlaceholder } from "@/components/profile/upload-placeholder";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { MobileProfile } from "@/components/profile/mobile-profile";
 import {
   demoProfileUser,
   discoverJustUploaded,
@@ -15,7 +16,14 @@ import {
 
 export function ProfilePage() {
   return (
-    <div className="min-h-screen bg-hw-bg">
+    <>
+      {/* Mobile: immersive app-style profile (matches Figma) */}
+      <div className="md:hidden">
+        <MobileProfile />
+      </div>
+
+      {/* Desktop / tablet */}
+      <div className="hidden min-h-screen bg-hw-bg md:block">
       <ProfileHeaderNav />
 
       <main className="mx-auto max-w-[1400px] px-4 py-8 lg:px-6 lg:py-10">
@@ -63,6 +71,7 @@ export function ProfilePage() {
       </main>
 
       <SiteFooter />
-    </div>
+      </div>
+    </>
   );
 }

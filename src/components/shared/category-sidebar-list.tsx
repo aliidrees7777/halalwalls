@@ -45,7 +45,7 @@ export function CategorySidebarList({
             className={cn(index > 0 && "border-t border-[#2a2f2d]")}
           >
             <Link
-              href={category.slug ? `/?filter=${category.slug}` : "#"}
+              href={category.slug ? `/?category=${category.slug}` : "/"}
               className={cn(
                 "flex items-center justify-between gap-2 py-2.5 transition-colors",
                 isActive && "rounded-md bg-[#2a2f2d] px-2 -mx-2"

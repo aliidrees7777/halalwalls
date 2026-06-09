@@ -41,7 +41,7 @@ export const communityPosts: CommunityPost[] = [
     restaurant: "Tokyo Halal Ramen",
     content:
       "As someone who lived in Tokyo for 3 years, I can confirm this is legit halal ramen. The broth depth is unreal. Pair with the gyoza — you won't regret it.",
-    image: "https://images.unsplash.com/photo-1557872943-16a5ac26437b?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80",
     likes: 412,
     comments: 67,
     timestamp: "8h ago",
@@ -71,7 +71,7 @@ export const communityPosts: CommunityPost[] = [
     restaurant: "Bismillah Biryani Co.",
     content:
       "Friday biryani drop at Bismillah is a ritual in our family now. The raita and mirchi ka salan are perfect. Cash only on weekends FYI!",
-    image: "https://images.unsplash.com/photo-1589302166868-efcc1f6d9736?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800&q=80",
     likes: 178,
     comments: 31,
     timestamp: "1d ago",

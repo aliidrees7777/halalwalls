@@ -84,6 +84,10 @@ export function PremiumPlans() {
           </div>
         ))}
       </div>
+
+      <p className="text-center text-xs text-white/50">
+        Demo — checkout is not connected yet.
+      </p>
     </div>
   );
 }

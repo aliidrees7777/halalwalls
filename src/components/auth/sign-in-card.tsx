@@ -14,17 +14,33 @@ import { useState } from "react";
  */
 export function SignInCard() {
   const [showPassword, setShowPassword] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   return (
     <div
       className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] p-6 backdrop-blur-md sm:p-7"
       style={{ background: "rgba(24, 26, 27, 0.77)" }}
     >
-      <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setSubmitted(true);
+        }}
+      >
         {/* Title */}
         <h1 className="text-center text-[22px] font-bold leading-tight text-white">
           Sign In
         </h1>
+
+        {submitted && (
+          <p
+            role="status"
+            className="rounded-lg border border-[#05DF8B]/40 bg-[#05DF8B]/10 px-3 py-2 text-center text-sm text-[#05DF8B]"
+          >
+            Signed in successfully (demo).
+          </p>
+        )}
 
         {/* Fields + forgot link */}
         <div className="flex flex-col gap-3.5">

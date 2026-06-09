@@ -37,7 +37,7 @@
   --hw-search-input: #121212;
   --hw-pill: #1e1e1e;
   --hw-sidebar: #121212;
-  --hw-green: #00ffa3;
+  --hw-green: #05DF8B;
   --hw-yellow: #f5c518;
   --hw-foreground: #ffffff;
   --hw-muted: #a1a1aa;
@@ -56,5 +56,23 @@
   }
   html {
     @apply font-sans scroll-smooth;
+  }
+
+  /* Interactive elements show a pointer cursor (Tailwind v4 defaults buttons to
+     the arrow cursor). Matches the polish on hdqwalls.com across the platform. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  [role="tab"]:not([aria-disabled="true"]),
+  [role="switch"],
+  [role="checkbox"],
+  summary,
+  label[for],
+  select {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
   }
 }

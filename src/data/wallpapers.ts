@@ -28,7 +28,7 @@ const rawWallpapers: Omit<Wallpaper, "slug">[] = [
   {
     id: "4",
     title: "Infinite Domain",
-    image: "https://images.unsplash.com/photo-1613376023733-0a73368d0ef4?w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=1200&q=80",
     category: "anime",
     resolution: "3840x2160",
   },
@@ -81,7 +81,7 @@ const rawWallpapers: Omit<Wallpaper, "slug">[] = [
   {
     id: "11",
     title: "Crow Moon",
-    image: "https://images.unsplash.com/photo-1574267432554-6a53487179de?w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?w=1200&q=80",
     category: "anime",
     resolution: "1920x1080",
   },
@@ -131,7 +131,7 @@ const rawWallpapers: Omit<Wallpaper, "slug">[] = [
   {
     id: "18",
     title: "Mosque Twilight",
-    image: "https://images.unsplash.com/photo-1564760055776-d63ef3c2f147?w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=1200&q=80",
     category: "islamic",
     resolution: "1920x1080",
     isFavorite: true,

@@ -23,7 +23,7 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
           className="relative block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50"
           aria-label={`View ${wallpaper.title}`}
         >
-          <div className="relative aspect-[16/10] w-full">
+          <div className="relative aspect-[9/16] w-full sm:aspect-[16/10]">
             <Image
               src={wallpaper.image}
               alt={wallpaper.title}
@@ -38,6 +38,13 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
             {!loaded && (
               <div className="absolute inset-0 animate-pulse bg-hw-surface" />
             )}
+
+            {/* HDQwalls-style hover: title on a gradient that fades in */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent px-3 pb-2.5 pt-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <p className="line-clamp-2 text-[13px] font-medium leading-tight text-white drop-shadow">
+                {wallpaper.title}
+              </p>
+            </div>
           </div>
         </Link>
 
