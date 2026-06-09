@@ -123,7 +123,7 @@ export function SiteHeader() {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden bg-[#191A1C] lg:hidden"
           >
-            <div className="max-h-[calc(100dvh-53px)] overflow-y-auto px-4 py-5">
+            <div className="max-h-[calc(100dvh-53px)] overflow-y-auto px-4 pt-5 pb-28">
               <MobileFilterMenu onNavigate={() => setOpen(false)} />
             </div>
           </motion.div>

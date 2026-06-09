@@ -3,23 +3,17 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ChevronDown, Menu, Moon } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Menu, Moon, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import { SearchBox } from "@/components/shared/search-box";
 import { HalalWallsLogo } from "@/components/home/halalwalls-logo";
+import { MobileFilterMenu } from "@/components/home/mobile-filter-menu";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -99,7 +93,7 @@ export function DownloadHeader() {
           </Link>
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2.5">
           <Link
             href="/login"
             className="hidden rounded-lg border border-white/25 px-3.5 py-1.5 text-[13px] font-medium text-hw-foreground transition-colors hover:bg-white/5 sm:inline-block"
@@ -108,73 +102,44 @@ export function DownloadHeader() {
           </Link>
           <button
             type="button"
-            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-hw-border text-hw-foreground transition-colors hover:border-hw-muted"
+            className="hidden size-9 shrink-0 items-center justify-center rounded-full border border-hw-border text-hw-foreground transition-colors hover:border-hw-muted lg:flex"
             aria-label="Toggle dark mode"
           >
             <Moon className="size-[18px]" />
           </button>
 
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger
-              render={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-hw-muted hover:text-hw-foreground lg:hidden"
-                />
-              }
-            >
-              <Menu className="size-5" />
-              <span className="sr-only">Menu</span>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[280px] border-hw-border bg-hw-card"
-            >
-              <SheetHeader>
-                <SheetTitle className="text-hw-foreground">Menu</SheetTitle>
-              </SheetHeader>
-              <div className="mt-4 md:hidden">
-                <SearchBox
-                  value={search}
-                  onChange={setSearch}
-                  onSubmit={(q) => {
-                    setOpen(false);
-                    handleSearch(q);
-                  }}
-                />
-              </div>
-              <nav className="mt-6 flex flex-col gap-1">
-                {navItems.map((item) => (
-                  <div key={item.label} className="py-2">
-                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-hw-muted">
-                      {item.label}
-                    </p>
-                    {item.items.map((sub) => (
-                      <Link
-                        key={sub}
-                        href="/"
-                        onClick={() => setOpen(false)}
-                        className="block rounded-md px-3 py-2 text-sm text-hw-muted hover:bg-hw-surface hover:text-hw-foreground"
-                      >
-                        {sub}
-                      </Link>
-                    ))}
-                  </div>
-                ))}
-                <Link
-                  href="/login"
-                  onClick={() => setOpen(false)}
-                  className="mt-4 inline-flex justify-center rounded-lg border border-white/25 px-4 py-2 text-sm text-hw-foreground"
-                >
-                  Sign In
-                </Link>
-              </nav>
-            </SheetContent>
-          </Sheet>
+          {/* Burger — far right, opens the top-to-bottom menu (mobile) */}
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-label="Menu"
+            aria-expanded={open}
+            className="flex size-9 items-center justify-center rounded-md border border-hw-border text-hw-muted transition-colors hover:text-hw-foreground lg:hidden"
+          >
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
         </div>
       </div>
+
       <div className="h-px w-full bg-hw-green" aria-hidden />
+
+      {/* Top-to-bottom expanding Filters menu (mobile only) */}
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden bg-[#191A1C] lg:hidden"
+          >
+            <div className="max-h-[calc(100dvh-53px)] overflow-y-auto px-4 pt-5 pb-28">
+              <MobileFilterMenu onNavigate={() => setOpen(false)} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

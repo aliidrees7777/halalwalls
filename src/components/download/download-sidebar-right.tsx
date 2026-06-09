@@ -17,7 +17,7 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.1 }}
-        className="rounded-lg border border-[#2a2f2d] bg-hw-sidebar p-4"
+        className="hidden rounded-lg border border-[#2a2f2d] bg-hw-sidebar p-4 xl:block"
       >
         <h2 className="mb-3 text-center text-[13px] font-semibold text-hw-foreground">
           Our App
