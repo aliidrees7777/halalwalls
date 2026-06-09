@@ -175,12 +175,6 @@ export function DownloadHeader() {
         </div>
       </div>
       <div className="h-px w-full bg-hw-green" aria-hidden />
-
-      <div className="border-b border-[#1a1f1d] px-4 py-2.5 md:hidden">
-        <div className="mx-auto max-w-[520px]">
-          <SearchBox value={search} onChange={setSearch} onSubmit={handleSearch} />
-        </div>
-      </div>
     </header>
   );
 }

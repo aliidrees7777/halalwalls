@@ -27,7 +27,7 @@ export function DownloadSidebarLeft({
   tags = downloadSidebarTags,
 }: DownloadSidebarLeftProps) {
   return (
-    <aside className="flex w-full flex-col gap-3 lg:w-[248px] lg:shrink-0">
+    <aside className="hidden w-full flex-col gap-3 lg:w-[248px] lg:shrink-0 xl:flex">
       <SidebarPanel title="Resolution">
         <SidebarCollapsible label="Browse Resolutions" defaultOpen>
           <div>
