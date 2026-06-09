@@ -28,7 +28,7 @@ export function ResolutionChips({
           key={res}
           type="button"
           onClick={() => onSelect?.(res)}
-          className="rounded-md border border-[#3a3f3d] bg-[#0d0f0e] px-1 py-2 text-center text-[11px] leading-tight text-hw-foreground transition-colors hover:border-hw-green/40 hover:text-hw-green"
+          className="rounded-md border border-hw-line bg-hw-deep px-1 py-2 text-center text-[11px] leading-tight text-hw-foreground transition-colors hover:border-hw-green/40 hover:text-hw-green"
         >
           {res}
         </button>

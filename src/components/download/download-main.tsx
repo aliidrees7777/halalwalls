@@ -29,7 +29,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        className="overflow-hidden rounded-lg border border-[#2a2f2d] bg-[#0d0f0e]"
+        className="overflow-hidden rounded-lg border border-hw-line bg-hw-deep"
       >
         <motion.div
           whileHover={{ scale: 1.005 }}
@@ -56,7 +56,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <Badge
           variant="outline"
-          className="gap-1.5 rounded-md border-[#3a3f3d] bg-[#121412] px-2.5 py-1 text-[12px] font-normal text-hw-muted"
+          className="gap-1.5 rounded-md border-hw-line bg-hw-deep px-2.5 py-1 text-[12px] font-normal text-hw-muted"
         >
           <Download className="size-3.5" />
           {wallpaper.views.toLocaleString()}

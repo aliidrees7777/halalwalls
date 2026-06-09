@@ -19,7 +19,7 @@ function ResolutionChip({ label }: { label: string }) {
   return (
     <button
       type="button"
-      className="rounded-md border border-[#3a3f3d] bg-[#0d0f0e] px-1 py-2 text-center text-[11px] leading-tight text-hw-foreground transition-colors hover:border-hw-green/40"
+      className="rounded-md border border-hw-line bg-hw-deep px-1 py-2 text-center text-[11px] leading-tight text-hw-foreground transition-colors hover:border-hw-green/40"
     >
       {label}
     </button>
@@ -37,7 +37,7 @@ function CategoryBadge({
     <span
       className={cn(
         "min-w-[28px] rounded-full px-2 py-0.5 text-center text-[11px] font-medium tabular-nums text-hw-foreground",
-        isPremium ? "border border-hw-yellow bg-transparent" : "bg-[#2a2f2d]"
+        isPremium ? "border border-hw-yellow bg-transparent" : "bg-hw-line"
       )}
     >
       {count}
@@ -81,7 +81,7 @@ export function HomeSidebar() {
           href="https://play.google.com/store/apps"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-3 rounded-md border border-[#3a3f3d] bg-[#0d0f0e] px-3 py-2.5 transition-opacity hover:opacity-90"
+          className="flex items-center gap-3 rounded-md border border-hw-line bg-hw-deep px-3 py-2.5 transition-opacity hover:opacity-90"
         >
           <Image
             src="/google-play-logo.png"
@@ -147,7 +147,7 @@ export function HomeSidebar() {
           {trendingTopics.map((topic, index) => (
             <li
               key={topic}
-              className={cn(index > 0 && "border-t border-[#2a2f2d]")}
+              className={cn(index > 0 && "border-t border-hw-line")}
             >
               <Link
                 href={`/?q=${encodeURIComponent(topic)}`}
@@ -166,7 +166,7 @@ export function HomeSidebar() {
             {sidebarCategories.map((category, index) => (
               <li
                 key={category.name}
-                className={cn(index > 0 && "border-t border-[#2a2f2d]")}
+                className={cn(index > 0 && "border-t border-hw-line")}
               >
                 <Link
                   href={category.slug ? `/?category=${category.slug}` : "/"}

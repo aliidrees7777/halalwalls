@@ -34,7 +34,7 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
           >
             <Link
               href={`/wallpaper/${wallpaper.slug}`}
-              className="group relative block overflow-hidden rounded-lg border border-[#2a2f2d] bg-[#0d0f0e]"
+              className="group relative block overflow-hidden rounded-lg border border-hw-line bg-hw-deep"
             >
               <motion.div
                 whileHover={{ scale: 1.02 }}

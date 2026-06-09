@@ -24,25 +24,24 @@ const FEATURES = [
 export function SignInBoxCard() {
   return (
     <div
-      className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] backdrop-blur-md sm:p-7"
-      style={{ background: "rgba(24, 26, 27, 0.77)" }}
+      className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] backdrop-blur-md sm:p-7"
     >
       <div className="flex flex-col gap-5">
         {/* Title */}
-        <h1 className="text-center text-[22px] font-bold leading-tight text-white">
+        <h1 className="text-center text-[22px] font-bold leading-tight text-hw-foreground">
           Sign in
         </h1>
 
         {/* Feature box */}
-        <div className="rounded-2xl border border-[#05DF8B] bg-[#181A1B] p-5">
-          <h2 className="text-[15px] font-semibold text-white">
+        <div className="rounded-2xl border border-[#05DF8B] bg-hw-input p-5">
+          <h2 className="text-[15px] font-semibold text-hw-foreground">
             Start Your Journey With HalalWalls
           </h2>
           <ul className="mt-4 flex flex-col gap-3">
             {FEATURES.map((label) => (
               <li key={label} className="flex items-center gap-2.5">
                 <BadgeCheck className="size-[22px] shrink-0 text-white" fill="#06DD8A" strokeWidth={2} />
-                <span className="text-sm font-light text-white">{label}</span>
+                <span className="text-sm font-light text-hw-foreground">{label}</span>
               </li>
             ))}
           </ul>
@@ -53,7 +52,7 @@ export function SignInBoxCard() {
           {/* Sign in with Google */}
           <button
             type="button"
-            className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[15px] font-bold text-[#181A1B] transition-[filter,transform] hover:brightness-95 active:translate-y-px"
+            className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px"
           >
             <span className="grid size-5 place-items-center rounded-full bg-white">
               <svg viewBox="0 0 24 24" className="size-3.5">
@@ -69,19 +68,19 @@ export function SignInBoxCard() {
           {/* Continue with Email */}
           <Link
             href="/signin"
-            className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#181A1B] text-sm font-semibold text-[#A8A299] transition-colors hover:bg-[#1f2122] active:translate-y-px"
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-hw-input text-sm font-semibold text-hw-faint transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
           >
             <CornerDownRight className="size-[18px]" />
             Continue with Email
           </Link>
 
           {/* or */}
-          <span className="text-center text-[13px] font-semibold text-[#A8A299] opacity-70">or</span>
+          <span className="text-center text-[13px] font-semibold text-hw-faint opacity-70">or</span>
 
           {/* Create an account */}
           <Link
             href="/signup"
-            className="flex h-11 w-full items-center justify-center rounded-full bg-[#42494E] text-sm font-semibold text-[#A8A299] transition-colors hover:bg-[#4c5358] active:translate-y-px"
+            className="flex h-11 w-full items-center justify-center rounded-full bg-hw-pill2 text-sm font-semibold text-hw-faint transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
           >
             Create an account
           </Link>

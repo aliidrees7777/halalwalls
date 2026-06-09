@@ -17,8 +17,7 @@ export function ForgotPasswordCard() {
 
   return (
     <div
-      className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] p-6 backdrop-blur-md sm:p-7"
-      style={{ background: "rgba(24, 26, 27, 0.77)" }}
+      className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 backdrop-blur-md sm:p-7"
     >
       <form
         className="flex flex-col gap-5"
@@ -37,10 +36,10 @@ export function ForgotPasswordCard() {
         )}
         {/* Title + description */}
         <div className="flex flex-col items-center gap-2">
-          <h1 className="text-center text-[22px] font-bold leading-tight text-white">
+          <h1 className="text-center text-[22px] font-bold leading-tight text-hw-foreground">
             Forgot Password?
           </h1>
-          <p className="mx-auto max-w-[300px] text-center text-[13px] leading-relaxed text-[#65635F]">
+          <p className="mx-auto max-w-[300px] text-center text-[13px] leading-relaxed text-hw-faint">
             If you forgot your password, please enter your email below and we will
             send you a recovery link.
           </p>
@@ -48,15 +47,15 @@ export function ForgotPasswordCard() {
 
         {/* Email field */}
         <div className="space-y-1.5">
-          <label htmlFor="forgot-email" className="block text-[13px] font-semibold text-white">
+          <label htmlFor="forgot-email" className="block text-[13px] font-semibold text-hw-foreground">
             Email Address
           </label>
-          <div className="flex h-10 items-center rounded-lg border border-[#3E4446] bg-[#181A1B] px-3 transition-colors focus-within:border-[#05DF8B]">
+          <div className="flex h-10 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
             <input
               id="forgot-email"
               type="email"
               placeholder="Enter your email address"
-              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-[#B2ACA2]/50"
+              className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
             />
           </div>
         </div>
@@ -64,7 +63,7 @@ export function ForgotPasswordCard() {
         {/* Primary: Send Recovery Link */}
         <button
           type="submit"
-          className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[15px] font-bold text-[#181A1B] transition-[filter,transform] hover:brightness-95 active:translate-y-px"
+          className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px"
         >
           Send Recovery Link
           <svg viewBox="0 0 24 24" fill="currentColor" className="size-[18px]">
@@ -73,7 +72,7 @@ export function ForgotPasswordCard() {
         </button>
 
         {/* Footer */}
-        <p className="text-center text-[13px] text-[#65635F]">
+        <p className="text-center text-[13px] text-hw-faint">
           Remember your password?{" "}
           <Link href="/signin" className="text-[#69A6D5] underline">
             Log in

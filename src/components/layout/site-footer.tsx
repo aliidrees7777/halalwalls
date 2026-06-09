@@ -13,7 +13,7 @@ const footerLinks = [
 ];
 
 const socialButtonClass =
-  "flex items-center gap-2 rounded-lg bg-[#262626] px-4 py-2.5 text-sm text-hw-muted transition-colors hover:bg-[#333333] hover:text-hw-foreground";
+  "flex items-center gap-2 rounded-lg border border-hw-line bg-hw-pill2 px-4 py-2.5 text-sm text-hw-muted transition-colors hover:bg-hw-pill2-hover hover:text-hw-foreground";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -58,7 +58,7 @@ export function SiteFooter() {
           {footerLinks.map((link, i) => (
             <span key={link.label} className="flex items-center">
               {i > 0 && (
-                <span className="mx-2 text-[#3a3f3d]" aria-hidden>
+                <span className="mx-2 text-hw-line" aria-hidden>
                   |
                 </span>
               )}

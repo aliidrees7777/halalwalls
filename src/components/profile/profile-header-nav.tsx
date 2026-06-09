@@ -102,7 +102,7 @@ export function ProfileHeaderNav() {
         <div className="ml-auto flex items-center gap-2">
           <Link
             href="/profile"
-            className="hidden rounded-lg border border-white/25 px-3.5 py-1.5 text-[13px] font-medium text-hw-foreground transition-colors hover:bg-white/5 sm:inline-block"
+            className="hidden rounded-lg border border-hw-border px-3.5 py-1.5 text-[13px] font-medium text-hw-foreground transition-colors hover:bg-hw-surface sm:inline-block"
           >
             Dashboard
           </Link>
@@ -165,7 +165,7 @@ export function ProfileHeaderNav() {
                 <Link
                   href="/profile"
                   onClick={() => setOpen(false)}
-                  className="mt-4 inline-flex justify-center rounded-lg border border-white/25 px-4 py-2 text-sm text-hw-foreground"
+                  className="mt-4 inline-flex justify-center rounded-lg border border-hw-border px-4 py-2 text-sm text-hw-foreground"
                 >
                   Dashboard
                 </Link>
@@ -176,7 +176,7 @@ export function ProfileHeaderNav() {
       </div>
       <div className="h-px w-full bg-hw-green" aria-hidden />
 
-      <div className="border-b border-[#1a1f1d] px-4 py-2.5 md:hidden">
+      <div className="border-b border-hw-border px-4 py-2.5 md:hidden">
         <div className="mx-auto max-w-[520px]">
           <SearchBox value={search} onChange={setSearch} onSubmit={handleSearch} />
         </div>

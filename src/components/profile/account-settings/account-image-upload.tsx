@@ -48,7 +48,7 @@ export function AccountImageUpload({
         type="button"
         onClick={() => inputRef.current?.click()}
         className={cn(
-          "group relative block overflow-hidden border border-white/10 bg-[#262626] transition-all duration-200",
+          "group relative block overflow-hidden border border-hw-border bg-hw-card transition-all duration-200",
           "hover:border-hw-green/40 hover:shadow-[0_0_20px_rgba(0,255,163,0.08)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50",
           variant === "avatar"

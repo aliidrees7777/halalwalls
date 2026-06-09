@@ -16,7 +16,7 @@ function CategoryBadge({
         "min-w-[28px] rounded-full px-2 py-0.5 text-center text-[11px] font-medium tabular-nums text-hw-foreground",
         isPremium
           ? "border border-hw-yellow bg-transparent"
-          : "bg-[#2a2f2d]"
+          : "bg-hw-line"
       )}
     >
       {count}
@@ -42,13 +42,13 @@ export function CategorySidebarList({
         return (
           <li
             key={category.name}
-            className={cn(index > 0 && "border-t border-[#2a2f2d]")}
+            className={cn(index > 0 && "border-t border-hw-line")}
           >
             <Link
               href={category.slug ? `/?category=${category.slug}` : "/"}
               className={cn(
                 "flex items-center justify-between gap-2 py-2.5 transition-colors",
-                isActive && "rounded-md bg-[#2a2f2d] px-2 -mx-2"
+                isActive && "rounded-md bg-hw-line px-2 -mx-2"
               )}
             >
               <span

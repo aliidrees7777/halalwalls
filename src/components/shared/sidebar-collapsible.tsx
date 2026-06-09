@@ -33,7 +33,7 @@ export function SidebarCollapsible({
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex h-9 w-full items-center justify-between rounded-md border border-[#3a3f3d] bg-[#0d0f0e] px-3 text-[13px] text-hw-muted transition-colors hover:text-hw-foreground"
+        className="flex h-9 w-full items-center justify-between rounded-md border border-hw-line bg-hw-deep px-3 text-[13px] text-hw-muted transition-colors hover:text-hw-foreground"
       >
         <span>{label}</span>
         <ChevronDown
@@ -61,7 +61,7 @@ export function SidebarCollapsible({
                   cn(
                     "overflow-y-auto pr-1",
                     maxHeightClass,
-                    "[scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#3a3f3d]"
+                    "[scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-hw-line"
                   )
               )}
             >

@@ -17,7 +17,7 @@ export function SidebarPanel({
   return (
     <section
       className={cn(
-        "rounded-lg border border-[#2a2f2d] bg-hw-sidebar p-4",
+        "rounded-lg border border-hw-line bg-hw-sidebar p-4",
         className
       )}
     >

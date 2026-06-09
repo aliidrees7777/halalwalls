@@ -69,7 +69,7 @@ export function HomePage() {
 
             {/* Mobile-only app banner (matches Figma mobile homepage) */}
             <div className="mt-4 flex items-center gap-3 rounded-xl border border-hw-green/40 bg-hw-card p-3 lg:hidden">
-              <div className="grid size-11 shrink-0 place-items-center rounded-lg bg-black">
+              <div className="grid size-11 shrink-0 place-items-center rounded-lg bg-hw-deep">
                 <span className="text-lg font-bold text-hw-green">W</span>
               </div>
               <div className="min-w-0 flex-1">
@@ -84,7 +84,7 @@ export function HomePage() {
                 href="https://play.google.com/store/apps"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex shrink-0 items-center gap-2 rounded-lg bg-[#262626] px-3 py-2 text-xs text-hw-foreground transition-colors hover:bg-[#333]"
+                className="flex shrink-0 items-center gap-2 rounded-lg bg-hw-pill px-3 py-2 text-xs text-hw-foreground transition-colors hover:bg-hw-pill2-hover"
               >
                 <Image
                   src="/google-play-logo.png"

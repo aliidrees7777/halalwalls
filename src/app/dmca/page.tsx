@@ -132,13 +132,13 @@ const content: LegalContent = {
           type: "ul",
           items: [
             <>
-              <strong className="font-semibold text-[#C8C3BC]">Email:</strong>{" "}
+              <strong className="font-semibold text-hw-faint">Email:</strong>{" "}
               <a href="mailto:contact@halalwalls.com" className={lk}>
                 contact@halalwalls.com
               </a>
             </>,
             <>
-              <strong className="font-semibold text-[#C8C3BC]">Contact Form:</strong>{" "}
+              <strong className="font-semibold text-hw-faint">Contact Form:</strong>{" "}
               <Link href="/contact" className={lk}>
                 Contact Us Page
               </Link>

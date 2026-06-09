@@ -49,7 +49,7 @@ export function MobileBottomNav() {
   const itemClass = (active: boolean) =>
     cn(
       "flex items-center justify-center transition-colors",
-      active ? "text-hw-green" : "text-[#727272] hover:text-hw-foreground"
+      active ? "text-hw-green" : "text-hw-icon hover:text-hw-foreground"
     );
 
   return (
@@ -81,7 +81,7 @@ export function MobileBottomNav() {
             "grid size-12 place-items-center rounded-full border-[3px] bg-black transition-colors",
             pathname === "/upload"
               ? "border-hw-green text-hw-green"
-              : "border-[#727272] text-[#727272] hover:border-hw-foreground hover:text-hw-foreground"
+              : "border-hw-icon text-hw-icon hover:border-hw-foreground hover:text-hw-foreground"
           )}
         >
           <Plus className="size-6" strokeWidth={2.5} />

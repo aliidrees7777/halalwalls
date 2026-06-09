@@ -32,7 +32,7 @@ const REASONS = [
 ];
 
 const fieldBox =
-  "w-full rounded-[7px] border border-[#3E4446] bg-[#181A1B] px-4 text-sm text-white outline-none transition-colors focus:border-[#05DF8B] placeholder:text-[#B2ACA2]/50";
+  "w-full rounded-[7px] border border-hw-input-border bg-hw-input px-4 text-sm text-hw-foreground outline-none transition-colors focus:border-[#05DF8B] placeholder:text-hw-faint/50";
 
 export function ContactForm() {
   const [reason, setReason] = useState("");
@@ -68,7 +68,7 @@ export function ContactForm() {
 
       {/* Reason */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="contact-reason" className="text-sm font-semibold text-white">
+        <label htmlFor="contact-reason" className="text-sm font-semibold text-hw-foreground">
           Reason <span className="text-red-400">*</span>
         </label>
         <div className="relative">
@@ -80,25 +80,25 @@ export function ContactForm() {
             className={cn(
               fieldBox,
               "h-12 appearance-none pr-11",
-              reason ? "text-white" : "text-[#B2ACA2]/80"
+              reason ? "text-hw-foreground" : "text-hw-faint/80"
             )}
           >
             <option value="" disabled>
               Select a reason
             </option>
             {REASONS.map((r) => (
-              <option key={r} value={r} className="bg-[#181A1B] text-white">
+              <option key={r} value={r} className="bg-hw-input text-hw-foreground">
                 {r}
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-5 -translate-y-1/2 text-[#B2ACA2]" />
+          <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-5 -translate-y-1/2 text-hw-faint" />
         </div>
       </div>
 
       {/* Email */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="contact-email" className="text-sm font-semibold text-white">
+        <label htmlFor="contact-email" className="text-sm font-semibold text-hw-foreground">
           Email <span className="text-red-400">*</span>
         </label>
         <input
@@ -112,7 +112,7 @@ export function ContactForm() {
 
       {/* Details */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="contact-details" className="text-sm font-semibold text-white">
+        <label htmlFor="contact-details" className="text-sm font-semibold text-hw-foreground">
           Details <span className="text-red-400">*</span>
         </label>
         <textarea

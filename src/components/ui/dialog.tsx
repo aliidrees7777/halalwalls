@@ -53,7 +53,7 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] max-h-[min(90vh,900px)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl border-2 border-hw-green bg-[#1a1a1a] text-hw-foreground shadow-[0_0_60px_rgba(0,255,163,0.12)] outline-none transition duration-200 ease-out data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0 sm:w-full sm:max-w-[640px]",
+          "fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] max-h-[min(90vh,900px)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl border-2 border-hw-green bg-hw-card text-hw-foreground shadow-[0_0_60px_rgba(0,255,163,0.12)] outline-none transition duration-200 ease-out data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0 sm:w-full sm:max-w-[640px]",
           className
         )}
         {...props}
@@ -66,7 +66,7 @@ function DialogContent({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="absolute top-4 right-4 z-10 text-hw-foreground/80 hover:bg-white/10 hover:text-hw-foreground"
+                className="absolute top-4 right-4 z-10 text-hw-foreground/80 hover:bg-hw-pill hover:text-hw-foreground"
               />
             }
           >
@@ -94,7 +94,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="dialog-footer"
       className={cn(
-        "flex flex-col-reverse gap-2 border-t border-white/10 px-6 py-4 sm:flex-row sm:justify-end sm:px-8",
+        "flex flex-col-reverse gap-2 border-t border-hw-line px-6 py-4 sm:flex-row sm:justify-end sm:px-8",
         className
       )}
       {...props}

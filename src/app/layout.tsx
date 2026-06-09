@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 
 const inter = Inter({
@@ -21,10 +22,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full`}>
+    <html lang="en" className={`${inter.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full pb-[72px] font-sans antialiased md:pb-0">
-        {children}
-        <MobileBottomNav />
+        <ThemeProvider>
+          {children}
+          <MobileBottomNav />
+        </ThemeProvider>
       </body>
     </html>
   );

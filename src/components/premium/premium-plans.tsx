@@ -22,14 +22,13 @@ const FEATURES = [
 export function PremiumPlans() {
   return (
     <div
-      className="relative z-10 my-auto flex w-full max-w-[804px] flex-col items-center gap-8 rounded-2xl border-2 border-[#05DF8B] p-6 shadow-[0_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-md sm:p-10"
-      style={{ background: "rgba(24, 26, 27, 0.77)" }}
+      className="relative z-10 my-auto flex w-full max-w-[804px] flex-col items-center gap-8 rounded-2xl border-2 border-[#05DF8B] bg-hw-card/90 p-6 shadow-[0_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-md sm:p-10"
     >
       {/* Heading */}
       <div className="flex flex-col items-center gap-3 text-center">
-        <Gem className="size-9 text-white" />
-        <h1 className="text-2xl font-semibold text-white">Go Premium</h1>
-        <p className="text-sm font-light tracking-wide text-white/80">
+        <Gem className="size-9 text-hw-foreground" />
+        <h1 className="text-2xl font-semibold text-hw-foreground">Go Premium</h1>
+        <p className="text-sm font-light tracking-wide text-hw-muted">
           Unlock the full potential of HalalWalls
         </p>
       </div>
@@ -42,11 +41,11 @@ export function PremiumPlans() {
             className="flex flex-col overflow-hidden rounded-xl border border-[#05DF8B]"
           >
             {/* Card header */}
-            <div className="relative overflow-hidden bg-[#1D2021] px-4 pb-5 pt-4">
+            <div className="relative overflow-hidden bg-hw-deep px-4 pb-5 pt-4">
               <Gem className="absolute -right-1 top-1 size-20 rotate-12 text-[#05DF8B]/80" />
               <Sparkles className="absolute right-16 top-2 size-4 text-[#05DF8B]/80" />
               <div className="relative z-10">
-                <h3 className="text-lg font-semibold text-white">Premium</h3>
+                <h3 className="text-lg font-semibold text-hw-foreground">Premium</h3>
                 <span
                   className="mt-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wider"
                   style={{ background: plan.badgeBg, color: plan.badgeText }}
@@ -57,17 +56,17 @@ export function PremiumPlans() {
             </div>
 
             {/* Features panel */}
-            <div className="flex flex-1 flex-col gap-5 rounded-xl bg-[#323639] p-4">
-              <p className="text-[26px] leading-none text-white">
+            <div className="flex flex-1 flex-col gap-5 rounded-xl bg-hw-surface p-4">
+              <p className="text-[26px] leading-none text-hw-foreground">
                 {plan.price}
-                <span className="text-base text-white/70">{plan.period}</span>
+                <span className="text-base text-hw-muted">{plan.period}</span>
               </p>
 
               <ul className="flex flex-col gap-2.5">
                 {FEATURES.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-xs font-light text-white">
+                  <li key={f} className="flex items-center gap-2 text-xs font-light text-hw-foreground">
                     <span className="grid size-[15px] shrink-0 place-items-center rounded-[3px] bg-[#05DF8B]">
-                      <Check className="size-2.5 text-[#1D2021]" strokeWidth={3.5} />
+                      <Check className="size-2.5 text-black" strokeWidth={3.5} />
                     </span>
                     {f}
                   </li>
@@ -76,7 +75,7 @@ export function PremiumPlans() {
 
               <button
                 type="button"
-                className="mt-auto rounded-full bg-[#1D2021] py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-[#262a2c] active:translate-y-px"
+                className="mt-auto rounded-full bg-hw-pill2 py-2.5 text-center text-sm font-medium text-hw-foreground transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
               >
                 Get Started
               </button>
@@ -85,7 +84,7 @@ export function PremiumPlans() {
         ))}
       </div>
 
-      <p className="text-center text-xs text-white/50">
+      <p className="text-center text-xs text-hw-faint">
         Demo — checkout is not connected yet.
       </p>
     </div>
