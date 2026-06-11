@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
+import { ApiError } from "@/lib/api";
 
 /**
  * Sign In (Login via Email) card.
@@ -13,8 +16,27 @@ import { useState } from "react";
  * "or" + google text #A8A299.
  */
 export function SignInCard() {
+  const router = useRouter();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    setSubmitting(true);
+    try {
+      await login(email, password);
+      router.push("/");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div
@@ -22,22 +44,19 @@ export function SignInCard() {
     >
       <form
         className="flex flex-col gap-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSubmitted(true);
-        }}
+        onSubmit={handleSubmit}
       >
         {/* Title */}
         <h1 className="text-center text-[22px] font-bold leading-tight text-hw-foreground">
           Sign In
         </h1>
 
-        {submitted && (
+        {error && (
           <p
-            role="status"
-            className="rounded-lg border border-[#05DF8B]/40 bg-[#05DF8B]/10 px-3 py-2 text-center text-sm text-[#05DF8B]"
+            role="alert"
+            className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-center text-sm text-red-400"
           >
-            Signed in successfully (demo).
+            {error}
           </p>
         )}
 
@@ -53,6 +72,8 @@ export function SignInCard() {
                 id="signin-email"
                 type="email"
                 placeholder="Your Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
             </div>
@@ -68,6 +89,8 @@ export function SignInCard() {
                 id="signin-password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Your Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
               <button
@@ -103,19 +126,21 @@ export function SignInCard() {
         <div className="flex flex-col gap-2">
           <button
             type="submit"
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px"
+            disabled={submitting}
+            className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-[18px]">
               <rect x="2" y="4" width="20" height="16" rx="2" />
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
             </svg>
-            Sign in with Email
+            {submitting ? "Please wait…" : "Sign in with Email"}
           </button>
 
           <span className="text-center text-[13px] font-semibold text-hw-faint opacity-70">or</span>
 
           <button
             type="button"
+            onClick={() => setError("Google sign-in will be enabled soon.")}
             className="flex h-10 w-full items-center justify-center gap-2.5 rounded-full bg-hw-input text-sm font-semibold text-hw-faint transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
           >
             <svg viewBox="0 0 24 24" className="size-[18px]">

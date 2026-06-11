@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Rocket, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/auth-context";
+import { ApiError } from "@/lib/api";
 
 /**
  * Sign Up ("Join Us in a Snap") card.
@@ -13,10 +16,46 @@ import { cn } from "@/lib/utils";
  * placeholder #B2ACA2@50% · terms links #69A6D5 · primary #05DF8B / text #181A1B.
  */
 export function SignUpCard() {
+  const router = useRouter();
+  const { signup } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agree, setAgree] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+
+    if (!agree) {
+      setError("Please agree to the Terms of Service and Privacy Policy.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    const trimmed = fullName.trim();
+    const spaceIndex = trimmed.indexOf(" ");
+    const firstName = spaceIndex === -1 ? trimmed : trimmed.slice(0, spaceIndex);
+    const lastName = spaceIndex === -1 ? "" : trimmed.slice(spaceIndex + 1).trim();
+
+    setSubmitting(true);
+    try {
+      await signup({ firstName, lastName, email, password, confirmPassword });
+      router.push("/");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div
@@ -24,22 +63,19 @@ export function SignUpCard() {
     >
       <form
         className="flex flex-col gap-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSubmitted(true);
-        }}
+        onSubmit={handleSubmit}
       >
         {/* Title */}
         <h1 className="text-center text-[22px] font-bold leading-tight text-hw-foreground">
           Join Us in a Snap
         </h1>
 
-        {submitted && (
+        {error && (
           <p
-            role="status"
-            className="rounded-lg border border-[#05DF8B]/40 bg-[#05DF8B]/10 px-3 py-2 text-center text-sm text-[#05DF8B]"
+            role="alert"
+            className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-center text-sm text-red-400"
           >
-            Account created successfully (demo).
+            {error}
           </p>
         )}
 
@@ -55,6 +91,8 @@ export function SignUpCard() {
                 id="signup-name"
                 type="text"
                 placeholder="John Doe"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
                 className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
             </div>
@@ -70,6 +108,8 @@ export function SignUpCard() {
                 id="signup-email"
                 type="email"
                 placeholder="example@site.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
             </div>
@@ -85,6 +125,8 @@ export function SignUpCard() {
                 id="signup-password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Minimum 8 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
               <button
@@ -108,6 +150,8 @@ export function SignUpCard() {
                 id="signup-confirm"
                 type={showConfirm ? "text" : "password"}
                 placeholder="Minimum 8 characters"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
               <button
@@ -147,10 +191,11 @@ export function SignUpCard() {
         {/* Primary: Start Your Journey */}
         <button
           type="submit"
-          className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px"
+          disabled={submitting}
+          className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Rocket className="size-[18px]" />
-          Start Your Journey
+          {submitting ? "Please wait…" : "Start Your Journey"}
         </button>
       </form>
     </div>

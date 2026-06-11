@@ -1,7 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { BadgeCheck, CornerDownRight } from "lucide-react";
+import { useAuth } from "@/context/auth-context";
+import { ApiError } from "@/lib/api";
 
 /**
  * Sign in Box — the main sign-in chooser (Google-first) with the feature list.
@@ -22,6 +26,28 @@ const FEATURES = [
 ];
 
 export function SignInBoxCard() {
+  const router = useRouter();
+  const { login } = useAuth();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setSubmitting(true);
+    try {
+      await login(email, password);
+      router.push("/");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Something went wrong.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <div
       className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] backdrop-blur-md sm:p-7"
@@ -47,11 +73,65 @@ export function SignInBoxCard() {
           </ul>
         </div>
 
+        {/* Error banner */}
+        {error && (
+          <p
+            role="alert"
+            className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-center text-sm text-red-400"
+          >
+            {error}
+          </p>
+        )}
+
+        {/* Email + password sign-in */}
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+          <div className="space-y-1.5">
+            <label htmlFor="signin-email" className="block text-[13px] font-semibold text-hw-foreground">
+              Email Address
+            </label>
+            <div className="flex h-11 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
+              <input
+                id="signin-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email address"
+                className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label htmlFor="signin-password" className="block text-[13px] font-semibold text-hw-foreground">
+              Password
+            </label>
+            <div className="flex h-11 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
+              <input
+                id="signin-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {submitting ? "Please wait…" : "Sign in"}
+          </button>
+        </form>
+
         {/* Buttons */}
         <div className="flex flex-col gap-3">
           {/* Sign in with Google */}
           <button
             type="button"
+            onClick={() => setError("Google sign-in will be enabled soon.")}
             className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px"
           >
             <span className="grid size-5 place-items-center rounded-full bg-white">
@@ -78,12 +158,13 @@ export function SignInBoxCard() {
           <span className="text-center text-[13px] font-semibold text-hw-faint opacity-70">or</span>
 
           {/* Create an account */}
-          <Link
-            href="/signup"
+          <button
+            type="button"
+            onClick={() => router.push("/signup")}
             className="flex h-11 w-full items-center justify-center rounded-full bg-hw-pill2 text-sm font-semibold text-hw-faint transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
           >
             Create an account
-          </Link>
+          </button>
         </div>
       </div>
     </div>

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { AuthProvider } from "@/context/auth-context";
+import { AuthModal } from "@/components/auth/auth-modal";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 
 const inter = Inter({
@@ -25,8 +27,11 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full pb-[72px] font-sans antialiased md:pb-0">
         <ThemeProvider>
-          {children}
-          <MobileBottomNav />
+          <AuthProvider>
+            {children}
+            <MobileBottomNav />
+            <AuthModal />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -7,16 +7,14 @@ import { DownloadSidebarLeft } from "@/components/download/download-sidebar-left
 import { DownloadMain } from "@/components/download/download-main";
 import { DownloadSidebarRight } from "@/components/download/download-sidebar-right";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { getRelatedForDetail } from "@/data/wallpaper-details";
-import type { WallpaperDetail } from "@/types/wallpaper";
+import type { Wallpaper, WallpaperDetail } from "@/types/wallpaper";
 
 interface DownloadPageProps {
   wallpaper: WallpaperDetail;
+  related: Wallpaper[];
 }
 
-export function DownloadPageClient({ wallpaper }: DownloadPageProps) {
-  const related = getRelatedForDetail(wallpaper);
-
+export function DownloadPageClient({ wallpaper, related }: DownloadPageProps) {
   return (
     <div className="min-h-screen bg-hw-bg">
       <DownloadHeader />

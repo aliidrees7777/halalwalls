@@ -3,40 +3,78 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { filterPills } from "@/data/filters";
 import { SiteHeader } from "@/components/home/site-header";
 import { WallpaperSearch } from "@/components/home/wallpaper-search";
 import { FilterPills } from "@/components/home/filter-pills";
 import { HomeSidebar } from "@/components/home/home-sidebar";
 import { WallpaperGrid } from "@/components/home/wallpaper-grid";
 import { WallpaperPagination } from "@/components/home/wallpaper-pagination";
+import { WallpaperStats } from "@/components/home/wallpaper-stats";
 import { SiteFooter } from "@/components/layout/site-footer";
-import type { FilterId } from "@/types/wallpaper";
+import { api } from "@/lib/api";
+import type { FilterId, Wallpaper } from "@/types/wallpaper";
 
-const validFilterIds = new Set(filterPills.map((p) => p.id));
+interface Pagination {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+interface WallpapersResponse {
+  wallpapers: Wallpaper[];
+  pagination: Pagination;
+  filter: FilterId;
+}
 
 export function HomePage() {
   const searchParams = useSearchParams();
-  const [activeFilter, setActiveFilter] = useState<FilterId>("latest");
+  const [activeFilter, setActiveFilter] = useState<string>("latest");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [wallpapers, setWallpapers] = useState<Wallpaper[]>([]);
+  const [pagination, setPagination] = useState<Pagination | null>(null);
 
   // Sync from URL so header search (?q=) and sidebar links (?category=) filter the grid
   useEffect(() => {
     const q = searchParams.get("q") ?? "";
     const category = searchParams.get("category");
     setSearch(q);
-    if (category && validFilterIds.has(category as FilterId)) {
-      setActiveFilter(category as FilterId);
-    }
+    setActiveFilter(category || "latest");
     setCurrentPage(1);
   }, [searchParams]);
 
   useEffect(() => {
+    let ignore = false;
     setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 700);
-    return () => clearTimeout(timer);
+
+    api
+      .get<WallpapersResponse>(
+        `/wallpapers?filter=${activeFilter}&q=${encodeURIComponent(
+          search
+        )}&page=${currentPage}&limit=18`
+      )
+      .then((data) => {
+        if (ignore) return;
+        setWallpapers(data.wallpapers);
+        setPagination(data.pagination);
+      })
+      .catch(() => {
+        if (ignore) return;
+        setWallpapers([]);
+        setPagination(null);
+      })
+      .finally(() => {
+        if (ignore) return;
+        setIsLoading(false);
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, [activeFilter, search, currentPage]);
 
   return (
@@ -57,13 +95,10 @@ export function HomePage() {
           <HomeSidebar />
 
           <div className="min-w-0 flex-1">
-            <WallpaperGrid
-              filter={activeFilter}
-              search={search}
-              isLoading={isLoading}
-            />
+            <WallpaperGrid wallpapers={wallpapers} isLoading={isLoading} />
             <WallpaperPagination
               currentPage={currentPage}
+              totalPages={pagination?.totalPages ?? 1}
               onPageChange={setCurrentPage}
             />
 
@@ -100,6 +135,7 @@ export function HomePage() {
         </div>
       </div>
 
+      <WallpaperStats />
       <SiteFooter />
     </div>
   );

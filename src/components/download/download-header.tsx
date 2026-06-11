@@ -15,6 +15,7 @@ import { SearchBox } from "@/components/shared/search-box";
 import { HalalWallsLogo } from "@/components/home/halalwalls-logo";
 import { MobileFilterMenu } from "@/components/home/mobile-filter-menu";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { HeaderAuth } from "@/components/layout/header-auth";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -95,12 +96,7 @@ export function DownloadHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2.5">
-          <Link
-            href="/login"
-            className="hidden rounded-lg border border-white/25 px-3.5 py-1.5 text-[13px] font-medium text-hw-foreground transition-colors hover:bg-white/5 sm:inline-block"
-          >
-            Sign In
-          </Link>
+          <HeaderAuth className="hidden sm:flex" />
           <ThemeToggle className="hidden size-9 shrink-0 lg:flex" />
 
           {/* Burger — far right, opens the top-to-bottom menu (mobile) */}

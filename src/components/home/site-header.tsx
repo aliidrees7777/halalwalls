@@ -13,6 +13,7 @@ import {
 import { HalalWallsLogo } from "@/components/home/halalwalls-logo";
 import { MobileFilterMenu } from "@/components/home/mobile-filter-menu";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { HeaderAuth } from "@/components/layout/header-auth";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -84,12 +85,7 @@ export function SiteHeader() {
 
         {/* Right cluster — pushed fully right via ml-auto */}
         <div className="ml-auto flex items-center gap-2.5">
-          <Link
-            href="/login"
-            className="hidden rounded-lg border border-white/25 px-4 py-1.5 text-[13px] font-medium text-hw-foreground transition-colors hover:bg-white/5 sm:inline-block"
-          >
-            Sign In
-          </Link>
+          <HeaderAuth className="hidden sm:flex" />
           <ThemeToggle className="hidden size-9 lg:flex" />
 
           {/* Burger — far right, opens the top-to-bottom menu */}

@@ -5,14 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronUp, LayoutGrid, TrendingUp } from "lucide-react";
-import {
-  desktopResolutions,
-  mobileResolutions,
-  sidebarCategories,
-  trendingTopics,
-} from "@/data/sidebar";
+import { trendingTopics } from "@/data/sidebar";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import { SidebarCollapsible } from "@/components/shared/sidebar-collapsible";
+import { useCategories, useResolutions } from "@/hooks/use-catalog";
 import { cn } from "@/lib/utils";
 
 function ResolutionChip({ label }: { label: string }) {
@@ -47,6 +43,8 @@ function CategoryBadge({
 
 export function HomeSidebar() {
   const [qrOpen, setQrOpen] = useState(true);
+  const { categories, loading } = useCategories();
+  const res = useResolutions();
 
   return (
     <aside className="hidden w-full flex-col gap-3 lg:flex lg:w-[248px] lg:shrink-0">
@@ -57,8 +55,8 @@ export function HomeSidebar() {
               Popular Desktop
             </p>
             <div className="grid grid-cols-3 gap-1.5">
-              {desktopResolutions.map((res) => (
-                <ResolutionChip key={res} label={res} />
+              {res.desktop.map((label) => (
+                <ResolutionChip key={label} label={label} />
               ))}
             </div>
           </div>
@@ -68,8 +66,8 @@ export function HomeSidebar() {
               Popular Mobile
             </p>
             <div className="grid grid-cols-3 gap-1.5">
-              {mobileResolutions.map((res) => (
-                <ResolutionChip key={res} label={res} />
+              {res.mobile.map((label) => (
+                <ResolutionChip key={label} label={label} />
               ))}
             </div>
           </div>
@@ -163,13 +161,13 @@ export function HomeSidebar() {
       <SidebarPanel title="Categories" icon={LayoutGrid}>
         <SidebarCollapsible label="Browse Categories" defaultOpen>
           <ul>
-            {sidebarCategories.map((category, index) => (
+            {loading && categories.length === 0 ? null : categories.map((category, index) => (
               <li
-                key={category.name}
+                key={category.id}
                 className={cn(index > 0 && "border-t border-hw-line")}
               >
                 <Link
-                  href={category.slug ? `/?category=${category.slug}` : "/"}
+                  href={`/?category=${category.slug}`}
                   className="flex items-center justify-between gap-2 py-2.5"
                 >
                   <span
