@@ -1,54 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Menu, X } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Menu, X } from "lucide-react";
 import { SearchBox } from "@/components/shared/search-box";
 import { HalalWallsLogo } from "@/components/home/halalwalls-logo";
 import { MobileFilterMenu } from "@/components/home/mobile-filter-menu";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { HeaderAuth } from "@/components/layout/header-auth";
-import { cn } from "@/lib/utils";
-
-const navItems = [
-  {
-    label: "Explore",
-    items: [
-      { label: "Latest", href: "/?category=latest" },
-      { label: "Most Popular", href: "/?category=popular" },
-      { label: "Random Picks", href: "/?category=random" },
-      { label: "Live Wallpapers", href: "/?category=live" },
-    ],
-  },
-  {
-    label: "Categories",
-    items: [
-      { label: "Islamic", href: "/?category=islamic" },
-      { label: "Anime", href: "/?category=anime" },
-      { label: "Gaming", href: "/?category=gaming" },
-      { label: "Superheroes", href: "/?category=superheroes" },
-      { label: "Cars", href: "/?category=cars" },
-      { label: "Space", href: "/?category=space" },
-    ],
-  },
-  {
-    label: "Resolutions",
-    items: [
-      { label: "1920×1080", href: "/?category=latest" },
-      { label: "2560×1440", href: "/?category=latest" },
-      { label: "4K UHD", href: "/?category=latest" },
-      { label: "Mobile HD", href: "/?category=latest" },
-    ],
-  },
-];
+import { HeaderNav } from "@/components/layout/header-nav";
 
 export function DownloadHeader() {
   const router = useRouter();
@@ -68,50 +29,7 @@ export function DownloadHeader() {
           <SearchBox value={search} onChange={setSearch} onSubmit={handleSearch} />
         </div>
 
-        <nav
-          className="hidden items-center gap-0.5 lg:flex"
-          aria-label="Primary"
-        >
-          {navItems.map((item) => (
-            <DropdownMenu key={item.label}>
-              <DropdownMenuTrigger
-                className={cn(
-                  "flex items-center gap-0.5 rounded-md px-2.5 py-2 text-[13px] text-hw-muted xl:px-3",
-                  "transition-colors hover:text-hw-foreground"
-                )}
-              >
-                {item.label}
-                <ChevronDown className="size-3.5 opacity-80" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="start"
-                className="min-w-[180px] border-hw-border bg-hw-card"
-              >
-                {item.items.map((sub) => (
-                  <DropdownMenuItem
-                    key={sub.label}
-                    render={<Link href={sub.href} />}
-                    className="text-sm text-hw-muted focus:bg-hw-surface focus:text-hw-foreground"
-                  >
-                    {sub.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ))}
-          <Link
-            href="/upload"
-            className="rounded-md px-2.5 py-2 text-[13px] text-hw-muted transition-colors hover:text-hw-foreground xl:px-3"
-          >
-            Upload
-          </Link>
-          <Link
-            href="/premium"
-            className="rounded-md px-2.5 py-2 text-[13px] font-medium text-hw-yellow transition-opacity hover:opacity-90 xl:px-3"
-          >
-            Premium
-          </Link>
-        </nav>
+        <HeaderNav />
 
         <div className="ml-auto flex items-center gap-2.5">
           <HeaderAuth className="hidden sm:flex" />

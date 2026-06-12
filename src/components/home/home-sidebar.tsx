@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronUp, LayoutGrid, TrendingUp } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronUp, LayoutGrid, TrendingUp } from "lucide-react";
 import { trendingTopics } from "@/data/sidebar";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import { SidebarCollapsible } from "@/components/shared/sidebar-collapsible";
@@ -41,10 +41,21 @@ function CategoryBadge({
   );
 }
 
+const CATEGORIES_PER_PAGE = 20;
+
 export function HomeSidebar() {
   const [qrOpen, setQrOpen] = useState(true);
+  const [catPage, setCatPage] = useState(0);
   const { categories, loading } = useCategories();
   const res = useResolutions();
+
+  const totalCatPages = Math.max(1, Math.ceil(categories.length / CATEGORIES_PER_PAGE));
+  const safeCatPage = Math.min(catPage, totalCatPages - 1);
+  const catSlice = categories.slice(
+    safeCatPage * CATEGORIES_PER_PAGE,
+    safeCatPage * CATEGORIES_PER_PAGE + CATEGORIES_PER_PAGE
+  );
+  const showCatPager = categories.length > CATEGORIES_PER_PAGE;
 
   return (
     <aside className="hidden w-full flex-col gap-3 lg:flex lg:w-[248px] lg:shrink-0">
@@ -161,7 +172,7 @@ export function HomeSidebar() {
       <SidebarPanel title="Categories" icon={LayoutGrid}>
         <SidebarCollapsible label="Browse Categories" defaultOpen>
           <ul>
-            {loading && categories.length === 0 ? null : categories.map((category, index) => (
+            {loading && categories.length === 0 ? null : catSlice.map((category, index) => (
               <li
                 key={category.id}
                 className={cn(index > 0 && "border-t border-hw-line")}
@@ -188,6 +199,32 @@ export function HomeSidebar() {
               </li>
             ))}
           </ul>
+
+          {showCatPager && (
+            <div className="mt-1 flex items-center justify-between border-t border-hw-line pt-2">
+              <button
+                type="button"
+                aria-label="Previous categories"
+                disabled={safeCatPage === 0}
+                onClick={() => setCatPage((p) => Math.max(0, p - 1))}
+                className="grid size-7 place-items-center rounded-md text-hw-muted transition-colors hover:bg-hw-surface hover:text-hw-foreground disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+              <span className="text-[11px] tabular-nums text-hw-muted">
+                {safeCatPage + 1} / {totalCatPages}
+              </span>
+              <button
+                type="button"
+                aria-label="Next categories"
+                disabled={safeCatPage >= totalCatPages - 1}
+                onClick={() => setCatPage((p) => Math.min(totalCatPages - 1, p + 1))}
+                className="grid size-7 place-items-center rounded-md text-hw-muted transition-colors hover:bg-hw-surface hover:text-hw-foreground disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
+          )}
         </SidebarCollapsible>
       </SidebarPanel>
     </aside>
