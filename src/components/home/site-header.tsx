@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
 import {
@@ -21,10 +20,10 @@ const navItems = [
   {
     label: "Explore",
     items: [
-      { label: "Latest Wallpapers", href: "/?category=latest" },
-      { label: "Top Rated", href: "/?category=popular" },
-      { label: "Editor's Picks", href: "/?category=popular" },
-      { label: "New Uploads", href: "/?category=latest" },
+      { label: "Latest", href: "/?category=latest" },
+      { label: "Most Popular", href: "/?category=popular" },
+      { label: "Random Picks", href: "/?category=random" },
+      { label: "Live Wallpapers", href: "/?category=live" },
     ],
   },
   {
@@ -50,7 +49,6 @@ const navItems = [
 ];
 
 export function SiteHeader() {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   return (
@@ -80,7 +78,7 @@ export function SiteHeader() {
                 {item.items.map((sub) => (
                   <DropdownMenuItem
                     key={sub.label}
-                    onClick={() => router.push(sub.href)}
+                    render={<Link href={sub.href} />}
                     className="text-sm text-hw-muted focus:bg-hw-surface focus:text-hw-foreground"
                   >
                     {sub.label}
