@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
 import {
@@ -19,19 +20,37 @@ import { cn } from "@/lib/utils";
 const navItems = [
   {
     label: "Explore",
-    items: ["Latest Wallpapers", "Top Rated", "Editor's Picks", "New Uploads"],
+    items: [
+      { label: "Latest Wallpapers", href: "/?category=latest" },
+      { label: "Top Rated", href: "/?category=popular" },
+      { label: "Editor's Picks", href: "/?category=popular" },
+      { label: "New Uploads", href: "/?category=latest" },
+    ],
   },
   {
     label: "Categories",
-    items: ["Islamic", "Anime", "Gaming", "Superheroes", "Cars", "Space"],
+    items: [
+      { label: "Islamic", href: "/?category=islamic" },
+      { label: "Anime", href: "/?category=anime" },
+      { label: "Gaming", href: "/?category=gaming" },
+      { label: "Superheroes", href: "/?category=superheroes" },
+      { label: "Cars", href: "/?category=cars" },
+      { label: "Space", href: "/?category=space" },
+    ],
   },
   {
     label: "Resolutions",
-    items: ["1920×1080", "2560×1440", "4K UHD", "Mobile HD"],
+    items: [
+      { label: "1920×1080", href: "/?category=latest" },
+      { label: "2560×1440", href: "/?category=latest" },
+      { label: "4K UHD", href: "/?category=latest" },
+      { label: "Mobile HD", href: "/?category=latest" },
+    ],
   },
 ];
 
 export function SiteHeader() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   return (
@@ -60,10 +79,11 @@ export function SiteHeader() {
               >
                 {item.items.map((sub) => (
                   <DropdownMenuItem
-                    key={sub}
+                    key={sub.label}
+                    onClick={() => router.push(sub.href)}
                     className="text-sm text-hw-muted focus:bg-hw-surface focus:text-hw-foreground"
                   >
-                    {sub}
+                    {sub.label}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
