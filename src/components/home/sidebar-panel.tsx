@@ -17,13 +17,13 @@ export function SidebarPanel({
   return (
     <section
       className={cn(
-        "rounded-lg border border-hw-line bg-hw-sidebar p-4",
+        "rounded-sm border border-hw-line bg-hw-sidebar py-4",
         className
       )}
     >
-      <h2 className="mb-3 flex items-center justify-center gap-1.5 text-[13px] font-semibold text-hw-foreground">
+      <h2 className="mb-3 flex items-center justify-center gap-1.5 text-[18px] font-bold text-hw-foreground">
         {title}
-        {Icon && <Icon className="size-3.5 text-hw-muted" strokeWidth={2} />}
+        {Icon && <Icon className="size-3.5 text-hw-muted" strokeWidth={4} />}
       </h2>
       {children}
     </section>

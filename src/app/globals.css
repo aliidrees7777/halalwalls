@@ -48,12 +48,12 @@
   --hw-header: #ffffff;
   --hw-search-header: #eef0f2;
   --hw-search-input: #ffffff;
-  --hw-pill: #eceef1;
+  --hw-pill: #181A1B;
   --hw-sidebar: #ffffff;
-  --hw-green: #05df8b;
+  --hw-green: #05DF8B;
   --hw-yellow: #b9820a;
   --hw-foreground: #14171a;
-  --hw-muted: #5b6470;
+  --hw-muted: #A8A299;
   --hw-card: #ffffff;
   --hw-border: #e3e6ea;
   --hw-purple: #7c4dff;
@@ -72,22 +72,22 @@
 /* DARK theme */
 .dark {
   --hw-bg: #0b0e11;
-  --hw-header: #050505;
+  --hw-header: #181A1B;
   --hw-search-header: #1a2421;
   --hw-search-input: #121212;
-  --hw-pill: #1e1e1e;
+  --hw-pill: #181A1B;
   --hw-sidebar: #121212;
   --hw-green: #05df8b;
-  --hw-yellow: #f5c518;
-  --hw-foreground: #ffffff;
-  --hw-muted: #a1a1aa;
+  --hw-yellow: #FFD700;
+  --hw-foreground: #A8A299;
+  --hw-muted: #9D9481;
   --hw-card: #161920;
   --hw-border: #252a33;
   --hw-purple: #8b5cf6;
-  --hw-surface: #111418;
+  --hw-surface: #000000;
   --hw-input: #181a1b;
   --hw-input-border: #3e4446;
-  --hw-line: #2a2f2d;
+  --hw-line: #3A3E41;
   --hw-pill2: #303133;
   --hw-pill2-hover: #3a3c3e;
   --hw-faint: #b2aca2;

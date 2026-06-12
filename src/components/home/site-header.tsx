@@ -14,13 +14,14 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 bg-hw-header">
-      <div className="mx-auto flex h-[52px] max-w-[1400px] items-center gap-4 px-4 lg:px-6">
+      <div className="mx-auto flex h-[70px] max-w-[1650px] items-center gap-4 px-4 lg:px-6">
         <HalalWallsLogo className="shrink-0" />
 
-        <HeaderNav className="mx-auto" />
+        
 
         {/* Right cluster — pushed fully right via ml-auto */}
-        <div className="ml-auto flex items-center gap-2.5">
+        <div className="ml-auto flex items-center gap-5">
+          <HeaderNav className="mx-auto" />
           <HeaderAuth className="hidden sm:flex" />
           <ThemeToggle className="hidden size-9 lg:flex" />
 

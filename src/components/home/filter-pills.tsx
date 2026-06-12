@@ -1,10 +1,14 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Flame, Play, Rocket, Shuffle } from "lucide-react";
+import { Flame, Play, Shuffle } from "lucide-react";
 import { useTags } from "@/hooks/use-catalog";
 import { cn } from "@/lib/utils";
-
+import Image from "next/image";
+import rocket from "../../../public/rocket.svg";
+import play from "../../../public/play.svg";
+import shuffle from "../../../public/shuffle.svg";
+import flame from "../../../public/flame.svg";
 /**
  * Homepage filter row: the 4 browse modes (Latest / Live / Random / Popular)
  * followed by TAG pills (tags users assign to wallpapers at upload).
@@ -14,16 +18,25 @@ import { cn } from "@/lib/utils";
  * — so "Cars" + "Latest" → latest cars; "+ #neon" → latest neon cars.
  */
 const BROWSE_MODES = [
-  { id: "latest", label: "Latest", icon: Rocket },
-  { id: "live", label: "Live Walls", icon: Play },
-  { id: "random", label: "Random", icon: Shuffle },
-  { id: "popular", label: "Popular", icon: Flame },
+  { id: "latest", label: "Latest", icon: rocket },
+  { id: "live", label: "Live Walls", icon: play },
+  { id: "random", label: "Random", icon: shuffle },
+  { id: "popular", label: "Popular", icon: flame },
+  { id: "anime", label: "Anime" },
+  { id: "superheroes", label: "Superheroes" },
+  { id: "minimalist", label: "Minimalist" },
+  { id: "gaming", label: "Gaming" },
+  { id: "movies", label: "Movies" },
+  { id: "cars", label: "Cars" },
+  { id: "sport", label: "Sport" },
 ] as const;
 
 const pillClass = (active: boolean) =>
   cn(
-    "flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-2 text-[13px] font-medium transition-colors",
-    active ? "bg-hw-green text-black" : "bg-hw-pill text-hw-foreground hover:bg-hw-pill2-hover"
+    "flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-[11px] text-[18px] font-medium text-white ",
+    active
+      ? "bg-hw-green font-semibold text-[#000000] text-[18px]"
+      : "bg-hw-pill text-hw-foreground hover:bg-hw-pill2-hover",
   );
 
 export function FilterPills() {
@@ -48,12 +61,12 @@ export function FilterPills() {
 
   return (
     <div
-      className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden "
       role="tablist"
       aria-label="Wallpaper filters"
     >
       {BROWSE_MODES.map((mode) => {
-        const Icon = mode.icon;
+        // const Icon = mode.icon;
         const isActive = activeSort === mode.id;
         return (
           <button
@@ -64,8 +77,11 @@ export function FilterPills() {
             onClick={() => go({ sort: mode.id })}
             className={pillClass(isActive)}
           >
-            <Icon className="size-3.5" />
             {mode.label}
+            {/* <Icon className="size-3.5" /> */}
+            {mode.icon && (
+              <Image src={mode.icon} alt={mode.label} width={22} height={22} />
+            )}
           </button>
         );
       })}

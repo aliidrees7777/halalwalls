@@ -23,7 +23,7 @@ export function DownloadHeader() {
   return (
     <header className="sticky top-0 z-50 bg-hw-header">
       <div className="mx-auto flex h-[52px] max-w-[1400px] items-center gap-3 px-4 lg:gap-4 lg:px-6">
-        <HalalWallsLogo className="shrink-0" />
+        {/* <HalalWallsLogo className="shrink-0" /> */}
 
         <div className="hidden min-w-0 flex-1 md:block lg:max-w-[420px] lg:justify-self-center xl:max-w-[520px]">
           <SearchBox value={search} onChange={setSearch} onSubmit={handleSearch} />

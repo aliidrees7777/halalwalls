@@ -9,8 +9,8 @@ interface WallpaperSearchProps {
 
 export function WallpaperSearch({ value, onChange }: WallpaperSearchProps) {
   return (
-    <div className="mx-auto w-full max-w-[720px]">
-      <SearchBox value={value} onChange={onChange} heightClass="h-11" textClass="text-sm" />
+    <div className="mx-auto w-full max-w-[790px] ">
+      <SearchBox value={value} onChange={onChange} heightClass="h-11" textClass="text-[18px]" />
     </div>
   );
 }

@@ -33,12 +33,12 @@ export function SidebarCollapsible({
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex h-9 w-full items-center justify-between rounded-md border border-hw-line bg-hw-deep px-3 text-[13px] text-hw-muted transition-colors hover:text-hw-foreground"
+        className="flex h-13 w-full items-center justify-between  border-t border-hw-line border-b border-hw-line ext-[18px] font-bold text-hw-muted transition-colors hover:text-hw-foreground h-2.5"
       >
-        <span>{label}</span>
+        <span className="pl-4 ">{label}</span>
         <ChevronDown
           className={cn(
-            "size-4 shrink-0 transition-transform duration-300",
+            "size-4 shrink-0 transition-transform duration-300 mr-4",
             open && "rotate-180"
           )}
         />

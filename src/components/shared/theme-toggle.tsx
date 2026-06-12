@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
-
+import Image from "next/image";
+import mon from "../../../public/mon.svg"
 /**
  * Round icon button that flips between dark and light themes (next-themes).
  * Shows a Sun in light mode and a Moon in dark mode. Guards on `mounted`
@@ -22,12 +23,12 @@ export function ThemeToggle({ className }: { className?: string }) {
       type="button"
       onClick={() => setTheme(isLight ? "dark" : "light")}
       aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}
-      className={cn(
-        "items-center justify-center rounded-full border border-hw-border text-hw-foreground transition-colors hover:border-hw-muted",
-        className
-      )}
+      // className={cn(
+      //   "items-center justify-center rounded-full border border-hw-border text-hw-foreground transition-colors hover:border-hw-muted",
+      //   className
+      // )}
     >
-      {isLight ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
+      {isLight ? <Sun className="size-[18px]" /> : <Image src={mon} alt="Moon icon" />}
     </button>
   );
 }

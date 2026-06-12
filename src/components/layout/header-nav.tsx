@@ -35,16 +35,16 @@ const RESOLUTION_LABELS = ["1920×1080", "2560×1440", "3840×2160 (4K)", "1080�
 const CATEGORIES_PER_PAGE = 10;
 
 const triggerClass =
-  "flex items-center gap-0.5 rounded-md px-3 py-2 text-[13px] text-hw-muted transition-colors hover:text-hw-foreground";
+  "flex items-center gap-0.5 rounded-md px-3 py-2 text-[18px] text-hw-muted transition-colors hover:text-hw-foreground font-medium";
 const itemClass =
-  "text-sm text-hw-muted focus:bg-hw-surface focus:text-hw-foreground";
+  "text-[18px] text-hw-muted focus:bg-hw-surface focus:text-hw-foreground font-medium";
 
 function LinkDropdown({ label, items }: { label: string; items: { label: string; href: string }[] }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={triggerClass}>
         {label}
-        <ChevronDown className="size-3.5 opacity-80" />
+        <ChevronDown className="size-6 opacity-80" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="min-w-[190px] border-hw-border bg-hw-card">
         {items.map((it) => (
@@ -71,7 +71,7 @@ function CategoriesDropdown({ searchParams }: { searchParams: ReturnType<typeof 
     <DropdownMenu>
       <DropdownMenuTrigger className={triggerClass}>
         Categories
-        <ChevronDown className="size-3.5 opacity-80" />
+        <ChevronDown className="size-6 opacity-80" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="min-w-[200px] border-hw-border bg-hw-card">
         {slice.map((c) => (
@@ -147,7 +147,7 @@ export function HeaderNav({ className }: { className?: string }) {
       </Link>
       <Link
         href="/premium"
-        className="rounded-md px-3 py-2 text-[13px] font-medium text-hw-yellow transition-opacity hover:opacity-90"
+        className="rounded-md px-3 py-2 text-[18px] font-medium text-hw-yellow transition-opacity hover:opacity-90"
       >
         Premium
       </Link>

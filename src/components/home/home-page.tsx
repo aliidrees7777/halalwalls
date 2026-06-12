@@ -90,7 +90,7 @@ export function HomePage() {
   }, [category, sort, tag, resolution, search, currentPage]);
 
   return (
-    <div className="min-h-screen bg-hw-bg">
+    <div className="min-h-screen  bg-[#1D2021]">
       <SiteHeader />
 
       <section className="bg-hw-search-header px-4 py-4 lg:px-6">

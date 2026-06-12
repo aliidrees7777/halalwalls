@@ -18,10 +18,10 @@ function ResolutionChip({ label, href, active }: { label: string; href: string; 
     <Link
       href={href}
       className={cn(
-        "rounded-md border bg-hw-deep px-1 py-2 text-center text-[11px] leading-tight transition-colors",
+        "mx-2 rounded-md border  bg-hw-deep px-1 py-2.5 text-center text-[13px] font-medium leading-tight transition-colors",
         active
-          ? "border-hw-green text-hw-green"
-          : "border-hw-line text-hw-foreground hover:border-hw-green/40"
+          ? "border-[#3A3E41] text-hw-green"
+          : "border-[#3A3E41] text-hw-foreground hover:border-hw-green/40"
       )}
     >
       {label}
@@ -67,11 +67,11 @@ export function HomeSidebar() {
   const showCatPager = categories.length > CATEGORIES_PER_PAGE;
 
   return (
-    <aside className="hidden w-full flex-col gap-3 lg:flex lg:w-[248px] lg:shrink-0">
+    <aside className="hidden w-full flex-col gap-3 lg:flex lg:w-[310px] lg:shrink-0">
       <SidebarPanel title="Resolution">
         <SidebarCollapsible label="Browse Resolutions" defaultOpen>
           <div>
-            <p className="mb-2 text-center text-[10px] font-semibold uppercase tracking-wider text-hw-muted">
+            <p className="mb-2  ml-4 text-[16px] font-medium uppercase tracking-wider text-hw-muted">
               Popular Desktop
             </p>
             <div className="grid grid-cols-3 gap-1.5">
@@ -87,7 +87,7 @@ export function HomeSidebar() {
           </div>
 
           <div className="mt-4">
-            <p className="mb-2 text-center text-[10px] font-semibold uppercase tracking-wider text-hw-muted">
+            <p className="mb-2  ml-4 text-[16px] font-medium uppercase tracking-wider text-hw-muted">
               Popular Mobile
             </p>
             <div className="grid grid-cols-3 gap-1.5">
@@ -105,24 +105,25 @@ export function HomeSidebar() {
       </SidebarPanel>
 
       <SidebarPanel title="Our App">
+        <div className="border border-hw-line my-4"></div>
         <a
           href="https://play.google.com/store/apps"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-3 rounded-md border border-hw-line bg-hw-deep px-3 py-2.5 transition-opacity hover:opacity-90"
+          className="flex items-center justify-center gap-3 rounded-md border border-hw-line bg-[#1C2129] px-3 py-2.5 transition-opacity hover:opacity-90 py-4 mx-4"
         >
           <Image
-            src="/google-play-logo.png"
+            src="/google-logo.svg"
             alt=""
-            width={40}
+            width={100}
             height={40}
             className="size-10 shrink-0 object-contain"
           />
           <div className="leading-tight">
-            <p className="text-[9px] uppercase tracking-wide text-hw-muted">
+            <p className="text-[12px] uppercase tracking-wide text-hw-muted font-semibold">
               Get it on
             </p>
-            <p className="text-sm font-semibold text-hw-foreground">Google Play</p>
+            <p className="text-base font-semibold text-hw-foreground">Google Play</p>
           </div>
         </a>
 
@@ -130,12 +131,12 @@ export function HomeSidebar() {
           type="button"
           onClick={() => setQrOpen((v) => !v)}
           aria-expanded={qrOpen}
-          className="mt-4 flex w-full items-center justify-center gap-1 text-[12px] text-hw-muted transition-colors hover:text-hw-foreground"
+          className="mt-4 flex w-full items-center justify-center gap-1 text-sm text-hw-muted font-bold transition-colors hover:text-hw-foreground"
         >
           Scan QR Code
           <ChevronUp
             className={cn(
-              "size-3.5 transition-transform duration-300",
+              "size-5 font-bold transition-transform duration-300",
               !qrOpen && "rotate-180"
             )}
           />
@@ -161,7 +162,7 @@ export function HomeSidebar() {
                     className="size-[140px] object-contain"
                   />
                 </div>
-                <p className="mt-2 text-center text-[11px] text-hw-muted">
+                <p className="mt-2 text-center font-medium text-[13px] text-hw-muted">
                   Google Play
                 </p>
               </div>
@@ -179,7 +180,7 @@ export function HomeSidebar() {
             >
               <Link
                 href={`/?q=${encodeURIComponent(topic)}`}
-                className="block py-2.5 text-[13px] text-hw-foreground transition-colors hover:text-hw-green"
+                className="block py-4 font-medium text-[15px] text-hw-foreground transition-colors hover:text-hw-green mx-4"
               >
                 {topic}
               </Link>
