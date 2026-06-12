@@ -28,18 +28,18 @@ interface NavLink {
 // Discovery-style entries (distinct from the browse-mode filter pills below).
 // Each opens the homepage with the matching filter applied, from anywhere.
 const EXPLORE: NavLink[] = [
-  { label: "Latest Wallpapers", href: "/?category=latest" }, // newest
-  { label: "Top Rated", href: "/?category=popular" }, // most downloaded
-  { label: "Editor's Picks", href: "/?category=popular" }, // most downloaded
-  { label: "New Uploads", href: "/?category=latest" }, // newest
+  { label: "Latest Wallpapers", href: "/?sort=latest" }, // newest
+  { label: "Top Rated", href: "/?sort=popular" }, // most downloaded
+  { label: "Editor's Picks", href: "/?sort=popular" }, // most downloaded
+  { label: "New Uploads", href: "/?sort=latest" }, // newest
 ];
 
 // No resolution-based grid filter on the backend yet — these browse the latest.
 const RESOLUTIONS: NavLink[] = [
-  { label: "1920×1080", href: "/?category=latest" },
-  { label: "2560×1440", href: "/?category=latest" },
-  { label: "3840×2160 (4K)", href: "/?category=latest" },
-  { label: "Mobile HD", href: "/?category=latest" },
+  { label: "1920×1080", href: "/?sort=latest" },
+  { label: "2560×1440", href: "/?sort=latest" },
+  { label: "3840×2160 (4K)", href: "/?sort=latest" },
+  { label: "Mobile HD", href: "/?sort=latest" },
 ];
 
 const CATEGORIES_PER_PAGE = 10;

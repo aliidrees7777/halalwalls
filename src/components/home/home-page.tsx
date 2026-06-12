@@ -12,7 +12,7 @@ import { WallpaperPagination } from "@/components/home/wallpaper-pagination";
 import { WallpaperStats } from "@/components/home/wallpaper-stats";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { api } from "@/lib/api";
-import type { FilterId, Wallpaper } from "@/types/wallpaper";
+import type { Wallpaper } from "@/types/wallpaper";
 
 interface Pagination {
   total: number;
@@ -26,37 +26,47 @@ interface Pagination {
 interface WallpapersResponse {
   wallpapers: Wallpaper[];
   pagination: Pagination;
-  filter: FilterId;
 }
 
 export function HomePage() {
   const searchParams = useSearchParams();
-  const [activeFilter, setActiveFilter] = useState<string>("latest");
-  const [search, setSearch] = useState("");
+  // Filters live in the URL so they COMBINE: category (sidebar/header) + sort
+  // (browse-mode pill) + tag (tag pill). q (search) is editable below.
+  const category = searchParams.get("category") || "";
+  const sort = searchParams.get("sort") || "latest";
+  const tag = searchParams.get("tag") || "";
+  const qParam = searchParams.get("q") || "";
+
+  const [search, setSearch] = useState(qParam);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [wallpapers, setWallpapers] = useState<Wallpaper[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
 
-  // Sync from URL so header search (?q=) and sidebar links (?category=) filter the grid
+  // Keep the search box in sync when q arrives via the URL (header search).
   useEffect(() => {
-    const q = searchParams.get("q") ?? "";
-    const category = searchParams.get("category");
-    setSearch(q);
-    setActiveFilter(category || "latest");
+    setSearch(qParam);
+  }, [qParam]);
+
+  // Any filter change → back to page 1.
+  useEffect(() => {
     setCurrentPage(1);
-  }, [searchParams]);
+  }, [category, sort, tag, search]);
 
   useEffect(() => {
     let ignore = false;
     setIsLoading(true);
 
+    const params = new URLSearchParams();
+    if (category) params.set("category", category);
+    if (sort) params.set("sort", sort);
+    if (tag) params.set("tag", tag);
+    if (search) params.set("q", search);
+    params.set("page", String(currentPage));
+    params.set("limit", "18");
+
     api
-      .get<WallpapersResponse>(
-        `/wallpapers?filter=${activeFilter}&q=${encodeURIComponent(
-          search
-        )}&page=${currentPage}&limit=18`
-      )
+      .get<WallpapersResponse>(`/wallpapers?${params.toString()}`)
       .then((data) => {
         if (ignore) return;
         setWallpapers(data.wallpapers);
@@ -75,7 +85,7 @@ export function HomePage() {
     return () => {
       ignore = true;
     };
-  }, [activeFilter, search, currentPage]);
+  }, [category, sort, tag, search, currentPage]);
 
   return (
     <div className="min-h-screen bg-hw-bg">
@@ -85,7 +95,7 @@ export function HomePage() {
         <div className="mx-auto max-w-[1400px]">
           <WallpaperSearch value={search} onChange={setSearch} />
           <div className="mt-4">
-            <FilterPills active={activeFilter} onChange={setActiveFilter} />
+            <FilterPills />
           </div>
         </div>
       </section>

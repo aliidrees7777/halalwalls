@@ -19,11 +19,18 @@ export interface ResolutionSet {
   mobile: string[];
 }
 
+export interface TagItem {
+  tag: string;
+  count: number;
+}
+
 // ── module-level caches so multiple consumers fetch once ──
 let _catsCache: ApiCategory[] | null = null;
 let _catsPromise: Promise<ApiCategory[]> | null = null;
 let _resCache: ResolutionSet | null = null;
 let _resPromise: Promise<ResolutionSet> | null = null;
+let _tagsCache: TagItem[] | null = null;
+let _tagsPromise: Promise<TagItem[]> | null = null;
 
 const FALLBACK_RES: ResolutionSet = {
   desktop: ["1920×1080", "2560×1440", "3840×2160"],
@@ -86,4 +93,31 @@ export function useResolutions() {
   }, []);
 
   return resolutions;
+}
+
+/** Popular tags (assigned to wallpapers at upload) from GET /wallpapers/tags. */
+export function useTags() {
+  const [tags, setTags] = useState<TagItem[]>(_tagsCache ?? []);
+
+  useEffect(() => {
+    if (_tagsCache) return;
+    if (!_tagsPromise) {
+      _tagsPromise = api
+        .get<{ tags: TagItem[] }>("/wallpapers/tags")
+        .then((d) => {
+          _tagsCache = d.tags;
+          return d.tags;
+        })
+        .catch(() => []);
+    }
+    let active = true;
+    _tagsPromise.then((t) => {
+      if (active) setTags(t);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  return tags;
 }
