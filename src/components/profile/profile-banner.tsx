@@ -4,6 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { LogOut, Settings } from "lucide-react";
+import { useAuth } from "@/context/auth-context";
+import { ApiError } from "@/lib/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PremiumIcon } from "@/components/profile/premium-icon";
 import {
@@ -20,14 +22,34 @@ interface ProfileBannerProps {
 }
 
 export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
+  const { updateProfile } = useAuth();
   const [user, setUser] = useState(initialUser);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [accountSettings, setAccountSettings] = useState<AccountSettingsData>(
     () => profileUserToAccountSettings(initialUser)
   );
 
-  function handleAccountSave(data: AccountSettingsData) {
+  async function handleAccountSave(data: AccountSettingsData) {
     setAccountSettings(data);
+
+    // Persist profile changes to the backend (PATCH /me). Email is intentionally
+    // not sent — the backend ignores it and it isn't editable here.
+    try {
+      await updateProfile({
+        name: data.name,
+        bio: data.description,
+        avatar: data.avatar,
+        banner: data.banner,
+      });
+    } catch (err) {
+      if (err instanceof ApiError) {
+        console.error("Failed to update profile:", err.message);
+      } else {
+        console.error("Failed to update profile:", err);
+      }
+    }
+
+    // Reflect the changes locally so the banner updates immediately.
     setUser((prev) => ({
       ...prev,
       name: data.name,

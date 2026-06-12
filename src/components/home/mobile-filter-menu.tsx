@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Smartphone, Apple, Send, Contrast, Moon, Sun } from "lucide-react";
 import { filterPills } from "@/data/filters";
-import { desktopResolutions, mobileResolutions } from "@/data/sidebar";
+import { useCategories, useResolutions } from "@/hooks/use-catalog";
+import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 
 /**
@@ -13,10 +15,6 @@ import { cn } from "@/lib/utils";
  * BROWSE, CATEGORIES, RESOLUTIONS, GET THE APP, THEME. Uses our own categories.
  */
 const browse = filterPills.filter((p) => ["latest", "random", "popular"].includes(p.id));
-const categories = filterPills.filter(
-  (p) => !["latest", "live", "random", "popular"].includes(p.id)
-);
-const resolutions = [...desktopResolutions, ...mobileResolutions];
 
 const pillBase =
   "inline-flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium text-hw-foreground transition-colors";
@@ -37,6 +35,10 @@ const themeOptions = [
 
 export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
   const { theme, setTheme } = useTheme();
+  const { categories } = useCategories();
+  const res = useResolutions();
+  const resolutions = [...res.desktop, ...res.mobile];
+  const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -49,7 +51,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
           {browse.map((p) => (
             <Link
               key={p.id}
-              href={`/?category=${p.id}`}
+              href={buildFilterHref(searchParams, { sort: p.id })}
               onClick={onNavigate}
               className={cn(pillBase, "bg-hw-pill2 hover:bg-hw-pill2-hover")}
             >
@@ -66,11 +68,11 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
           {categories.map((c) => (
             <Link
               key={c.id}
-              href={`/?category=${c.id}`}
+              href={buildFilterHref(searchParams, { category: c.slug })}
               onClick={onNavigate}
               className={cn(pillBase, "border border-hw-input-border bg-hw-pill2 hover:border-hw-faint")}
             >
-              {c.label}
+              {c.name}
             </Link>
           ))}
           <Link
@@ -78,7 +80,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
             onClick={onNavigate}
             className={cn(pillBase, "border border-[#819CE4] bg-transparent text-[#819CE4]")}
           >
-            All 12 +
+            All {categories.length}+
           </Link>
         </div>
       </section>
@@ -88,13 +90,14 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
         <SectionLabel>Resolutions</SectionLabel>
         <div className="flex flex-wrap gap-2">
           {resolutions.map((r) => (
-            <button
+            <Link
               key={r}
-              type="button"
+              href={buildFilterHref(searchParams, { resolution: normalizeResolution(r) })}
+              onClick={onNavigate}
               className={cn(pillBase, "border border-hw-input-border bg-hw-pill2 hover:border-hw-faint")}
             >
               {r}
-            </button>
+            </Link>
           ))}
           <button
             type="button"

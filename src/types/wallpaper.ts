@@ -22,6 +22,11 @@ export interface Wallpaper {
   resolution: string;
   isFavorite?: boolean;
   isPremium?: boolean;
+  // Optional fields returned by the backend catalog API.
+  isLive?: boolean;
+  downloadCount?: number;
+  views?: number;
+  favoritesCount?: number;
 }
 
 export interface WallpaperDetail extends Wallpaper {

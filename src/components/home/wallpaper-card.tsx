@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import { useState } from "react";
 import type { Wallpaper } from "@/types/wallpaper";
+import { useFavorite } from "@/hooks/use-favorite";
 import { cn } from "@/lib/utils";
 
 interface WallpaperCardProps {
@@ -12,7 +13,10 @@ interface WallpaperCardProps {
 }
 
 export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
-  const [favorited, setFavorited] = useState(wallpaper.isFavorite ?? false);
+  const { isFavorite: favorited, toggle } = useFavorite(
+    wallpaper.id,
+    wallpaper.favoritesCount ?? 0
+  );
   const [loaded, setLoaded] = useState(false);
 
   return (
@@ -53,7 +57,7 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setFavorited(!favorited);
+            toggle();
           }}
           className={cn(
             "absolute right-2 top-2 z-10 flex size-7 items-center justify-center",

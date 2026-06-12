@@ -14,6 +14,7 @@ interface AccountFormFieldProps {
   error?: string;
   multiline?: boolean;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 export function AccountFormField({
@@ -26,6 +27,7 @@ export function AccountFormField({
   error,
   multiline = false,
   placeholder,
+  disabled = false,
 }: AccountFormFieldProps) {
   const invalid = Boolean(error);
 
@@ -63,20 +65,24 @@ export function AccountFormField({
             onChange={(e) => onChange(e.target.value)}
             onBlur={onBlur}
             placeholder={placeholder}
+            disabled={disabled}
             aria-invalid={invalid}
             className={cn(
               "h-10 rounded-[6px] border bg-hw-input px-3 pr-10 text-sm text-hw-foreground shadow-none",
               "focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20",
+              disabled && "cursor-not-allowed opacity-60",
               invalid
                 ? "border-red-500/80 ring-2 ring-red-500/15"
                 : "border-hw-faint/40 hover:border-hw-faint/60"
             )}
           />
         )}
-        <Pencil
-          className="pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-hw-foreground/50"
-          aria-hidden
-        />
+        {!disabled ? (
+          <Pencil
+            className="pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-hw-foreground/50"
+            aria-hidden
+          />
+        ) : null}
       </div>
       {error ? (
         <p

@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Settings, ShoppingCart, Info, Heart, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  demoProfileUser,
-  discoverJustUploaded,
-  profileFavorites,
-} from "@/data/profile-user";
+import { demoProfileUser } from "@/data/profile-user";
+import { useAuth } from "@/context/auth-context";
+import { useMyFavorites } from "@/hooks/use-my-favorites";
 import type { Wallpaper } from "@/types/wallpaper";
 
 /**
@@ -19,15 +18,14 @@ import type { Wallpaper } from "@/types/wallpaper";
  */
 type GridItem = Wallpaper & { price: number | null; aspect: string };
 
-const gridItems: GridItem[] = [
-  { ...profileFavorites[0], price: null, aspect: "aspect-[3/4]" },
-  { ...discoverJustUploaded[0], price: null, aspect: "aspect-[16/10]" },
-  { ...profileFavorites[1], price: 25, aspect: "aspect-[16/11]" },
-  { ...profileFavorites[2], price: 99, aspect: "aspect-[16/9]" },
-  { ...discoverJustUploaded[3], price: 40, aspect: "aspect-[4/3]" },
-  { ...discoverJustUploaded[2], price: null, aspect: "aspect-[4/3]" },
-  { ...profileFavorites[3], price: 15, aspect: "aspect-[3/4]" },
-  { ...discoverJustUploaded[1], price: null, aspect: "aspect-[16/10]" },
+// Cosmetic decorations cycled across the live favorites so the masonry grid
+// keeps its varied heights / pricing badges (data is real, styling is static).
+const ASPECTS = [
+  "aspect-[3/4]",
+  "aspect-[16/10]",
+  "aspect-[16/11]",
+  "aspect-[16/9]",
+  "aspect-[4/3]",
 ];
 
 function PriceCard({ item }: { item: GridItem }) {
@@ -100,7 +98,40 @@ function PriceCard({ item }: { item: GridItem }) {
 }
 
 export function MobileProfile() {
-  const user = demoProfileUser;
+  const router = useRouter();
+  const { user: authUser, loading } = useAuth();
+  const { wallpapers: favorites, loading: favoritesLoading } = useMyFavorites();
+
+  // Auth guard: redirect guests to /login.
+  useEffect(() => {
+    if (!loading && !authUser) router.replace("/login");
+  }, [loading, authUser, router]);
+
+  const gridItems: GridItem[] = favorites.map((w, i) => ({
+    ...w,
+    price: null,
+    aspect: ASPECTS[i % ASPECTS.length],
+  }));
+
+  if (loading) {
+    return (
+      <div className="grid min-h-dvh place-items-center bg-hw-bg">
+        <div className="size-8 animate-spin rounded-full border-2 border-hw-muted border-t-hw-foreground" />
+      </div>
+    );
+  }
+
+  if (!authUser) return null;
+
+  const user = {
+    name: authUser.name || authUser.email,
+    email: authUser.email,
+    avatar: authUser.avatar || demoProfileUser.avatar,
+    banner: authUser.banner || demoProfileUser.banner,
+    isPremium: authUser.isPremium,
+    favoritesCount: authUser.favoritesCount,
+    uploadsCount: authUser.uploadsCount ?? 0,
+  };
 
   return (
     <div className="min-h-dvh bg-hw-bg">
@@ -156,7 +187,7 @@ export function MobileProfile() {
         style={{ boxShadow: "0 0 8px rgba(5,223,139,0.5)" }}
       >
         {[
-          { label: "Images", value: "5" },
+          { label: "Images", value: String(user.uploadsCount) },
           { label: "Followers", value: "1000" },
           { label: "Following", value: "15" },
         ].map((s) => (
@@ -168,11 +199,17 @@ export function MobileProfile() {
       </div>
 
       {/* Masonry grid */}
-      <div className="columns-2 gap-3 px-4 pb-6 pt-5">
-        {gridItems.map((item) => (
-          <PriceCard key={item.id} item={item} />
-        ))}
-      </div>
+      {gridItems.length === 0 && !favoritesLoading ? (
+        <p className="px-4 py-10 text-center text-xs text-hw-muted">
+          No favorites yet.
+        </p>
+      ) : (
+        <div className="columns-2 gap-3 px-4 pb-6 pt-5">
+          {gridItems.map((item) => (
+            <PriceCard key={item.id} item={item} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

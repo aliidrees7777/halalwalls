@@ -21,6 +21,8 @@ import {
   type AccountFormValues,
   type AccountFormErrors,
 } from "@/components/profile/account-settings/validation";
+import { useAuth } from "@/context/auth-context";
+import { ApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 export interface AccountSettingsData extends AccountFormValues {
@@ -54,6 +56,7 @@ export function AccountSettingsModal({
   initialData,
   onSave,
 }: AccountSettingsModalProps) {
+  const { changePassword } = useAuth();
   const [values, setValues] = useState<AccountSettingsData>(initialData);
   const [errors, setErrors] = useState<AccountFormErrors>({});
   const [touched, setTouched] = useState<
@@ -64,6 +67,15 @@ export function AccountSettingsModal({
   const [subscriptionActive, setSubscriptionActive] = useState(true);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
+  // Change-password state — kept independent of the profile `values` so that
+  // saving the profile and updating the password are fully separate actions.
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [passwordSubmitting, setPasswordSubmitting] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
+
   const resetForm = useCallback(() => {
     setValues(initialData);
     setErrors({});
@@ -72,6 +84,12 @@ export function AccountSettingsModal({
     setShowCancelSubConfirm(false);
     setSubscriptionActive(true);
     setStatusMessage(null);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setPasswordSubmitting(false);
+    setPasswordError(null);
+    setPasswordSuccess(false);
   }, [initialData]);
 
   useEffect(() => {
@@ -114,6 +132,42 @@ export function AccountSettingsModal({
   function handleCancel() {
     resetForm();
     onOpenChange(false);
+  }
+
+  async function handleChangePassword() {
+    setPasswordSuccess(false);
+    setPasswordError(null);
+
+    // Client-side guards before hitting the backend.
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      setPasswordError("Please fill in all password fields.");
+      return;
+    }
+    if (newPassword.length < 8) {
+      setPasswordError("New password must be at least 8 characters.");
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      setPasswordError("New passwords do not match.");
+      return;
+    }
+
+    setPasswordSubmitting(true);
+    try {
+      await changePassword(currentPassword, newPassword, confirmNewPassword);
+      setPasswordSuccess(true);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+    } catch (err) {
+      setPasswordError(
+        err instanceof ApiError
+          ? err.message
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setPasswordSubmitting(false);
+    }
   }
 
   return (
@@ -169,12 +223,11 @@ export function AccountSettingsModal({
             />
             <AccountFormField
               id="account-email"
-              label="Email"
+              label="Email (cannot be changed)"
               type="email"
               value={values.email}
-              onChange={(email) => updateField("email", email)}
-              onBlur={() => markTouched("email")}
-              error={touched.email ? errors.email : undefined}
+              onChange={() => {}}
+              disabled
             />
             <AccountFormField
               id="account-description"
@@ -185,6 +238,85 @@ export function AccountSettingsModal({
               onBlur={() => markTouched("description")}
               error={touched.description ? errors.description : undefined}
             />
+          </div>
+
+          {/* Change Password */}
+          <div className="mt-7 space-y-3.5 sm:mt-8">
+            <AccountSectionTitle>Password</AccountSectionTitle>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="account-current-password"
+                className="block text-[11px] font-medium text-hw-foreground/90 sm:text-xs"
+              >
+                Current Password
+              </label>
+              <input
+                id="account-current-password"
+                type="password"
+                autoComplete="current-password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="h-10 w-full rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 text-sm text-hw-foreground outline-none transition-colors hover:border-hw-faint/60 placeholder:text-hw-muted/60 focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="account-new-password"
+                className="block text-[11px] font-medium text-hw-foreground/90 sm:text-xs"
+              >
+                New Password
+              </label>
+              <input
+                id="account-new-password"
+                type="password"
+                autoComplete="new-password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="At least 8 characters"
+                className="h-10 w-full rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 text-sm text-hw-foreground outline-none transition-colors hover:border-hw-faint/60 placeholder:text-hw-muted/60 focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="account-confirm-password"
+                className="block text-[11px] font-medium text-hw-foreground/90 sm:text-xs"
+              >
+                Confirm New Password
+              </label>
+              <input
+                id="account-confirm-password"
+                type="password"
+                autoComplete="new-password"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                className="h-10 w-full rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 text-sm text-hw-foreground outline-none transition-colors hover:border-hw-faint/60 placeholder:text-hw-muted/60 focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20"
+              />
+            </div>
+
+            {passwordError ? (
+              <p role="alert" className="text-[11px] text-red-400 sm:text-xs">
+                {passwordError}
+              </p>
+            ) : null}
+            {passwordSuccess ? (
+              <p role="status" className="text-[11px] text-hw-green sm:text-xs">
+                Password updated.
+              </p>
+            ) : null}
+
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              disabled={passwordSubmitting}
+              className="h-9 rounded-[5px] border border-hw-faint/40 bg-hw-input px-4 text-[13px] font-semibold text-hw-foreground hover:bg-hw-surface disabled:opacity-60"
+              onClick={handleChangePassword}
+            >
+              {passwordSubmitting ? "Updating…" : "Update Password"}
+            </Button>
           </div>
 
           {/* Payment Method */}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ProfileHeaderNav } from "@/components/profile/profile-header-nav";
 import { ProfileBanner } from "@/components/profile/profile-banner";
@@ -8,13 +10,48 @@ import { ProfileWallpaperThumb } from "@/components/profile/profile-wallpaper-th
 import { UploadPlaceholder } from "@/components/profile/upload-placeholder";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { MobileProfile } from "@/components/profile/mobile-profile";
+import { useAuth } from "@/context/auth-context";
+import { useMyFavorites } from "@/hooks/use-my-favorites";
+import { useMyUploads } from "@/hooks/use-my-uploads";
 import {
   demoProfileUser,
   discoverJustUploaded,
-  profileFavorites,
+  type ProfileUser,
 } from "@/data/profile-user";
 
 export function ProfilePage() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
+  const { wallpapers: favorites, loading: favoritesLoading } = useMyFavorites();
+  const { wallpapers: uploads } = useMyUploads();
+
+  // Auth guard: redirect guests to /login.
+  useEffect(() => {
+    if (!loading && !user) router.replace("/login");
+  }, [loading, user, router]);
+
+  if (loading) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-hw-bg">
+        <div className="size-8 animate-spin rounded-full border-2 border-hw-muted border-t-hw-foreground" />
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
+  const profileUser: ProfileUser = {
+    id: user.id,
+    name: user.name || user.email,
+    bio: user.bio || "",
+    email: user.email,
+    avatar: user.avatar || demoProfileUser.avatar,
+    banner: user.banner || demoProfileUser.banner,
+    isPremium: user.isPremium,
+    favoritesCount: user.favoritesCount,
+    uploadsCount: user.uploadsCount ?? 0,
+  };
+
   return (
     <>
       {/* Mobile: immersive app-style profile (matches Figma) */}
@@ -36,7 +73,7 @@ export function ProfilePage() {
           My Account
         </motion.h1>
 
-        <ProfileBanner user={demoProfileUser} />
+        <ProfileBanner user={profileUser} />
 
         <section className="mt-10 sm:mt-12">
           <ProfileSectionHeader title="Discover Just Uploaded" />
@@ -53,20 +90,38 @@ export function ProfilePage() {
 
         <section className="mt-10 sm:mt-12">
           <ProfileSectionHeader title="Your Uploads" seeAllHref={null} />
-          <UploadPlaceholder />
+          {uploads.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+              {uploads.map((wallpaper, index) => (
+                <ProfileWallpaperThumb
+                  key={wallpaper.id}
+                  wallpaper={wallpaper}
+                  index={index}
+                />
+              ))}
+            </div>
+          ) : (
+            <UploadPlaceholder />
+          )}
         </section>
 
         <section className="mt-10 sm:mt-12">
           <ProfileSectionHeader title="Your Favorites" />
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-            {profileFavorites.map((wallpaper, index) => (
-              <ProfileWallpaperThumb
-                key={wallpaper.id}
-                wallpaper={wallpaper}
-                index={index}
-              />
-            ))}
-          </div>
+          {favorites.length === 0 && !favoritesLoading ? (
+            <p className="py-12 text-center text-sm text-hw-muted">
+              No favorites yet.
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+              {favorites.map((wallpaper, index) => (
+                <ProfileWallpaperThumb
+                  key={wallpaper.id}
+                  wallpaper={wallpaper}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
         </section>
       </main>
 

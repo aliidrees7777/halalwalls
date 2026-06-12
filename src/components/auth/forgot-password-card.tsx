@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { api, ApiError } from "@/lib/api";
 
 /**
  * Forgot Password card.
@@ -13,7 +14,25 @@ import { useState } from "react";
  * primary #05DF8B / text #181A1B · "Log in" link #69A6D5.
  */
 export function ForgotPasswordCard() {
-  const [submitted, setSubmitted] = useState(false);
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setMessage(null);
+    setSubmitting(true);
+    try {
+      const data = await api.post<{ message?: string }>("/auth/forgot-password", { email });
+      setMessage(data?.message || "If that email exists, a recovery link has been sent.");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Something went wrong.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div
@@ -21,17 +40,22 @@ export function ForgotPasswordCard() {
     >
       <form
         className="flex flex-col gap-5"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSubmitted(true);
-        }}
+        onSubmit={handleSubmit}
       >
-        {submitted && (
+        {message && (
           <p
             role="status"
             className="rounded-lg border border-[#05DF8B]/40 bg-[#05DF8B]/10 px-3 py-2 text-center text-sm text-[#05DF8B]"
           >
-            Recovery link sent (demo). Check your inbox.
+            {message}
+          </p>
+        )}
+        {error && (
+          <p
+            role="alert"
+            className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-center text-sm text-red-400"
+          >
+            {error}
           </p>
         )}
         {/* Title + description */}
@@ -54,6 +78,8 @@ export function ForgotPasswordCard() {
             <input
               id="forgot-email"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email address"
               className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
             />
@@ -63,12 +89,15 @@ export function ForgotPasswordCard() {
         {/* Primary: Send Recovery Link */}
         <button
           type="submit"
-          className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px"
+          disabled={submitting}
+          className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Send Recovery Link
-          <svg viewBox="0 0 24 24" fill="currentColor" className="size-[18px]">
-            <path d="M3 11l18-8-8 18-2.5-7.5L3 11z" />
-          </svg>
+          {submitting ? "Please wait…" : "Send Recovery Link"}
+          {!submitting && (
+            <svg viewBox="0 0 24 24" fill="currentColor" className="size-[18px]">
+              <path d="M3 11l18-8-8 18-2.5-7.5L3 11z" />
+            </svg>
+          )}
         </button>
 
         {/* Footer */}

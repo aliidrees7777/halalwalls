@@ -3,26 +3,29 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronUp, LayoutGrid, TrendingUp } from "lucide-react";
-import {
-  desktopResolutions,
-  mobileResolutions,
-  sidebarCategories,
-  trendingTopics,
-} from "@/data/sidebar";
+import { ChevronLeft, ChevronRight, ChevronUp, LayoutGrid, TrendingUp } from "lucide-react";
+import { trendingTopics } from "@/data/sidebar";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import { SidebarCollapsible } from "@/components/shared/sidebar-collapsible";
+import { useCategories, useResolutions } from "@/hooks/use-catalog";
+import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 
-function ResolutionChip({ label }: { label: string }) {
+function ResolutionChip({ label, href, active }: { label: string; href: string; active: boolean }) {
   return (
-    <button
-      type="button"
-      className="rounded-md border border-hw-line bg-hw-deep px-1 py-2 text-center text-[11px] leading-tight text-hw-foreground transition-colors hover:border-hw-green/40"
+    <Link
+      href={href}
+      className={cn(
+        "rounded-md border bg-hw-deep px-1 py-2 text-center text-[11px] leading-tight transition-colors",
+        active
+          ? "border-hw-green text-hw-green"
+          : "border-hw-line text-hw-foreground hover:border-hw-green/40"
+      )}
     >
       {label}
-    </button>
+    </Link>
   );
 }
 
@@ -45,8 +48,23 @@ function CategoryBadge({
   );
 }
 
+const CATEGORIES_PER_PAGE = 20;
+
 export function HomeSidebar() {
   const [qrOpen, setQrOpen] = useState(true);
+  const [catPage, setCatPage] = useState(0);
+  const { categories, loading } = useCategories();
+  const res = useResolutions();
+  const searchParams = useSearchParams();
+  const activeResolution = searchParams.get("resolution") || "";
+
+  const totalCatPages = Math.max(1, Math.ceil(categories.length / CATEGORIES_PER_PAGE));
+  const safeCatPage = Math.min(catPage, totalCatPages - 1);
+  const catSlice = categories.slice(
+    safeCatPage * CATEGORIES_PER_PAGE,
+    safeCatPage * CATEGORIES_PER_PAGE + CATEGORIES_PER_PAGE
+  );
+  const showCatPager = categories.length > CATEGORIES_PER_PAGE;
 
   return (
     <aside className="hidden w-full flex-col gap-3 lg:flex lg:w-[248px] lg:shrink-0">
@@ -57,8 +75,13 @@ export function HomeSidebar() {
               Popular Desktop
             </p>
             <div className="grid grid-cols-3 gap-1.5">
-              {desktopResolutions.map((res) => (
-                <ResolutionChip key={res} label={res} />
+              {res.desktop.map((label) => (
+                <ResolutionChip
+                  key={label}
+                  label={label}
+                  href={buildFilterHref(searchParams, { resolution: normalizeResolution(label) })}
+                  active={activeResolution === normalizeResolution(label)}
+                />
               ))}
             </div>
           </div>
@@ -68,8 +91,13 @@ export function HomeSidebar() {
               Popular Mobile
             </p>
             <div className="grid grid-cols-3 gap-1.5">
-              {mobileResolutions.map((res) => (
-                <ResolutionChip key={res} label={res} />
+              {res.mobile.map((label) => (
+                <ResolutionChip
+                  key={label}
+                  label={label}
+                  href={buildFilterHref(searchParams, { resolution: normalizeResolution(label) })}
+                  active={activeResolution === normalizeResolution(label)}
+                />
               ))}
             </div>
           </div>
@@ -163,13 +191,13 @@ export function HomeSidebar() {
       <SidebarPanel title="Categories" icon={LayoutGrid}>
         <SidebarCollapsible label="Browse Categories" defaultOpen>
           <ul>
-            {sidebarCategories.map((category, index) => (
+            {loading && categories.length === 0 ? null : catSlice.map((category, index) => (
               <li
-                key={category.name}
+                key={category.id}
                 className={cn(index > 0 && "border-t border-hw-line")}
               >
                 <Link
-                  href={category.slug ? `/?category=${category.slug}` : "/"}
+                  href={buildFilterHref(searchParams, { category: category.slug })}
                   className="flex items-center justify-between gap-2 py-2.5"
                 >
                   <span
@@ -190,6 +218,32 @@ export function HomeSidebar() {
               </li>
             ))}
           </ul>
+
+          {showCatPager && (
+            <div className="mt-1 flex items-center justify-between border-t border-hw-line pt-2">
+              <button
+                type="button"
+                aria-label="Previous categories"
+                disabled={safeCatPage === 0}
+                onClick={() => setCatPage((p) => Math.max(0, p - 1))}
+                className="grid size-7 place-items-center rounded-md text-hw-muted transition-colors hover:bg-hw-surface hover:text-hw-foreground disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+              <span className="text-[11px] tabular-nums text-hw-muted">
+                {safeCatPage + 1} / {totalCatPages}
+              </span>
+              <button
+                type="button"
+                aria-label="Next categories"
+                disabled={safeCatPage >= totalCatPages - 1}
+                onClick={() => setCatPage((p) => Math.min(totalCatPages - 1, p + 1))}
+                className="grid size-7 place-items-center rounded-md text-hw-muted transition-colors hover:bg-hw-surface hover:text-hw-foreground disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
+          )}
         </SidebarCollapsible>
       </SidebarPanel>
     </aside>

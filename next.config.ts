@@ -6,10 +6,12 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "picsum.photos" },
+      { protocol: "https", hostname: "fastly.picsum.photos" },
+      // Backend-served media (local dev fallback + future production media host).
+      { protocol: "http", hostname: "localhost" },
+      { protocol: "https", hostname: "**.halalwalls.com" },
     ],
   },
 };
