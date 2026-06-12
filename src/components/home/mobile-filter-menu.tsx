@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { Smartphone, Apple, Send, Contrast, Moon, Sun } from "lucide-react";
 import { filterPills } from "@/data/filters";
 import { desktopResolutions, mobileResolutions } from "@/data/sidebar";
@@ -17,17 +19,27 @@ const categories = filterPills.filter(
 const resolutions = [...desktopResolutions, ...mobileResolutions];
 
 const pillBase =
-  "inline-flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium text-[#CCCCCC] transition-colors";
+  "inline-flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium text-hw-foreground transition-colors";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#CCCCCC]">
+    <p className="text-[11px] font-bold uppercase tracking-[0.06em] text-hw-muted">
       {children}
     </p>
   );
 }
 
+const themeOptions = [
+  { value: "system", label: "Auto", icon: Contrast },
+  { value: "dark", label: "Dark", icon: Moon },
+  { value: "light", label: "Light", icon: Sun },
+] as const;
+
 export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   return (
     <div className="flex flex-col gap-7 pt-2">
       {/* BROWSE */}
@@ -39,7 +51,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
               key={p.id}
               href={`/?category=${p.id}`}
               onClick={onNavigate}
-              className={cn(pillBase, "bg-[#303133] hover:bg-[#3a3c3e]")}
+              className={cn(pillBase, "bg-hw-pill2 hover:bg-hw-pill2-hover")}
             >
               {p.label}
             </Link>
@@ -56,7 +68,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
               key={c.id}
               href={`/?category=${c.id}`}
               onClick={onNavigate}
-              className={cn(pillBase, "border border-[#5B6268] bg-[#303133] hover:border-[#7a828a]")}
+              className={cn(pillBase, "border border-hw-input-border bg-hw-pill2 hover:border-hw-faint")}
             >
               {c.label}
             </Link>
@@ -79,7 +91,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
             <button
               key={r}
               type="button"
-              className={cn(pillBase, "border border-[#5B6268] bg-[#303133] hover:border-[#7a828a]")}
+              className={cn(pillBase, "border border-hw-input-border bg-hw-pill2 hover:border-hw-faint")}
             >
               {r}
             </button>
@@ -101,7 +113,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
             href="https://play.google.com/store/apps"
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(pillBase, "bg-[#303133] hover:bg-[#3a3c3e]")}
+            className={cn(pillBase, "bg-hw-pill2 hover:bg-hw-pill2-hover")}
           >
             <Smartphone className="size-4 text-[#95CF00]" />
             Android
@@ -110,7 +122,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
             href="https://apps.apple.com"
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(pillBase, "bg-[#303133] hover:bg-[#3a3c3e]")}
+            className={cn(pillBase, "bg-hw-pill2 hover:bg-hw-pill2-hover")}
           >
             <Apple className="size-4" />
             iOS
@@ -119,7 +131,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
             href="https://telegram.org"
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(pillBase, "bg-[#303133] hover:bg-[#3a3c3e]")}
+            className={cn(pillBase, "bg-hw-pill2 hover:bg-hw-pill2-hover")}
           >
             <Send className="size-4 text-[#25A1DF]" />
             Telegram
@@ -131,22 +143,25 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
       <section className="flex flex-col gap-3">
         <SectionLabel>Theme</SectionLabel>
         <div className="flex flex-wrap gap-2.5">
-          <button type="button" className={cn(pillBase, "bg-[#303133] hover:bg-[#3a3c3e]")}>
-            <Contrast className="size-4" />
-            Auto
-          </button>
-          <button
-            type="button"
-            className={cn(pillBase, "border border-hw-green/50 bg-[#303133]")}
-            aria-pressed
-          >
-            <Moon className="size-4" />
-            Dark
-          </button>
-          <button type="button" className={cn(pillBase, "bg-[#303133] hover:bg-[#3a3c3e]")}>
-            <Sun className="size-4" />
-            Light
-          </button>
+          {themeOptions.map(({ value, label, icon: Icon }) => {
+            const active = mounted && theme === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setTheme(value)}
+                aria-pressed={active}
+                className={cn(
+                  pillBase,
+                  "bg-hw-pill2 hover:bg-hw-pill2-hover",
+                  active && "border border-hw-green/60 text-hw-green"
+                )}
+              >
+                <Icon className="size-4" />
+                {label}
+              </button>
+            );
+          })}
         </div>
       </section>
     </div>

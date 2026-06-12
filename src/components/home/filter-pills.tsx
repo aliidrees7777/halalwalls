@@ -38,7 +38,7 @@ export function FilterPills({ active, onChange }: FilterPillsProps) {
             className={cn(
               "flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-2 text-[13px] font-medium transition-colors",
               isActive && "bg-hw-green text-black",
-              !isActive && "bg-hw-pill text-hw-foreground hover:bg-[#252525]"
+              !isActive && "bg-hw-pill text-hw-foreground hover:bg-hw-pill2-hover"
             )}
           >
             {Icon && <Icon className="size-3.5" />}

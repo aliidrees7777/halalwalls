@@ -56,7 +56,7 @@ export function DownloadSidebarLeft({
           {tags.map((tag, index) => (
             <li
               key={tag}
-              className={cn(index > 0 && "border-t border-[#2a2f2d]")}
+              className={cn(index > 0 && "border-t border-hw-line")}
             >
               <Link
                 href="/"

@@ -24,7 +24,7 @@ export interface LegalContent {
   sections: LegalSection[];
 }
 
-const bodyText = "text-sm leading-relaxed text-[#C8C3BC]/90";
+const bodyText = "text-sm leading-relaxed text-hw-faint/90";
 
 function Block({ block }: { block: LegalBlock }) {
   switch (block.type) {
@@ -61,11 +61,11 @@ export function LegalPage({ content }: { content: LegalContent }) {
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 lg:py-14">
-        <h1 className="mb-6 text-center text-2xl font-bold text-[#C8C3BC]">
+        <h1 className="mb-6 text-center text-2xl font-bold text-hw-faint">
           {content.title}
         </h1>
 
-        <div className="rounded-md border border-[#3A3E41] bg-[#181A1B] p-5 sm:p-8">
+        <div className="rounded-md border border-hw-line bg-hw-input p-5 sm:p-8">
           <div className="space-y-7">
             {content.sections.map((section, i) => (
               <section key={i} className="space-y-3">

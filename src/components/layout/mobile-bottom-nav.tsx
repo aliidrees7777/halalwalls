@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { Home, LayoutGrid, Plus, Heart, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,15 +10,28 @@ import { cn } from "@/lib/utils";
  * Mobile fixed bottom navigation (client's Note 8 + mobile Figma):
  * black bar, green top border, rounded top corners, 5 icon items with a
  * prominent circular "+" (Add/Upload) in the center. Mobile only (md:hidden).
- * Inactive icons #727272, active = brand green.
+ * Inactive icons #727272, active = brand green. Every item navigates to a
+ * distinct destination and gives a tap animation so a press always responds.
  */
+const MotionLink = motion.create(Link);
+
 const sideItems = [
   { label: "Home", href: "/", icon: Home, match: (p: string) => p === "/" },
-  { label: "Categories", href: "/", icon: LayoutGrid, match: () => false },
+  {
+    label: "Categories",
+    href: "/?category=popular",
+    icon: LayoutGrid,
+    match: () => false,
+  },
 ];
 
 const rightItems = [
-  { label: "Favorites", href: "/profile", icon: Heart, match: () => false },
+  {
+    label: "Favorites",
+    href: "/profile?tab=favorites",
+    icon: Heart,
+    match: () => false,
+  },
   {
     label: "Profile",
     href: "/profile",
@@ -26,13 +40,16 @@ const rightItems = [
   },
 ];
 
+const tap = { scale: 0.82 };
+const tapTransition = { type: "spring", stiffness: 500, damping: 24 } as const;
+
 export function MobileBottomNav() {
   const pathname = usePathname();
 
   const itemClass = (active: boolean) =>
     cn(
       "flex items-center justify-center transition-colors",
-      active ? "text-hw-green" : "text-[#727272] hover:text-hw-foreground"
+      active ? "text-hw-green" : "text-hw-icon hover:text-hw-foreground"
     );
 
   return (
@@ -42,29 +59,45 @@ export function MobileBottomNav() {
     >
       <div className="mx-auto flex h-full max-w-[360px] items-center justify-around px-5">
         {sideItems.map(({ label, href, icon: Icon, match }) => (
-          <Link key={label} href={href} aria-label={label} className={itemClass(match(pathname))}>
+          <MotionLink
+            key={label}
+            href={href}
+            aria-label={label}
+            whileTap={tap}
+            transition={tapTransition}
+            className={itemClass(match(pathname))}
+          >
             <Icon className="size-6" />
-          </Link>
+          </MotionLink>
         ))}
 
         {/* Center Add (+) — prominent circular button */}
-        <Link
+        <MotionLink
           href="/upload"
           aria-label="Add wallpaper"
+          whileTap={{ scale: 0.9 }}
+          transition={tapTransition}
           className={cn(
             "grid size-12 place-items-center rounded-full border-[3px] bg-black transition-colors",
             pathname === "/upload"
               ? "border-hw-green text-hw-green"
-              : "border-[#727272] text-[#727272] hover:border-hw-foreground hover:text-hw-foreground"
+              : "border-hw-icon text-hw-icon hover:border-hw-foreground hover:text-hw-foreground"
           )}
         >
           <Plus className="size-6" strokeWidth={2.5} />
-        </Link>
+        </MotionLink>
 
         {rightItems.map(({ label, href, icon: Icon, match }) => (
-          <Link key={label} href={href} aria-label={label} className={itemClass(match(pathname))}>
+          <MotionLink
+            key={label}
+            href={href}
+            aria-label={label}
+            whileTap={tap}
+            transition={tapTransition}
+            className={itemClass(match(pathname))}
+          >
             <Icon className="size-6" />
-          </Link>
+          </MotionLink>
         ))}
       </div>
     </nav>

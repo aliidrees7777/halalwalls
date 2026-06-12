@@ -103,7 +103,7 @@ export function MobileProfile() {
   const user = demoProfileUser;
 
   return (
-    <div className="min-h-dvh bg-black">
+    <div className="min-h-dvh bg-hw-bg">
       {/* Immersive banner */}
       <header className="relative">
         <div className="relative h-[210px] w-full overflow-hidden rounded-b-[20px]">

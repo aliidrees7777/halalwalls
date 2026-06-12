@@ -17,15 +17,15 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.1 }}
-        className="hidden rounded-lg border border-[#2a2f2d] bg-hw-sidebar p-4 xl:block"
+        className="hidden rounded-lg border border-hw-line bg-hw-sidebar p-4 xl:block"
       >
         <h2 className="mb-3 text-center text-[13px] font-semibold text-hw-foreground">
           Our App
         </h2>
         <div className="mx-auto max-w-[200px]">
-          <div className="relative mx-auto w-[140px] rounded-[28px] border-[3px] border-[#3a3f3d] bg-[#0a0c0b] p-2 shadow-lg">
-            <div className="absolute left-1/2 top-2 h-1 w-10 -translate-x-1/2 rounded-full bg-[#2a2f2d]" />
-            <div className="mt-4 overflow-hidden rounded-[20px] bg-[#121412] p-3">
+          <div className="relative mx-auto w-[140px] rounded-[28px] border-[3px] border-hw-line bg-hw-deep p-2 shadow-lg">
+            <div className="absolute left-1/2 top-2 h-1 w-10 -translate-x-1/2 rounded-full bg-hw-line" />
+            <div className="mt-4 overflow-hidden rounded-[20px] bg-hw-deep p-3">
               <div className="flex items-center justify-center gap-1.5">
                 <Image
                   src="/hw-logo.png"

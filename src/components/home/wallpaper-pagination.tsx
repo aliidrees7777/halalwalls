@@ -28,7 +28,7 @@ export function WallpaperPagination({
           className={cn(
             "flex size-9 items-center justify-center rounded-lg text-sm font-medium transition-colors",
             currentPage === page
-              ? "bg-[#2a3038] text-hw-foreground"
+              ? "bg-hw-green font-semibold text-black"
               : "bg-hw-card text-hw-muted hover:bg-hw-surface hover:text-hw-foreground"
           )}
           aria-current={currentPage === page ? "page" : undefined}

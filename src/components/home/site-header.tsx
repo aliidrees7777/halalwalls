@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Menu, Moon, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { HalalWallsLogo } from "@/components/home/halalwalls-logo";
 import { MobileFilterMenu } from "@/components/home/mobile-filter-menu";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -89,13 +90,7 @@ export function SiteHeader() {
           >
             Sign In
           </Link>
-          <button
-            type="button"
-            className="hidden size-9 items-center justify-center rounded-full border border-hw-border text-hw-foreground transition-colors hover:border-hw-muted lg:flex"
-            aria-label="Toggle dark mode"
-          >
-            <Moon className="size-[18px]" />
-          </button>
+          <ThemeToggle className="hidden size-9 lg:flex" />
 
           {/* Burger — far right, opens the top-to-bottom menu */}
           <button
@@ -121,7 +116,7 @@ export function SiteHeader() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden bg-[#191A1C] lg:hidden"
+            className="overflow-hidden bg-hw-card lg:hidden"
           >
             <div className="max-h-[calc(100dvh-53px)] overflow-y-auto px-4 pt-5 pb-28">
               <MobileFilterMenu onNavigate={() => setOpen(false)} />

@@ -56,14 +56,14 @@ export function DownloadResolutionPanel({
       <SidebarPanel
         title="Download Different Resolutions"
         icon={Download}
-        className="bg-[#121412]"
+        className="bg-hw-deep"
       >
         <ResolutionLinkList
           title="Popular Desktop Resolutions"
           items={desktopDownloadResolutions}
           onSelect={onSelect}
         />
-        <div className="my-4 h-px bg-[#2a2f2d]" />
+        <div className="my-4 h-px bg-hw-line" />
         <ResolutionLinkList
           title="Popular Mobile Resolutions"
           items={mobileDownloadResolutions}

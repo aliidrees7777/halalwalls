@@ -19,7 +19,7 @@ export function UploadPlaceholder({ className, onClick }: UploadPlaceholderProps
       transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "flex aspect-[16/10] w-full max-w-[280px] flex-col items-center justify-center gap-3 rounded-xl",
-        "border-2 border-dashed border-[#3a3f47] bg-hw-card/50 transition-colors hover:bg-hw-card/80",
+        "border-2 border-dashed border-hw-border bg-hw-card/50 transition-colors hover:bg-hw-card/80",
         className
       )}
     >

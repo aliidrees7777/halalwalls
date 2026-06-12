@@ -31,7 +31,7 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
       <Button
         type="button"
         onClick={() => handleMockDownload("primary")}
-        className="h-10 flex-1 rounded-md border border-[#3a3f3d] bg-[#1a1d1c] px-4 text-[13px] font-medium text-hw-foreground shadow-none transition-colors hover:border-hw-green/35 hover:bg-[#222625] sm:min-w-[240px] sm:flex-[1.4]"
+        className="h-10 flex-1 rounded-md border border-hw-line bg-hw-pill2 px-4 text-[13px] font-medium text-hw-foreground shadow-none transition-colors hover:border-hw-green/35 hover:bg-hw-pill2-hover sm:min-w-[240px] sm:flex-[1.4]"
       >
         {primaryDone ? (
           <Check className="mr-2 size-4 text-hw-green" />
@@ -45,7 +45,7 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
         type="button"
         variant="outline"
         onClick={() => handleMockDownload("original")}
-        className="h-10 flex-1 rounded-md border-[#3a3f3d] bg-[#121412] px-4 text-[13px] font-medium text-hw-foreground shadow-none transition-colors hover:border-hw-muted hover:bg-[#1a1d1c] sm:min-w-[200px]"
+        className="h-10 flex-1 rounded-md border-hw-line bg-hw-deep px-4 text-[13px] font-medium text-hw-foreground shadow-none transition-colors hover:border-hw-muted hover:bg-hw-pill2 sm:min-w-[200px]"
       >
         {originalDone ? (
           <Check className="mr-2 size-4 text-hw-green" />
@@ -61,7 +61,7 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
           variant="outline"
           onClick={() => setFavorited((v) => !v)}
           className={cn(
-            "h-10 w-full rounded-md border-[#3a3f3d] bg-[#121412] px-6 text-[13px] font-medium shadow-none transition-colors sm:w-auto",
+            "h-10 w-full rounded-md border-hw-line bg-hw-deep px-6 text-[13px] font-medium shadow-none transition-colors sm:w-auto",
             favorited && "border-red-500/40 text-red-400"
           )}
         >

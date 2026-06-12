@@ -18,8 +18,7 @@ export function SignInCard() {
 
   return (
     <div
-      className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] p-6 backdrop-blur-md sm:p-7"
-      style={{ background: "rgba(24, 26, 27, 0.77)" }}
+      className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 backdrop-blur-md sm:p-7"
     >
       <form
         className="flex flex-col gap-4"
@@ -29,7 +28,7 @@ export function SignInCard() {
         }}
       >
         {/* Title */}
-        <h1 className="text-center text-[22px] font-bold leading-tight text-white">
+        <h1 className="text-center text-[22px] font-bold leading-tight text-hw-foreground">
           Sign In
         </h1>
 
@@ -46,36 +45,36 @@ export function SignInCard() {
         <div className="flex flex-col gap-3.5">
           {/* Email */}
           <div className="space-y-1.5">
-            <label htmlFor="signin-email" className="block text-[13px] font-semibold text-white">
+            <label htmlFor="signin-email" className="block text-[13px] font-semibold text-hw-foreground">
               Email Address
             </label>
-            <div className="flex h-10 items-center rounded-lg border border-[#3E4446] bg-[#181A1B] px-3 transition-colors focus-within:border-[#05DF8B]">
+            <div className="flex h-10 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
               <input
                 id="signin-email"
                 type="email"
                 placeholder="Your Email"
-                className="w-full bg-transparent text-sm text-white outline-none placeholder:text-[#B2ACA2]/50"
+                className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
             </div>
           </div>
 
           {/* Password */}
           <div className="space-y-1.5">
-            <label htmlFor="signin-password" className="block text-[13px] font-semibold text-white">
+            <label htmlFor="signin-password" className="block text-[13px] font-semibold text-hw-foreground">
               Password
             </label>
-            <div className="flex h-10 items-center gap-2 rounded-lg border border-[#3E4446] bg-[#181A1B] px-3 transition-colors focus-within:border-[#05DF8B]">
+            <div className="flex h-10 items-center gap-2 rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
               <input
                 id="signin-password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Your Password"
-                className="w-full bg-transparent text-sm text-white outline-none placeholder:text-[#B2ACA2]/50"
+                className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
               <button
                 type="button"
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 onClick={() => setShowPassword((s) => !s)}
-                className="grid size-5 shrink-0 place-items-center text-[#65635F] opacity-70 transition-opacity hover:opacity-100"
+                className="grid size-5 shrink-0 place-items-center text-hw-faint opacity-70 transition-opacity hover:opacity-100"
               >
                 {showPassword ? (
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-full">
@@ -104,7 +103,7 @@ export function SignInCard() {
         <div className="flex flex-col gap-2">
           <button
             type="submit"
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[15px] font-bold text-[#181A1B] transition-[filter,transform] hover:brightness-95 active:translate-y-px"
+            className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-[18px]">
               <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -113,11 +112,11 @@ export function SignInCard() {
             Sign in with Email
           </button>
 
-          <span className="text-center text-[13px] font-semibold text-[#A8A299] opacity-70">or</span>
+          <span className="text-center text-[13px] font-semibold text-hw-faint opacity-70">or</span>
 
           <button
             type="button"
-            className="flex h-10 w-full items-center justify-center gap-2.5 rounded-full bg-[#181A1B] text-sm font-semibold text-[#A8A299] transition-colors hover:bg-[#1f2122] active:translate-y-px"
+            className="flex h-10 w-full items-center justify-center gap-2.5 rounded-full bg-hw-input text-sm font-semibold text-hw-faint transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
           >
             <svg viewBox="0 0 24 24" className="size-[18px]">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1Z" />

@@ -119,7 +119,7 @@ export function AccountSettingsModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton className="max-w-[640px] border-[#05DF8B]">
-        <DialogHeader className="shrink-0 border-b border-white/5 pb-4">
+        <DialogHeader className="shrink-0 border-b border-hw-border pb-4">
           <DialogTitle className="text-xl sm:text-2xl">Account Information</DialogTitle>
         </DialogHeader>
 
@@ -192,7 +192,7 @@ export function AccountSettingsModal({
             <AccountSectionTitle>Payment Method</AccountSectionTitle>
             <button
               type="button"
-              className="flex w-full items-center gap-3 rounded-[6px] border border-[#B0B0B1]/40 bg-[#181A1B] px-3 py-2.5 text-left transition-colors duration-200 hover:border-[#B0B0B1]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/40"
+              className="flex w-full items-center gap-3 rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 py-2.5 text-left transition-colors duration-200 hover:border-hw-faint/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/40"
               onClick={() =>
                 setStatusMessage("Payment editing is available in a future update.")
               }
@@ -213,10 +213,10 @@ export function AccountSettingsModal({
 
             <div
               className={cn(
-                "flex items-center justify-between gap-3 rounded-[6px] border bg-[#181A1B] px-3.5 py-2.5 transition-colors duration-200",
+                "flex items-center justify-between gap-3 rounded-[6px] border bg-hw-input px-3.5 py-2.5 transition-colors duration-200",
                 subscriptionActive
                   ? "border-[#FFD700]"
-                  : "border-[#B0B0B1]/40 opacity-70"
+                  : "border-hw-faint/40 opacity-70"
               )}
             >
               <span
@@ -235,8 +235,8 @@ export function AccountSettingsModal({
             </div>
 
             {subscriptionActive ? (
-              <div className="flex flex-col gap-3 rounded-[6px] border border-[#B0B0B1]/40 bg-[#181A1B] px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-2.5">
-                <p className="text-[12px] text-[#B0B0B1] sm:text-[13px]">
+              <div className="flex flex-col gap-3 rounded-[6px] border border-hw-faint/40 bg-hw-input px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-2.5">
+                <p className="text-[12px] text-hw-faint sm:text-[13px]">
                   Billing period: {values.billingPeriod}
                 </p>
                 {!showCancelSubConfirm ? (
@@ -244,7 +244,7 @@ export function AccountSettingsModal({
                     type="button"
                     variant="secondary"
                     size="sm"
-                    className="h-8 shrink-0 rounded-[5px] border-0 bg-[#B0B0B1] px-3 text-[12px] font-semibold text-[#181A1B] hover:bg-[#c2c2c2] sm:text-[13px]"
+                    className="h-8 shrink-0 rounded-[5px] border-0 bg-hw-faint px-3 text-[12px] font-semibold text-hw-input hover:bg-hw-faint/80 sm:text-[13px]"
                     onClick={() => setShowCancelSubConfirm(true)}
                   >
                     Cancel Subscription
@@ -292,7 +292,7 @@ export function AccountSettingsModal({
             {!showDeleteConfirm ? (
               <button
                 type="button"
-                className="flex w-full items-center justify-between gap-3 rounded-[6px] border border-[#B10000] bg-[#181A1B]/50 px-3.5 py-3 text-left transition-all duration-200 hover:bg-[#B10000]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B10000]/40"
+                className="flex w-full items-center justify-between gap-3 rounded-[6px] border border-[#B10000] bg-hw-input/50 px-3.5 py-3 text-left transition-all duration-200 hover:bg-[#B10000]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B10000]/40"
                 onClick={() => setShowDeleteConfirm(true)}
               >
                 <span className="text-[13px] font-medium text-[#B10000] sm:text-sm">
@@ -340,7 +340,7 @@ export function AccountSettingsModal({
           <Button
             type="button"
             variant="outline"
-            className="w-full border-white/20 bg-transparent text-hw-foreground hover:bg-white/5 sm:w-auto"
+            className="w-full border-hw-border bg-transparent text-hw-foreground hover:bg-hw-surface sm:w-auto"
             onClick={handleCancel}
           >
             Cancel
