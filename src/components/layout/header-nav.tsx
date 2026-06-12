@@ -25,11 +25,13 @@ interface NavLink {
   href: string;
 }
 
+// Discovery-style entries (distinct from the browse-mode filter pills below).
+// Each opens the homepage with the matching filter applied, from anywhere.
 const EXPLORE: NavLink[] = [
-  { label: "Latest", href: "/?category=latest" },
-  { label: "Most Popular", href: "/?category=popular" },
-  { label: "Random Picks", href: "/?category=random" },
-  { label: "Live Wallpapers", href: "/?category=live" },
+  { label: "Latest Wallpapers", href: "/?category=latest" }, // newest
+  { label: "Top Rated", href: "/?category=popular" }, // most downloaded
+  { label: "Editor's Picks", href: "/?category=popular" }, // most downloaded
+  { label: "New Uploads", href: "/?category=latest" }, // newest
 ];
 
 // No resolution-based grid filter on the backend yet — these browse the latest.
