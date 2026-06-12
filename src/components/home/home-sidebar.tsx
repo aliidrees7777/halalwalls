@@ -3,22 +3,29 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ChevronUp, LayoutGrid, TrendingUp } from "lucide-react";
 import { trendingTopics } from "@/data/sidebar";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import { SidebarCollapsible } from "@/components/shared/sidebar-collapsible";
 import { useCategories, useResolutions } from "@/hooks/use-catalog";
+import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 
-function ResolutionChip({ label }: { label: string }) {
+function ResolutionChip({ label, href, active }: { label: string; href: string; active: boolean }) {
   return (
-    <button
-      type="button"
-      className="rounded-md border border-hw-line bg-hw-deep px-1 py-2 text-center text-[11px] leading-tight text-hw-foreground transition-colors hover:border-hw-green/40"
+    <Link
+      href={href}
+      className={cn(
+        "rounded-md border bg-hw-deep px-1 py-2 text-center text-[11px] leading-tight transition-colors",
+        active
+          ? "border-hw-green text-hw-green"
+          : "border-hw-line text-hw-foreground hover:border-hw-green/40"
+      )}
     >
       {label}
-    </button>
+    </Link>
   );
 }
 
@@ -48,6 +55,8 @@ export function HomeSidebar() {
   const [catPage, setCatPage] = useState(0);
   const { categories, loading } = useCategories();
   const res = useResolutions();
+  const searchParams = useSearchParams();
+  const activeResolution = searchParams.get("resolution") || "";
 
   const totalCatPages = Math.max(1, Math.ceil(categories.length / CATEGORIES_PER_PAGE));
   const safeCatPage = Math.min(catPage, totalCatPages - 1);
@@ -67,7 +76,12 @@ export function HomeSidebar() {
             </p>
             <div className="grid grid-cols-3 gap-1.5">
               {res.desktop.map((label) => (
-                <ResolutionChip key={label} label={label} />
+                <ResolutionChip
+                  key={label}
+                  label={label}
+                  href={buildFilterHref(searchParams, { resolution: normalizeResolution(label) })}
+                  active={activeResolution === normalizeResolution(label)}
+                />
               ))}
             </div>
           </div>
@@ -78,7 +92,12 @@ export function HomeSidebar() {
             </p>
             <div className="grid grid-cols-3 gap-1.5">
               {res.mobile.map((label) => (
-                <ResolutionChip key={label} label={label} />
+                <ResolutionChip
+                  key={label}
+                  label={label}
+                  href={buildFilterHref(searchParams, { resolution: normalizeResolution(label) })}
+                  active={activeResolution === normalizeResolution(label)}
+                />
               ))}
             </div>
           </div>
@@ -178,7 +197,7 @@ export function HomeSidebar() {
                 className={cn(index > 0 && "border-t border-hw-line")}
               >
                 <Link
-                  href={`/?category=${category.slug}`}
+                  href={buildFilterHref(searchParams, { category: category.slug })}
                   className="flex items-center justify-between gap-2 py-2.5"
                 >
                   <span

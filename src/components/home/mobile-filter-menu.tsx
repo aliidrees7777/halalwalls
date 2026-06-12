@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Smartphone, Apple, Send, Contrast, Moon, Sun } from "lucide-react";
 import { filterPills } from "@/data/filters";
 import { useCategories, useResolutions } from "@/hooks/use-catalog";
+import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 
 /**
@@ -36,6 +38,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
   const { categories } = useCategories();
   const res = useResolutions();
   const resolutions = [...res.desktop, ...res.mobile];
+  const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -48,7 +51,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
           {browse.map((p) => (
             <Link
               key={p.id}
-              href={`/?category=${p.id}`}
+              href={buildFilterHref(searchParams, { sort: p.id })}
               onClick={onNavigate}
               className={cn(pillBase, "bg-hw-pill2 hover:bg-hw-pill2-hover")}
             >
@@ -65,7 +68,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
           {categories.map((c) => (
             <Link
               key={c.id}
-              href={`/?category=${c.slug}`}
+              href={buildFilterHref(searchParams, { category: c.slug })}
               onClick={onNavigate}
               className={cn(pillBase, "border border-hw-input-border bg-hw-pill2 hover:border-hw-faint")}
             >
@@ -87,13 +90,14 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
         <SectionLabel>Resolutions</SectionLabel>
         <div className="flex flex-wrap gap-2">
           {resolutions.map((r) => (
-            <button
+            <Link
               key={r}
-              type="button"
+              href={buildFilterHref(searchParams, { resolution: normalizeResolution(r) })}
+              onClick={onNavigate}
               className={cn(pillBase, "border border-hw-input-border bg-hw-pill2 hover:border-hw-faint")}
             >
               {r}
-            </button>
+            </Link>
           ))}
           <button
             type="button"

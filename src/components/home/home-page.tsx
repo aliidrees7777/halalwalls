@@ -35,6 +35,7 @@ export function HomePage() {
   const category = searchParams.get("category") || "";
   const sort = searchParams.get("sort") || "latest";
   const tag = searchParams.get("tag") || "";
+  const resolution = searchParams.get("resolution") || "";
   const qParam = searchParams.get("q") || "";
 
   const [search, setSearch] = useState(qParam);
@@ -51,7 +52,7 @@ export function HomePage() {
   // Any filter change → back to page 1.
   useEffect(() => {
     setCurrentPage(1);
-  }, [category, sort, tag, search]);
+  }, [category, sort, tag, resolution, search]);
 
   useEffect(() => {
     let ignore = false;
@@ -61,6 +62,7 @@ export function HomePage() {
     if (category) params.set("category", category);
     if (sort) params.set("sort", sort);
     if (tag) params.set("tag", tag);
+    if (resolution) params.set("resolution", resolution);
     if (search) params.set("q", search);
     params.set("page", String(currentPage));
     params.set("limit", "18");
@@ -85,7 +87,7 @@ export function HomePage() {
     return () => {
       ignore = true;
     };
-  }, [category, sort, tag, search, currentPage]);
+  }, [category, sort, tag, resolution, search, currentPage]);
 
   return (
     <div className="min-h-screen bg-hw-bg">

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   DropdownMenu,
@@ -11,36 +12,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCategories } from "@/hooks/use-catalog";
+import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 
 /**
  * Desktop primary navigation (shared by the home + download headers).
- * - Explore / Resolutions: static browse links.
- * - Categories: LIVE from the API, paginated 10 per page with prev/next arrows
- *   (so it scales to hundreds of categories).
- * Every menu item is a real <Link> (reliable navigation + prefetch).
+ * Every entry MERGES into the current filters (combine), targeting the homepage:
+ * - Explore → ?sort (browse mode)
+ * - Categories → ?category (LIVE, paginated 10/page with prev/next arrows)
+ * - Resolutions → ?resolution (native resolution filter)
+ * Items are real <Link>s for reliable navigation.
  */
-interface NavLink {
-  label: string;
-  href: string;
-}
-
-// Discovery-style entries (distinct from the browse-mode filter pills below).
-// Each opens the homepage with the matching filter applied, from anywhere.
-const EXPLORE: NavLink[] = [
-  { label: "Latest Wallpapers", href: "/?sort=latest" }, // newest
-  { label: "Top Rated", href: "/?sort=popular" }, // most downloaded
-  { label: "Editor's Picks", href: "/?sort=popular" }, // most downloaded
-  { label: "New Uploads", href: "/?sort=latest" }, // newest
+const EXPLORE = [
+  { label: "Latest Wallpapers", update: { sort: "latest" } },
+  { label: "Top Rated", update: { sort: "popular" } },
+  { label: "Editor's Picks", update: { sort: "popular" } },
+  { label: "New Uploads", update: { sort: "latest" } },
 ];
 
-// No resolution-based grid filter on the backend yet — these browse the latest.
-const RESOLUTIONS: NavLink[] = [
-  { label: "1920×1080", href: "/?sort=latest" },
-  { label: "2560×1440", href: "/?sort=latest" },
-  { label: "3840×2160 (4K)", href: "/?sort=latest" },
-  { label: "Mobile HD", href: "/?sort=latest" },
-];
+const RESOLUTION_LABELS = ["1920×1080", "2560×1440", "3840×2160 (4K)", "1080×2400 (Mobile)"];
 
 const CATEGORIES_PER_PAGE = 10;
 
@@ -49,14 +39,14 @@ const triggerClass =
 const itemClass =
   "text-sm text-hw-muted focus:bg-hw-surface focus:text-hw-foreground";
 
-function StaticDropdown({ label, items }: { label: string; items: NavLink[] }) {
+function LinkDropdown({ label, items }: { label: string; items: { label: string; href: string }[] }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={triggerClass}>
         {label}
         <ChevronDown className="size-3.5 opacity-80" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="min-w-[180px] border-hw-border bg-hw-card">
+      <DropdownMenuContent align="start" className="min-w-[190px] border-hw-border bg-hw-card">
         {items.map((it) => (
           <DropdownMenuItem key={it.label} render={<Link href={it.href} />} className={itemClass}>
             {it.label}
@@ -67,7 +57,7 @@ function StaticDropdown({ label, items }: { label: string; items: NavLink[] }) {
   );
 }
 
-function CategoriesDropdown() {
+function CategoriesDropdown({ searchParams }: { searchParams: ReturnType<typeof useSearchParams> }) {
   const { categories } = useCategories();
   const [page, setPage] = useState(0);
 
@@ -87,7 +77,7 @@ function CategoriesDropdown() {
         {slice.map((c) => (
           <DropdownMenuItem
             key={c.id}
-            render={<Link href={`/?category=${c.slug}`} />}
+            render={<Link href={buildFilterHref(searchParams, { category: c.slug })} />}
             className={itemClass}
           >
             {c.name}
@@ -136,11 +126,22 @@ function CategoriesDropdown() {
 }
 
 export function HeaderNav({ className }: { className?: string }) {
+  const searchParams = useSearchParams();
+
+  const exploreItems = EXPLORE.map((e) => ({
+    label: e.label,
+    href: buildFilterHref(searchParams, e.update),
+  }));
+  const resolutionItems = RESOLUTION_LABELS.map((l) => ({
+    label: l,
+    href: buildFilterHref(searchParams, { resolution: normalizeResolution(l) }),
+  }));
+
   return (
     <nav className={cn("hidden items-center gap-0.5 lg:flex", className)} aria-label="Primary">
-      <StaticDropdown label="Explore" items={EXPLORE} />
-      <CategoriesDropdown />
-      <StaticDropdown label="Resolutions" items={RESOLUTIONS} />
+      <LinkDropdown label="Explore" items={exploreItems} />
+      <CategoriesDropdown searchParams={searchParams} />
+      <LinkDropdown label="Resolutions" items={resolutionItems} />
       <Link href="/upload" className={triggerClass}>
         Upload
       </Link>
