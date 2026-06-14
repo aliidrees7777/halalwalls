@@ -1,0 +1,128 @@
+[
+  {
+    "id": "1",
+    "slug": "nature-mountain-wallpaper",
+    "title": "Nature Mountain Wallpaper",
+    "image": "/image.png",
+    "favoritesCount": 120
+  },
+  {
+    "id": "2",
+    "slug": "sunset-lake-wallpaper",
+    "title": "Sunset Lake Wallpaper",
+    "image": "/image1.png",
+    "favoritesCount": 85
+  },
+  {
+    "id": "3",
+    "slug": "forest-road-wallpaper",
+    "title": "Forest Road Wallpaper",
+    "image": "/image2.png",
+    "favoritesCount": 64
+  },
+  {
+    "id": "4",
+    "slug": "city-night-wallpaper",
+    "title": "City Night Wallpaper",
+    "image": "/image3.png",
+    "favoritesCount": 98
+  },
+  {
+    "id": "5",
+    "slug": "ocean-view-wallpaper",
+    "title": "Ocean View Wallpaper",
+    "image": "/image4.png",
+    "favoritesCount": 145
+  },
+  {
+    "id": "6",
+    "slug": "snow-mountain-wallpaper",
+    "title": "Snow Mountain Wallpaper",
+    "image": "/image5.png",
+    "favoritesCount": 112
+  },
+  {
+    "id": "7",
+    "slug": "green-forest-wallpaper",
+    "title": "Green Forest Wallpaper",
+    "image": "/image6.png",
+    "favoritesCount": 76
+  },
+  {
+    "id": "8",
+    "slug": "river-side-wallpaper",
+    "title": "River Side Wallpaper",
+    "image": "/image7.png",
+    "favoritesCount": 87
+  },
+  {
+    "id": "9",
+    "slug": "beautiful-waterfall-wallpaper",
+    "title": "Beautiful Waterfall Wallpaper",
+    "image": "/image8.png",
+    "favoritesCount": 169
+  },
+  {
+    "id": "10",
+    "slug": "dark-road-wallpaper",
+    "title": "Dark Road Wallpaper",
+    "image": "/image9.png",
+    "favoritesCount": 54
+  },
+  {
+    "id": "11",
+    "slug": "space-galaxy-wallpaper",
+    "title": "Space Galaxy Wallpaper",
+    "image": "/image10.png",
+    "favoritesCount": 210
+  },
+  {
+    "id": "12",
+    "slug": "moonlight-wallpaper",
+    "title": "Moonlight Wallpaper",
+    "image": "/image11.png",
+    "favoritesCount": 91
+  },
+  {
+    "id": "13",
+    "slug": "autumn-leaves-wallpaper",
+    "title": "Autumn Leaves Wallpaper",
+    "image": "/image12.png",
+    "favoritesCount": 73
+  },
+  {
+    "id": "14",
+    "slug": "lake-reflection-wallpaper",
+    "title": "Lake Reflection Wallpaper",
+    "image": "/image13.png",
+    "favoritesCount": 102
+  },
+  {
+    "id": "15",
+    "slug": "sunrise-hills-wallpaper",
+    "title": "Sunrise Hills Wallpaper",
+    "image": "/image14.png",
+    "favoritesCount": 134
+  },
+  {
+    "id": "16",
+    "slug": "cloudy-sky-wallpaper",
+    "title": "Cloudy Sky Wallpaper",
+    "image": "/image15.png",
+    "favoritesCount": 67
+  },
+  {
+    "id": "17",
+    "slug": "golden-desert-wallpaper",
+    "title": "Golden Desert Wallpaper",
+    "image": "/image16.png",
+    "favoritesCount": 81
+  },
+  {
+    "id": "18",
+    "slug": "tropical-beach-wallpaper",
+    "title": "Tropical Beach Wallpaper",
+    "image": "/image17.png",
+    "favoritesCount": 193
+  }
+]
