@@ -102,7 +102,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1400px] px-4 py-4 lg:px-6">
+      <div className="mx-auto max-w-[1650px] px-4 py-4 lg:px-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
           <HomeSidebar />
 
