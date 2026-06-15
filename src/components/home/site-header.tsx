@@ -40,7 +40,7 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <div className="h-px w-full bg-hw-green" aria-hidden />
+      <div className="border-3 border-hw-green" aria-hidden />
 
       {/* Top-to-bottom expanding Filters menu (mobile only) */}
       <AnimatePresence initial={false}>

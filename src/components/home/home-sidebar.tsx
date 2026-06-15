@@ -5,15 +5,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ChevronUp, LayoutGrid, TrendingUp } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  LayoutGrid,
+  TrendingUp,
+} from "lucide-react";
 import { trendingTopics } from "@/data/sidebar";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import { SidebarCollapsible } from "@/components/shared/sidebar-collapsible";
 import { useCategories, useResolutions } from "@/hooks/use-catalog";
 import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
-
-function ResolutionChip({ label, href, active }: { label: string; href: string; active: boolean }) {
+import dimon from "../../../public/dimon.svg";
+function ResolutionChip({
+  label,
+  href,
+  active,
+}: {
+  label: string;
+  href: string;
+  active: boolean;
+}) {
   return (
     <Link
       href={href}
@@ -21,7 +35,7 @@ function ResolutionChip({ label, href, active }: { label: string; href: string; 
         "mx-2 rounded-md border  bg-hw-deep px-1 py-2.5 text-center text-[13px] font-medium leading-tight transition-colors",
         active
           ? "border-[#3A3E41] text-hw-green"
-          : "border-[#3A3E41] text-hw-foreground "
+          : "border-[#3A3E41] text-hw-foreground ",
       )}
     >
       {label}
@@ -39,8 +53,8 @@ function CategoryBadge({
   return (
     <span
       className={cn(
-        "min-w-[28px] rounded-full px-2 py-0.5 text-center text-[11px] font-medium tabular-nums text-hw-foreground",
-        isPremium ? "border border-hw-yellow bg-transparent" : "bg-hw-line"
+        "min-w-[28px] rounded-full b-1 w-16 h-5 text-center text-[15px] font-bold tabular-nums text-hw-depw",
+        isPremium ? "border border-hw-yellow bg-transparent" : "bg-hw-line",
       )}
     >
       {count}
@@ -58,11 +72,14 @@ export function HomeSidebar() {
   const searchParams = useSearchParams();
   const activeResolution = searchParams.get("resolution") || "";
 
-  const totalCatPages = Math.max(1, Math.ceil(categories.length / CATEGORIES_PER_PAGE));
+  const totalCatPages = Math.max(
+    1,
+    Math.ceil(categories.length / CATEGORIES_PER_PAGE),
+  );
   const safeCatPage = Math.min(catPage, totalCatPages - 1);
   const catSlice = categories.slice(
     safeCatPage * CATEGORIES_PER_PAGE,
-    safeCatPage * CATEGORIES_PER_PAGE + CATEGORIES_PER_PAGE
+    safeCatPage * CATEGORIES_PER_PAGE + CATEGORIES_PER_PAGE,
   );
   const showCatPager = categories.length > CATEGORIES_PER_PAGE;
 
@@ -79,7 +96,9 @@ export function HomeSidebar() {
                 <ResolutionChip
                   key={label}
                   label={label}
-                  href={buildFilterHref(searchParams, { resolution: normalizeResolution(label) })}
+                  href={buildFilterHref(searchParams, {
+                    resolution: normalizeResolution(label),
+                  })}
                   active={activeResolution === normalizeResolution(label)}
                 />
               ))}
@@ -95,7 +114,9 @@ export function HomeSidebar() {
                 <ResolutionChip
                   key={label}
                   label={label}
-                  href={buildFilterHref(searchParams, { resolution: normalizeResolution(label) })}
+                  href={buildFilterHref(searchParams, {
+                    resolution: normalizeResolution(label),
+                  })}
                   active={activeResolution === normalizeResolution(label)}
                 />
               ))}
@@ -123,7 +144,9 @@ export function HomeSidebar() {
             <p className="text-[12px] uppercase tracking-wide text-hw-muted font-semibold">
               Get it on
             </p>
-            <p className="text-base font-semibold text-hw-foreground">Google Play</p>
+            <p className="text-base font-semibold text-hw-foreground">
+              Google Play
+            </p>
           </div>
         </a>
 
@@ -134,22 +157,22 @@ export function HomeSidebar() {
           className="mt-4 flex w-full items-center justify-center gap-1 text-sm text-hw-muted font-bold transition-colors hover:text-hw-foreground"
         >
           Scan QR Code
-                  <svg
-          width="11"
-          height="7"
-          viewBox="0 0 11 7"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className={cn(
-            "ml-2 transition-transform duration-200",
-            qrOpen || "rotate-180",
-          )}
-        >
-          <path
-            d="M9.4199 0H0.890855C0.126943 0 -0.281331 0.89974 0.221709 1.47464L4.48623 6.34838C4.84047 6.75323 5.47028 6.75323 5.82452 6.34838L10.089 1.47464C10.5921 0.89974 10.1838 0 9.4199 0Z"
-            fill="#A8A299"
-          />
-        </svg>
+          <svg
+            width="11"
+            height="7"
+            viewBox="0 0 11 7"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className={cn(
+              "ml-2 transition-transform duration-200",
+              qrOpen || "rotate-180",
+            )}
+          >
+            <path
+              d="M9.4199 0H0.890855C0.126943 0 -0.281331 0.89974 0.221709 1.47464L4.48623 6.34838C4.84047 6.75323 5.47028 6.75323 5.82452 6.34838L10.089 1.47464C10.5921 0.89974 10.1838 0 9.4199 0Z"
+              fill="#A8A299"
+            />
+          </svg>
           {/* <ChevronUp
             className={cn(
               "size-5 font-bold transition-transform duration-300",
@@ -208,32 +231,44 @@ export function HomeSidebar() {
       <SidebarPanel title="Categories" icon={LayoutGrid}>
         <SidebarCollapsible label="Browse Categories" defaultOpen>
           <ul>
-            {loading && categories.length === 0 ? null : catSlice.map((category, index) => (
-              <li
-                key={category.id}
-                className={cn(index > 0 && "border-t border-hw-line")}
-              >
-                <Link
-                  href={buildFilterHref(searchParams, { category: category.slug })}
-                  className="flex items-center justify-between gap-2 py-2.5"
-                >
-                  <span
-                    className={cn(
-                      "text-[13px]",
-                      category.isPremium
-                        ? "font-medium text-hw-yellow"
-                        : "text-hw-foreground"
-                    )}
+            {loading && categories.length === 0
+              ? null
+              : catSlice.map((category, index) => (
+                  <li
+                    key={category.id}
+                    className={cn(index > 0 && "border-t border-hw-line")}
                   >
-                    {category.isPremium ? `${category.name} 💎` : category.name}
-                  </span>
-                  <CategoryBadge
-                    count={category.count}
-                    isPremium={category.isPremium}
-                  />
-                </Link>
-              </li>
-            ))}
+                    <Link
+                      href={buildFilterHref(searchParams, {
+                        category: category.slug,
+                      })}
+                      className="flex items-center justify-between gap-2 py-3.5 mx-4"
+                    >
+                      <span
+                        className={cn(
+                          "text-[14px] flex items-center gap-1",
+                          category.isPremium
+                            ? "font-medium text-hw-yellow"
+                            : "text-hw-foreground",
+                        )}
+                      >
+                        {category.name}
+                        {category.isPremium && (
+                          <Image
+                            src={dimon}
+                            alt="Premium"
+                            width={14}
+                            height={14}
+                          />
+                        )}
+                      </span>
+                      <CategoryBadge
+                        count={category.count}
+                        isPremium={category.isPremium}
+                      />
+                    </Link>
+                  </li>
+                ))}
           </ul>
 
           {showCatPager && (
@@ -254,7 +289,9 @@ export function HomeSidebar() {
                 type="button"
                 aria-label="Next categories"
                 disabled={safeCatPage >= totalCatPages - 1}
-                onClick={() => setCatPage((p) => Math.min(totalCatPages - 1, p + 1))}
+                onClick={() =>
+                  setCatPage((p) => Math.min(totalCatPages - 1, p + 1))
+                }
                 className="grid size-7 place-items-center rounded-md text-hw-muted transition-colors hover:bg-hw-surface hover:text-hw-foreground disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronRight className="size-4" />

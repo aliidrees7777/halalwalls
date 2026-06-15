@@ -37,9 +37,9 @@ const BROWSE_MODES = [
 
 const pillClass = (active: boolean) =>
   cn(
-    "flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-[11px] text-[19px] font-medium text-white ",
+    "flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-[11px] lg:text-[19px] text-[15px]  lg:font-medium font-semibold text-white ",
     active
-      ? "bg-hw-green font-semibold text-[#000000] text-[19px]"
+      ? "bg-hw-green font-semibold text-[#000000] lg:text-[19px] text-[15px]"
       : "bg-hw-pill text-hw-depw hover:bg-hw-pill2-hover",
   );
 
@@ -84,7 +84,7 @@ export function FilterPills() {
             {mode.label}
             {/* <Icon className="size-3.5" /> */}
             {"icon" in mode && (
-              <Image src={mode.icon} alt={mode.label} width={22} height={22} />
+              <Image src={mode.icon} alt={mode.label} width={22} height={22} className="lg:w-[22px] lg:h-[22px] w-[17px] h-[17px]"/>
             )}
           </button>
         );
