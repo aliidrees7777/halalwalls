@@ -21,7 +21,7 @@ function ResolutionChip({ label, href, active }: { label: string; href: string; 
         "mx-2 rounded-md border  bg-hw-deep px-1 py-2.5 text-center text-[13px] font-medium leading-tight transition-colors",
         active
           ? "border-[#3A3E41] text-hw-green"
-          : "border-[#3A3E41] text-hw-foreground hover:border-hw-green/40"
+          : "border-[#3A3E41] text-hw-foreground "
       )}
     >
       {label}
@@ -134,12 +134,28 @@ export function HomeSidebar() {
           className="mt-4 flex w-full items-center justify-center gap-1 text-sm text-hw-muted font-bold transition-colors hover:text-hw-foreground"
         >
           Scan QR Code
-          <ChevronUp
+                  <svg
+          width="11"
+          height="7"
+          viewBox="0 0 11 7"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={cn(
+            "ml-2 transition-transform duration-200",
+            qrOpen || "rotate-180",
+          )}
+        >
+          <path
+            d="M9.4199 0H0.890855C0.126943 0 -0.281331 0.89974 0.221709 1.47464L4.48623 6.34838C4.84047 6.75323 5.47028 6.75323 5.82452 6.34838L10.089 1.47464C10.5921 0.89974 10.1838 0 9.4199 0Z"
+            fill="#A8A299"
+          />
+        </svg>
+          {/* <ChevronUp
             className={cn(
               "size-5 font-bold transition-transform duration-300",
-              !qrOpen && "rotate-180"
+              ! && "rotate-180"
             )}
-          />
+          /> */}
         </button>
 
         <AnimatePresence initial={false}>
@@ -180,7 +196,7 @@ export function HomeSidebar() {
             >
               <Link
                 href={`/?q=${encodeURIComponent(topic)}`}
-                className="block py-4 font-medium text-[15px] text-hw-foreground transition-colors hover:text-hw-green mx-4"
+                className="block py-4 font-medium text-[15px] text-hw-foreground transition-colors  mx-4"
               >
                 {topic}
               </Link>

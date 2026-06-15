@@ -28,7 +28,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       //   className
       // )}
     >
-      {isLight ? <Sun className="size-[18px]" /> : <Image src={mon} alt="Moon icon" />}
+      {isLight ? <Sun className="size-[18px]" /> : <Image src={mon} alt="Moon icon" className="hidden md:flex"/>}
     </button>
   );
 }

@@ -8,14 +8,11 @@ export function HalalWallsLogo({ className }: { className?: string }) {
       <Image
         src="/logo.svg"
         alt=""
-        width={32}
-        height={32}
-        className="size-8 shrink-0"
+        width={185}
+        height={36}
+        className="shrink-0 w-[175px] md:w-[185px] h-auto"
         priority
       />
-      <span className="text-[25px] font-bold tracking-tight text-hw-foreground">
-        Halal <span className="text-hw-green">Walls</span>
-      </span>
     </Link>
   );
 }

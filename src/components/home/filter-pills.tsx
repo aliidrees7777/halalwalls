@@ -29,14 +29,18 @@ const BROWSE_MODES = [
   { id: "movies", label: "Movies" },
   { id: "cars", label: "Cars" },
   { id: "sport", label: "Sport" },
+  { id: "space", label: "Space" },
+  { id: "animals", label: "Animals" },
+  { id: "tvshows", label: "TV Shows" },
+  { id: "3D", label: "3D" },
 ] as const;
 
 const pillClass = (active: boolean) =>
   cn(
-    "flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-[11px] text-[18px] font-medium text-white ",
+    "flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-[11px] text-[19px] font-medium text-white ",
     active
-      ? "bg-hw-green font-semibold text-[#000000] text-[18px]"
-      : "bg-hw-pill text-hw-foreground hover:bg-hw-pill2-hover",
+      ? "bg-hw-green font-semibold text-[#000000] text-[19px]"
+      : "bg-hw-pill text-hw-depw hover:bg-hw-pill2-hover",
   );
 
 export function FilterPills() {

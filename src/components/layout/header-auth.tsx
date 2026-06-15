@@ -23,7 +23,7 @@ export function HeaderAuth({ className }: { className?: string }) {
       <Link
         href="/login"
         className={cn(
-          "rounded-[10px]  px-6 py-4 text-[18px] font-medium text-hw-foreground transition-colors bg-hw-surface",
+          "rounded-[10px]  px-6 py-4 text-[18px] font-medium text-hw-depw transition-colors bg-hw-surface",
           className
         )}
       >

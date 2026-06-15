@@ -29,6 +29,7 @@
   --color-hw-faint: var(--hw-faint);
   --color-hw-icon: var(--hw-icon);
   --color-hw-deep: var(--hw-deep);
+    --color-hw-depw:var(--hw-depw);
   /* shadcn aliases */
   --color-background: var(--hw-bg);
   --color-foreground: var(--hw-foreground);
@@ -66,12 +67,13 @@
   --hw-faint: #6b7280;
   --hw-icon: #9aa0a6;
   --hw-deep: #ffffff;
+  --hw-depw:#ffffff;
   color-scheme: light;
 }
 
 /* DARK theme */
 .dark {
-  --hw-bg: #0b0e11;
+  --hw-bg: #1D2021;
   --hw-header: #181A1B;
   --hw-search-header: #1a2421;
   --hw-search-input: #121212;
@@ -85,7 +87,7 @@
   --hw-border: #252a33;
   --hw-purple: #8b5cf6;
   --hw-surface: #000000;
-  --hw-input: #181a1b;
+  --hw-input: #181A1B;
   --hw-input-border: #3e4446;
   --hw-line: #3A3E41;
   --hw-pill2: #303133;
@@ -93,6 +95,7 @@
   --hw-faint: #b2aca2;
   --hw-icon: #727272;
   --hw-deep: #0d0f0e;
+  --hw-depw:#ffffff;
   color-scheme: dark;
 }
 

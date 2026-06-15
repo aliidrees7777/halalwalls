@@ -33,9 +33,9 @@ export function SiteHeader() {
             onClick={() => setOpen((o) => !o)}
             aria-label="Menu"
             aria-expanded={open}
-            className="flex size-9 items-center justify-center rounded-md border border-hw-border text-hw-muted transition-colors hover:text-hw-foreground lg:hidden"
+            className="flex h-9 w-11 items-center justify-center rounded-md border border-hw-border text-hw-muted transition-colors hover:text-hw-foreground lg:hidden"
           >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+            {open ? <X className="size-[26px]" /> : <Menu className="size-[26px]" />}
           </button>
         </div>
       </div>

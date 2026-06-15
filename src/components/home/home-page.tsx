@@ -90,11 +90,11 @@ export function HomePage() {
   }, [category, sort, tag, resolution, search, currentPage]);
 
   return (
-    <div className="min-h-screen  bg-[#1D2021]">
+    <div className="min-h-screen ">
       <SiteHeader />
 
       <section className="bg-hw-search-header px-4 py-4 lg:px-6">
-        <div className="mx-auto max-w-[1400px]">
+        <div className="mx-auto max-w-[1600px]">
           <WallpaperSearch value={search} onChange={setSearch} />
           <div className="mt-4">
             <FilterPills />
@@ -102,7 +102,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1650px] px-4 py-4 lg:px-6">
+      <div className="mx-auto max-w-[1650px] px-4 py-4 lg:px-6 bg-hw-bg">
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
           <HomeSidebar />
 
