@@ -1,7 +1,7 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { SearchBox } from "@/components/shared/search-box";
@@ -29,7 +29,9 @@ export function DownloadHeader() {
           <SearchBox value={search} onChange={setSearch} onSubmit={handleSearch} />
         </div>
 
-        <HeaderNav />
+        <Suspense fallback={null}>
+          <HeaderNav />
+        </Suspense>
 
         <div className="ml-auto flex items-center gap-2.5">
           <HeaderAuth className="hidden sm:flex" />
@@ -62,7 +64,9 @@ export function DownloadHeader() {
             className="overflow-hidden bg-hw-card lg:hidden"
           >
             <div className="max-h-[calc(100dvh-53px)] overflow-y-auto px-4 pt-5 pb-28">
-              <MobileFilterMenu onNavigate={() => setOpen(false)} />
+              <Suspense fallback={null}>
+                <MobileFilterMenu onNavigate={() => setOpen(false)} />
+              </Suspense>
             </div>
           </motion.div>
         )}

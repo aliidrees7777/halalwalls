@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { HalalWallsLogo } from "@/components/home/halalwalls-logo";
@@ -21,7 +21,9 @@ export function SiteHeader() {
 
         {/* Right cluster — pushed fully right via ml-auto */}
         <div className="ml-auto flex items-center gap-5">
-          <HeaderNav className="mx-auto" />
+          <Suspense fallback={null}>
+            <HeaderNav className="mx-auto" />
+          </Suspense>
           <HeaderAuth className="hidden sm:flex" />
           <ThemeToggle className="hidden size-9 lg:flex" />
 
@@ -52,7 +54,9 @@ export function SiteHeader() {
             className="overflow-hidden bg-hw-card lg:hidden"
           >
             <div className="max-h-[calc(100dvh-53px)] overflow-y-auto px-4 pt-5 pb-28">
-              <MobileFilterMenu onNavigate={() => setOpen(false)} />
+              <Suspense fallback={null}>
+                <MobileFilterMenu onNavigate={() => setOpen(false)} />
+              </Suspense>
             </div>
           </motion.div>
         )}

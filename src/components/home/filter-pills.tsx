@@ -79,7 +79,7 @@ export function FilterPills() {
           >
             {mode.label}
             {/* <Icon className="size-3.5" /> */}
-            {mode.icon && (
+            {"icon" in mode && (
               <Image src={mode.icon} alt={mode.label} width={22} height={22} />
             )}
           </button>

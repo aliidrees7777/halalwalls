@@ -3,14 +3,13 @@
 import { WallpaperCard } from "@/components/home/wallpaper-card";
 import { WallpaperGridSkeleton } from "@/components/home/wallpaper-grid-skeleton";
 import type { Wallpaper } from "@/types/wallpaper";
-import wallpapers from "@/data/wallpapers.json";
+
 interface WallpaperGridProps {
   wallpapers: Wallpaper[];
   isLoading: boolean;
 }
 
-
-export function WallpaperGrid({isLoading }: WallpaperGridProps) {
+export function WallpaperGrid({ wallpapers, isLoading }: WallpaperGridProps) {
   if (isLoading) {
     return <WallpaperGridSkeleton count={18} />;
   }
