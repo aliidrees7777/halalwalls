@@ -1,8 +1,8 @@
 [
   {
     "id": "1",
-    "slug": "nature-mountain-wallpaper",
-    "title": "Nature Mountain Wallpaper",
+    "slug": "gtavi",
+    "title": "GTA VI",
     "image": "/image.png",
     "favoritesCount": 120,
     "category": "animals",
@@ -37,8 +37,8 @@
   },
   {
     "id": "5",
-    "slug": "ocean-view-wallpaper",
-    "title": "Ocean View Wallpaper",
+    "slug": "joker",
+    "title": "Joker",
     "image": "/image4.png",
     "favoritesCount": 145,
     "category": "anime",
@@ -46,8 +46,8 @@
   },
   {
     "id": "6",
-    "slug": "snow-mountain-wallpaper",
-    "title": "Snow Mountain Wallpaper",
+    "slug": "spiderman",
+    "title": "Spiderman",
     "image": "/image5.png",
     "favoritesCount": 112,
     "category": "minimalist",
@@ -91,8 +91,8 @@
   },
   {
     "id": "11",
-    "slug": "space-galaxy-wallpaper",
-    "title": "Space Galaxy Wallpaper",
+    "slug": "Iron Man",
+    "title": "Iron Man",
     "image": "/image10.png",
     "favoritesCount": 210,
     "category": "space",
@@ -100,8 +100,8 @@
   },
   {
     "id": "12",
-    "slug": "moonlight-wallpaper",
-    "title": "Moonlight Wallpaper",
+    "slug": "jujutsu-kaisen",
+    "title": "Jujutsu Kaisen",
     "image": "/image11.png",
     "favoritesCount": 91,
     "category": "space",
@@ -136,8 +136,8 @@
   },
   {
     "id": "16",
-    "slug": "cloudy-sky-wallpaper",
-    "title": "Cloudy Sky Wallpaper",
+    "slug": "wolverine",
+    "title": "Wolverine",
     "image": "/image15.png",
     "favoritesCount": 67,
     "category": "anime",
