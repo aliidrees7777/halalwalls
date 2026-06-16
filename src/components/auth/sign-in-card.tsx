@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { ApiError } from "@/lib/api";
+import Image from "next/image";
+import close from "../../../public/authicon/close.svg";
+
 
 /**
  * Sign In (Login via Email) card.
@@ -40,14 +43,20 @@ export function SignInCard() {
 
   return (
     <div
-      className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 backdrop-blur-md sm:p-7"
+      className="relative z-10 flex justify-center items-center my-auto w-full max-w-[825px] h-[600px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 backdrop-blur-md sm:p-7"
     >
+        <button
+        onClick={() => router.back()}
+        className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
+      >
+        <Image src={close} alt="Close" width={20} height={20} />
+      </button>
       <form
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-12 w-xl"
         onSubmit={handleSubmit}
       >
         {/* Title */}
-        <h1 className="text-center text-[22px] font-bold leading-tight text-hw-foreground">
+        <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw">
           Sign In
         </h1>
 
@@ -64,34 +73,34 @@ export function SignInCard() {
         <div className="flex flex-col gap-3.5">
           {/* Email */}
           <div className="space-y-1.5">
-            <label htmlFor="signin-email" className="block text-[13px] font-semibold text-hw-foreground">
+            <label htmlFor="signin-email" className="block text-[19px] font-semibold text-hw-depw">
               Email Address
             </label>
-            <div className="flex h-10 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
+            <div className="flex h-12 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
               <input
                 id="signin-email"
                 type="email"
                 placeholder="Your Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
+                className="w-full bg-transparent text-lg text-hw-depw outline-none placeholder:text-hw-faint/50"
               />
             </div>
           </div>
 
           {/* Password */}
           <div className="space-y-1.5">
-            <label htmlFor="signin-password" className="block text-[13px] font-semibold text-hw-foreground">
+            <label htmlFor="signin-password" className="block text-[19px] font-semibold text-hw-depw">
               Password
             </label>
-            <div className="flex h-10 items-center gap-2 rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
+            <div className="flex h-12 items-center gap-2 rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
               <input
                 id="signin-password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Your Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
+                className="w-full h-11 bg-transparent text-lg text-hw-depw outline-none placeholder:text-hw-faint/50"
               />
               <button
                 type="button"
@@ -117,7 +126,7 @@ export function SignInCard() {
           </div>
 
           {/* Forgot password */}
-          <a href="/forgot-password" className="text-[13px] font-normal text-[#69A6D5] underline">
+          <a href="/forgot-password" className="text-[13px] font-[450px] text-[#69A6D5] underline">
             Forgot your password?
           </a>
         </div>
@@ -127,21 +136,18 @@ export function SignInCard() {
           <button
             type="submit"
             disabled={submitting}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[22px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="size-[18px]">
-              <rect x="2" y="4" width="20" height="16" rx="2" />
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-            </svg>
+            <span>@</span>
             {submitting ? "Please wait…" : "Sign in with Email"}
           </button>
 
-          <span className="text-center text-[13px] font-semibold text-hw-faint opacity-70">or</span>
+          <span className="text-center text-[14px] font-semibold text-hw-faint opacity-70">or</span>
 
           <button
             type="button"
             onClick={() => setError("Google sign-in will be enabled soon.")}
-            className="flex h-10 w-full items-center justify-center gap-2.5 rounded-full bg-hw-input text-sm font-semibold text-hw-faint transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
+            className="flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-hw-input text-[18px] font-semibold text-hw-faint transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
           >
             <svg viewBox="0 0 24 24" className="size-[18px]">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1Z" />

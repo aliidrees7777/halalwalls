@@ -8,9 +8,8 @@ import { ApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 /**
- * Global sign-in / sign-up modal. Opened via useAuth().openAuthModal() whenever
- * a guest triggers a gated action (download, favorite, …). Rendered once in the
- * root layout. On success it closes itself.
+ * Global sign-in / sign-up modal.
+ * Animated to slide up from the bottom on mobile.
  */
 export function AuthModal() {
   const { authModal, openAuthModal, closeAuthModal, login, signup } = useAuth();
@@ -23,7 +22,6 @@ export function AuthModal() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Reset fields/errors whenever the modal opens or switches view.
   useEffect(() => {
     if (authModal.open) {
       setError(null);
@@ -59,7 +57,7 @@ export function AuthModal() {
     <AnimatePresence>
       {authModal.open && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          className="fixed inset-0 z-[100] flex items-end justify-center p-4 sm:items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -75,9 +73,9 @@ export function AuthModal() {
           <motion.div
             role="dialog"
             aria-modal="true"
-            initial={{ scale: 0.96, y: 12, opacity: 0 }}
-            animate={{ scale: 1, y: 0, opacity: 1 }}
-            exit={{ scale: 0.96, y: 12, opacity: 0 }}
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 26 }}
             className="relative z-10 w-full max-w-[400px] rounded-2xl border-2 border-hw-green bg-hw-card p-6 shadow-xl sm:p-7"
           >

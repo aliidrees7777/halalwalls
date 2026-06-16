@@ -147,7 +147,9 @@ export function HomePage() {
     <div className="min-h-screen ">
       <SiteHeader />
 
-      <section className="bg-hw-search-header px-4 py-4 lg:px-6">
+      <section 
+      style={{ background: "var(--hw-search-header)" }}
+      className=" px-4 py-4 lg:px-6">
         <div className="mx-auto max-w-[1600px]">
           <WallpaperSearch value={search} onChange={setSearch} />
           <div className="mt-4">

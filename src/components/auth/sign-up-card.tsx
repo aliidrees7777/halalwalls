@@ -6,7 +6,8 @@ import { Eye, EyeOff, Rocket, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
 import { ApiError } from "@/lib/api";
-
+import close from "../../../public/authicon/close.svg";
+import Image from "next/image";
 /**
  * Sign Up ("Join Us in a Snap") card.
  * Matches the Figma "Sign up section" frame — colors, fonts, layout — at the
@@ -59,14 +60,20 @@ export function SignUpCard() {
 
   return (
     <div
-      className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 backdrop-blur-md sm:p-7"
+      className="relative z-10 my-auto flex justify-center items-center w-full max-w-[825px] h-[670px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 backdrop-blur-md sm:p-7"
     >
+        <button
+        onClick={() => router.back()}
+        className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
+      >
+        <Image src={close} alt="Close" width={20} height={20} />
+      </button>
       <form
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-12 w-[570px]"
         onSubmit={handleSubmit}
       >
         {/* Title */}
-        <h1 className="text-center text-[22px] font-bold leading-tight text-hw-foreground">
+        <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw">
           Join Us in a Snap
         </h1>
 
@@ -83,51 +90,51 @@ export function SignUpCard() {
         <div className="flex flex-col gap-3.5">
           {/* Full Name */}
           <div className="space-y-1.5">
-            <label htmlFor="signup-name" className="block text-[13px] font-semibold text-hw-foreground">
+            <label htmlFor="signup-name" className="block text-[19px] font-semibold text-hw-depw">
               Full Name
             </label>
-            <div className="flex h-10 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
+            <div className="flex h-11 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
               <input
                 id="signup-name"
                 type="text"
                 placeholder="John Doe"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
+                className="w-full bg-transparent text-[19px] text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
             </div>
           </div>
 
           {/* Email Address */}
           <div className="space-y-1.5">
-            <label htmlFor="signup-email" className="block text-[13px] font-semibold text-hw-foreground">
+            <label htmlFor="signup-email" className="block text-[19px] font-semibold text-hw-depw">
               Email Address
             </label>
-            <div className="flex h-10 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
+            <div className="flex h-11 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
               <input
                 id="signup-email"
                 type="email"
                 placeholder="example@site.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
+                className="w-full bg-transparent text-[19px] text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
             </div>
           </div>
 
           {/* Password */}
           <div className="space-y-1.5">
-            <label htmlFor="signup-password" className="block text-[13px] font-semibold text-hw-foreground">
+            <label htmlFor="signup-password" className="block text-[19px] font-semibold text-hw-depw">
               Password
             </label>
-            <div className="flex h-10 items-center gap-2 rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
+            <div className="flex h-11 items-center gap-2 rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
               <input
                 id="signup-password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Minimum 8 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
+                className="w-full bg-transparent text-[19px] text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
               <button
                 type="button"
@@ -142,17 +149,17 @@ export function SignUpCard() {
 
           {/* Confirm Password */}
           <div className="space-y-1.5">
-            <label htmlFor="signup-confirm" className="block text-[13px] font-semibold text-hw-foreground">
+            <label htmlFor="signup-confirm" className="block text-[19px] font-semibold text-hw-foreground">
               Confirm Password
             </label>
-            <div className="flex h-10 items-center gap-2 rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
+            <div className="flex h-11 items-center gap-2 rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
               <input
                 id="signup-confirm"
                 type={showConfirm ? "text" : "password"}
                 placeholder="Minimum 8 characters"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full bg-transparent text-sm text-hw-foreground outline-none placeholder:text-hw-faint/50"
+                className="w-full bg-transparent text-[19px] text-hw-foreground outline-none placeholder:text-hw-faint/50"
               />
               <button
                 type="button"
@@ -178,9 +185,9 @@ export function SignUpCard() {
                 agree ? "border-[#05DF8B] bg-[#05DF8B]" : "border-hw-foreground bg-transparent"
               )}
             >
-              {agree ? <Check className="size-3 text-hw-input" strokeWidth={3} /> : null}
+              {agree ? <Check className="size-2 text-hw-input" strokeWidth={5} /> : null}
             </button>
-            <p className="text-[13px] leading-snug text-hw-foreground">
+            <p className="text-[15px] leading-snug font-[450px]  text-hw-depw">
               I agree to the{" "}
               <a href="/terms" className="text-[#69A6D5] underline">Terms of Service</a> and{" "}
               <a href="/privacy" className="text-[#69A6D5] underline">Privacy Policy</a>
@@ -192,9 +199,9 @@ export function SignUpCard() {
         <button
           type="submit"
           disabled={submitting}
-          className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[15px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[22px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <Rocket className="size-[18px]" />
+          <Rocket className="size-[22px]" />
           {submitting ? "Please wait…" : "Start Your Journey"}
         </button>
       </form>
