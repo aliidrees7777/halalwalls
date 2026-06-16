@@ -54,7 +54,7 @@ function CategoryBadge({
     <span
       className={cn(
         "min-w-[28px] rounded-full b-1 w-16 h-5 text-center text-[15px] font-bold tabular-nums text-hw-depw",
-        isPremium ? "border border-hw-yellow bg-transparent" : "bg-hw-line",
+        isPremium ? "border border-hw-yellow bg-hw-lines text-hw-yellow" : "bg-hw-lines text-white",
       )}
     >
       {count}
@@ -131,7 +131,7 @@ export function HomeSidebar() {
           href="https://play.google.com/store/apps"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-3 rounded-md border border-hw-line bg-[#1C2129] px-3 py-2.5 transition-opacity hover:opacity-90 py-4 mx-4"
+          className="flex items-center justify-center gap-3 rounded-md border border-hw-line bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90 py-4 mx-4"
         >
           <Image
             src="/google-logo.svg"
@@ -144,7 +144,7 @@ export function HomeSidebar() {
             <p className="text-[12px] uppercase tracking-wide text-hw-muted font-semibold">
               Get it on
             </p>
-            <p className="text-base font-semibold text-hw-foreground">
+            <p className="text-base font-semibold text-hw-muted">
               Google Play
             </p>
           </div>

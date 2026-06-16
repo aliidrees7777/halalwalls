@@ -35,7 +35,7 @@ const RESOLUTION_LABELS = ["1920×1080", "2560×1440", "3840×2160 (4K)", "1080�
 const CATEGORIES_PER_PAGE = 10;
 
 const triggerClass =
-  "flex items-center gap-0.5 rounded-md px-3 py-2 text-[18px] text-hw-muted transition-colors hover:text-hw-foreground font-medium";
+  "flex items-center gap-0.5 rounded-md px-3 py-2 text-[18px] transition-colors text-hw-foreground font-medium";
 const itemClass =
   "text-[18px] text-hw-muted focus:bg-hw-surface focus:text-hw-foreground font-medium";
 

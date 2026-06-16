@@ -39,7 +39,7 @@ const pillClass = (active: boolean) =>
   cn(
     "flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-[11px] lg:text-[19px] text-[15px]  lg:font-medium font-semibold text-white ",
     active
-      ? "bg-hw-green font-semibold text-[#000000] lg:text-[19px] text-[15px]"
+      ? "bg-hw-green font-semibold  lg:text-[19px] text-[15px]"
       : "bg-hw-pill text-hw-depw hover:bg-hw-pill2-hover",
   );
 

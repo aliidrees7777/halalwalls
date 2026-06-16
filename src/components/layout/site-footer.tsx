@@ -13,7 +13,7 @@ const footerLinks = [
 ];
 
 const socialButtonClass =
-  "flex items-center gap-2 rounded-lg border border-hw-line bg-hw-pill2 px-4 py-2.5 text-base font-medium text-hw-muted transition-colors hover:bg-hw-pill2-hover hover:text-hw-foreground";
+  "flex items-center gap-2 rounded-lg border border-hw-line bg-[#323639] px-4 py-2.5 text-base font-medium text-hw-fcolor transition-colors hover:bg-hw-pill2-hover hover:text-hw-foreground";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -49,7 +49,7 @@ function TikTokIcon({ className }: { className?: string }) {
 
 export function SiteFooter() {
   return (
-    <footer className="bg-[#1f2224] px-4 py-12 lg:px-6 border-t-2 border-hw-line">
+    <footer className="bg-hw-footer px-4 py-12 lg:px-6 border-t-2 border-hw-border">
       <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-6">
         <nav
           className="flex flex-wrap items-center justify-center gap-x-1 gap-y-2 text-center  text-hw-muted"

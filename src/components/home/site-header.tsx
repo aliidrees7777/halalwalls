@@ -15,6 +15,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 bg-hw-header">
       <div className="mx-auto flex h-[70px] max-w-[1650px] items-center gap-4 px-4 lg:px-6">
+        {/* {dark ? ():()} */}
         <HalalWallsLogo className="shrink-0" />
 
         

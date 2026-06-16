@@ -5,7 +5,8 @@ import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import mon from "../../../public/mon.svg"
+import mon from "../../../public/mon.svg";
+import sun from "../../../public/sun.svg"
 /**
  * Round icon button that flips between dark and light themes (next-themes).
  * Shows a Sun in light mode and a Moon in dark mode. Guards on `mounted`
@@ -28,7 +29,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       //   className
       // )}
     >
-      {isLight ? <Sun className="size-[18px]" /> : <Image src={mon} alt="Moon icon" className="hidden md:flex"/>}
+      {isLight ? <Image src={sun} alt="Moon icon" className="hidden md:flex"/> : <Image src={mon} alt="Moon icon" className="hidden md:flex"/>}
     </button>
   );
 }
