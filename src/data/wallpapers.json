@@ -1,164 +1,155 @@
 [
   {
     "id": "1",
-    "slug": "gtavi",
-    "title": "GTA VI",
-    "image": "/image.png",
+    "slug": "gta-6-the-next-chapter-begins",
+    "title": "GTA 6 — The Next Chapter Begins",
+    "image": "/gta-6-the-next-chapter-begins-rg-2550x1435.jpg",
     "favoritesCount": 120,
-    "category": "animals",
-    "resolution": "1920x1080"
+    "category": "gaming",
+    "resolution": "2550x1435"
   },
   {
     "id": "2",
-    "slug": "sunset-lake-wallpaper",
-    "title": "Sunset Lake Wallpaper",
-    "image": "/image1.png",
+    "slug": "miles-morales-sitting-alone",
+    "title": "Miles Morales Sitting Alone",
+    "image": "/miles-morales-sitting-alone-7k-2550x1435.jpg",
     "favoritesCount": 85,
-    "category": "space",
-    "resolution": "1920x1080"
+    "category": "superheroes",
+    "resolution": "2550x1435"
   },
   {
     "id": "3",
-    "slug": "forest-road-wallpaper",
-    "title": "Forest Road Wallpaper",
-    "image": "/image2.png",
+    "slug": "playstation-logo-5k",
+    "title": "PlayStation Logo 5K",
+    "image": "/playstation-logo-5k-wq-2550x1435.jpg",
     "favoritesCount": 64,
-    "category": "animals",
-    "resolution": "1920x1080"
+    "category": "gaming",
+    "resolution": "2550x1435"
   },
   {
     "id": "4",
-    "slug": "city-night-wallpaper",
-    "title": "City Night Wallpaper",
-    "image": "/image3.png",
+    "slug": "small-memory",
+    "title": "Small Memory",
+    "image": "/small-memory-lp.jpg",
     "favoritesCount": 98,
-    "category": "movies",
+    "category": "minimalist",
     "resolution": "1920x1080"
   },
   {
     "id": "5",
-    "slug": "joker",
-    "title": "Joker",
-    "image": "/image4.png",
+    "slug": "beautiful-aesthetic-anime-background",
+    "title": "Beautiful Aesthetic Anime Background",
+    "image": "/beautiful-aesthetic-anime-background.jpg",
     "favoritesCount": 145,
     "category": "anime",
     "resolution": "1920x1080"
   },
   {
     "id": "6",
-    "slug": "spiderman",
-    "title": "Spiderman",
-    "image": "/image5.png",
+    "slug": "shulk-xenoblade",
+    "title": "Shulk — Xenoblade",
+    "image": "/shulk-xenoblade-t4-2550x1435.jpg",
     "favoritesCount": 112,
-    "category": "minimalist",
-    "resolution": "1920x1080"
+    "category": "gaming",
+    "resolution": "2550x1435"
   },
   {
     "id": "7",
-    "slug": "green-forest-wallpaper",
-    "title": "Green Forest Wallpaper",
-    "image": "/image6.png",
+    "slug": "satoru-gojo-end-game",
+    "title": "Satoru Gojo — End Game",
+    "image": "/satoru-gojo-end-game-tf-2550x1435.jpg",
     "favoritesCount": 76,
-    "category": "animals",
-    "resolution": "1920x1080"
+    "category": "anime",
+    "resolution": "2550x1435"
   },
   {
     "id": "8",
-    "slug": "river-side-wallpaper",
-    "title": "River Side Wallpaper",
-    "image": "/image7.png",
+    "slug": "lamborghini-revuelto",
+    "title": "Lamborghini Revuelto",
+    "image": "/novitec-lamborghini-revuelto-exotic-carbon-machine-7t-2550x1435.jpg",
     "favoritesCount": 87,
-    "category": "animals",
-    "resolution": "1920x1080"
+    "category": "cars",
+    "resolution": "2550x1435"
   },
   {
     "id": "9",
-    "slug": "beautiful-waterfall-wallpaper",
-    "title": "Beautiful Waterfall Wallpaper",
-    "image": "/image8.png",
+    "slug": "spiderman-miles-lost-in-space",
+    "title": "Spider-Man Miles — Lost In Space",
+    "image": "/spiderman-miles-lost-in-space-4k-0f-2550x1435.jpg",
     "favoritesCount": 169,
-    "category": "animals",
-    "resolution": "1920x1080"
+    "category": "superheroes",
+    "resolution": "2550x1435"
   },
   {
     "id": "10",
-    "slug": "dark-road-wallpaper",
-    "title": "Dark Road Wallpaper",
-    "image": "/image9.png",
+    "slug": "itachi-uchiha",
+    "title": "Itachi Uchiha",
+    "image": "/itachi-uchiha-the-villain-who-was-always-the-hero-no-2550x1435.jpg",
     "favoritesCount": 54,
-    "category": "gaming",
-    "resolution": "1920x1080"
+    "category": "anime",
+    "resolution": "2550x1435"
   },
   {
     "id": "11",
-    "slug": "Iron Man",
-    "title": "Iron Man",
-    "image": "/image10.png",
+    "slug": "nordland-norway",
+    "title": "Nordland Norway",
+    "image": "/nordland-norway-lk-2550x1435.jpg",
     "favoritesCount": 210,
     "category": "space",
-    "resolution": "1920x1080"
+    "resolution": "2550x1435"
   },
   {
     "id": "12",
-    "slug": "jujutsu-kaisen",
-    "title": "Jujutsu Kaisen",
-    "image": "/image11.png",
+    "slug": "darth-vader",
+    "title": "Darth Vader",
+    "image": "/darth-vader-became-a-legend-dn-2550x1435.jpg",
     "favoritesCount": 91,
-    "category": "space",
-    "resolution": "1920x1080"
+    "category": "movies",
+    "resolution": "2550x1435"
   },
   {
     "id": "13",
-    "slug": "autumn-leaves-wallpaper",
-    "title": "Autumn Leaves Wallpaper",
-    "image": "/image12.png",
+    "slug": "shinra-kusakabe",
+    "title": "Shinra Kusakabe",
+    "image": "/shinrabansho-man-a2-2550x1435.jpg",
     "favoritesCount": 73,
-    "category": "animals",
-    "resolution": "1920x1080"
+    "category": "anime",
+    "resolution": "2550x1435"
   },
   {
     "id": "14",
-    "slug": "lake-reflection-wallpaper",
-    "title": "Lake Reflection Wallpaper",
-    "image": "/image13.png",
+    "slug": "goku-super-saiyan-blue",
+    "title": "Goku Super Saiyan Blue",
+    "image": "/goku-super-saiyan-blue-against-all-gods-hv-2550x1435.jpg",
     "favoritesCount": 102,
-    "category": "animals",
-    "resolution": "1920x1080"
+    "category": "anime",
+    "resolution": "2550x1435"
   },
   {
     "id": "15",
-    "slug": "sunrise-hills-wallpaper",
-    "title": "Sunrise Hills Wallpaper",
-    "image": "/image14.png",
+    "slug": "batman-revolution",
+    "title": "Batman — Revolution",
+    "image": "/batman-is-not-a-replacement-he-is-a-revolution-4i-2550x1435.jpg",
     "favoritesCount": 134,
-    "category": "animals",
-    "resolution": "1920x1080"
+    "category": "superheroes",
+    "resolution": "2550x1435"
   },
   {
     "id": "16",
-    "slug": "wolverine",
-    "title": "Wolverine",
-    "image": "/image15.png",
+    "slug": "v-for-vendetta",
+    "title": "V for Vendetta",
+    "image": "/v-for-vendetta-2026-uz-2550x1435.jpg",
     "favoritesCount": 67,
-    "category": "anime",
-    "resolution": "1920x1080"
+    "category": "movies",
+    "resolution": "2550x1435"
   },
   {
     "id": "17",
-    "slug": "golden-desert-wallpaper",
-    "title": "Golden Desert Wallpaper",
-    "image": "/image16.png",
+    "slug": "abstract-wallpaper",
+    "title": "Abstract Wallpaper",
+    "image": "/hf_20260326_164049_8974aeb1-5fda-4ce2-a53e-8ef40197514c.jpeg",
     "favoritesCount": 81,
     "category": "minimalist",
-    "resolution": "1920x1080"
-  },
-  {
-    "id": "18",
-    "slug": "tropical-beach-wallpaper",
-    "title": "Tropical Beach Wallpaper",
-    "image": "/image17.png",
-    "favoritesCount": 193,
-    "category": "animals",
     "resolution": "1920x1080"
   }
 ]
