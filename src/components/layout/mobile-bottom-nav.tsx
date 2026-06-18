@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Home, LayoutGrid, Plus, Heart, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-
 /**
  * Mobile fixed bottom navigation (client's Note 8 + mobile Figma):
  * black bar, green top border, rounded top corners, 5 icon items with a
@@ -54,10 +53,10 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-50 h-[68px] rounded-t-[28px] border-t border-hw-green bg-black md:hidden"
+      className="fixed inset-x-0 bottom-0 z-50 h-[92px] rounded-t-[28px] border-t border-hw-green bg-black md:hidden"
       aria-label="Mobile navigation"
     >
-      <div className="mx-auto flex h-full max-w-[360px] items-center justify-around px-5">
+      <div className="mx-auto flex h-full max-w-[360px] items-center justify-around ">
         {sideItems.map(({ label, href, icon: Icon, match }) => (
           <MotionLink
             key={label}
@@ -67,7 +66,7 @@ export function MobileBottomNav() {
             transition={tapTransition}
             className={itemClass(match(pathname))}
           >
-            <Icon className="size-6" />
+            <Icon className="size-10" />
           </MotionLink>
         ))}
 
@@ -78,13 +77,13 @@ export function MobileBottomNav() {
           whileTap={{ scale: 0.9 }}
           transition={tapTransition}
           className={cn(
-            "grid size-12 place-items-center rounded-full border-[3px] bg-black transition-colors",
+            "grid size-14 place-items-center rounded-full border-[3px] bg-black transition-colors",
             pathname === "/upload"
               ? "border-hw-green text-hw-green"
               : "border-hw-icon text-hw-icon hover:border-hw-foreground hover:text-hw-foreground"
           )}
         >
-          <Plus className="size-6" strokeWidth={2.5} />
+          <Plus className="size-10" strokeWidth={2.5} />
         </MotionLink>
 
         {rightItems.map(({ label, href, icon: Icon, match }) => (
@@ -96,7 +95,7 @@ export function MobileBottomNav() {
             transition={tapTransition}
             className={itemClass(match(pathname))}
           >
-            <Icon className="size-6" />
+            <Icon className="size-10" />
           </MotionLink>
         ))}
       </div>
