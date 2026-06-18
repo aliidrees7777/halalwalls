@@ -6,12 +6,8 @@ import dimond from "../../../public/authicon/dimond.svg";
 import start from "../../../public/authicon/start.svg";
 import whitedimond from "../../../public/authicon/whitedimond.svg";
 import close from "../../../public/authicon/close.svg";
-/**
- * Go Premium pricing card. Matches the Figma "Subs container" frame:
- * dark-glass container rgba(24,26,27,0.77) + green #05DF8B border, "Go Premium"
- * heading, and three plan cards (Flexible / Popular / Best Value).
- * Card header #1D2021, features panel #323639, green check badges, #1D2021 pill.
- */
+import { useAuth } from "@/context/auth-context";
+import { motion, AnimatePresence } from "framer-motion";
 const PLANS = [
   {
     badge: "Flexible",
@@ -44,12 +40,23 @@ const FEATURES = [
 ];
 
 export function PremiumPlans() {
+    const { signup,closeAuthModal } = useAuth();
   const router = useRouter();
   return (
-    <div className="relative z-10 my-auto flex w-full max-w-[1275px] h-[900px] flex-col items-center gap-20 rounded-2xl border-2 border-[#05DF8B]  sm:p-10">
+    <AnimatePresence>
+    <motion.div
+          key="modal"
+          initial={{ opacity: 0, y: "100%" }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: "100%" }}
+          transition={{
+            duration: 0.4,
+            ease: "easeInOut",
+          }}
+    className="relative z-10 my-auto flex w-full max-w-[1275px] h-[900px] flex-col items-center gap-20 rounded-2xl border-2 border-[#05DF8B]  sm:p-10 bg-hw-card/80">
       {/* Heading */}
             <button
-        onClick={() => router.back()}
+        onClick={closeAuthModal}
         className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
       >
         <Image src={close} alt="Close" width={20} height={20} />
@@ -84,7 +91,6 @@ export function PremiumPlans() {
                 className="absolute right-6 top-8  rotate-12 text-[#05DF8B]/80"
                 width={170}
               />
-              {/* <Gem className="absolute -right-1 top-1 size-20 rotate-12 text-[#05DF8B]/80" /> */}
               <Image
                 src={start}
                 alt="start"
@@ -149,6 +155,7 @@ export function PremiumPlans() {
           </div>
         ))}
       </div>
-    </div>
+    </motion.div>
+    </AnimatePresence>
   );
 }

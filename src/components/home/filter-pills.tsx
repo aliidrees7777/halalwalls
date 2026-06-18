@@ -9,6 +9,12 @@ import rocket from "../../../public/rocket.svg";
 import play from "../../../public/play.svg";
 import shuffle from "../../../public/shuffle.svg";
 import flame from "../../../public/flame.svg";
+import lightrocket from "../../../public/cate-icon/lightrocket.svg";
+import playdark from "../../../public/cate-icon/playdark.svg";
+import populardark from "../../../public/cate-icon/populardark.svg";
+import randomdark from "../../../public/cate-icon/randomdark.svg";
+import { useAuth } from "@/context/auth-context";
+
 /**
  * Homepage filter row: the 4 browse modes (Latest / Live / Random / Popular)
  * followed by TAG pills (tags users assign to wallpapers at upload).
@@ -17,23 +23,6 @@ import flame from "../../../public/flame.svg";
  * the current category (?category, chosen from the sidebar/header) is preserved
  * — so "Cars" + "Latest" → latest cars; "+ #neon" → latest neon cars.
  */
-const BROWSE_MODES = [
-  { id: "latest", label: "Latest", icon: rocket },
-  { id: "live", label: "Live Walls", icon: play },
-  { id: "random", label: "Random", icon: shuffle },
-  { id: "popular", label: "Popular", icon: flame },
-  { id: "anime", label: "Anime" },
-  { id: "superheroes", label: "Superheroes" },
-  { id: "minimalist", label: "Minimalist" },
-  { id: "gaming", label: "Gaming" },
-  { id: "movies", label: "Movies" },
-  { id: "cars", label: "Cars" },
-  { id: "sport", label: "Sport" },
-  { id: "space", label: "Space" },
-  { id: "animals", label: "Animals" },
-  { id: "tvshows", label: "TV Shows" },
-  { id: "3D", label: "3D" },
-] as const;
 
 const pillClass = (active: boolean) =>
   cn(
@@ -44,6 +33,7 @@ const pillClass = (active: boolean) =>
   );
 
 export function FilterPills() {
+  const { isLight } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const tags = useTags();
@@ -62,6 +52,29 @@ export function FilterPills() {
     const qs = params.toString();
     router.push(qs ? `/?${qs}` : "/");
   };
+
+  const BROWSE_MODES = [
+    {
+      id: "latest",
+      label: "Latest",
+      icon: lightrocket,
+      darkIcon: rocket,
+    },
+    { id: "live", label: "Live Walls", icon: play, darkIcon: playdark },
+    { id: "random", label: "Random", icon: shuffle, darkIcon: randomdark },
+    { id: "popular", label: "Popular", icon: flame, darkIcon: populardark },
+    { id: "anime", label: "Anime" },
+    { id: "superheroes", label: "Superheroes" },
+    { id: "minimalist", label: "Minimalist" },
+    { id: "gaming", label: "Gaming" },
+    { id: "movies", label: "Movies" },
+    { id: "cars", label: "Cars" },
+    { id: "sport", label: "Sport" },
+    { id: "space", label: "Space" },
+    { id: "animals", label: "Animals" },
+    { id: "tvshows", label: "TV Shows" },
+    { id: "3D", label: "3D" },
+  ] as const;
 
   return (
     <div
@@ -84,7 +97,13 @@ export function FilterPills() {
             {mode.label}
             {/* <Icon className="size-3.5" /> */}
             {"icon" in mode && (
-              <Image src={mode.icon} alt={mode.label} width={22} height={22} className="lg:w-[22px] lg:h-[22px] w-[17px] h-[17px]"/>
+              <Image
+                src={isActive ? mode.icon : isLight ? mode.darkIcon : mode.icon}
+                alt={mode.label}
+                width={22}
+                height={22}
+                className="lg:w-[22px] lg:h-[22px] w-[17px] h-[17px]"
+              />
             )}
           </button>
         );
