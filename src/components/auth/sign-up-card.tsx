@@ -5,20 +5,14 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Rocket, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
+import { motion, AnimatePresence } from "framer-motion";
 import { ApiError } from "@/lib/api";
 import close from "../../../public/authicon/close.svg";
 import Image from "next/image";
-/**
- * Sign Up ("Join Us in a Snap") card.
- * Matches the Figma "Sign up section" frame — colors, fonts, layout — at the
- * same compact platform scale as the Sign In card (h-10 inputs, text-sm,
- * ~13px labels, rounded-lg, 400px width). Palette from Figma CSS:
- * card rgba(24,26,27,0.77) · border #05DF8B · inputs #181A1B / #3E4446 ·
- * placeholder #B2ACA2@50% · terms links #69A6D5 · primary #05DF8B / text #181A1B.
- */
+
 export function SignUpCard() {
   const router = useRouter();
-  const { signup } = useAuth();
+  const { signup,closeAuthModal } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agree, setAgree] = useState(false);
@@ -59,11 +53,20 @@ export function SignUpCard() {
   }
 
   return (
-    <div
-      className="relative z-10 my-auto flex justify-center items-center w-full max-w-[825px] h-[670px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 backdrop-blur-md sm:p-7"
+    <AnimatePresence>
+    <motion.div
+          key="modal"
+          initial={{ opacity: 0, y: "100%" }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: "100%" }}
+          transition={{
+            duration: 0.4,
+            ease: "easeInOut",
+          }}
+      className="relative z-10 my-auto flex justify-center items-center w-full max-w-[825px] h-[670px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 sm:p-7"
     >
         <button
-        onClick={() => router.back()}
+        onClick={closeAuthModal}
         className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
       >
         <Image src={close} alt="Close" width={20} height={20} />
@@ -205,6 +208,7 @@ export function SignUpCard() {
           {submitting ? "Please wait…" : "Start Your Journey"}
         </button>
       </form>
-    </div>
+    </motion.div>
+    </AnimatePresence>
   );
 }

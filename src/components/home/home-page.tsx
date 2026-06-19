@@ -14,6 +14,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { api } from "@/lib/api";
 import type { Wallpaper } from "@/types/wallpaper";
 import wallpapersData from "../../data/wallpapers.json";
+import logodark from "../../../public/authicon/logodark.svg"
 interface Pagination {
   total: number;
   page: number;
@@ -171,33 +172,39 @@ export function HomePage() {
             />
 
             {/* Mobile-only app banner (matches Figma mobile homepage) */}
-            <div className="mt-4 flex items-center gap-3 rounded-xl border border-hw-green/40 bg-hw-card p-3 lg:hidden">
-              <div className="grid size-11 shrink-0 place-items-center rounded-lg bg-hw-deep">
-                <span className="text-lg font-bold text-hw-green">W</span>
+            <div className="mt-4 flex items-center justify-center gap-[22px] rounded-xl border border-hw-green/40 bg-[#CBFFEB] p-3 lg:hidden h-[120px]">
+              <div className="grid shrink-0">
+                <span className="text-lg font-bold text-hw-green">
+<Image src={logodark} alt="logodark" className="w-[84px]"/>
+                </span>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-hw-foreground">
+              <div className="min-w-0 ">
+                <p className="text-[20px] font-bold text-hw-deep">
                   HalalWalls App
                 </p>
-                <p className="text-[11px] text-hw-muted">
+                <p className="text-[12px] text-hw-deep">
                   Download wallpapers on the go
                 </p>
-              </div>
-              <a
+                  <a
                 href="https://play.google.com/store/apps"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex shrink-0 items-center gap-2 rounded-lg bg-hw-pill px-3 py-2 text-xs text-hw-foreground transition-colors hover:bg-hw-pill2-hover"
+                className="flex shrink-0 items-center gap-2 rounded-lg bg-hw-pill px-3 py-2  mt-2 w-[150px]"
               >
                 <Image
                   src="/google-play-logo.png"
                   alt=""
                   width={16}
                   height={16}
-                  className="size-4 object-contain"
+                  className="size-6 object-contain"
                 />
-                Google Play
+                <div>
+                <p className="text-[10px] font-semibold">Get it on</p>
+               <p className="text-[13px] font-semibold">Google Play</p>
+               </div>
               </a>
+              </div>
+            
             </div>
           </div>
         </div>

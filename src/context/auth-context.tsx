@@ -1,5 +1,5 @@
 "use client";
-
+import { useTheme } from "next-themes";
 import {
   createContext,
   useCallback,
@@ -34,7 +34,13 @@ interface SignupPayload {
   confirmPassword: string;
 }
 
-type AuthModalView = "signin" | "signup";
+export type AuthModalView =
+  | "login"
+  | "signin"
+  | "signup"
+  | "full-signin"
+  | "forgot"
+  | "premium";
 
 interface AuthContextValue {
   user: AuthUser | null;
@@ -46,7 +52,7 @@ interface AuthContextValue {
   changePassword: (
     currentPassword: string,
     newPassword: string,
-    confirmNewPassword: string
+    confirmNewPassword: string,
   ) => Promise<void>;
   updateProfile: (payload: {
     firstName?: string;
@@ -62,12 +68,16 @@ interface AuthContextValue {
   // Favorites
   isFavorited: (wallpaperId: string) => boolean;
   toggleFavorite: (
-    wallpaperId: string
+    wallpaperId: string,
   ) => Promise<{ isFavorite: boolean; favoritesCount: number } | null>;
-  // Auth modal (shown when a guest triggers a gated action)
   authModal: { open: boolean; view: AuthModalView };
   openAuthModal: (view?: AuthModalView) => void;
   closeAuthModal: () => void;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isLight: boolean;
+  mounted: boolean;
+  setTheme: (theme: string) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -75,13 +85,25 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 type AuthSuccess = { token: string; user: AuthUser };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
-  const [authModal, setAuthModal] = useState<{ open: boolean; view: AuthModalView }>({
+  const [authModal, setAuthModal] = useState<{
+    open: boolean;
+    view: AuthModalView;
+  }>({
     open: false,
     view: "signin",
   });
+  const { resolvedTheme, setTheme } = useTheme();
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isLight = mounted && resolvedTheme === "light";
   // Hydrate the session from a stored token on first load.
   useEffect(() => {
     let active = true;
@@ -91,9 +113,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
       try {
-        const data = await api.get<{ user: AuthUser; favoritesCount: number; uploadsCount: number }>(
-          "/me"
-        );
+        const data = await api.get<{
+          user: AuthUser;
+          favoritesCount: number;
+          uploadsCount: number;
+        }>("/me");
         if (active)
           setUser({
             ...data.user,
@@ -121,10 +145,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const data = await api.post<AuthSuccess>("/auth/login", { email, password });
+      const data = await api.post<AuthSuccess>("/auth/login", {
+        email,
+        password,
+      });
       return persistSession(data);
     },
-    [persistSession]
+    [persistSession],
   );
 
   const signup = useCallback(
@@ -132,7 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await api.post<AuthSuccess>("/auth/signup", payload);
       return persistSession(data);
     },
-    [persistSession]
+    [persistSession],
   );
 
   const loginWithGoogle = useCallback(
@@ -140,11 +167,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await api.post<AuthSuccess>("/auth/google", { credential });
       return persistSession(data);
     },
-    [persistSession]
+    [persistSession],
   );
 
   const changePassword = useCallback(
-    async (currentPassword: string, newPassword: string, confirmNewPassword: string) => {
+    async (
+      currentPassword: string,
+      newPassword: string,
+      confirmNewPassword: string,
+    ) => {
       const data = await api.post<{ token: string }>("/auth/change-password", {
         currentPassword,
         newPassword,
@@ -152,7 +183,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       setToken(data.token); // keep this session alive with the fresh token
     },
-    []
+    [],
   );
 
   const updateProfile = useCallback(
@@ -166,19 +197,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }) => {
       const data = await api.patch<{ user: AuthUser }>("/me", payload);
       setUser((u) =>
-        u ? { ...data.user, uploadsCount: u.uploadsCount, favoritesCount: u.favoritesCount } : data.user
+        u
+          ? {
+              ...data.user,
+              uploadsCount: u.uploadsCount,
+              favoritesCount: u.favoritesCount,
+            }
+          : data.user,
       );
       return data.user;
     },
-    []
+    [],
   );
 
   const refreshMe = useCallback(async () => {
     if (!getToken()) return;
-    const data = await api.get<{ user: AuthUser; favoritesCount: number; uploadsCount: number }>(
-      "/me"
-    );
-    setUser({ ...data.user, favoritesCount: data.favoritesCount, uploadsCount: data.uploadsCount });
+    const data = await api.get<{
+      user: AuthUser;
+      favoritesCount: number;
+      uploadsCount: number;
+    }>("/me");
+    setUser({
+      ...data.user,
+      favoritesCount: data.favoritesCount,
+      uploadsCount: data.uploadsCount,
+    });
   }, []);
 
   const logout = useCallback(() => {
@@ -189,11 +232,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const openAuthModal = useCallback((view: AuthModalView = "signin") => {
     setAuthModal({ open: true, view });
   }, []);
-  const closeAuthModal = useCallback(() => setAuthModal((m) => ({ ...m, open: false })), []);
+  const closeAuthModal = useCallback(
+    () => setAuthModal((m) => ({ ...m, open: false })),
+    [],
+  );
 
   const isFavorited = useCallback(
     (wallpaperId: string) => !!user?.favorites?.includes(wallpaperId),
-    [user]
+    [user],
   );
 
   // Add/remove a favorite. Optimistically updates the user's favorites; opens
@@ -214,18 +260,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 ? u.favorites.filter((f) => f !== wallpaperId)
                 : [...u.favorites, wallpaperId],
             }
-          : u
+          : u,
       );
       try {
         const data = currentlyFav
-          ? await api.delete<{ favorites: string[]; favoritesCount: number; isFavorite: boolean }>(
-              `/me/favorites/${wallpaperId}`
-            )
-          : await api.post<{ favorites: string[]; favoritesCount: number; isFavorite: boolean }>(
-              `/me/favorites/${wallpaperId}`
-            );
+          ? await api.delete<{
+              favorites: string[];
+              favoritesCount: number;
+              isFavorite: boolean;
+            }>(`/me/favorites/${wallpaperId}`)
+          : await api.post<{
+              favorites: string[];
+              favoritesCount: number;
+              isFavorite: boolean;
+            }>(`/me/favorites/${wallpaperId}`);
         setUser((u) => (u ? { ...u, favorites: data.favorites } : u));
-        return { isFavorite: data.isFavorite, favoritesCount: data.favoritesCount };
+        return {
+          isFavorite: data.isFavorite,
+          favoritesCount: data.favoritesCount,
+        };
       } catch (err) {
         // revert
         setUser((u) =>
@@ -236,13 +289,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   ? [...u.favorites, wallpaperId]
                   : u.favorites.filter((f) => f !== wallpaperId),
               }
-            : u
+            : u,
         );
-        if (err instanceof ApiError && err.statusCode === 401) openAuthModal("signin");
+        if (err instanceof ApiError && err.statusCode === 401)
+          openAuthModal("signin");
         throw err;
       }
     },
-    [user, openAuthModal]
+    [user, openAuthModal],
   );
 
   const value = useMemo<AuthContextValue>(
@@ -263,8 +317,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       authModal,
       openAuthModal,
       closeAuthModal,
+      open,
+      setOpen,
+      isLight,
+      mounted,
+      setTheme,
     }),
-    [user, loading, login, signup, loginWithGoogle, changePassword, updateProfile, logout, refreshMe, isFavorited, toggleFavorite, authModal, openAuthModal, closeAuthModal]
+    [
+      user,
+      loading,
+      login,
+      open,
+      signup,
+      loginWithGoogle,
+      changePassword,
+      updateProfile,
+      logout,
+      refreshMe,
+      isFavorited,
+      toggleFavorite,
+      authModal,
+      openAuthModal,
+      closeAuthModal,
+      isLight,
+      mounted,
+      setTheme,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

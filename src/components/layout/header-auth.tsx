@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
  * (links to /profile) + a log-out button when signed in.
  */
 export function HeaderAuth({ className }: { className?: string }) {
-  const { user, isAuthenticated, logout, loading } = useAuth();
+  const { user, isAuthenticated, logout, loading ,openAuthModal} = useAuth();
 
   // Avoid a flash of "Sign In" before the session hydrates.
   if (loading) {
@@ -20,15 +20,14 @@ export function HeaderAuth({ className }: { className?: string }) {
 
   if (!isAuthenticated || !user) {
     return (
-      <Link
-        href="/login"
-        className={cn(
-          "rounded-[10px]  px-6 py-4 text-[18px] font-medium text-white transition-colors bg-hw-surface",
-          className
-        )}
-      >
-        Sign In
-      </Link>
+<button
+  onClick={() => openAuthModal("signin")} // "signin" view ke liye
+  className={cn(
+    "rounded-[10px] px-6 py-4 text-[18px] font-medium text-white transition-colors bg-hw-surface",
+  )}
+>
+  Sign In
+</button>
     );
   }
 

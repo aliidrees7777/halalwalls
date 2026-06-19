@@ -1,21 +1,14 @@
 "use client";
-
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api, ApiError } from "@/lib/api";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import close from "../../../public/authicon/close.svg";
-/**
- * Forgot Password card.
- * Matches the Figma "Forgot password" frame — colors, fonts, layout — at the
- * same compact platform scale as Sign In / Sign Up (h-10 inputs/buttons,
- * text-sm, ~13px labels, rounded-lg, 400px width). No cross.
- * Palette from Figma CSS: card rgba(24,26,27,0.77) · border #05DF8B ·
- * input #181A1B / #3E4446 · placeholder #B2ACA2@50% · description/footer #65635F ·
- * primary #05DF8B / text #181A1B · "Log in" link #69A6D5.
- */
+import { useAuth } from "@/context/auth-context";
 export function ForgotPasswordCard() {
+  const { signup,closeAuthModal,openAuthModal } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -38,11 +31,20 @@ export function ForgotPasswordCard() {
   }
 
   return (
-    <div
-      className="relative z-10 my-auto flex justify-center items-center w-full max-w-[825px] h-[480px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 backdrop-blur-md sm:p-7"
+    <AnimatePresence>
+    <motion.div
+          key="modal"
+          initial={{ opacity: 0, y: "100%" }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: "100%" }}
+          transition={{
+            duration: 0.4,
+            ease: "easeInOut",
+          }}
+      className="relative z-10 my-auto flex justify-center items-center w-full max-w-[825px] h-[480px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 sm:p-7 p-5"
     >
      <button
-        onClick={() => router.back()}
+        onClick={closeAuthModal}
         className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
       >
         <Image src={close} alt="Close" width={20} height={20} />
@@ -112,11 +114,15 @@ export function ForgotPasswordCard() {
         {/* Footer */}
         <p className="text-center text-[13px] text-hw-faint font-[450px]">
           Remember your password?{" "}
-          <Link href="/signin" className="text-[#69A6D5] underline">
+          <button 
+          type="button"
+          onClick={()=>openAuthModal("full-signin")}
+          className="text-[#69A6D5] underline">
             Log in
-          </Link>
+          </button>
         </p>
       </form>
-    </div>
+    </motion.div>
+    </AnimatePresence>
   );
 }

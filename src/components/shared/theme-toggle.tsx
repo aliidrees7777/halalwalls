@@ -7,18 +7,14 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import mon from "../../../public/mon.svg";
 import sun from "../../../public/sun.svg"
+import { useAuth } from "@/context/auth-context";
 /**
  * Round icon button that flips between dark and light themes (next-themes).
  * Shows a Sun in light mode and a Moon in dark mode. Guards on `mounted`
  * to avoid a hydration mismatch (the icon depends on the resolved theme).
  */
 export function ThemeToggle({ className }: { className?: string }) {
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  const isLight = mounted && resolvedTheme === "light";
-
+const {isLight,setTheme}= useAuth()
   return (
     <button
       type="button"

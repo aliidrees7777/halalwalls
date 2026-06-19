@@ -14,7 +14,7 @@ import {
 import { useCategories } from "@/hooks/use-catalog";
 import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
-
+import { useAuth } from "@/context/auth-context";
 /**
  * Desktop primary navigation (shared by the home + download headers).
  * Every entry MERGES into the current filters (combine), targeting the homepage:
@@ -30,7 +30,12 @@ const EXPLORE = [
   { label: "New Uploads", update: { sort: "latest" } },
 ];
 
-const RESOLUTION_LABELS = ["1920×1080", "2560×1440", "3840×2160 (4K)", "1080×2400 (Mobile)"];
+const RESOLUTION_LABELS = [
+  "1920×1080",
+  "2560×1440",
+  "3840×2160 (4K)",
+  "1080×2400 (Mobile)",
+];
 
 const CATEGORIES_PER_PAGE = 10;
 
@@ -39,16 +44,29 @@ const triggerClass =
 const itemClass =
   "text-[18px] text-hw-muted focus:bg-hw-surface focus:text-hw-foreground font-medium";
 
-function LinkDropdown({ label, items }: { label: string; items: { label: string; href: string }[] }) {
+function LinkDropdown({
+  label,
+  items,
+}: {
+  label: string;
+  items: { label: string; href: string }[];
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={triggerClass}>
         {label}
         <ChevronDown className="size-6 opacity-80" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="min-w-[190px] border-hw-border bg-hw-card">
+      <DropdownMenuContent
+        align="start"
+        className="min-w-[190px] border-hw-border bg-hw-card"
+      >
         {items.map((it) => (
-          <DropdownMenuItem key={it.label} render={<Link href={it.href} />} className={itemClass}>
+          <DropdownMenuItem
+            key={it.label}
+            render={<Link href={it.href} />}
+            className={itemClass}
+          >
             {it.label}
           </DropdownMenuItem>
         ))}
@@ -57,11 +75,19 @@ function LinkDropdown({ label, items }: { label: string; items: { label: string;
   );
 }
 
-function CategoriesDropdown({ searchParams }: { searchParams: ReturnType<typeof useSearchParams> }) {
+function CategoriesDropdown({
+  searchParams,
+}: {
+  searchParams: ReturnType<typeof useSearchParams>;
+}) {
+  
   const { categories } = useCategories();
   const [page, setPage] = useState(0);
 
-  const totalPages = Math.max(1, Math.ceil(categories.length / CATEGORIES_PER_PAGE));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(categories.length / CATEGORIES_PER_PAGE),
+  );
   const safePage = Math.min(page, totalPages - 1);
   const start = safePage * CATEGORIES_PER_PAGE;
   const slice = categories.slice(start, start + CATEGORIES_PER_PAGE);
@@ -73,11 +99,18 @@ function CategoriesDropdown({ searchParams }: { searchParams: ReturnType<typeof 
         Categories
         <ChevronDown className="size-6 opacity-80" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="min-w-[200px] border-hw-border bg-hw-card">
+      <DropdownMenuContent
+        align="start"
+        className="min-w-[200px] border-hw-border bg-hw-card"
+      >
         {slice.map((c) => (
           <DropdownMenuItem
             key={c.id}
-            render={<Link href={buildFilterHref(searchParams, { category: c.slug })} />}
+            render={
+              <Link
+                href={buildFilterHref(searchParams, { category: c.slug })}
+              />
+            }
             className={itemClass}
           >
             {c.name}
@@ -127,7 +160,7 @@ function CategoriesDropdown({ searchParams }: { searchParams: ReturnType<typeof 
 
 export function HeaderNav({ className }: { className?: string }) {
   const searchParams = useSearchParams();
-
+  const {openAuthModal } = useAuth();
   const exploreItems = EXPLORE.map((e) => ({
     label: e.label,
     href: buildFilterHref(searchParams, e.update),
@@ -138,19 +171,27 @@ export function HeaderNav({ className }: { className?: string }) {
   }));
 
   return (
-    <nav className={cn("hidden items-center gap-0.5 lg:flex", className)} aria-label="Primary">
+    <nav
+      className={cn("hidden items-center gap-0.5 lg:flex", className)}
+      aria-label="Primary"
+    >
       <LinkDropdown label="Explore" items={exploreItems} />
       <CategoriesDropdown searchParams={searchParams} />
       <LinkDropdown label="Resolutions" items={resolutionItems} />
       <Link href="/upload" className={triggerClass}>
         Upload
       </Link>
-      <Link
+      {/* <Link
         href="/premium"
         className="rounded-md px-3 py-2 text-[18px] font-medium text-hw-yellow transition-opacity hover:opacity-90"
       >
         Premium
-      </Link>
+      </Link> */}
+      <button 
+      onClick={() => openAuthModal("premium")}
+      className="rounded-md px-3 py-2 text-[18px] font-medium text-hw-yellow transition-opacity hover:opacity-90">
+        Premium
+      </button>
     </nav>
   );
 }

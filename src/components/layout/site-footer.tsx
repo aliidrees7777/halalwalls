@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Send } from "lucide-react";
-
+import playstore from "../../../public/authicon/playstore.svg";
+import tiktok from "../../../public/authicon/tiktok.svg";
+import insta from "../../../public/authicon/insta.svg";
+import ncn from "../../../public/authicon/ncn.svg";
 const footerLinks = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
@@ -50,7 +53,7 @@ function TikTokIcon({ className }: { className?: string }) {
 export function SiteFooter() {
   return (
     <footer className="bg-hw-footer px-4 py-12 lg:px-6 border-t-2 border-hw-border">
-      <div className="mx-auto flex max-w-[1400px] flex-col items-center gap-6">
+      <div className="mx-auto flex md:max-w-[1400px] max-w-[410px] flex-col items-center gap-6">
         <nav
           className="flex flex-wrap items-center justify-center gap-x-1 gap-y-2 text-center  text-hw-muted"
           aria-label="Footer"
@@ -64,7 +67,7 @@ export function SiteFooter() {
               )}
               <Link
                 href={link.href}
-                className="transition-colors hover:text-hw-foreground text-base font-medium"
+                className="transition-colors hover:text-hw-foreground md:text-base text-[15px] font-medium"
               >
                 {link.label}
               </Link>
@@ -72,7 +75,7 @@ export function SiteFooter() {
           ))}
         </nav>
 
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3 md:flex hidden">
           <a href="https://play.google.com/store/apps" target="_blank" rel="noopener noreferrer" className={socialButtonClass}>
             <Image
               src="/google-play-logo.png"
@@ -96,8 +99,13 @@ export function SiteFooter() {
             Instagram
           </a>
         </div>
-
-        <p className="text-center text-base font-medium text-hw-muted">
+        <div className="flex flex-wrap items-center justify-center gap-3 md:hidden ">
+          <Image src={playstore} alt="playstore" />
+          <Image src={tiktok} alt="playstore" />
+          <Image src={insta} alt="playstore" />
+          <Image src={ncn} alt="playstore" />
+        </div>
+        <p className="text-center md:text-base text-[14px] font-medium text-hw-foreground">
           © 2026 HalalWalls.com
         </p>
       </div>

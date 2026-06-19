@@ -8,9 +8,9 @@ import { MobileFilterMenu } from "@/components/home/mobile-filter-menu";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { HeaderAuth } from "@/components/layout/header-auth";
 import { HeaderNav } from "@/components/layout/header-nav";
-
+import { useAuth } from "@/context/auth-context";
 export function SiteHeader() {
-  const [open, setOpen] = useState(false);
+  const {open, setOpen} = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-hw-header">
@@ -42,8 +42,6 @@ export function SiteHeader() {
       </div>
 
       <div className="border-3 border-hw-green" aria-hidden />
-
-      {/* Top-to-bottom expanding Filters menu (mobile only) */}
       <AnimatePresence initial={false}>
         {open && (
           <motion.div

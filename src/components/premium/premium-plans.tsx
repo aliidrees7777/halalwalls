@@ -6,12 +6,8 @@ import dimond from "../../../public/authicon/dimond.svg";
 import start from "../../../public/authicon/start.svg";
 import whitedimond from "../../../public/authicon/whitedimond.svg";
 import close from "../../../public/authicon/close.svg";
-/**
- * Go Premium pricing card. Matches the Figma "Subs container" frame:
- * dark-glass container rgba(24,26,27,0.77) + green #05DF8B border, "Go Premium"
- * heading, and three plan cards (Flexible / Popular / Best Value).
- * Card header #1D2021, features panel #323639, green check badges, #1D2021 pill.
- */
+import { useAuth } from "@/context/auth-context";
+import { motion, AnimatePresence } from "framer-motion";
 const PLANS = [
   {
     badge: "Flexible",
@@ -44,33 +40,44 @@ const FEATURES = [
 ];
 
 export function PremiumPlans() {
+    const { signup,closeAuthModal } = useAuth();
   const router = useRouter();
   return (
-    <div className="relative z-10 my-auto flex w-full max-w-[1275px] h-[900px] flex-col items-center gap-20 rounded-2xl border-2 border-[#05DF8B]  sm:p-10">
+    <AnimatePresence>
+    <motion.div
+          key="modal"
+          initial={{ opacity: 0, y: "100%" }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: "100%" }}
+          transition={{
+            duration: 0.4,
+            ease: "easeInOut",
+          }}
+    className="relative z-10 my-auto flex w-full max-w-[1275px] h-auto sm:h-[900px] max-h-[95dvh] sm:max-h-none overflow-y-auto sm:overflow-visible flex-col items-center gap-6 sm:gap-20 rounded-2xl border-2 border-[#05DF8B] p-4 sm:p-10 bg-hw-card/80">
       {/* Heading */}
             <button
-        onClick={() => router.back()}
-        className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
+        onClick={closeAuthModal}
+        className="absolute top-3 right-4 sm:top-4 sm:right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
       >
         <Image src={close} alt="Close" width={20} height={20} />
       </button>
-      <div className="flex flex-col items-center gap-3 text-center ">
+      <div className="flex flex-col items-center gap-2 sm:gap-3 text-center px-6">
         
          <Image
                 src={whitedimond}
                 alt="whitedimond"
-                className="size-16 text-hw-foreground"
+                className="size-12 sm:size-16 text-hw-foreground"
               />
-        <h1 className="text-[41px] font-semibold text-hw-depw">
+        <h1 className="text-[26px] sm:text-[41px] font-semibold text-hw-depw">
           Go Premium
         </h1>
-        <p className="text-[22px] font-light tracking-wide text-hw-depw">
+        <p className="text-[15px] sm:text-[22px] font-light tracking-wide text-hw-depw">
           Unlock the full potential of HalalWalls
         </p>
       </div>
 
       {/* Plans */}
-      <div className="grid w-full h-[490px] grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid w-full h-auto sm:h-[490px] grid-cols-1 gap-4 sm:grid-cols-3">
         {PLANS.map((plan) => (
           <div
             key={plan.badge}
@@ -84,7 +91,6 @@ export function PremiumPlans() {
                 className="absolute right-6 top-8  rotate-12 text-[#05DF8B]/80"
                 width={170}
               />
-              {/* <Gem className="absolute -right-1 top-1 size-20 rotate-12 text-[#05DF8B]/80" /> */}
               <Image
                 src={start}
                 alt="start"
@@ -103,7 +109,7 @@ export function PremiumPlans() {
               />
               {/* <Sparkles className="absolute right-16 top-2 size-4 text-[#05DF8B]/80" /> */}
               <div className="relative z-10">
-                <h3 className="text-[28px] font-semibold text-hw-depw">
+                <h3 className="text-[20px] sm:text-[28px] font-semibold text-hw-depw">
                   Premium
                 </h3>
                 <span
@@ -116,17 +122,17 @@ export function PremiumPlans() {
             </div>
 
             {/* Features panel */}
-            <div className="flex flex-1 absolute top-110 flex-col gap-8 rounded-[20px] bg-[#323639] px-4 py-6 w-[384px]">
-              <p className="text-[41px] leading-none text-hw-depw">
+            <div className="flex flex-1 flex-col gap-4 sm:gap-8 rounded-[20px] bg-[#323639] px-4 py-6 w-full sm:absolute sm:top-110 sm:w-[384px]">
+              <p className="text-[28px] sm:text-[41px] leading-none text-hw-depw">
                 {plan.price}
-                <span className="text-[28px] text-hw-depw">{plan.period}</span>
+                <span className="text-[18px] sm:text-[28px] text-hw-depw">{plan.period}</span>
               </p>
 
               <ul className="flex flex-col gap-2.5">
                 {FEATURES.map((f) => (
                   <li
                     key={f}
-                    className="flex items-center gap-2 text-[19px] font-light text-hw-depw"
+                    className="flex items-center gap-2 text-[15px] sm:text-[19px] font-light text-hw-depw"
                   >
                     <span className="grid size-[23px] shrink-0 place-items-center rounded-full bg-[#05DF8B]">
                       <Check
@@ -141,7 +147,7 @@ export function PremiumPlans() {
 
               <button
                 type="button"
-                className="mt-auto rounded-full bg-hw-bg py-2.5 text-center text-[22px] font-medium text-hw-depw transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
+                className="mt-auto rounded-full bg-hw-bg py-2.5 text-center text-[16px] sm:text-[22px] font-medium text-hw-depw transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
               >
                 Get Started
               </button>
@@ -149,6 +155,7 @@ export function PremiumPlans() {
           </div>
         ))}
       </div>
-    </div>
+    </motion.div>
+    </AnimatePresence>
   );
 }
