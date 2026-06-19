@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -9,8 +9,20 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { HeaderAuth } from "@/components/layout/header-auth";
 import { HeaderNav } from "@/components/layout/header-nav";
 import { useAuth } from "@/context/auth-context";
+import { SearchBox } from "@/components/shared/search-box";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+
 export function SiteHeader() {
-  const {open, setOpen} = useAuth();
+  const router = useRouter();
+  const { open, setOpen } = useAuth();
+  const [search, setSearch] = useState("");
+  const pathname = usePathname();
+  const showSearchInput = pathname !== "/";
+  const handleSearch = (q: string) => {
+    if (q.trim()) router.push(`/?q=${encodeURIComponent(q.trim())}`);
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-hw-header">
@@ -18,14 +30,35 @@ export function SiteHeader() {
         {/* {dark ? ():()} */}
         <HalalWallsLogo className="shrink-0" />
 
-        
+        {pathname !== "/" && (
+          <div className="hidden min-w-0 flex-1 md:block lg:max-w-[420px] xl:max-w-[520px]">
+            <SearchBox
+              value={search}
+              onChange={setSearch}
+              onSubmit={handleSearch}
+            />
+          </div>
+        )}
 
         {/* Right cluster — pushed fully right via ml-auto */}
         <div className="ml-auto flex items-center gap-5">
           <Suspense fallback={null}>
             <HeaderNav className="mx-auto" />
           </Suspense>
-          <HeaderAuth className="hidden sm:flex" />
+          {pathname === "/profile" ? (
+            <Link
+              href="/profile"
+              onClick={() => setOpen(false)}
+                className={cn(
+                  "rounded-[10px] px-6 py-4 text-[18px] font-medium text-white transition-colors bg-hw-surface",
+                )}
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <HeaderAuth className="hidden sm:flex" />
+          )}
+
           <ThemeToggle className="hidden size-9 lg:flex" />
 
           {/* Burger — far right, opens the top-to-bottom menu */}
@@ -36,7 +69,11 @@ export function SiteHeader() {
             aria-expanded={open}
             className="flex h-9 w-11 items-center justify-center rounded-md border border-hw-border text-hw-muted transition-colors hover:text-hw-foreground lg:hidden"
           >
-            {open ? <X className="size-[26px]" /> : <Menu className="size-[26px]" />}
+            {open ? (
+              <X className="size-[26px]" />
+            ) : (
+              <Menu className="size-[26px]" />
+            )}
           </button>
         </div>
       </div>

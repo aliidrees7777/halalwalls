@@ -44,7 +44,7 @@ export function WallpaperPagination({
 
   return (
     <nav
-      className="flex flex-wrap items-center justify-center gap-1 py-6"
+      className="flex flex-wrap items-center justify-center gap-1 py-10"
       aria-label="Pagination"
     >
       {pages.map((page, index) =>
@@ -58,10 +58,10 @@ export function WallpaperPagination({
             type="button"
             onClick={() => onPageChange(page)}
             className={cn(
-              "flex size-9 items-center justify-center rounded-lg text-sm font-medium transition-colors",
+              "flex lg:w-[54px] lg:h-[53px]  w-[32px]  h-[32px] items-center justify-center rounded-sm lg:text-2xl text-base font-medium transition-colors",
               currentPage === page
-                ? "bg-hw-green font-semibold text-black"
-                : "bg-hw-card text-hw-muted hover:bg-hw-surface hover:text-hw-foreground"
+                ? "bg-[#33373A] font-semibold text-white"
+                : "bg-hw-card text-[#ffffff] hover:bg-hw-surface hover:text-hw-foreground"
             )}
             aria-current={currentPage === page ? "page" : undefined}
           >
@@ -73,7 +73,7 @@ export function WallpaperPagination({
         type="button"
         onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage >= totalPages}
-        className="ml-1 rounded-lg bg-hw-card px-3 py-2 text-sm text-hw-muted transition-colors hover:bg-hw-surface hover:text-hw-foreground disabled:cursor-not-allowed disabled:opacity-50"
+        className="ml-1 rounded-sm bg-hw-card lg:w-[112px]  lg:h-[54px] h-[32px] w-[73px] lg:text-2xl text-base font-medium text-[#ffffff] transition-colors hover:bg-hw-surface hover:text-hw-foreground disabled:cursor-not-allowed disabled:opacity-50"
       >
         Next »
       </button>

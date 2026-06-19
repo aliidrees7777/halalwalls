@@ -9,7 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { DownloadActions } from "@/components/download/download-actions";
 import { DownloadResolutionPanel } from "@/components/download/download-resolution-panel";
 import type { DownloadResolution, WallpaperDetail } from "@/types/wallpaper";
-
+import download from "../../../public/download.svg";link
+import link from "../../../public/link.svg";
 interface DownloadMainProps {
   wallpaper: WallpaperDetail;
 }
@@ -24,12 +25,12 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
   };
 
   return (
-    <div className="min-w-0 flex-1">
+    <div className="min-w-0 flex-1 max-w-[900px]">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        className="overflow-hidden rounded-lg border border-hw-line bg-hw-deep"
+        className="overflow-hidden rounded-[7px] border border-hw-line bg-hw-deep"
       >
         <motion.div
           whileHover={{ scale: 1.005 }}
@@ -52,30 +53,30 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
           )}
         </motion.div>
       </motion.div>
-
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+      <div className="mt-4 flex">
         <Badge
           variant="outline"
-          className="gap-1.5 rounded-md border-hw-line bg-hw-deep px-2.5 py-1 text-[12px] font-normal text-hw-muted"
+          className="gap-2 mr-3 rounded-full border-hw-line bg-hw-down w-[74px] h-[26px] text-[15px] font-semibold text-hw-depw"
         >
-          <Download className="size-3.5" />
+          {/* <Download className="size-3.5" /> */}
+          <Image src={download} alt="download" />
           {wallpaper.views.toLocaleString()}
         </Badge>
-      </div>
+      <div className=" flex flex-wrap items-center ">
 
-      <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1">
+        <Image src={link} alt="link" className="mr-2"/>
         {wallpaper.tagSlugs.map((slug, index) => (
           <Link
             key={slug}
             href="/"
-            className="text-[12px] text-hw-muted underline decoration-hw-muted/40 underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
+            className="text-[19px]  text-hw-muted font-medium underline decoration-hw-muted/40 underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
           >
-            #{slug}
+            {slug},
           </Link>
         ))}
       </div>
-
-      <p className="mt-3 text-[12px] leading-relaxed text-hw-muted">
+ </div>
+      <p className="mt-3 ml-21 text-[17px] leading-relaxed text-hw-muted">
         — Published on {wallpaper.publishedAt} | Original Resolution:{" "}
         {wallpaper.originalResolution} | Author: {wallpaper.author}
       </p>

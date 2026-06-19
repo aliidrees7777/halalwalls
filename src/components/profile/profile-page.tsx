@@ -18,51 +18,60 @@ import {
   discoverJustUploaded,
   type ProfileUser,
 } from "@/data/profile-user";
+import { SiteHeader } from "../home/site-header";
 
 export function ProfilePage() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, loading, openAuthModal } = useAuth();
   const { wallpapers: favorites, loading: favoritesLoading } = useMyFavorites();
   const { wallpapers: uploads } = useMyUploads();
 
-  // Auth guard: redirect guests to /login.
+  // ⚠️ TEMP BYPASS (testing only) — auth guard disabled.
+  // Revert: uncomment this block to re-enable login requirement.
+  /*
   useEffect(() => {
-    if (!loading && !user) router.replace("/login");
-  }, [loading, user, router]);
+    if (!loading && !user) {
+      openAuthModal("full-signin");
+    }
+  }, [loading, user, openAuthModal]);
+  */
 
   if (loading) {
     return (
-      <div className="grid min-h-screen place-items-center bg-hw-bg">
+      <div className="grid min-h-screen place-items-center ">
         <div className="size-8 animate-spin rounded-full border-2 border-hw-muted border-t-hw-foreground" />
       </div>
     );
   }
 
-  if (!user) return null;
+  // ⚠️ TEMP BYPASS: agar user nahi hai to demo user se render karo
+  // (pehle yahan `if (!user) return null;` tha — wapas laane ke liye yeh line uncomment + neeche wala fallback hatayen)
+  // if (!user) return null;
 
-  const profileUser: ProfileUser = {
-    id: user.id,
-    name: user.name || user.email,
-    bio: user.bio || "",
-    email: user.email,
-    avatar: user.avatar || demoProfileUser.avatar,
-    banner: user.banner || demoProfileUser.banner,
-    isPremium: user.isPremium,
-    favoritesCount: user.favoritesCount,
-    uploadsCount: user.uploadsCount ?? 0,
-  };
+  const profileUser: ProfileUser = user
+    ? {
+        id: user.id,
+        name: user.name || user.email,
+        bio: user.bio || "",
+        email: user.email,
+        avatar: user.avatar || demoProfileUser.avatar,
+        banner: user.banner || demoProfileUser.banner,
+        isPremium: user.isPremium,
+        favoritesCount: user.favoritesCount,
+        uploadsCount: user.uploadsCount ?? 0,
+      }
+    : demoProfileUser; // ⚠️ TEMP fallback jab user null ho
 
   return (
     <>
       {/* Mobile: immersive app-style profile (matches Figma) */}
-      <div className="md:hidden">
+      {/* <div className="md:hidden">
         <MobileProfile />
-      </div>
+      </div> */}
 
       {/* Desktop / tablet */}
-      <div className="hidden min-h-screen bg-hw-bg md:block">
-      <ProfileHeaderNav />
-
+      <div className=" min-h-screen bg-hw-bg md:block">
+<SiteHeader/>
       <main className="mx-auto max-w-[1400px] px-4 py-8 lg:px-6 lg:py-10">
         <motion.h1
           initial={{ opacity: 0, y: -8 }}

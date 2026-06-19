@@ -20,16 +20,16 @@ function ResolutionLinkList({
 }) {
   return (
     <div>
-      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-hw-muted">
+      <p className="mb-2 ml-5 text-[16px] font-semibold  tracking-wider text-hw-foreground">
         {title}
       </p>
-      <ul className="flex flex-wrap gap-x-3 gap-y-1.5">
+      <ul className=" ml-5 flex flex-wrap gap-x-3 gap-y-1.5">
         {items.map((item) => (
           <li key={item.label}>
             <button
               type="button"
               onClick={() => onSelect?.(item)}
-              className="text-[13px] text-[#6b8cae] underline decoration-[#6b8cae]/50 underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
+              className="text-[16px] text-hw-foreground underline decoration-hw-foreground underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
             >
               {item.label}
             </button>
@@ -58,12 +58,13 @@ export function DownloadResolutionPanel({
         icon={Download}
         className="bg-hw-deep"
       >
+        <div className="my-4 h-0.5 bg-hw-line " />
         <ResolutionLinkList
           title="Popular Desktop Resolutions"
           items={desktopDownloadResolutions}
           onSelect={onSelect}
         />
-        <div className="my-4 h-px bg-hw-line" />
+        <div className="my-4 h-0.5 bg-hw-line" />
         <ResolutionLinkList
           title="Popular Mobile Resolutions"
           items={mobileDownloadResolutions}

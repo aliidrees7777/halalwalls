@@ -100,12 +100,12 @@ export function ProfileHeaderNav() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <Link
+          {/* <Link
             href="/profile"
             className="hidden rounded-lg border border-hw-border px-3.5 py-1.5 text-[13px] font-medium text-hw-foreground transition-colors hover:bg-hw-surface sm:inline-block"
           >
             Dashboard
-          </Link>
+          </Link> */}
           <button
             type="button"
             className="flex size-9 shrink-0 items-center justify-center rounded-full border border-hw-border text-hw-foreground transition-colors hover:border-hw-muted"
