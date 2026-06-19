@@ -8,6 +8,8 @@ import { DownloadMain } from "@/components/download/download-main";
 import { DownloadSidebarRight } from "@/components/download/download-sidebar-right";
 import { SiteFooter } from "@/components/layout/site-footer";
 import type { Wallpaper, WallpaperDetail } from "@/types/wallpaper";
+import { SiteHeader } from "../home/site-header";
+import { HomeSidebar } from "../home/home-sidebar";
 
 interface DownloadPageProps {
   wallpaper: WallpaperDetail;
@@ -17,29 +19,30 @@ interface DownloadPageProps {
 export function DownloadPageClient({ wallpaper, related }: DownloadPageProps) {
   return (
     <div className="min-h-screen bg-hw-bg">
-      <DownloadHeader />
+      <SiteHeader/>
+      {/* <DownloadHeader /> */}
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
-        className="mx-auto max-w-[1400px] px-4 py-6 lg:px-6 lg:py-8"
+        className="mx-auto max-w-[1650px] px-4 py-6 lg:px-6 lg:py-8"
       >
         <header className="mb-6 text-center">
           <h1 className="text-xl font-bold leading-tight text-hw-foreground sm:text-2xl lg:text-[26px]">
             {wallpaper.title}
           </h1>
-          <div className="mt-3 flex justify-center">
+          <div className="mt-3 flex justify-center w-full">
             <DownloadBreadcrumbs wallpaper={wallpaper} />
           </div>
         </header>
 
         <div className="flex flex-col gap-4 xl:flex-row xl:gap-5">
-          <DownloadSidebarLeft
+          {/* <DownloadSidebarLeft
             activeCategory={wallpaper.category}
             tags={wallpaper.tags}
-          />
-
+          /> */}
+<HomeSidebar/>
           <DownloadMain wallpaper={wallpaper} />
 
           <DownloadSidebarRight related={related} />

@@ -22,9 +22,10 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
   }
 
   return (
-    <SidebarPanel title="Related Wallpapers">
+    <div className="w-[360px]">
+      <h1 className="text-center border border-hw-line py-4 text-[17px] font-bold">Related Wallpapers</h1>
       {/* 2-col grid on mobile/tablet (matches Figma); single column in the narrow desktop sidebar */}
-      <ul className="grid grid-cols-2 gap-2.5 xl:grid-cols-1">
+      <ul className="grid grid-cols-2 gap-1 xl:grid-cols-1">
         {items.map((wallpaper, index) => (
           <motion.li
             key={wallpaper.id}
@@ -34,21 +35,21 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
           >
             <Link
               href={`/wallpaper/${wallpaper.slug}`}
-              className="group relative block overflow-hidden rounded-lg border border-hw-line bg-hw-deep"
+              className="group relative block overflow-hidden  border border-hw-line bg-hw-deep h-[236px]"
             >
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
-                className="relative aspect-[16/10] w-full xl:aspect-[16/7]"
+                className="relative aspect-[16/10] w-full xl:h-[236px] "
               >
                 <Image
                   src={wallpaper.image}
                   alt={wallpaper.title}
                   fill
-                  className="object-cover transition-opacity duration-300 group-hover:opacity-90"
-                  sizes="(min-width: 1280px) 248px, 45vw"
+                  className="object-cover transition-opacity duration-300 group-hover:opacity-90 "
+                 
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                {/* <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" /> */}
                 <p className="absolute bottom-2 left-2 right-2 truncate text-[11px] font-medium text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   {wallpaper.title}
                 </p>
@@ -57,6 +58,6 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
           </motion.li>
         ))}
       </ul>
-    </SidebarPanel>
+    </div>
   );
 }

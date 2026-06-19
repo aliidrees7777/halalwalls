@@ -13,7 +13,7 @@ import { WallpaperStats } from "@/components/home/wallpaper-stats";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { api } from "@/lib/api";
 import type { Wallpaper } from "@/types/wallpaper";
-import wallpapersData from "../../data/wallpapers.json";
+import { wallpapers as wallpapersData } from "@/data/wallpapers";
 import logodark from "../../../public/authicon/logodark.svg"
 interface Pagination {
   total: number;
