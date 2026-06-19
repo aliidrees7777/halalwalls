@@ -39,7 +39,7 @@ export function SignInBoxCard() {
             duration: 0.4,
             ease: "easeInOut",
           }}
-          className="relative flex flex-col justify-center items-center z-10 my-auto w-full max-w-[825px] h-[805px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] sm:p-7"
+          className="relative flex flex-col justify-center items-center z-10 my-auto w-full max-w-[825px] lg:h-[805px]  rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] sm:p-7"
         >
           <button
             onClick={closeAuthModal}
@@ -47,7 +47,7 @@ export function SignInBoxCard() {
           >
             <Image src={close} alt="Close" width={20} height={20} />
           </button>
-          <div className="flex flex-col gap-12 w-md ">
+          <div className="flex flex-col gap-12 ld:w-md ">
             <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw">
               Sign in
             </h1>
@@ -64,7 +64,7 @@ export function SignInBoxCard() {
                       width={25}
                       height={25}
                     />
-                    <span className="text-[20px] font-light text-hw-depw">
+                    <span className="lg:text-[20px] font-light text-hw-depw">
                       {label}
                     </span>
                   </li>

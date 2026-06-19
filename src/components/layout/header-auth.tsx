@@ -24,7 +24,6 @@ export function HeaderAuth({ className }: { className?: string }) {
   onClick={() => openAuthModal("signin")} // "signin" view ke liye
   className={cn(
     "rounded-[10px] px-6 py-4 text-[18px] font-medium text-white transition-colors bg-hw-surface",
-    className
   )}
 >
   Sign In
