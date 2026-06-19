@@ -99,13 +99,14 @@ function PriceCard({ item }: { item: GridItem }) {
 
 export function MobileProfile() {
   const router = useRouter();
-  const { user: authUser, loading } = useAuth();
+  const { user: authUser, loading,openAuthModal ,} = useAuth();
   const { wallpapers: favorites, loading: favoritesLoading } = useMyFavorites();
 
-  // Auth guard: redirect guests to /login.
-  useEffect(() => {
-    if (!loading && !authUser) router.replace("/login");
-  }, [loading, authUser, router]);
+  // useEffect(() => {
+  //   if (!loading && !user) {
+  //     openAuthModal("full-signin");
+  //   }
+  // }, [loading, openAuthModal]);
 
   const gridItems: GridItem[] = favorites.map((w, i) => ({
     ...w,
