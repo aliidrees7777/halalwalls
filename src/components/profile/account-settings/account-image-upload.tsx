@@ -52,8 +52,8 @@ export function AccountImageUpload({
           "hover:border-hw-green/40 hover:shadow-[0_0_20px_rgba(0,255,163,0.08)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50",
           variant === "avatar"
-            ? "size-[88px] rounded-full sm:size-[96px]"
-            : "h-[88px] w-full rounded-xl sm:h-[96px]"
+            ? " rounded-full ] w-[163px] h-[163px]"
+            : "h-[88px] w-full rounded-md sm:h-[163px]"
         )}
         aria-label={`Change ${label}`}
       >
@@ -69,7 +69,7 @@ export function AccountImageUpload({
           className="absolute inset-0 flex items-center justify-center bg-black/35 opacity-90 transition-opacity duration-200 group-hover:bg-black/45"
           aria-hidden
         >
-          <Pencil className="size-4 text-white drop-shadow-sm sm:size-[18px]" />
+          <Pencil className="size-4 text-white drop-shadow-sm sm:size-[35px]" />
         </span>
       </button>
     </div>

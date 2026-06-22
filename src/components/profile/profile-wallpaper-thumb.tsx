@@ -28,7 +28,7 @@ export function ProfileWallpaperThumb({
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={{ scale: 1.02 }}
-      className="group relative overflow-hidden rounded-xl"
+      className="group relative overflow-hidden rounded-md"
     >
       <Link
         href={`/wallpaper/${wallpaper.slug}`}

@@ -34,7 +34,7 @@ export function ProfileSideIconButton({
         className
       )}
     >
-      {iconNode ?? (Icon && <Icon className="size-[18px] sm:size-5" strokeWidth={1.75} />)}
+      {iconNode ?? (Icon && <Icon className="size-[18px] sm:size-5 text-[#FFFFFF]" strokeWidth={1.75} />)}
     </motion.button>
   );
 }

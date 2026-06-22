@@ -41,7 +41,7 @@ export function SiteHeader() {
         )}
 
         {/* Right cluster — pushed fully right via ml-auto */}
-        <div className="ml-auto flex items-center gap-5">
+        <div className="ml-auto flex items-center lg:gap-5 gap-3">
           <Suspense fallback={null}>
             <HeaderNav className="mx-auto" />
           </Suspense>

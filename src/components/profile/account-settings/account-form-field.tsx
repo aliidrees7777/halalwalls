@@ -35,7 +35,7 @@ export function AccountFormField({
     <div className="space-y-1.5">
       <label
         htmlFor={id}
-        className="block text-[11px] font-medium text-hw-foreground/90 sm:text-xs"
+        className="block text-[14px] font-medium text-hw-depw sm:text-xs"
       >
         {label}
       </label>
@@ -50,7 +50,7 @@ export function AccountFormField({
             rows={2}
             aria-invalid={invalid}
             className={cn(
-              "min-h-[52px] w-full resize-none rounded-[6px] border bg-hw-input px-3 py-2.5 pr-10 text-sm text-hw-foreground transition-colors outline-none placeholder:text-hw-muted/60",
+              "h-11 w-full resize-none rounded-[6px] border bg-hw-input px-3 py-2.5 pr-10 text-sm text-hw-foreground transition-colors outline-none placeholder:text-hw-muted/60",
               "focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20",
               invalid
                 ? "border-red-500/80 ring-2 ring-red-500/15"
@@ -68,7 +68,7 @@ export function AccountFormField({
             disabled={disabled}
             aria-invalid={invalid}
             className={cn(
-              "h-10 rounded-[6px] border bg-hw-input px-3 pr-10 text-sm text-hw-foreground shadow-none",
+              "h-11 rounded-[6px] border bg-hw-input px-3 pr-10 text-sm text-hw-foreground shadow-none",
               "focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20",
               disabled && "cursor-not-allowed opacity-60",
               invalid
