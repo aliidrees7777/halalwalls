@@ -17,13 +17,56 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.1 }}
-        className="hidden border border-hw-line bg-hw-sidebar  xl:block"
+        className=" border border-hw-line bg-hw-sidebar  xl:block"
       >
-        <h2 className="mb-3 text-center text-[13px] font-semibold text-hw-foreground pt-3">
+        <h2 className="text-[13px] mb-3 text-center font-semibold text-hw-foreground pt-3">
           Our App
         </h2>
         <div className="my-4 h-0.5 bg-hw-line "></div>
-        <div className="mx-auto flex justify-around">
+        <div className="flex flex-col items-center gap-6 lg:hidden">
+          <div className="flex w-full items-center justify-around">
+            <div className="flex flex-col items-center">
+              <div className="overflow-hidden rounded-lg bg-white p-2">
+                <Image
+                  src="/qr-code-logo.png"
+                  alt="Scan to download on Google Play"
+                  width={110}
+                  height={110}
+                  className="size-[100px] object-contain"
+                />
+              </div>
+              <p className="mt-2 text-center font-medium text-hw-muted text-[13px]">
+                Google Play
+              </p>
+            </div>
+            <Image src={mobilelog} alt="mobile-logo" width={100} height={150} />
+          </div>
+
+          {/* Button - Now follows document flow instead of absolute positioning */}
+          <a
+            href="https://play.google.com/store/apps"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center mb-2 justify-center gap-3 rounded-md border border-hw-line w-full max-w-[216px] bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90"
+          >
+            <Image
+              src="/google-logo.svg"
+              alt=""
+              width={80}
+              height={40}
+              className="size-10 shrink-0 object-contain"
+            />
+            <div className="leading-tight">
+              <p className="text-[12px] uppercase tracking-wide text-hw-muted font-semibold">
+                Get it on
+              </p>
+              <p className="text-base font-semibold text-hw-muted">
+                Google Play
+              </p>
+            </div>
+          </a>
+        </div>
+        <div className="mx-auto lg:flex justify-around hidden">
           <div className="mt-4">
             <div className=" flex flex-col items-center">
               <div className="overflow-hidden rounded-lg bg-white p-2">
@@ -35,61 +78,34 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
                   className="size-[100px] object-contain"
                 />
               </div>
-              <p className="mt-2 text-center font-medium text-[13px] text-hw-muted">
+              <p className="mt-2 text-center font-medium text-hw-muted text-[13px]">
                 Google Play
               </p>
             </div>
           </div>
           <Image src={mobilelog} alt="mobile-logo" width={150} />
-             <a
-                    href="https://play.google.com/store/apps"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute w-[216px] right-70 top-114 flex items-center justify-center gap-3 rounded-md border border-hw-line bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90  mx-4"
-                  >
-                    <Image
-                      src="/google-logo.svg"
-                      alt=""
-                      width={80}
-                      height={40}
-                      className="size-10 shrink-0 object-contain"
-                    />
-                    <div className="leading-tight">
-                      <p className="text-[12px] uppercase tracking-wide text-hw-muted font-semibold">
-                        Get it on
-                      </p>
-                      <p className="text-base font-semibold text-hw-muted">
-                        Google Play
-                      </p>
-                    </div>
-                  </a>
-          
-          {/* <div className="relative mx-auto w-[140px] rounded-[28px] border-[3px] border-hw-line bg-hw-deep p-2 shadow-lg">
-            <div className="absolute left-1/2 top-2 h-1 w-10 -translate-x-1/2 rounded-full bg-hw-line" />
-            <div className="mt-4 overflow-hidden rounded-[20px] bg-hw-deep p-3">
-              <div className="flex items-center justify-center gap-1.5">
-                <Image
-                  src="/hw-logo.png"
-                  alt=""
-                  width={24}
-                  height={24}
-                  className="size-6"
-                />
-                <span className="text-[11px] font-bold text-hw-foreground">
-                  HalalWalls
-                </span>
-              </div>
-              <div className="mt-3 flex justify-center rounded-md bg-white p-1.5">
-                <Image
-                  src="/qr-code-logo.png"
-                  alt="QR code"
-                  width={100}
-                  height={100}
-                  className="size-[88px] object-contain"
-                />
-              </div>
+          <a
+            href="https://play.google.com/store/apps"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute hidden right-70 bg-conic-0 -bottom-13  top-114 lg:flex items-center justify-center gap-3 rounded-md border border-hw-line w-[216px] bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90  mx-4"
+          >
+            <Image
+              src="/google-logo.svg"
+              alt=""
+              width={80}
+              height={40}
+              className="size-10 shrink-0 object-contain"
+            />
+            <div className="leading-tight">
+              <p className="text-[12px] uppercase tracking-wide text-hw-muted font-semibold">
+                Get it on
+              </p>
+              <p className="text-base font-semibold text-hw-muted">
+                Google Play
+              </p>
             </div>
-          </div> */}
+          </a>
         </div>
       </motion.section>
 
