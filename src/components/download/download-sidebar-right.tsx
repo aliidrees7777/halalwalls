@@ -19,8 +19,8 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
         transition={{ duration: 0.45, delay: 0.1 }}
         className="hidden border border-hw-line bg-hw-sidebar  xl:block"
       >
-        <h2 className="mb-3 text-center text-[13px] font-semibold text-hw-foreground pt-3">
-          Our App
+        <h2 className="text-[13px] mb-3 text-center font-semibold text-hw-foreground pt-3">
+        Our App
         </h2>
         <div className="my-4 h-0.5 bg-hw-line "></div>
         <div className="mx-auto flex justify-around">
@@ -35,7 +35,7 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
                   className="size-[100px] object-contain"
                 />
               </div>
-              <p className="mt-2 text-center font-medium text-[13px] text-hw-muted">
+              <p className="mt-2 text-center font-medium text-hw-muted text-[13px]">
                 Google Play
               </p>
             </div>
@@ -45,7 +45,7 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
                     href="https://play.google.com/store/apps"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="absolute w-[216px] right-70 top-114 flex items-center justify-center gap-3 rounded-md border border-hw-line bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90  mx-4"
+                    className="absolute  flex items-center justify-center gap-3 rounded-md border border-hw-line w-[216px] right-70 top-114 bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90  mx-4"
                   >
                     <Image
                       src="/google-logo.svg"
