@@ -16,6 +16,7 @@ import { useMyUploads } from "@/hooks/use-my-uploads";
 import {
   demoProfileUser,
   discoverJustUploaded,
+  profileFavorites,
   type ProfileUser,
 } from "@/data/profile-user";
 import { SiteHeader } from "../home/site-header";
@@ -72,21 +73,24 @@ export function ProfilePage() {
       {/* Desktop / tablet */}
       <div className=" min-h-screen bg-hw-bg md:block">
 <SiteHeader/>
-      <main className="mx-auto max-w-[1400px] px-4 py-8 lg:px-6 lg:py-10">
+      <main className="mx-auto max-w-[1650px] px-4 py-8 lg:px-6 lg:py-10">
         <motion.h1
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-6 text-center text-xl font-semibold text-hw-foreground sm:mb-8 sm:text-2xl"
+          className="mb-6 text-center text-xl font-bold text-hw-account sm:mb-8 sm:text-[39px]"
         >
           My Account
         </motion.h1>
 
         <ProfileBanner user={profileUser} />
 
-        <section className="mt-10 sm:mt-12">
-          <ProfileSectionHeader title="Discover Just Uploaded" />
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <section className="">
+          <div className="flex items-end justify-between mb-10">
+          <h1 className="lg:text-4xl text-2xl font-semibold  text-hw-account">Discover Just Uploaded</h1>
+           <ProfileSectionHeader title="" className="text-right"/>
+          </div>
+          <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
             {discoverJustUploaded.map((wallpaper, index) => (
               <ProfileWallpaperThumb
                 key={wallpaper.id}
@@ -97,10 +101,13 @@ export function ProfilePage() {
           </div>
         </section>
 
-        <section className="mt-10 sm:mt-12">
-          <ProfileSectionHeader title="Your Uploads" seeAllHref={null} />
+        <section className="">
+           <div className="flex items-end justify-between mb-10">
+          <h2 className="lg:text-4xl text-2xl font-semibold text-hw-account">Your Uploads</h2>
+          <ProfileSectionHeader title="" seeAllHref={null} />
+          </div>
           {uploads.length > 0 ? (
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4 max-w-4xl">
               {uploads.map((wallpaper, index) => (
                 <ProfileWallpaperThumb
                   key={wallpaper.id}
@@ -114,15 +121,18 @@ export function ProfilePage() {
           )}
         </section>
 
-        <section className="mt-10 sm:mt-12">
-          <ProfileSectionHeader title="Your Favorites" />
-          {favorites.length === 0 && !favoritesLoading ? (
+        <section className="">
+           <div className="flex items-end justify-between mb-10">
+          <h2 className="lg:text-4xl text-2xl font-semibold  text-hw-account">Your Favorites</h2>
+          <ProfileSectionHeader title="" />
+          </div>
+          {profileFavorites.length === 0 && !favoritesLoading ? (
             <p className="py-12 text-center text-sm text-hw-muted">
               No favorites yet.
             </p>
           ) : (
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-              {favorites.map((wallpaper, index) => (
+            <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
+              {profileFavorites.map((wallpaper, index) => (
                 <ProfileWallpaperThumb
                   key={wallpaper.id}
                   wallpaper={wallpaper}

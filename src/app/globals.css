@@ -46,6 +46,7 @@
   --color-hw-fcolor: var(--hw-fcolor);
   --color-hw-down: var(--hw-down);
   --color-hw-down-text: var(--hw-down-text);
+  --color-hw-account: var(--hw-account);
   --font-sans: var(--font-sans);
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
@@ -89,6 +90,7 @@
   --hw-fcolor: #ffffff;
   --hw-down: #5a6165;
   --hw-down-text: #d8d5d1;
+  --hw-account: #c8c3bc;
   color-scheme: light;
 }
 
@@ -125,6 +127,7 @@
   --hw-fcolor: #9d9481;
   --hw-down: #5a6165;
   --hw-down-text: #d8d5d1;
+  --hw-account: #c8c3bc;
   color-scheme: dark;
 }
 

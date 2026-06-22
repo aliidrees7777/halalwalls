@@ -174,7 +174,7 @@ export function AccountSettingsModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton className="max-w-[640px] border-[#05DF8B]">
         <DialogHeader className="shrink-0 border-b border-hw-border pb-4">
-          <DialogTitle className="text-xl sm:text-2xl">Account Information</DialogTitle>
+          <DialogTitle className="text-xl sm:text-2xl text-hw-depw">Account Information</DialogTitle>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-7 sm:py-6">
@@ -240,88 +240,10 @@ export function AccountSettingsModal({
             />
           </div>
 
-          {/* Change Password */}
-          <div className="mt-7 space-y-3.5 sm:mt-8">
-            <AccountSectionTitle>Password</AccountSectionTitle>
-
-            <div className="space-y-1.5">
-              <label
-                htmlFor="account-current-password"
-                className="block text-[11px] font-medium text-hw-foreground/90 sm:text-xs"
-              >
-                Current Password
-              </label>
-              <input
-                id="account-current-password"
-                type="password"
-                autoComplete="current-password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                className="h-10 w-full rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 text-sm text-hw-foreground outline-none transition-colors hover:border-hw-faint/60 placeholder:text-hw-muted/60 focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label
-                htmlFor="account-new-password"
-                className="block text-[11px] font-medium text-hw-foreground/90 sm:text-xs"
-              >
-                New Password
-              </label>
-              <input
-                id="account-new-password"
-                type="password"
-                autoComplete="new-password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="At least 8 characters"
-                className="h-10 w-full rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 text-sm text-hw-foreground outline-none transition-colors hover:border-hw-faint/60 placeholder:text-hw-muted/60 focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label
-                htmlFor="account-confirm-password"
-                className="block text-[11px] font-medium text-hw-foreground/90 sm:text-xs"
-              >
-                Confirm New Password
-              </label>
-              <input
-                id="account-confirm-password"
-                type="password"
-                autoComplete="new-password"
-                value={confirmNewPassword}
-                onChange={(e) => setConfirmNewPassword(e.target.value)}
-                className="h-10 w-full rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 text-sm text-hw-foreground outline-none transition-colors hover:border-hw-faint/60 placeholder:text-hw-muted/60 focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20"
-              />
-            </div>
-
-            {passwordError ? (
-              <p role="alert" className="text-[11px] text-red-400 sm:text-xs">
-                {passwordError}
-              </p>
-            ) : null}
-            {passwordSuccess ? (
-              <p role="status" className="text-[11px] text-hw-green sm:text-xs">
-                Password updated.
-              </p>
-            ) : null}
-
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              disabled={passwordSubmitting}
-              className="h-9 rounded-[5px] border border-hw-faint/40 bg-hw-input px-4 text-[13px] font-semibold text-hw-foreground hover:bg-hw-surface disabled:opacity-60"
-              onClick={handleChangePassword}
-            >
-              {passwordSubmitting ? "Updating…" : "Update Password"}
-            </Button>
-          </div>
 
           {/* Payment Method */}
           <div className="mt-7 space-y-3 sm:mt-8">
-            <AccountSectionTitle>Payment Method</AccountSectionTitle>
+            <AccountSectionTitle className="text-xl sm:text-2xl text-hw-depw">Payment Method</AccountSectionTitle>
             <button
               type="button"
               className="flex w-full items-center gap-3 rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 py-2.5 text-left transition-colors duration-200 hover:border-hw-faint/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/40"
@@ -341,7 +263,7 @@ export function AccountSettingsModal({
 
           {/* Subscription Plan */}
           <div className="mt-7 space-y-3 sm:mt-8">
-            <AccountSectionTitle>Subscription Plan</AccountSectionTitle>
+            <AccountSectionTitle className="text-xl sm:text-2xl text-hw-depw">Subscription Plan</AccountSectionTitle>
 
             <div
               className={cn(
@@ -467,24 +389,6 @@ export function AccountSettingsModal({
             )}
           </div>
         </div>
-
-        <DialogFooter className="shrink-0 gap-2 sm:gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full border-hw-border bg-transparent text-hw-foreground hover:bg-hw-surface sm:w-auto"
-            onClick={handleCancel}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            className="w-full bg-hw-green text-[#0b0e11] hover:bg-hw-green/90 sm:w-auto"
-            onClick={handleSave}
-          >
-            Save Changes
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
