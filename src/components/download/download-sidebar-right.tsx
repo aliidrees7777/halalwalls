@@ -20,7 +20,7 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
         className="hidden border border-hw-line bg-hw-sidebar  xl:block"
       >
         <h2 className="text-[13px] mb-3 text-center font-semibold text-hw-foreground pt-3">
-        Our App
+          Our App
         </h2>
         <div className="my-4 h-0.5 bg-hw-line "></div>
         <div className="mx-auto flex justify-around">
@@ -41,55 +41,28 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
             </div>
           </div>
           <Image src={mobilelog} alt="mobile-logo" width={150} />
-             <a
-                    href="https://play.google.com/store/apps"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute  flex items-center justify-center gap-3 rounded-md border border-hw-line w-[216px] right-70 top-114 bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90  mx-4"
-                  >
-                    <Image
-                      src="/google-logo.svg"
-                      alt=""
-                      width={80}
-                      height={40}
-                      className="size-10 shrink-0 object-contain"
-                    />
-                    <div className="leading-tight">
-                      <p className="text-[12px] uppercase tracking-wide text-hw-muted font-semibold">
-                        Get it on
-                      </p>
-                      <p className="text-base font-semibold text-hw-muted">
-                        Google Play
-                      </p>
-                    </div>
-                  </a>
-          
-          {/* <div className="relative mx-auto w-[140px] rounded-[28px] border-[3px] border-hw-line bg-hw-deep p-2 shadow-lg">
-            <div className="absolute left-1/2 top-2 h-1 w-10 -translate-x-1/2 rounded-full bg-hw-line" />
-            <div className="mt-4 overflow-hidden rounded-[20px] bg-hw-deep p-3">
-              <div className="flex items-center justify-center gap-1.5">
-                <Image
-                  src="/hw-logo.png"
-                  alt=""
-                  width={24}
-                  height={24}
-                  className="size-6"
-                />
-                <span className="text-[11px] font-bold text-hw-foreground">
-                  HalalWalls
-                </span>
-              </div>
-              <div className="mt-3 flex justify-center rounded-md bg-white p-1.5">
-                <Image
-                  src="/qr-code-logo.png"
-                  alt="QR code"
-                  width={100}
-                  height={100}
-                  className="size-[88px] object-contain"
-                />
-              </div>
+          <a
+            href="https://play.google.com/store/apps"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute  flex items-center justify-center gap-3 rounded-md border border-hw-line w-[216px] right-70 top-114 bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90  mx-4"
+          >
+            <Image
+              src="/google-logo.svg"
+              alt=""
+              width={80}
+              height={40}
+              className="size-10 shrink-0 object-contain"
+            />
+            <div className="leading-tight">
+              <p className="text-[12px] uppercase tracking-wide text-hw-muted font-semibold">
+                Get it on
+              </p>
+              <p className="text-base font-semibold text-hw-muted">
+                Google Play
+              </p>
             </div>
-          </div> */}
+          </a>
         </div>
       </motion.section>
 
