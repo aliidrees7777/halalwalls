@@ -56,7 +56,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
       <div className="mt-4 flex">
         <Badge
           variant="outline"
-          className="gap-2 mr-3 rounded-full border-hw-line bg-hw-down w-[74px] h-[26px] text-[15px] font-semibold text-hw-depw"
+          className="gap-2 mr-3 rounded-full border-hw-line bg-hw-down w-[74px] h-[26px] text-[15px] font-semibold text-[#ffffff]"
         >
           {/* <Download className="size-3.5" /> */}
           <Image src={download} alt="download" />

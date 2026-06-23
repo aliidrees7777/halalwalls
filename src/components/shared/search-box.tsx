@@ -36,7 +36,7 @@ export function SearchBox({
         onSubmit?.(value ?? "");
       }}
       className={cn(
-        "flex items-center overflow-hidden rounded-[7px]  bg-hw-input transition-colors focus-within:border-[#05DF8B]/50 border border-hw-ground",
+        "flex items-center h-11 overflow-hidden rounded-[7px] bg-hw-input border border[#C8C3BC]",
         heightClass,
         className
       )}
@@ -58,7 +58,7 @@ export function SearchBox({
         aria-label="Search"
         className="flex h-full shrink-0 items-center border-l border-hw-input-border px-3 text-hw-faint transition-colors hover:text-hw-foreground "
       >
-        <Search className="size-5" />
+        <Search className="size-5 text-[#D9D9D9]"/>
       </button>
     </form>
   );

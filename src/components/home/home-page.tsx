@@ -150,7 +150,7 @@ export function HomePage() {
 
       <section 
       style={{ background: "var(--hw-search-header)" }}
-      className=" px-4 py-4 lg:px-6">
+      className=" px-4 py-7 lg:px-6">
         <div className="mx-auto max-w-[1600px]">
           <WallpaperSearch value={search} onChange={setSearch} />
           <div className="mt-4">
@@ -159,7 +159,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1650px] px-4 py-4 lg:px-6 bg-hw-bg">
+      <div className="mx-auto max-w-[1650px] px-4 py-7 lg:px-6 bg-hw-bg">
         <div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
           <HomeSidebar />
 
