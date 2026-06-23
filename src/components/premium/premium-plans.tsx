@@ -53,7 +53,7 @@ export function PremiumPlans() {
             duration: 0.4,
             ease: "easeInOut",
           }}
-    className="relative z-10 my-auto flex w-full max-w-[1275px] h-auto sm:h-[900px] max-h-[95dvh] sm:max-h-none overflow-y-auto sm:overflow-visible flex-col items-center gap-6 sm:gap-20 rounded-2xl border-2 border-[#05DF8B] p-4 sm:p-10 bg-hw-card/80">
+    className="relative z-10 my-auto flex w-full max-w-[1275px] h-auto sm:h-[900px] max-h-[95dvh] sm:max-h-none overflow-y-auto sm:overflow-visible flex-col items-center gap-6 sm:gap-20 rounded-2xl border-3 border-[#05DF8B] p-4 sm:p-10 bg-hw-card/80">
       {/* Heading */}
             <button
         onClick={closeAuthModal}
