@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
-
+import pencil from "../../../../public/my-account/pencil.svg"
 interface AccountImageUploadProps {
   label: string;
   src: string;
@@ -48,7 +48,7 @@ export function AccountImageUpload({
         type="button"
         onClick={() => inputRef.current?.click()}
         className={cn(
-          "group relative block overflow-hidden border border-hw-border bg-hw-card transition-all duration-200",
+          "group relative block overflow-hidden  bg-hw-card transition-all duration-200",
           "hover:border-hw-green/40 hover:shadow-[0_0_20px_rgba(0,255,163,0.08)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50",
           variant === "avatar"
@@ -69,7 +69,8 @@ export function AccountImageUpload({
           className="absolute inset-0 flex items-center justify-center bg-black/35 opacity-90 transition-opacity duration-200 group-hover:bg-black/45"
           aria-hidden
         >
-          <Pencil className="size-4 text-white drop-shadow-sm sm:size-[35px]" />
+          <Image src={pencil} alt="pencil" className="size-4 text-white drop-shadow-sm sm:size-[35px]" />
+          {/* <Pencil /> */}
         </span>
       </button>
     </div>

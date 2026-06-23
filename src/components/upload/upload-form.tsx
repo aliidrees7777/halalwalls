@@ -192,7 +192,7 @@ export function UploadForm() {
           htmlFor="upload-tags"
           className="text-[21px] font-semibold text-hw-depw"
         >
-          Tags
+          Tags<span className="text-red-400">*</span>
         </label>
         <input
           id="upload-tags"
@@ -208,7 +208,7 @@ export function UploadForm() {
           htmlFor="upload-source"
           className="text-[21px] font-semibold text-hw-depw"
         >
-          Source
+          Source<span className="text-red-400">*</span>
         </label>
         <textarea
           id="upload-source"

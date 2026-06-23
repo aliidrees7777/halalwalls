@@ -102,7 +102,7 @@ export function ProfilePage() {
         </section>
 
         <section className="">
-           <div className="flex items-end justify-between mb-10">
+           <div className="flex items-end justify-between my-10">
           <h2 className="lg:text-4xl text-2xl font-semibold text-hw-account">Your Uploads</h2>
           <ProfileSectionHeader title="" seeAllHref={null} />
           </div>

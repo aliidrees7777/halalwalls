@@ -24,7 +24,8 @@ import {
 import { useAuth } from "@/context/auth-context";
 import { ApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
-
+import Image from "next/image";
+import pencil from "../../../../public/my-account/pencil.svg"
 export interface AccountSettingsData extends AccountFormValues {
   cardLast4: string;
   cardExpiry: string;
@@ -171,9 +172,9 @@ export function AccountSettingsModal({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} >
       <DialogContent showCloseButton className="max-w-[640px] border-[#05DF8B]">
-        <DialogHeader className="shrink-0 border-b border-hw-border pb-4">
+        <DialogHeader className="shrink-0 border-b border-hw-border ">
           <DialogTitle className="text-xl sm:text-2xl text-hw-depw">Account Information</DialogTitle>
         </DialogHeader>
 
@@ -226,8 +227,8 @@ export function AccountSettingsModal({
               label="Email (cannot be changed)"
               type="email"
               value={values.email}
-              onChange={() => {}}
-              disabled
+              onChange={(email) => updateField("email", email)}
+              
             />
             <AccountFormField
               id="account-description"
@@ -257,7 +258,8 @@ export function AccountSettingsModal({
                 <span className="mx-2 text-hw-muted/60">·</span>
                 Exp. {values.cardExpiry}
               </span>
-              <Pencil className="size-3.5 shrink-0 text-hw-foreground/50" />
+              <Image src={pencil} alt="pencil" className="size-3.5 shrink-0 text-hw-foreground/50"/>
+              
             </button>
           </div>
 
