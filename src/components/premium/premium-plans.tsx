@@ -61,23 +61,23 @@ export function PremiumPlans() {
       >
         <Image src={close} alt="Close" width={20} height={20} />
       </button>
-      <div className="flex flex-col items-center gap-2 sm:gap-3 text-center px-6">
+      <div className="flex flex-col items-center gap-2 sm:gap-3 text-center px-6 primary-font">
         
          <Image
                 src={whitedimond}
                 alt="whitedimond"
                 className="size-12 sm:size-16 text-hw-foreground"
               />
-        <h1 className="text-[26px] sm:text-[41px] font-semibold text-hw-depw">
+        <h1 className="text-[26px] sm:text-[41px] font-semibold text-hw-depw primary-font">
           Go Premium
         </h1>
-        <p className="text-[15px] sm:text-[22px] font-light tracking-wide text-hw-depw">
+        <p className="text-[15px] sm:text-[22px] font-light tracking-wide text-hw-depw primary-font">
           Unlock the full potential of HalalWalls
         </p>
       </div>
 
       {/* Plans */}
-      <div className="grid w-full h-auto sm:h-[490px] grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid w-full h-auto sm:h-[490px] grid-cols-1 gap-4 sm:grid-cols-3 primary-font">
         {PLANS.map((plan) => (
           <div
             key={plan.badge}
@@ -88,7 +88,7 @@ export function PremiumPlans() {
               <Image
                 src={dimond}
                 alt="dimond"
-                className="absolute right-6 top-8  rotate-12 text-[#05DF8B]/80"
+                className="absolute right-6 top-9  rotate-12 text-[#05DF8B]/80"
                 width={170}
               />
               <Image
@@ -105,11 +105,11 @@ export function PremiumPlans() {
               <Image
                 src={start}
                 alt="start"
-                className="absolute right-50 top-20 size-5 text-[#05DF8B]/80"
+                className="absolute right-50 top-25 size-5 text-[#05DF8B]/80"
               />
               {/* <Sparkles className="absolute right-16 top-2 size-4 text-[#05DF8B]/80" /> */}
               <div className="relative z-10">
-                <h3 className="text-[20px] sm:text-[28px] font-semibold text-hw-depw">
+                <h3 className="text-[20px] sm:text-[28px] font-semibold text-hw-depw primary-font">
                   Premium
                 </h3>
                 <span
@@ -123,16 +123,16 @@ export function PremiumPlans() {
 
             {/* Features panel */}
             <div className="flex flex-1 flex-col gap-4 sm:gap-8 rounded-[20px] bg-[#323639] px-4 py-6 w-full sm:absolute sm:top-110 sm:w-[384px]">
-              <p className="text-[28px] sm:text-[41px] leading-none text-hw-depw">
+              <p className="text-[28px] sm:text-[41px] leading-none text-hw-depw primary-font">
                 {plan.price}
-                <span className="text-[18px] sm:text-[28px] text-hw-depw">{plan.period}</span>
+                <span className="text-[18px] sm:text-[28px] text-hw-depw primary-font">{plan.period}</span>
               </p>
 
               <ul className="flex flex-col gap-2.5">
                 {FEATURES.map((f) => (
                   <li
                     key={f}
-                    className="flex items-center gap-2 text-[15px] sm:text-[19px] font-light text-hw-depw"
+                    className="primary-font flex items-center gap-2 text-[15px] sm:text-[19px] font-light text-hw-depw"
                   >
                     <span className="grid size-[23px] shrink-0 place-items-center rounded-full bg-[#05DF8B]">
                       <Check
@@ -147,7 +147,7 @@ export function PremiumPlans() {
 
               <button
                 type="button"
-                className="mt-auto rounded-full bg-hw-bg py-2.5 text-center text-[16px] sm:text-[22px] font-medium text-hw-depw transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
+                className="primary-font mt-auto rounded-full bg-hw-bg py-2.5 text-center text-[16px] sm:text-[22px] font-medium text-hw-depw transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
               >
                 Get Started
               </button>
