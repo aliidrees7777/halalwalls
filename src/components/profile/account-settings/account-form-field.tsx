@@ -3,7 +3,8 @@
 import { Pencil } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
+import Image from "next/image";
+import pencil from "../../../../public/my-account/pencil.svg"
 interface AccountFormFieldProps {
   id: string;
   label: string;
@@ -78,10 +79,9 @@ export function AccountFormField({
           />
         )}
         {!disabled ? (
-          <Pencil
-            className="pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-hw-foreground/50"
-            aria-hidden
-          />
+          <Image src={pencil} alt="pencil" className="pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-hw-foreground/50"
+            aria-hidden/>
+         
         ) : null}
       </div>
       {error ? (

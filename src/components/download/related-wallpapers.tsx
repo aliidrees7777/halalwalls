@@ -23,7 +23,7 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
 
   return (
     <div className="lg:max-w-[360px] ">
-      <h1 className="text-center border border-hw-line py-4 text-[17px] font-bold">Related Wallpapers</h1>
+      <h1 className="text-center border border-hw-line py-4 text-[17px] font-bold">Related Content</h1>
       {/* 2-col grid on mobile/tablet (matches Figma); single column in the narrow desktop sidebar */}
       <ul className="grid grid-cols-2 gap-1 xl:grid-cols-1">
         {items.map((wallpaper, index) => (
@@ -35,7 +35,7 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
           >
             <Link
               href={`/wallpaper/${wallpaper.slug}`}
-              className="group relative block overflow-hidden  border border-hw-line bg-hw-deep lg:h-[236px]"
+              className="group relative block overflow-hidden  border border-hw-line bg-hw-deep lg:h-[236px] rounded-[3px]"
             >
               <motion.div
                 whileHover={{ scale: 1.02 }}

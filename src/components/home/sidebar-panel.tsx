@@ -22,9 +22,9 @@ export function SidebarPanel({
         className
       )}
     >
-      <h2 className="mb-3 flex items-center justify-center  gap-1.5 text-[18px] font-bold text-hw-down-text">
+      <h2 className="mb-3 flex items-center justify-center  gap-1.5 text-[18px] font-bold text-hw-muted">
         {title}
-        {Icon && <Image src={download} alt=""/>}
+        {Icon && <Icon className="size-3.5 text-hw-muted" strokeWidth={4} />}
       </h2>
       {children}
     </section>

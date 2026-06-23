@@ -47,6 +47,7 @@
   --color-hw-down: var(--hw-down);
   --color-hw-down-text: var(--hw-down-text);
   --color-hw-account: var(--hw-account);
+  --hw-content: var(--hw-content);
   --font-sans: var(--font-sans);
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
@@ -89,8 +90,9 @@
   --hw-footer: #ffffff;
   --hw-fcolor: #ffffff;
   --hw-down: #5a6165;
-  --hw-down-text: #d8d5d1;
+  --hw-down-text: #000000;
   --hw-account: #c8c3bc;
+  --hw-content: #c8c3b2;
   color-scheme: light;
 }
 
@@ -128,6 +130,7 @@
   --hw-down: #5a6165;
   --hw-down-text: #d8d5d1;
   --hw-account: #c8c3bc;
+  --hw-content: #c8c3b2;
   color-scheme: dark;
 }
 

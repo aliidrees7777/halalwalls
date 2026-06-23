@@ -12,12 +12,12 @@ interface DownloadSidebarRightProps {
 
 export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
   return (
-    <aside className="flex w-full flex-col gap-3 lg:w-[360px]  lg:shrink-0">
+    <aside className="flex w-full flex-col gap-3 lg:w-[360px]   lg:shrink-0">
       <motion.section
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.1 }}
-        className=" border border-hw-line bg-hw-sidebar  xl:block"
+        className=" border border-hw-line bg-hw-sidebar  xl:block h-[350px]"
       >
         <h2 className="text-[13px] mb-3 text-center font-semibold text-hw-foreground pt-3">
           Our App
@@ -69,26 +69,24 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
         <div className="mx-auto lg:flex justify-around hidden">
           <div className="mt-4">
             <div className=" flex flex-col items-center">
-              <div className="overflow-hidden rounded-lg bg-white p-2">
+              <div className="overflow-hidden rounded-lg  p-2">
                 <Image
-                  src="/qr-code-logo.png"
+                  src="/detail-page/scanlogo.svg"
                   alt="Scan to download on Google Play"
-                  width={110}
-                  height={110}
-                  className="size-[100px] object-contain"
+                  width={116}
+                  height={156}
+                  className="size-[150px] object-contain"
                 />
               </div>
-              <p className="mt-2 text-center font-medium text-hw-muted text-[13px]">
-                Google Play
-              </p>
+             
             </div>
           </div>
-          <Image src={mobilelog} alt="mobile-logo" width={150} />
+          <Image src={mobilelog} alt="mobile-logo" width={150} className="h-[282px]"/>
           <a
             href="https://play.google.com/store/apps"
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute hidden right-70 bg-conic-0 -bottom-13  top-114 lg:flex items-center justify-center gap-3 rounded-md border border-hw-line w-[216px] bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90  mx-4"
+            className="absolute hidden right-70 bg-conic-0   top-125 lg:flex items-center justify-center gap-3 rounded-md border border-hw-line w-[216px] bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90  mx-4"
           >
             <Image
               src="/google-logo.svg"

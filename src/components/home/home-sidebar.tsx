@@ -53,7 +53,7 @@ function CategoryBadge({
   return (
     <span
       className={cn(
-        "min-w-[28px] rounded-full b-1 w-16 h-5 text-center text-[15px] font-bold tabular-nums text-hw-depw",
+        "min-w-[28px] rounded-full  w-16 h-6 text-center text-[15px] font-bold tabular-nums text-hw-depw",
         isPremium ? "border border-hw-yellow bg-hw-lines text-hw-yellow" : "bg-hw-lines text-white",
       )}
     >
@@ -227,8 +227,8 @@ export function HomeSidebar() {
           ))}
         </ul>
       </SidebarPanel>
-
       <SidebarPanel title="Categories" icon={LayoutGrid}>
+
         <SidebarCollapsible label="Browse Categories" defaultOpen>
           <ul>
             {loading && categories.length === 0

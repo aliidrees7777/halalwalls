@@ -7,6 +7,7 @@ import { LogOut, Settings } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { ApiError } from "@/lib/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { PremiumWhiteIcon } from "@/components/profile/premium-white-icon";
 import { PremiumIcon } from "@/components/profile/premium-icon";
 import {
   AccountSettingsModal,
@@ -71,7 +72,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-2xl border border-hw-yellow/70 shadow-[0_0_40px_rgba(245,197,24,0.08)]"
+      className="relative overflow-hidden rounded-[28px] border-3 border-hw-yellow "
     >
       <div className="relative aspect-[16/5] min-h-[600px] w-full sm:min-h-[280px] md:min-h-[470px]">
         <Image
@@ -108,7 +109,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
         <div className="mb-3 flex items-center justify-center gap-4 sm:gap-5">
           <ProfileSideIconButton
             label="Premium"
-            iconNode={<PremiumIcon size={20} className="sm:size-[22px]" />}
+            iconNode={<PremiumWhiteIcon size={20} className="sm:size-[22px]" />}
           />
 
           <div className="relative">
@@ -116,7 +117,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
               className="absolute -inset-1 rounded-full "
               aria-hidden
             />
-            <Avatar className="relative w-[214px] h-[214px] border-[3px] border-hw-yellow/80 after:hidden mb-10">
+            <Avatar className="relative w-[214px] h-[214px] after:hidden mb-10">
               <AvatarImage src={user.avatar} alt={user.name} />
               <AvatarFallback className="bg-hw-surface text-lg text-hw-foreground">
                 {initials}
@@ -145,7 +146,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
             className="hidden shrink-0 sm:inline-flex"
           />
 
-          <div className="w-full max-w-sm rounded-xl border border-white/10 bg-black/50 px-5 py-3.5 text-center  sm:max-w-md sm:px-6 sm:py-4">
+          <div className="w-full max-w-sm rounded-[17px] border border-white/10 bg-black/50 px-5 py-3.5 text-center  sm:max-w-md sm:px-6 sm:py-4">
             <h1 className="text-[26px] font-bold text-hw-depw sm:text-lg">
               {user.name}
             </h1>

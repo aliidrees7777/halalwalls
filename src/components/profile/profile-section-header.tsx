@@ -26,7 +26,7 @@ export function ProfileSectionHeader({
       {seeAllHref && (
         <Link
           href={seeAllHref}
-          className="flex mt-20 shrink-0 items-center gap-0.5 text-[13px] font-medium text-[#3b82f6] transition-opacity hover:opacity-80"
+          className="flex mt-20 shrink-0 items-center gap-0.5 text-[24px] font-medium text-[#69A6D5] transition-opacity hover:opacity-80"
         >
           See All
           <ChevronRight className="size-3.5" />
