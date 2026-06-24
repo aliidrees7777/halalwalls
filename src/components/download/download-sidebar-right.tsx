@@ -86,7 +86,7 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
             href="https://play.google.com/store/apps"
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute hidden right-70 bg-conic-0   top-125 lg:flex items-center justify-center gap-3 rounded-md border border-hw-line w-[216px] bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90  mx-4"
+            className="absolute hidden right-65 bg-conic-0   top-125 lg:flex items-center justify-center gap-3 rounded-md border border-hw-line w-[216px] bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90  mx-4"
           >
             <Image
               src="/google-logo.svg"

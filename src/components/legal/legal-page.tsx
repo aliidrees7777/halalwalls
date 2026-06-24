@@ -60,7 +60,7 @@ export function LegalPage({ content }: { content: LegalContent }) {
     <div className="flex min-h-screen flex-col bg-hw-bg">
       <SiteHeader />
 
-      <main className="mx-auto  w-[1650px] flex-1 px-4 py-10 lg:py-14">
+      <main className="mx-auto  lg:w-[1650px] flex-1 px-4 py-10 lg:py-14">
         <h1 className="mb-6 text-center text-[40px] font-bold text-hw-content">
           {content.title}
         </h1>

@@ -96,8 +96,24 @@ export function UploadForm() {
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="group mx-auto flex w-[733px] h-[412px] flex-col items-center justify-center gap-4 overflow-hidden rounded-4xl border-[3px] border-dashed border-[#909098]/70 bg-hw-input p-6 text-center transition-colors hover:border-[#05DF8B]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05DF8B]/40"
+        className="group mx-auto relative w-full lg:w-[733px] h-[412px] flex flex-col items-center justify-center gap-4 overflow-hidden rounded-4xl bg-hw-input p-6 text-center"
       >
+        <svg
+  className="absolute inset-0 h-full w-full pointer-events-none"
+  preserveAspectRatio="none"
+>
+  <rect
+    x="2"
+    y="2"
+    width="calc(100% - 4px)"
+    height="calc(100% - 4px)"
+    rx="24"
+    fill="none"
+    stroke="#909098"
+    strokeWidth="3"
+    strokeDasharray="18 10"
+  />
+</svg>
         {preview ? (
           <>
             <NextImage
@@ -131,8 +147,8 @@ export function UploadForm() {
       </button>
 
       {/* Don't publish notice */}
-      <div className="flex flex-col justify-center items-center">
-        <div className="rounded-[9px]  w-[1191px] border border-[#2F2805] bg-[#2F2805] px-6 py-5 text-[#C1A36F]">
+      <div className="flex flex-col justify-center lg:items-center">
+        <div className="rounded-[9px]  lg:w-[1191px] border border-[#2F2805] bg-[#2F2805] px-6 py-5 text-[#C1A36F]">
           <h2 className="text-[28px] font-semibold text-[#C1A36F]">Don&rsquo;t publish:</h2>
           <ol className="mt-4 space-y-2 text-[21px] text-[#C1A36F] font-medium">
             {DONT_PUBLISH.map((item, i) => (

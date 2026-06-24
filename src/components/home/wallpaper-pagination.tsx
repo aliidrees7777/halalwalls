@@ -61,7 +61,7 @@ export function WallpaperPagination({
               "flex lg:w-[54px] lg:h-[53px]  w-[32px]  h-[32px] items-center justify-center rounded-sm lg:text-2xl text-base font-medium transition-colors",
               currentPage === page
                 ? "bg-[#33373A] font-semibold text-white"
-                : "bg-hw-card text-[#ffffff] hover:bg-hw-surface hover:text-hw-foreground"
+                : "bg-[#191a1c] text-[#ffffff] hover:bg-hw-surface hover:text-hw-foreground"
             )}
             aria-current={currentPage === page ? "page" : undefined}
           >
@@ -73,7 +73,7 @@ export function WallpaperPagination({
         type="button"
         onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage >= totalPages}
-        className="ml-1 rounded-sm bg-hw-card lg:w-[112px]  lg:h-[54px] h-[32px] w-[73px] lg:text-2xl text-base font-medium text-[#ffffff] transition-colors hover:bg-hw-surface hover:text-hw-foreground disabled:cursor-not-allowed disabled:opacity-50"
+        className="ml-1 rounded-sm bg-[#191a1c] lg:w-[112px]  lg:h-[54px] h-[32px] w-[73px] lg:text-2xl text-base font-medium text-[#ffffff] transition-colors hover:bg-hw-surface hover:text-hw-foreground disabled:cursor-not-allowed disabled:opacity-50"
       >
         Next »
       </button>

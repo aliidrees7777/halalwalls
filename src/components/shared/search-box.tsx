@@ -36,7 +36,7 @@ export function SearchBox({
         onSubmit?.(value ?? "");
       }}
       className={cn(
-        "flex items-center h-11 overflow-hidden rounded-[7px] bg-hw-input border border[#C8C3BC]",
+        "flex items-center h-12 overflow-hidden rounded-[7px] bg-hw-input border border[#C8C3BC]",
         heightClass,
         className
       )}
@@ -49,7 +49,7 @@ export function SearchBox({
         placeholder="Search for wallpapers..."
         aria-label="Search wallpapers"
         className={cn(
-          "h-full min-w-0 flex-1 bg-transparent px-3 lg:text-[17px] text-[13px] font-medium text-hw-faint outline-none placeholder:text-hw-faint/50 [&::-webkit-search-cancel-button]:appearance-none ",
+          "h-12 ] flex-1 bg-transparent px-3 lg:text-[17px] text-[13px]  font-medium text-hw-faint outline-none placeholder:text-hw-faint/50 [&::-webkit-search-cancel-button]:appearance-none ",
           textClass
         )}
       />

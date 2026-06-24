@@ -16,7 +16,7 @@ export function ProfileSectionHeader({
   return (
     <div
       className={cn(
-        "mb-4 flex items-center justify-between gap-4",
+        "lg:mb-4 flex items-center justify-between gap-4",
         className
       )}
     >

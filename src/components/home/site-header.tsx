@@ -30,8 +30,8 @@ export function SiteHeader() {
         {/* {dark ? ():()} */}
         <HalalWallsLogo className="shrink-0" />
 
-        {pathname !== "/" && (
-          <div className="hidden min-w-0 flex-1 md:block lg:max-w-[420px] xl:max-w-[520px]">
+        {pathname !== "/" && ( 
+          <div className=" ml-25 hidden  flex-1 md:block lg:max-w-[337px] ">
             <SearchBox
               value={search}
               onChange={setSearch}

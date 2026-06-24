@@ -1,7 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-
 /* Class-based dark mode (next-themes toggles `.dark` on <html>) */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -91,9 +91,11 @@
   --hw-fcolor: #ffffff;
   --hw-down: #5a6165;
   --hw-down-text: #000000;
-  --hw-account: #c8c3bc;
+  --hw-account: #000000;
   --hw-content: #c8c3b2;
   color-scheme: light;
+    --font-primary: 'Lexend Deca', sans-serif;
+  --font-secondary: 'Inter', "Inter Fallback" ;
 }
 
 /* DARK theme */
@@ -134,6 +136,18 @@
   color-scheme: dark;
 }
 
+body {
+  font-family: var(--font-secondary);
+}
+
+.primary-font {
+  font-family: var(--font-primary);
+}
+
+.secondary-font {
+  font-family: var(--font-secondary);
+}
+
 @layer base {
   * {
     @apply border-hw-border outline-hw-green/50;
@@ -163,3 +177,4 @@
     cursor: not-allowed;
   }
 }
+
