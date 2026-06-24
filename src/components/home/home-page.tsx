@@ -14,7 +14,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { api } from "@/lib/api";
 import type { Wallpaper } from "@/types/wallpaper";
 import { wallpapers as wallpapersData } from "@/data/wallpapers";
-import logodark from "../../../public/authicon/logodark.svg"
+import logodark from "../../../public/authicon/logodark.svg";
 interface Pagination {
   total: number;
   page: number;
@@ -113,23 +113,23 @@ export function HomePage() {
       }
 
       // pagination (client side)
-    const limit = 18;
-    const start = (currentPage - 1) * limit;
-    const paginated = data.slice(start, start + limit);
+      const limit = 18;
+      const start = (currentPage - 1) * limit;
+      const paginated = data.slice(start, start + limit);
 
-    const pagination = {
-      total: data.length,
-      page: currentPage,
-      limit,
-      totalPages: Math.ceil(data.length / limit),
-      hasNextPage: start + limit < data.length,
-      hasPrevPage: currentPage > 1,
-    };
+      const pagination = {
+        total: data.length,
+        page: currentPage,
+        limit,
+        totalPages: Math.ceil(data.length / limit),
+        hasNextPage: start + limit < data.length,
+        hasPrevPage: currentPage > 1,
+      };
 
-    if (!ignore) {
-      setWallpapers(paginated as unknown as Wallpaper[]);
-      setPagination(pagination);
-    }
+      if (!ignore) {
+        setWallpapers(paginated as unknown as Wallpaper[]);
+        setPagination(pagination);
+      }
     } catch (e) {
       if (!ignore) {
         setWallpapers([]);
@@ -148,9 +148,10 @@ export function HomePage() {
     <div className="min-h-screen ">
       <SiteHeader />
 
-      <section 
-      style={{ background: "var(--hw-search-header)" }}
-      className=" px-4 py-7 lg:px-6">
+      <section
+        style={{ background: "var(--hw-search-header)" }}
+        className=" px-4 py-7 lg:px-6"
+      >
         <div className="mx-auto max-w-[1600px]">
           <WallpaperSearch value={search} onChange={setSearch} />
           <div className="mt-4">
@@ -175,36 +176,35 @@ export function HomePage() {
             <div className="mt-4 flex items-center justify-center gap-[22px] rounded-xl border border-hw-green/40 bg-[#CBFFEB] p-3 lg:hidden h-[120px]">
               <div className="grid shrink-0">
                 <span className="text-lg font-bold text-hw-green">
-<Image src={logodark} alt="logodark" className="w-[84px]"/>
+                  <Image src={logodark} alt="logodark" className="w-[84px]" />
                 </span>
               </div>
               <div className="min-w-0 ">
-                <p className="text-[20px] font-bold text-hw-deep">
+                <p className="text-[20px] font-bold text-[#000000]">
                   HalalWalls App
                 </p>
-                <p className="text-[12px] text-hw-deep">
+                <p className="text-[12px] text-[#000000]">
                   Download wallpapers on the go
                 </p>
-                  <a
-                href="https://play.google.com/store/apps"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex shrink-0 items-center gap-2 rounded-lg bg-hw-pill px-3 py-2  mt-2 w-[150px]"
-              >
-                <Image
-                  src="/google-play-logo.png"
-                  alt=""
-                  width={16}
-                  height={16}
-                  className="size-6 object-contain"
-                />
-                <div>
-                <p className="text-[10px] font-semibold">Get it on</p>
-               <p className="text-[13px] font-semibold">Google Play</p>
-               </div>
-              </a>
+                <a
+                  href="https://play.google.com/store/apps"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex shrink-0 items-center gap-2 rounded-lg bg-hw-pill px-3 py-2  mt-2 w-[150px]"
+                >
+                  <Image
+                    src="/google-play-logo.png"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="size-6 object-contain"
+                  />
+                  <div>
+                    <p className="text-[10px] font-semibold">Get it on</p>
+                    <p className="text-[13px] font-semibold">Google Play</p>
+                  </div>
+                </a>
               </div>
-            
             </div>
           </div>
         </div>

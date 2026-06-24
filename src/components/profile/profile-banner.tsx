@@ -147,13 +147,13 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
           />
 
           <div className="w-full max-w-sm rounded-[17px] border border-white/10 bg-black/50 px-5 py-3.5 text-center  sm:max-w-md sm:px-6 sm:py-4">
-            <h1 className="text-[26px] font-bold text-hw-depw sm:text-lg">
+            <h1 className="text-[26px] font-bold text-[#ffffff] sm:text-lg">
               {user.name}
             </h1>
-            <p className="mt-1 text-[17px] text-hw-depw sm:text-[13px]">
+            <p className="mt-1 text-[17px] text-[#ffffff] sm:text-[13px]">
               {user.bio}
             </p>
-            <p className="mt-1 text-[17px] text-hw-depw sm:text-[12px]">
+            <p className="mt-1 text-[17px] text-[#ffffff] sm:text-[12px]">
               {user.email}
             </p>
           </div>
