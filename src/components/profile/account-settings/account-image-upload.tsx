@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { compressImageToDataUrl } from "@/lib/image";
 import pencil from "../../../../public/my-account/pencil.svg"
 interface AccountImageUploadProps {
   label: string;
@@ -22,13 +23,22 @@ export function AccountImageUpload({
 }: AccountImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  function handleFile(file: File | undefined) {
+  async function handleFile(file: File | undefined) {
     if (!file?.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") onChange(reader.result);
-    };
-    reader.readAsDataURL(file);
+    // Compress in the browser so the data URL stays small (avatars ~256px,
+    // banners ~1280px). Keeps the PATCH /me payload under the body limit.
+    const maxDim = variant === "avatar" ? 256 : 1280;
+    try {
+      const dataUrl = await compressImageToDataUrl(file, maxDim, 0.82);
+      onChange(dataUrl);
+    } catch {
+      // Fallback: raw read if canvas/compression isn't available.
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === "string") onChange(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   return (

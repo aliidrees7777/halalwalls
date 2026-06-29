@@ -37,7 +37,7 @@ interface AccountSettingsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialData: AccountSettingsData;
-  onSave: (data: AccountSettingsData) => void;
+  onSave: (data: AccountSettingsData) => void | Promise<void>;
 }
 
 function VisaBadge() {
@@ -57,7 +57,7 @@ export function AccountSettingsModal({
   initialData,
   onSave,
 }: AccountSettingsModalProps) {
-  const { changePassword } = useAuth();
+  const { user, changePassword, resendVerification } = useAuth();
   const [values, setValues] = useState<AccountSettingsData>(initialData);
   const [errors, setErrors] = useState<AccountFormErrors>({});
   const [touched, setTouched] = useState<
@@ -67,6 +67,10 @@ export function AccountSettingsModal({
   const [showCancelSubConfirm, setShowCancelSubConfirm] = useState(false);
   const [subscriptionActive, setSubscriptionActive] = useState(true);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
 
   // Change-password state — kept independent of the profile `values` so that
   // saving the profile and updating the password are fully separate actions.
@@ -85,6 +89,10 @@ export function AccountSettingsModal({
     setShowCancelSubConfirm(false);
     setSubscriptionActive(true);
     setStatusMessage(null);
+    setSaving(false);
+    setSaveError(null);
+    setResending(false);
+    setResent(false);
     setCurrentPassword("");
     setNewPassword("");
     setConfirmNewPassword("");
@@ -115,19 +123,49 @@ export function AccountSettingsModal({
     setErrors(validateAccountForm(values));
   }
 
-  function handleSave() {
+  async function handleSave() {
     const nextErrors = validateAccountForm(values);
     setErrors(nextErrors);
     setTouched({ name: true, email: true, description: true });
 
     if (hasFormErrors(nextErrors)) return;
 
-    onSave(values);
-    setStatusMessage("Account saved successfully.");
-    setTimeout(() => {
-      setStatusMessage(null);
-      onOpenChange(false);
-    }, 400);
+    setSaving(true);
+    setSaveError(null);
+    try {
+      await onSave(values); // persists to the backend; throws on failure
+      setStatusMessage("Account saved successfully.");
+      setTimeout(() => {
+        setStatusMessage(null);
+        onOpenChange(false);
+      }, 700);
+    } catch (err) {
+      setSaveError(
+        err instanceof ApiError
+          ? err.message
+          : "Couldn't save your changes. Please try again."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleResendVerification() {
+    setResent(false);
+    setSaveError(null);
+    setResending(true);
+    try {
+      await resendVerification();
+      setResent(true);
+    } catch (err) {
+      setSaveError(
+        err instanceof ApiError
+          ? err.message
+          : "Couldn't resend the confirmation email. Please try again."
+      );
+    } finally {
+      setResending(false);
+    }
   }
 
   function handleCancel() {
@@ -227,9 +265,33 @@ export function AccountSettingsModal({
               label="Email (cannot be changed)"
               type="email"
               value={values.email}
-              onChange={(email) => updateField("email", email)}
-              
+              onChange={() => {}}
+              disabled
             />
+            {/* Email verification status + resend */}
+            {user && !user.emailVerified ? (
+              <div className="-mt-1 flex flex-wrap items-center justify-between gap-2 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2">
+                <span className="text-[12px] text-amber-400">
+                  Your email is not verified.
+                </span>
+                <button
+                  type="button"
+                  onClick={handleResendVerification}
+                  disabled={resending || resent}
+                  className="text-[12px] font-semibold text-[#05DF8B] underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {resent
+                    ? "Confirmation sent ✓"
+                    : resending
+                      ? "Sending…"
+                      : "Resend confirmation"}
+                </button>
+              </div>
+            ) : user?.emailVerified ? (
+              <p className="-mt-1 px-1 text-[12px] text-[#05DF8B]">
+                ✓ Email verified
+              </p>
+            ) : null}
             <AccountFormField
               id="account-description"
               label="Description"
@@ -391,6 +453,34 @@ export function AccountSettingsModal({
             )}
           </div>
         </div>
+
+        <DialogFooter className="shrink-0 flex-col gap-2 border-t border-hw-border px-5 py-4 sm:flex-row sm:items-center sm:px-7">
+          {saveError ? (
+            <p
+              role="alert"
+              className="mr-auto text-[12px] text-red-400 sm:self-center"
+            >
+              {saveError}
+            </p>
+          ) : null}
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={handleCancel}
+            disabled={saving}
+            className="text-hw-muted"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-[#05DF8B] font-semibold text-hw-input hover:brightness-95"
+          >
+            {saving ? "Saving…" : "Save Changes"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

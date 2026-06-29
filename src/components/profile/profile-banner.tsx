@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { LogOut, Settings } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
-import { ApiError } from "@/lib/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PremiumWhiteIcon } from "@/components/profile/premium-white-icon";
 import { PremiumIcon } from "@/components/profile/premium-icon";
@@ -31,30 +30,21 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
   );
 
   async function handleAccountSave(data: AccountSettingsData) {
+    // Persist to the backend (PATCH /me). Email is intentionally not sent — the
+    // backend ignores it and it isn't editable here. Errors propagate so the
+    // modal can surface them instead of silently "succeeding".
+    await updateProfile({
+      name: data.name,
+      bio: data.description,
+      avatar: data.avatar,
+      banner: data.banner,
+    });
+
+    // Reflect the changes locally only after the save actually succeeded.
     setAccountSettings(data);
-
-    // Persist profile changes to the backend (PATCH /me). Email is intentionally
-    // not sent — the backend ignores it and it isn't editable here.
-    try {
-      await updateProfile({
-        name: data.name,
-        bio: data.description,
-        avatar: data.avatar,
-        banner: data.banner,
-      });
-    } catch (err) {
-      if (err instanceof ApiError) {
-        console.error("Failed to update profile:", err.message);
-      } else {
-        console.error("Failed to update profile:", err);
-      }
-    }
-
-    // Reflect the changes locally so the banner updates immediately.
     setUser((prev) => ({
       ...prev,
       name: data.name,
-      email: data.email,
       bio: data.description,
       avatar: data.avatar,
       banner: data.banner,

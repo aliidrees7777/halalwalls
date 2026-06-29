@@ -17,6 +17,7 @@ export interface AuthUser {
   name: string;
   email: string;
   role: "user" | "admin";
+  emailVerified: boolean;
   avatar: string | null;
   banner: string | null;
   bio: string;
@@ -62,6 +63,8 @@ interface AuthContextValue {
     avatar?: string;
     banner?: string;
   }) => Promise<AuthUser>;
+  resendVerification: () => Promise<void>;
+  verifyEmail: (token: string) => Promise<void>;
   logout: () => void;
   refreshMe: () => Promise<void>;
   setUser: (u: AuthUser | null) => void;
@@ -210,6 +213,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
+  // Re-send the email-verification link (requires a logged-in user).
+  const resendVerification = useCallback(async () => {
+    await api.post("/auth/resend-verification", {});
+  }, []);
+
+  // Confirm an email via the token from the verification link, then refresh the
+  // session so `emailVerified` reflects the new state.
+  const verifyEmail = useCallback(async (token: string) => {
+    await api.post("/auth/verify-email", { token });
+    if (getToken()) {
+      try {
+        const data = await api.get<{
+          user: AuthUser;
+          favoritesCount: number;
+          uploadsCount: number;
+        }>("/me");
+        setUser({
+          ...data.user,
+          favoritesCount: data.favoritesCount,
+          uploadsCount: data.uploadsCount,
+        });
+      } catch {
+        /* not signed in on this device — that's fine */
+      }
+    }
+  }, []);
+
   const refreshMe = useCallback(async () => {
     if (!getToken()) return;
     const data = await api.get<{
@@ -309,6 +339,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loginWithGoogle,
       changePassword,
       updateProfile,
+      resendVerification,
+      verifyEmail,
       logout,
       refreshMe,
       setUser,
@@ -332,6 +364,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loginWithGoogle,
       changePassword,
       updateProfile,
+      resendVerification,
+      verifyEmail,
       logout,
       refreshMe,
       isFavorited,
