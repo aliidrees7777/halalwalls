@@ -4,9 +4,11 @@ import { useRef, useState } from "react";
 import NextImage from "next/image";
 import Link from "next/link";
 import ReCAPTCHA from "react-google-recaptcha";
-import { ChevronDown, Plus, Upload, Check } from "lucide-react";
+import { ChevronDown, Plus, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { api, ApiError } from "@/lib/api";
+import { useAuth } from "@/context/auth-context";
 import downloadrotate from "../../../public/detail-page/downloadrotate.svg"
 const RECAPTCHA_SITE_KEY =
   process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
@@ -37,48 +39,111 @@ const fieldBox =
   "w-full rounded-[5px] border h-[16px] border-hw-input-border bg-hw-input px-4 text-[21px] text-hw-foreground outline-none transition-colors focus:border-[#05DF8B] placeholder:text-hw-faint/50";
 
 export function UploadForm() {
+  const { isAuthenticated, openAuthModal } = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [category, setCategory] = useState("");
+  const [tags, setTags] = useState("");
+  const [source, setSource] = useState("");
   const [agree, setAgree] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleFile(file: File | undefined) {
-    if (!file) return;
-    if (file.type !== "image/jpeg") {
+  function handleFile(picked: File | undefined) {
+    if (!picked) return;
+    if (picked.type !== "image/jpeg") {
       alert("JPG only.");
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
+    if (picked.size > 10 * 1024 * 1024) {
       alert("Max file size is 10MB.");
       return;
     }
-    setFileName(file.name);
+    setFile(picked);
+    setFileName(picked.name);
     const reader = new FileReader();
     reader.onload = () => {
       if (typeof reader.result === "string") setPreview(reader.result);
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(picked);
   }
 
-  const canSubmit = Boolean(preview && category && agree && captchaToken);
+  const canSubmit = Boolean(file && category && agree && captchaToken);
+
+  function resetForm() {
+    setFile(null);
+    setPreview(null);
+    setFileName(null);
+    setCategory("");
+    setTags("");
+    setSource("");
+    setAgree(false);
+    setCaptchaToken(null);
+    recaptchaRef.current?.reset();
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    // Submitting requires a signed-in user (the backend route is auth-guarded).
+    if (!isAuthenticated) {
+      openAuthModal("signin");
+      return;
+    }
+    if (!canSubmit || !file) return;
+
+    setSubmitting(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("category", category);
+      if (tags.trim()) formData.append("tags", tags.trim());
+      if (source.trim()) formData.append("source", source.trim());
+
+      await api.post("/uploads", formData);
+
+      setSuccess(
+        "Wallpaper submitted! It’s now pending review — you’ll find it under your profile uploads.",
+      );
+      resetForm();
+    } catch (err) {
+      // An expired/invalid session surfaces the sign-in modal.
+      if (err instanceof ApiError && err.statusCode === 401) {
+        openAuthModal("signin");
+      }
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Upload failed. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
-    <form
-      className="flex flex-col gap-7 "
-      onSubmit={(e) => {
-        e.preventDefault();
-        setSubmitted(true);
-      }}
-    >
-      {submitted && (
+    <form className="flex flex-col gap-7 " onSubmit={handleSubmit}>
+      {success && (
         <p
           role="status"
           className="rounded-[7px] border border-[#4D853A]/50 bg-[#4D853A]/15 px-4 py-3 text-sm text-[#7ed957]"
         >
-          Wallpaper submitted for review (demo).
+          {success}
+        </p>
+      )}
+      {error && (
+        <p
+          role="alert"
+          className="rounded-[7px] border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm text-red-400"
+        >
+          {error}
         </p>
       )}
 
@@ -213,7 +278,9 @@ export function UploadForm() {
         <input
           id="upload-tags"
           type="text"
-          placeholder="Add tags to help discovery..."
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          placeholder="Add tags to help discovery (comma-separated)..."
           className={cn(fieldBox, "h-12")}
         />
       </div>
@@ -228,6 +295,8 @@ export function UploadForm() {
         </label>
         <textarea
           id="upload-source"
+          value={source}
+          onChange={(e) => setSource(e.target.value)}
           placeholder="Credit the original source..."
           rows={4}
           className={cn(
@@ -266,6 +335,7 @@ export function UploadForm() {
 
       {/* reCAPTCHA */}
       <ReCAPTCHA
+        ref={recaptchaRef}
         sitekey={RECAPTCHA_SITE_KEY}
         theme="light"
         onChange={(token) => setCaptchaToken(token)}
@@ -276,10 +346,10 @@ export function UploadForm() {
       <div>
         <button
           type="submit"
-          // disabled={!canSubmit}
+          disabled={!canSubmit || submitting}
           className="inline-flex h-11 items-center justify-center gap-2 rounded-[5px] bg-[#4D853A] px-5 text-[17px] font-semibold text-white transition-[filter,transform] hover:brightness-110 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Upload Wallpaper
+          {submitting ? "Uploading…" : "Upload Wallpaper"}
           <Image src={downloadrotate} alt="" className="text-white"/>
         </button>
       </div>

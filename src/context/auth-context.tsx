@@ -65,6 +65,7 @@ interface AuthContextValue {
   }) => Promise<AuthUser>;
   resendVerification: () => Promise<void>;
   verifyEmail: (token: string) => Promise<void>;
+  deleteAccount: () => Promise<void>;
   logout: () => void;
   refreshMe: () => Promise<void>;
   setUser: (u: AuthUser | null) => void;
@@ -254,6 +255,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  // Permanently delete the signed-in user's account (DELETE /me), then clear
+  // the local session. Errors propagate so the caller can surface them.
+  const deleteAccount = useCallback(async () => {
+    await api.delete("/me");
+    setToken(null);
+    setUser(null);
+  }, []);
+
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
@@ -341,6 +350,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateProfile,
       resendVerification,
       verifyEmail,
+      deleteAccount,
       logout,
       refreshMe,
       setUser,
@@ -366,6 +376,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateProfile,
       resendVerification,
       verifyEmail,
+      deleteAccount,
       logout,
       refreshMe,
       isFavorited,
