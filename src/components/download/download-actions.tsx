@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Download, Heart } from "lucide-react";
+import { Check, Heart, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -17,13 +17,16 @@ interface DownloadActionsProps {
 }
 
 export function DownloadActions({ wallpaper }: DownloadActionsProps) {
-  const { isAuthenticated, openAuthModal } = useAuth();
+  const { isAuthenticated, openAuthModal, user } = useAuth();
   const { isFavorite: favorited, count: favCount, toggle: toggleFav } = useFavorite(
     wallpaper.id,
     wallpaper.favoritesCount ?? 0
   );
   const [primaryDone, setPrimaryDone] = useState(false);
   const [originalDone, setOriginalDone] = useState(false);
+
+  // Premium wallpapers are downloadable only by premium members.
+  const locked = !!wallpaper.isPremium && !user?.isPremium;
 
   const flashDone = (type: "primary" | "original") => {
     if (type === "primary") setPrimaryDone(true);
@@ -42,6 +45,11 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
       openAuthModal("signin");
       return;
     }
+    // Premium wallpaper + non-premium user → prompt to upgrade instead.
+    if (locked) {
+      openAuthModal("premium");
+      return;
+    }
 
     try {
       const data = await api.post<{
@@ -54,6 +62,11 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
     } catch (e) {
       if (e instanceof ApiError && e.statusCode === 401) {
         openAuthModal("signin");
+        return;
+      }
+      // Backend gate (premium-only wallpaper) — send them to the plans.
+      if (e instanceof ApiError && e.statusCode === 403) {
+        openAuthModal("premium");
         return;
       }
       console.error(e);
@@ -69,11 +82,14 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
       >
         {primaryDone ? (
           <Check className="mr-2 size-4 text-hw-green" />
+        ) : locked ? (
+          <Lock className="mr-2 size-4 text-hw-yellow" />
         ) : (
-          // <Download className="mr-2 size-4" />
           <Image src={downloadrotate} alt="downloadrotate"/>
         )}
-        Download Wallpaper ({wallpaper.preferredResolution}) <Check className="mr-2 size-4 text" />
+        {locked
+          ? "Premium — Go Premium to Download"
+          : `Download Wallpaper (${wallpaper.preferredResolution})`}
       </Button>
 
       <Button
@@ -86,10 +102,14 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
       >
         {originalDone ? (
           <Check className="mr-2 size-4 text-hw-green" />
+        ) : locked ? (
+          <Lock className="mr-2 size-4 text-hw-yellow" />
         ) : (
          <Image src={downloadrotate} alt="downloadrotate"/>
         )}
-        Download Original ({wallpaper.originalSizeMB.toFixed(2)}MB)
+        {locked
+          ? "Premium Only"
+          : `Download Original (${wallpaper.originalSizeMB.toFixed(2)}MB)`}
       </Button>
 
       <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>

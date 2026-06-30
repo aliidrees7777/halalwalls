@@ -16,7 +16,6 @@ import { useMyUploads } from "@/hooks/use-my-uploads";
 import {
   demoProfileUser,
   discoverJustUploaded,
-  profileFavorites,
   type ProfileUser,
 } from "@/data/profile-user";
 import { SiteHeader } from "../home/site-header";
@@ -126,13 +125,17 @@ export function ProfilePage() {
           <h2 className="lg:text-4xl text-2xl font-semibold  text-hw-account">Your Favorites</h2>
           <ProfileSectionHeader title="" />
           </div>
-          {profileFavorites.length === 0 && !favoritesLoading ? (
+          {favoritesLoading ? (
+            <p className="py-12 text-center text-sm text-hw-muted">
+              Loading your favorites…
+            </p>
+          ) : favorites.length === 0 ? (
             <p className="py-12 text-center text-sm text-hw-muted">
               No favorites yet.
             </p>
           ) : (
             <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
-              {profileFavorites.map((wallpaper, index) => (
+              {favorites.map((wallpaper, index) => (
                 <ProfileWallpaperThumb
                   key={wallpaper.id}
                   wallpaper={wallpaper}

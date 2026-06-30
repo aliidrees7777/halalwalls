@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Pencil, Trash2 } from "lucide-react";
+import { CreditCard, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -22,33 +23,51 @@ import {
   type AccountFormErrors,
 } from "@/components/profile/account-settings/validation";
 import { useAuth } from "@/context/auth-context";
-import { ApiError } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-import pencil from "../../../../public/my-account/pencil.svg"
-export interface AccountSettingsData extends AccountFormValues {
-  cardLast4: string;
-  cardExpiry: string;
-  planLabel: string;
-  billingPeriod: string;
-}
+
+// The editable account form values (profile fields). Subscription + payment
+// state is fetched live from the backend, not carried in here.
+export type AccountSettingsData = AccountFormValues;
 
 interface AccountSettingsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialData: AccountSettingsData;
-  onSave: (data: AccountSettingsData) => void;
+  onSave: (data: AccountSettingsData) => void | Promise<void>;
 }
 
-function VisaBadge() {
-  return (
-    <span
-      className="inline-flex h-7 w-11 shrink-0 items-center justify-center rounded-[3px] bg-[#0E4595] text-[12px] font-bold italic tracking-tight text-white"
-      aria-hidden
-    >
-      VISA
-    </span>
-  );
+// Live subscription status from GET /subscriptions/me.
+interface SubscriptionInfo {
+  isPremium: boolean;
+  status: string | null;
+  plan: string | null;
+  currentPeriodEnd: string | null;
+}
+
+// Human-readable plan label from the stored plan key / status.
+function formatPlanLabel(sub: SubscriptionInfo | null): string {
+  if (!sub) return "Premium Plan";
+  if (sub.status === "lifetime" || sub.plan === "lifetime")
+    return "Premium Plan (Lifetime)";
+  if (sub.plan === "yearly") return "Premium Plan (Annual)";
+  if (sub.plan === "monthly") return "Premium Plan (Monthly)";
+  return "Premium Plan";
+}
+
+// Billing line derived from the current period end + status.
+function formatBilling(sub: SubscriptionInfo | null): string {
+  if (!sub) return "";
+  if (sub.status === "lifetime" || sub.plan === "lifetime")
+    return "Lifetime access — no renewal";
+  if (!sub.currentPeriodEnd) return "";
+  const date = new Date(sub.currentPeriodEnd).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const renews = sub.status === "active" || sub.status === "trialing";
+  return `${renews ? "Renews on" : "Active until"} ${date}`;
 }
 
 export function AccountSettingsModal({
@@ -57,16 +76,25 @@ export function AccountSettingsModal({
   initialData,
   onSave,
 }: AccountSettingsModalProps) {
-  const { changePassword } = useAuth();
+  const router = useRouter();
+  const { user, changePassword, resendVerification, deleteAccount } = useAuth();
   const [values, setValues] = useState<AccountSettingsData>(initialData);
   const [errors, setErrors] = useState<AccountFormErrors>({});
   const [touched, setTouched] = useState<
     Partial<Record<keyof AccountFormValues, boolean>>
   >({});
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [showCancelSubConfirm, setShowCancelSubConfirm] = useState(false);
-  const [subscriptionActive, setSubscriptionActive] = useState(true);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
+
+  // Live subscription + billing-portal + delete state.
+  const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
+  const [subLoading, setSubLoading] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Change-password state — kept independent of the profile `values` so that
   // saving the profile and updating the password are fully separate actions.
@@ -82,9 +110,13 @@ export function AccountSettingsModal({
     setErrors({});
     setTouched({});
     setShowDeleteConfirm(false);
-    setShowCancelSubConfirm(false);
-    setSubscriptionActive(true);
     setStatusMessage(null);
+    setSaving(false);
+    setSaveError(null);
+    setResending(false);
+    setResent(false);
+    setPortalLoading(false);
+    setDeleting(false);
     setCurrentPassword("");
     setNewPassword("");
     setConfirmNewPassword("");
@@ -96,6 +128,31 @@ export function AccountSettingsModal({
   useEffect(() => {
     if (open) resetForm();
   }, [open, resetForm]);
+
+  // Load the real subscription status whenever the modal opens.
+  useEffect(() => {
+    if (!open) return;
+    let ignore = false;
+    setSubLoading(true);
+    api
+      .get<SubscriptionInfo>("/subscriptions/me")
+      .then((data) => {
+        if (!ignore) setSubscription(data);
+      })
+      .catch(() => {
+        if (!ignore) setSubscription(null);
+      })
+      .finally(() => {
+        if (!ignore) setSubLoading(false);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [open]);
+
+  const subscriptionActive = !!subscription?.isPremium;
+  const planLabel = formatPlanLabel(subscription);
+  const billingText = formatBilling(subscription);
 
   function updateField<K extends keyof AccountFormValues>(
     key: K,
@@ -115,19 +172,87 @@ export function AccountSettingsModal({
     setErrors(validateAccountForm(values));
   }
 
-  function handleSave() {
+  async function handleSave() {
     const nextErrors = validateAccountForm(values);
     setErrors(nextErrors);
     setTouched({ name: true, email: true, description: true });
 
     if (hasFormErrors(nextErrors)) return;
 
-    onSave(values);
-    setStatusMessage("Account saved successfully.");
-    setTimeout(() => {
-      setStatusMessage(null);
-      onOpenChange(false);
-    }, 400);
+    setSaving(true);
+    setSaveError(null);
+    try {
+      await onSave(values); // persists to the backend; throws on failure
+      setStatusMessage("Account saved successfully.");
+      setTimeout(() => {
+        setStatusMessage(null);
+        onOpenChange(false);
+      }, 700);
+    } catch (err) {
+      setSaveError(
+        err instanceof ApiError
+          ? err.message
+          : "Couldn't save your changes. Please try again."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleResendVerification() {
+    setResent(false);
+    setSaveError(null);
+    setResending(true);
+    try {
+      await resendVerification();
+      setResent(true);
+    } catch (err) {
+      setSaveError(
+        err instanceof ApiError
+          ? err.message
+          : "Couldn't resend the confirmation email. Please try again."
+      );
+    } finally {
+      setResending(false);
+    }
+  }
+
+  // Open Stripe's billing portal (manage payment method / cancel subscription).
+  // On success the browser navigates away, so loading state is left on.
+  async function openBillingPortal() {
+    setSaveError(null);
+    setStatusMessage(null);
+    setPortalLoading(true);
+    try {
+      const { url } = await api.post<{ url: string }>(
+        "/subscriptions/portal",
+        {}
+      );
+      window.location.href = url;
+    } catch (err) {
+      setSaveError(
+        err instanceof ApiError
+          ? err.message
+          : "Couldn't open the billing portal. Please try again."
+      );
+      setPortalLoading(false);
+    }
+  }
+
+  async function handleDeleteAccount() {
+    setSaveError(null);
+    setDeleting(true);
+    try {
+      await deleteAccount(); // DELETE /me + clears the session
+      router.push("/"); // leave the (now inaccessible) profile page
+    } catch (err) {
+      setSaveError(
+        err instanceof ApiError
+          ? err.message
+          : "Couldn't delete your account. Please try again."
+      );
+      setDeleting(false);
+    }
   }
 
   function handleCancel() {
@@ -227,9 +352,33 @@ export function AccountSettingsModal({
               label="Email (cannot be changed)"
               type="email"
               value={values.email}
-              onChange={(email) => updateField("email", email)}
-              
+              onChange={() => {}}
+              disabled
             />
+            {/* Email verification status + resend */}
+            {user && !user.emailVerified ? (
+              <div className="-mt-1 flex flex-wrap items-center justify-between gap-2 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2">
+                <span className="text-[12px] text-amber-400">
+                  Your email is not verified.
+                </span>
+                <button
+                  type="button"
+                  onClick={handleResendVerification}
+                  disabled={resending || resent}
+                  className="text-[12px] font-semibold text-[#05DF8B] underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {resent
+                    ? "Confirmation sent ✓"
+                    : resending
+                      ? "Sending…"
+                      : "Resend confirmation"}
+                </button>
+              </div>
+            ) : user?.emailVerified ? (
+              <p className="-mt-1 px-1 text-[12px] text-[#05DF8B]">
+                ✓ Email verified
+              </p>
+            ) : null}
             <AccountFormField
               id="account-description"
               label="Description"
@@ -245,100 +394,77 @@ export function AccountSettingsModal({
           {/* Payment Method */}
           <div className="mt-7 space-y-3 sm:mt-8">
             <AccountSectionTitle className="text-xl sm:text-2xl text-hw-depw">Payment Method</AccountSectionTitle>
-            <button
-              type="button"
-              className="flex w-full items-center gap-3 rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 py-2.5 text-left transition-colors duration-200 hover:border-hw-faint/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/40"
-              onClick={() =>
-                setStatusMessage("Payment editing is available in a future update.")
-              }
-            >
-              <VisaBadge />
-              <span className="min-w-0 flex-1 text-[13px] text-hw-foreground/95 sm:text-sm">
-                <span className="text-hw-muted">****</span> {values.cardLast4}
-                <span className="mx-2 text-hw-muted/60">·</span>
-                Exp. {values.cardExpiry}
-              </span>
-              <Image src={pencil} alt="pencil" className="size-3.5 shrink-0 text-hw-foreground/50"/>
-              
-            </button>
+            {subscriptionActive ? (
+              <button
+                type="button"
+                disabled={portalLoading}
+                className="flex w-full items-center gap-3 rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 py-2.5 text-left transition-colors duration-200 hover:border-hw-faint/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/40 disabled:cursor-not-allowed disabled:opacity-60"
+                onClick={openBillingPortal}
+              >
+                <CreditCard className="size-5 shrink-0 text-hw-foreground/70" />
+                <span className="min-w-0 flex-1 text-[13px] text-hw-foreground/95 sm:text-sm">
+                  {portalLoading
+                    ? "Opening secure portal…"
+                    : "Manage your payment method in the secure billing portal"}
+                </span>
+              </button>
+            ) : (
+              <p className="rounded-[6px] border border-hw-faint/40 bg-hw-input px-3 py-2.5 text-[13px] text-hw-muted">
+                No payment method on file.
+              </p>
+            )}
           </div>
 
           {/* Subscription Plan */}
           <div className="mt-7 space-y-3 sm:mt-8">
             <AccountSectionTitle className="text-xl sm:text-2xl text-hw-depw">Subscription Plan</AccountSectionTitle>
 
-            <div
-              className={cn(
-                "flex items-center justify-between gap-3 rounded-[6px] border bg-hw-input px-3.5 py-2.5 transition-colors duration-200",
-                subscriptionActive
-                  ? "border-[#FFD700]"
-                  : "border-hw-faint/40 opacity-70"
-              )}
-            >
-              <span
-                className={cn(
-                  "text-[13px] font-medium sm:text-sm",
-                  subscriptionActive ? "text-[#FFD700]" : "text-hw-muted"
-                )}
-              >
-                {subscriptionActive
-                  ? values.planLabel
-                  : "No active subscription"}
-              </span>
-              {subscriptionActive ? (
-                <PremiumIcon size={18} className="shrink-0 opacity-90" />
-              ) : null}
-            </div>
+            {subLoading ? (
+              <p className="rounded-[6px] border border-hw-faint/40 bg-hw-input px-3.5 py-2.5 text-[13px] text-hw-muted">
+                Loading subscription…
+              </p>
+            ) : (
+              <>
+                <div
+                  className={cn(
+                    "flex items-center justify-between gap-3 rounded-[6px] border bg-hw-input px-3.5 py-2.5 transition-colors duration-200",
+                    subscriptionActive
+                      ? "border-[#FFD700]"
+                      : "border-hw-faint/40 opacity-70"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "text-[13px] font-medium sm:text-sm",
+                      subscriptionActive ? "text-[#FFD700]" : "text-hw-muted"
+                    )}
+                  >
+                    {subscriptionActive ? planLabel : "No active subscription"}
+                  </span>
+                  {subscriptionActive ? (
+                    <PremiumIcon size={18} className="shrink-0 opacity-90" />
+                  ) : null}
+                </div>
 
-            {subscriptionActive ? (
-              <div className="flex flex-col gap-3 rounded-[6px] border border-hw-faint/40 bg-hw-input px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-2.5">
-                <p className="text-[12px] text-hw-faint sm:text-[13px]">
-                  Billing period: {values.billingPeriod}
-                </p>
-                {!showCancelSubConfirm ? (
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    className="h-8 shrink-0 rounded-[5px] border-0 bg-hw-faint px-3 text-[12px] font-semibold text-hw-input hover:bg-hw-faint/80 sm:text-[13px]"
-                    onClick={() => setShowCancelSubConfirm(true)}
-                  >
-                    Cancel Subscription
-                  </Button>
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="flex flex-wrap items-center gap-2"
-                  >
-                    <span className="text-[11px] text-hw-muted">
-                      Cancel your plan?
-                    </span>
+                {subscriptionActive ? (
+                  <div className="flex flex-col gap-3 rounded-[6px] border border-hw-faint/40 bg-hw-input px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:py-2.5">
+                    <p className="text-[12px] text-hw-faint sm:text-[13px]">
+                      {billingText || "Active subscription"}
+                    </p>
                     <Button
                       type="button"
-                      size="xs"
-                      variant="destructive"
-                      onClick={() => {
-                        setSubscriptionActive(false);
-                        setShowCancelSubConfirm(false);
-                        setStatusMessage("Subscription cancelled (demo).");
-                      }}
+                      variant="secondary"
+                      size="sm"
+                      disabled={portalLoading}
+                      className="h-8 shrink-0 rounded-[5px] border-0 bg-hw-faint px-3 text-[12px] font-semibold text-hw-input hover:bg-hw-faint/80 disabled:cursor-not-allowed disabled:opacity-60 sm:text-[13px]"
+                      onClick={openBillingPortal}
                     >
-                      Confirm
+                      {portalLoading ? "Opening…" : "Cancel Subscription"}
                     </Button>
-                    <Button
-                      type="button"
-                      size="xs"
-                      variant="ghost"
-                      className="text-hw-muted"
-                      onClick={() => setShowCancelSubConfirm(false)}
-                    >
-                      Keep
-                    </Button>
-                  </motion.div>
-                )}
-              </div>
-            ) : null}
+                  </div>
+                ) : null}
+              </>
+            )}
           </div>
 
           {/* Danger Zone */}
@@ -371,6 +497,7 @@ export function AccountSettingsModal({
                     variant="ghost"
                     size="sm"
                     className="text-hw-muted"
+                    disabled={deleting}
                     onClick={() => setShowDeleteConfirm(false)}
                   >
                     Keep Account
@@ -379,18 +506,44 @@ export function AccountSettingsModal({
                     type="button"
                     variant="destructive"
                     size="sm"
-                    onClick={() => {
-                      setStatusMessage("Account deletion requested (demo).");
-                      setShowDeleteConfirm(false);
-                    }}
+                    disabled={deleting}
+                    onClick={handleDeleteAccount}
                   >
-                    Delete Permanently
+                    {deleting ? "Deleting…" : "Delete Permanently"}
                   </Button>
                 </div>
               </motion.div>
             )}
           </div>
         </div>
+
+        <DialogFooter className="shrink-0 flex-col gap-2 border-t border-hw-border px-5 py-4 sm:flex-row sm:items-center sm:px-7">
+          {saveError ? (
+            <p
+              role="alert"
+              className="mr-auto text-[12px] text-red-400 sm:self-center"
+            >
+              {saveError}
+            </p>
+          ) : null}
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={handleCancel}
+            disabled={saving}
+            className="text-hw-muted"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-[#05DF8B] font-semibold text-hw-input hover:brightness-95"
+          >
+            {saving ? "Saving…" : "Save Changes"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
@@ -412,10 +565,6 @@ export function profileUserToAccountSettings(
     description: user.bio,
     avatar: user.avatar,
     banner: user.banner,
-    cardLast4: "4243",
-    cardExpiry: "8/2030",
-    planLabel: "Premium Plan (Annual)",
-    billingPeriod: "May 14, 2026 ~ May 14, 2027",
     ...overrides,
   };
 }

@@ -160,7 +160,7 @@ function CategoriesDropdown({
 
 export function HeaderNav({ className }: { className?: string }) {
   const searchParams = useSearchParams();
-  const {openAuthModal } = useAuth();
+  const { openAuthModal, user } = useAuth();
   const exploreItems = EXPLORE.map((e) => ({
     label: e.label,
     href: buildFilterHref(searchParams, e.update),
@@ -187,11 +187,14 @@ export function HeaderNav({ className }: { className?: string }) {
       >
         Premium
       </Link> */}
-      <button 
-      onClick={() => openAuthModal("premium")}
-      className="rounded-md px-3 py-2 text-[18px] font-medium text-hw-yellow transition-opacity hover:opacity-90">
-        Premium
-      </button>
+      {!user?.isPremium && (
+        <button
+          onClick={() => openAuthModal("premium")}
+          className="rounded-md px-3 py-2 text-[18px] font-medium text-hw-yellow transition-opacity hover:opacity-90"
+        >
+          Premium
+        </button>
+      )}
     </nav>
   );
 }
