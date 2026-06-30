@@ -6,7 +6,6 @@ import ChartsRow from "./ChartsRow";
 import RecentUploadsPage from "./RecentUploadsPage";
 import Rightpanel from "./Rightpanel";
 
-
 type Props = {};
 
 const Dashboard = (props: Props) => {
@@ -37,12 +36,12 @@ const Dashboard = (props: Props) => {
             </svg>
           </button>
         </div>
-<StatsList/>
-<ChartsRow/>
-<div className="bot-row">
-<RecentUploadsPage/>
-<Rightpanel/>
-</div>
+        <StatsList />
+        <ChartsRow />
+        <div className="bot-row">
+          <RecentUploadsPage />
+          <Rightpanel />
+        </div>
       </div>
       <SideBar />
     </div>

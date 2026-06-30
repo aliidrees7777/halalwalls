@@ -1,5 +1,5 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 
 export interface Column {
   header: string;
@@ -14,7 +14,7 @@ interface Props {
 
 const DynamicTable = ({ title, columns, data: initialData }: Props) => {
   const [data] = useState(initialData);
-  const [activeTab, setActiveTab] = useState('Pending');
+  const [activeTab, setActiveTab] = useState("Pending");
 
   return (
     <div className="ucard">
@@ -24,13 +24,13 @@ const DynamicTable = ({ title, columns, data: initialData }: Props) => {
       </div>
 
       <div className="utabs">
-        {['Pending', 'Approved', 'Rejected'].map((tab) => (
-          <div 
-            key={tab} 
-            className={`utab ${activeTab === tab ? 'on' : ''}`} 
+        {["Pending", "Approved", "Rejected"].map((tab) => (
+          <div
+            key={tab}
+            className={`utab ${activeTab === tab ? "on" : ""}`}
             onClick={() => setActiveTab(tab)}
           >
-            {tab === 'Pending' ? `Pending Review` : tab}
+            {tab === "Pending" ? `Pending Review` : tab}
           </div>
         ))}
       </div>
@@ -39,7 +39,9 @@ const DynamicTable = ({ title, columns, data: initialData }: Props) => {
         <table>
           <thead>
             <tr>
-              {columns.map((col, i) => <th key={i}>{col.header}</th>)}
+              {columns.map((col, i) => (
+                <th key={i}>{col.header}</th>
+              ))}
             </tr>
           </thead>
           <tbody>

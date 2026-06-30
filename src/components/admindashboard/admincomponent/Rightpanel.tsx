@@ -16,7 +16,7 @@ const Rightpanel = (props: Props) => {
               <span className="cp-val">1,245</span>
             </div>
             <div className="pbg">
-              <div className="pfill" style={{width:"92%"}}></div>
+              <div className="pfill" style={{ width: "92%" }}></div>
             </div>
           </div>
           <div className="cat-prog">
@@ -25,7 +25,7 @@ const Rightpanel = (props: Props) => {
               <span className="cp-val">1,198</span>
             </div>
             <div className="pbg">
-              <div className="pfill" style={{width:"88%"}}></div>
+              <div className="pfill" style={{ width: "88%" }}></div>
             </div>
           </div>
           <div className="cat-prog">
@@ -34,7 +34,7 @@ const Rightpanel = (props: Props) => {
               <span className="cp-val">1,156</span>
             </div>
             <div className="pbg">
-              <div className="pfill" style={{width:"84%"}}></div>
+              <div className="pfill" style={{ width: "84%" }}></div>
             </div>
           </div>
           <div className="cat-prog">
@@ -43,7 +43,7 @@ const Rightpanel = (props: Props) => {
               <span className="cp-val">1,089</span>
             </div>
             <div className="pbg">
-              <div className="pfill" style={{width:"79%"}}></div>
+              <div className="pfill" style={{ width: "79%" }}></div>
             </div>
           </div>
           <div className="cat-prog">
@@ -52,7 +52,7 @@ const Rightpanel = (props: Props) => {
               <span className="cp-val">986</span>
             </div>
             <div className="pbg">
-              <div className="pfill" style={{width:"68%"}}></div>
+              <div className="pfill" style={{ width: "68%" }}></div>
             </div>
           </div>
           <div className="cat-prog">
@@ -61,7 +61,7 @@ const Rightpanel = (props: Props) => {
               <span className="cp-val">874</span>
             </div>
             <div className="pbg">
-              <div className="pfill" style={{width:"58%"}}></div>
+              <div className="pfill" style={{ width: "58%" }}></div>
             </div>
           </div>
         </div>
