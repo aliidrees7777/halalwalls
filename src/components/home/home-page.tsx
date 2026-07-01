@@ -13,7 +13,6 @@ import { WallpaperStats } from "@/components/home/wallpaper-stats";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { api } from "@/lib/api";
 import type { Wallpaper } from "@/types/wallpaper";
-import { wallpapers as wallpapersData } from "@/data/wallpapers";
 import logodark from "../../../public/authicon/logodark.svg";
 interface Pagination {
   total: number;
@@ -55,89 +54,36 @@ export function HomePage() {
     setCurrentPage(1);
   }, [category, sort, tag, resolution, search]);
 
-  // useEffect(() => {
-  //   let ignore = false;
-  //   setIsLoading(true);
-
-  //   const params = new URLSearchParams();
-  //   if (category) params.set("category", category);
-  //   if (sort) params.set("sort", sort);
-  //   if (tag) params.set("tag", tag);
-  //   if (resolution) params.set("resolution", resolution);
-  //   if (search) params.set("q", search);
-  //   params.set("page", String(currentPage));
-  //   params.set("limit", "18");
-
-  //   api
-  //     .get<WallpapersResponse>(`/wallpapers?${params.toString()}`)
-  //     .then((data) => {
-  //       if (ignore) return;
-  //       setWallpapers(data.wallpapers);
-  //       setPagination(data.pagination);
-  //     })
-  //     .catch(() => {
-  //       if (ignore) return;
-  //       setWallpapers([]);
-  //       setPagination(null);
-  //     })
-  //     .finally(() => {
-  //       if (ignore) return;
-  //       setIsLoading(false);
-  //     });
-
-  //   return () => {
-  //     ignore = true;
-  //   };
-  // }, [category, sort, tag, resolution, search, currentPage]);
-
+  // Live catalog from the backend — filters (category + sort + tag + resolution
+  // + q) combine server-side; results are paginated (18/page).
   useEffect(() => {
     let ignore = false;
     setIsLoading(true);
 
-    try {
-      let data = [...wallpapersData];
+    const params = new URLSearchParams();
+    if (category) params.set("category", category);
+    if (sort) params.set("sort", sort);
+    if (tag) params.set("tag", tag);
+    if (resolution) params.set("resolution", resolution);
+    if (search) params.set("q", search);
+    params.set("page", String(currentPage));
+    params.set("limit", "18");
 
-      // filters
-      if (category) {
-        data = data.filter((w) => w.category === category);
-      }
-
-      if (resolution) {
-        data = data.filter((w) => w.resolution === resolution);
-      }
-
-      if (search) {
-        data = data.filter((w) =>
-          w.title.toLowerCase().includes(search.toLowerCase()),
-        );
-      }
-
-      // pagination (client side)
-      const limit = 18;
-      const start = (currentPage - 1) * limit;
-      const paginated = data.slice(start, start + limit);
-
-      const pagination = {
-        total: data.length,
-        page: currentPage,
-        limit,
-        totalPages: Math.ceil(data.length / limit),
-        hasNextPage: start + limit < data.length,
-        hasPrevPage: currentPage > 1,
-      };
-
-      if (!ignore) {
-        setWallpapers(paginated as unknown as Wallpaper[]);
-        setPagination(pagination);
-      }
-    } catch (e) {
-      if (!ignore) {
+    api
+      .get<WallpapersResponse>(`/wallpapers?${params.toString()}`)
+      .then((data) => {
+        if (ignore) return;
+        setWallpapers(data.wallpapers);
+        setPagination(data.pagination);
+      })
+      .catch(() => {
+        if (ignore) return;
         setWallpapers([]);
         setPagination(null);
-      }
-    } finally {
-      if (!ignore) setIsLoading(false);
-    }
+      })
+      .finally(() => {
+        if (!ignore) setIsLoading(false);
+      });
 
     return () => {
       ignore = true;

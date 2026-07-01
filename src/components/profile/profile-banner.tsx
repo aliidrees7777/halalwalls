@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { LogOut, Settings } from "lucide-react";
@@ -22,8 +23,14 @@ interface ProfileBannerProps {
 }
 
 export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
-  const { updateProfile } = useAuth();
+  const { updateProfile, logout: signOut, openAuthModal } = useAuth();
+  const router = useRouter();
   const [user, setUser] = useState(initialUser);
+
+  function handleSignOut() {
+    signOut();
+    router.push("/");
+  }
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [accountSettings, setAccountSettings] = useState<AccountSettingsData>(
     () => profileUserToAccountSettings(initialUser)
@@ -65,15 +72,20 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
       className="relative overflow-hidden rounded-[28px] border-3 border-hw-yellow "
     >
       <div className="relative aspect-[16/5] min-h-[600px] w-full sm:min-h-[280px] md:min-h-[470px]">
-        <Image
-          src={user.banner}
-          alt=""
-          fill
-          className="object-cover"
-          priority
-          sizes="(max-width: 1400px) 100vw, 1400px"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/60" />
+        {user.banner ? (
+          <Image
+            src={user.banner}
+            alt=""
+            fill
+            className="object-cover"
+            priority
+            sizes="(max-width: 1400px) 100vw, 1400px"
+          />
+        ) : (
+          // Default cover when the user hasn't set a banner (branded gradient).
+          <div className="absolute inset-0 bg-gradient-to-br from-hw-deep via-hw-surface to-hw-green/20" />
+        )}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/60" />
       </div>
 
       {user.isPremium && (
@@ -87,7 +99,8 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
 
       <button
         type="button"
-        className="absolute right-4 top-4 z-10 flex w-12 h-12 items-center justify-center rounded-full bg-black/40 text-hw-foreground backdrop-blur-sm transition-colors hover:bg-black/60 sm:right-5 sm:top-5"
+        onClick={handleSignOut}
+        className="absolute right-4 top-4 z-30 flex w-12 h-12 cursor-pointer items-center justify-center rounded-full bg-black/40 text-hw-foreground backdrop-blur-sm transition-colors hover:bg-black/60 sm:right-5 sm:top-5"
         aria-label="Sign out"
       >
         {/* <LogOut className="size-[18px]" /> */}
@@ -100,6 +113,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
           <ProfileSideIconButton
             label="Premium"
             iconNode={<PremiumWhiteIcon size={20} className="sm:size-[22px]" />}
+            onClick={() => openAuthModal("premium")}
           />
 
           <div className="relative">
@@ -108,8 +122,8 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
               aria-hidden
             />
             <Avatar className="relative w-[214px] h-[214px] after:hidden mb-10">
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback className="bg-hw-surface text-lg text-hw-foreground">
+              <AvatarImage src={user.avatar || undefined} alt={user.name} />
+              <AvatarFallback className="bg-hw-surface text-5xl font-semibold text-hw-foreground">
                 {initials}
               </AvatarFallback>
             </Avatar>

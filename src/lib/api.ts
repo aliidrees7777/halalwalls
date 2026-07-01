@@ -32,6 +32,16 @@ export function setToken(token: string | null) {
   else window.localStorage.removeItem(TOKEN_KEY);
 }
 
+// ── dead-session hook ──
+// Invoked when an authenticated request is rejected with 401 (expired token,
+// password changed elsewhere, account deactivated). Lets the auth layer clear
+// its React state so the UI stops showing a "logged-in" user whose every action
+// silently fails. Registered by AuthProvider.
+let onUnauthorized: (() => void) | null = null;
+export function setUnauthorizedHandler(fn: (() => void) | null) {
+  onUnauthorized = fn;
+}
+
 // ── error type ──
 export class ApiError extends Error {
   statusCode: number;
@@ -95,6 +105,13 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   }
 
   if (!res.ok || json.status === "error") {
+    // A 401 on an authenticated (non-/auth) request means the stored session is
+    // no longer valid. Drop the dead token and notify the auth layer so the UI
+    // reflects a logged-out state instead of a zombie session that fails silently.
+    if (res.status === 401 && authToken && !path.startsWith("/auth/")) {
+      setToken(null);
+      onUnauthorized?.();
+    }
     throw new ApiError(json.message || `Request failed (${res.status})`, res.status);
   }
   return json.data as T;

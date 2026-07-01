@@ -391,6 +391,77 @@ export function AccountSettingsModal({
           </div>
 
 
+          {/* Change Password — hidden until the client approves. Flip `false` to
+              `true` (or delete the guard) to re-enable the whole section. */}
+          {false && (
+          <div className="mt-7 space-y-3 sm:mt-8">
+            <AccountSectionTitle className="text-xl sm:text-2xl text-hw-depw">Change Password</AccountSectionTitle>
+            <div className="space-y-3.5">
+              <AccountFormField
+                id="account-current-password"
+                label="Current Password"
+                type="password"
+                value={currentPassword}
+                onChange={setCurrentPassword}
+              />
+              <AccountFormField
+                id="account-new-password"
+                label="New Password"
+                type="password"
+                value={newPassword}
+                onChange={setNewPassword}
+                error={
+                  newPassword.length > 0 && newPassword.length < 8
+                    ? "Use at least 8 characters."
+                    : undefined
+                }
+              />
+              <AccountFormField
+                id="account-confirm-password"
+                label="Confirm New Password"
+                type="password"
+                value={confirmNewPassword}
+                onChange={setConfirmNewPassword}
+                error={
+                  confirmNewPassword.length > 0 && newPassword !== confirmNewPassword
+                    ? "Passwords do not match."
+                    : undefined
+                }
+              />
+              {/* Live match confirmation */}
+              {confirmNewPassword.length > 0 &&
+              newPassword.length >= 8 &&
+              newPassword === confirmNewPassword ? (
+                <p role="status" className="text-[12px] text-[#05DF8B]">
+                  ✓ Passwords match
+                </p>
+              ) : null}
+              {passwordError ? (
+                <p role="alert" className="text-[12px] text-red-400">
+                  {passwordError}
+                </p>
+              ) : passwordSuccess ? (
+                <p role="status" className="text-[12px] text-[#05DF8B]">
+                  ✓ Password updated.
+                </p>
+              ) : null}
+              <Button
+                type="button"
+                onClick={handleChangePassword}
+                disabled={
+                  passwordSubmitting ||
+                  !currentPassword ||
+                  newPassword.length < 8 ||
+                  newPassword !== confirmNewPassword
+                }
+                className="h-9 rounded-[5px] bg-[#05DF8B] px-4 text-[13px] font-semibold text-hw-input hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {passwordSubmitting ? "Updating…" : "Change Password"}
+              </Button>
+            </div>
+          </div>
+          )}
+
           {/* Payment Method */}
           <div className="mt-7 space-y-3 sm:mt-8">
             <AccountSectionTitle className="text-xl sm:text-2xl text-hw-depw">Payment Method</AccountSectionTitle>
@@ -478,7 +549,7 @@ export function AccountSettingsModal({
                 onClick={() => setShowDeleteConfirm(true)}
               >
                 <span className="text-[13px] font-medium text-[#B10000] sm:text-sm">
-                  Delete Account Permanently
+                  Delete Account
                 </span>
                 <Trash2 className="size-4 shrink-0 text-[#B10000]" />
               </button>
@@ -489,7 +560,8 @@ export function AccountSettingsModal({
                 className="space-y-3 rounded-lg border border-red-500/80 bg-red-500/5 p-3.5"
               >
                 <p className="text-center text-[12px] text-hw-foreground/90 sm:text-[13px]">
-                  This action cannot be undone. All data will be removed.
+                  This deactivates your account and signs you out. Your data is
+                  kept — you can restore it anytime by signing back in.
                 </p>
                 <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-center">
                   <Button
@@ -509,7 +581,7 @@ export function AccountSettingsModal({
                     disabled={deleting}
                     onClick={handleDeleteAccount}
                   >
-                    {deleting ? "Deleting…" : "Delete Permanently"}
+                    {deleting ? "Deleting…" : "Delete Account"}
                   </Button>
                 </div>
               </motion.div>

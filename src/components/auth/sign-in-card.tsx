@@ -11,21 +11,33 @@ import close from "../../../public/authicon/close.svg";
 
 export function SignInCard() {
   const router = useRouter();
-  const { login, closeAuthModal, authModal, openAuthModal } = useAuth();
+  const { login, reactivate, closeAuthModal, authModal, openAuthModal } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // A deactivated (soft-deleted) account → offer reactivation.
+  const [deactivated, setDeactivated] = useState(false);
+  const [reactivating, setReactivating] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
+    setDeactivated(false);
     setSubmitting(true);
     try {
       await login(email, password);
+      closeAuthModal();
       router.push("/");
     } catch (err) {
+      if (
+        err instanceof ApiError &&
+        err.statusCode === 403 &&
+        /deactivat/i.test(err.message)
+      ) {
+        setDeactivated(true);
+      }
       setError(
         err instanceof ApiError
           ? err.message
@@ -33,6 +45,24 @@ export function SignInCard() {
       );
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleReactivate() {
+    setError(null);
+    setReactivating(true);
+    try {
+      await reactivate(email, password);
+      closeAuthModal();
+      router.push("/");
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Couldn't reactivate your account. Please try again.",
+      );
+    } finally {
+      setReactivating(false);
     }
   }
 
@@ -69,6 +99,17 @@ export function SignInCard() {
               >
                 {error}
               </p>
+            )}
+
+            {deactivated && (
+              <button
+                type="button"
+                onClick={handleReactivate}
+                disabled={reactivating}
+                className="rounded-full bg-[#05DF8B] py-2.5 text-center text-[16px] font-semibold text-hw-input transition-[filter] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {reactivating ? "Reactivating…" : "Reactivate my account"}
+              </button>
             )}
 
             {/* Fields + forgot link */}
