@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ProfileHeaderNav } from "@/components/profile/profile-header-nav";
@@ -13,11 +13,9 @@ import { MobileProfile } from "@/components/profile/mobile-profile";
 import { useAuth } from "@/context/auth-context";
 import { useMyFavorites } from "@/hooks/use-my-favorites";
 import { useMyUploads } from "@/hooks/use-my-uploads";
-import {
-  demoProfileUser,
-  discoverJustUploaded,
-  type ProfileUser,
-} from "@/data/profile-user";
+import { demoProfileUser, type ProfileUser } from "@/data/profile-user";
+import { api } from "@/lib/api";
+import type { Wallpaper } from "@/types/wallpaper";
 import { SiteHeader } from "../home/site-header";
 
 export function ProfilePage() {
@@ -26,15 +24,27 @@ export function ProfilePage() {
   const { wallpapers: favorites, loading: favoritesLoading } = useMyFavorites();
   const { wallpapers: uploads } = useMyUploads();
 
-  // ⚠️ TEMP BYPASS (testing only) — auth guard disabled.
-  // Revert: uncomment this block to re-enable login requirement.
-  /*
+  // "Discover Just Uploaded" — latest live wallpapers from the catalog.
+  const [discover, setDiscover] = useState<Wallpaper[]>([]);
+  useEffect(() => {
+    let ignore = false;
+    api
+      .get<{ wallpapers: Wallpaper[] }>("/wallpapers?sort=latest&limit=8")
+      .then((d) => {
+        if (!ignore) setDiscover(d.wallpapers);
+      })
+      .catch(() => {});
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  // Auth guard: the profile is private — prompt sign-in when not logged in.
   useEffect(() => {
     if (!loading && !user) {
       openAuthModal("full-signin");
     }
   }, [loading, user, openAuthModal]);
-  */
 
   if (loading) {
     return (
@@ -44,23 +54,20 @@ export function ProfilePage() {
     );
   }
 
-  // ⚠️ TEMP BYPASS: agar user nahi hai to demo user se render karo
-  // (pehle yahan `if (!user) return null;` tha — wapas laane ke liye yeh line uncomment + neeche wala fallback hatayen)
-  // if (!user) return null;
+  // Not signed in → render nothing (the sign-in modal is opened by the effect above).
+  if (!user) return null;
 
-  const profileUser: ProfileUser = user
-    ? {
-        id: user.id,
-        name: user.name || user.email,
-        bio: user.bio || "",
-        email: user.email,
-        avatar: user.avatar || demoProfileUser.avatar,
-        banner: user.banner || demoProfileUser.banner,
-        isPremium: user.isPremium,
-        favoritesCount: user.favoritesCount,
-        uploadsCount: user.uploadsCount ?? 0,
-      }
-    : demoProfileUser; // ⚠️ TEMP fallback jab user null ho
+  const profileUser: ProfileUser = {
+    id: user.id,
+    name: user.name || user.email,
+    bio: user.bio || "",
+    email: user.email,
+    avatar: user.avatar || demoProfileUser.avatar,
+    banner: user.banner || demoProfileUser.banner,
+    isPremium: user.isPremium,
+    favoritesCount: user.favoritesCount,
+    uploadsCount: user.uploadsCount ?? 0,
+  };
 
   return (
     <>
@@ -90,7 +97,7 @@ export function ProfilePage() {
            <ProfileSectionHeader title="" className="text-right"/>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
-            {discoverJustUploaded.map((wallpaper, index) => (
+            {discover.map((wallpaper, index) => (
               <ProfileWallpaperThumb
                 key={wallpaper.id}
                 wallpaper={wallpaper}

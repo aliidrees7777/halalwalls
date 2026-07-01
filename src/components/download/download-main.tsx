@@ -8,7 +8,8 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { DownloadActions } from "@/components/download/download-actions";
 import { DownloadResolutionPanel } from "@/components/download/download-resolution-panel";
-import type { DownloadResolution, WallpaperDetail } from "@/types/wallpaper";
+import { useWallpaperDownload } from "@/hooks/use-wallpaper-download";
+import type { WallpaperDetail } from "@/types/wallpaper";
 import download from "../../../public/download.svg";link
 import link from "../../../public/link.svg";
 interface DownloadMainProps {
@@ -17,12 +18,7 @@ interface DownloadMainProps {
 
 export function DownloadMain({ wallpaper }: DownloadMainProps) {
   const [loaded, setLoaded] = useState(false);
-  const [lastDownload, setLastDownload] = useState<string | null>(null);
-
-  const handleResolution = (res: DownloadResolution) => {
-    setLastDownload(`${res.label} · ${res.fileSizeMB.toFixed(2)} MB`);
-    setTimeout(() => setLastDownload(null), 2500);
-  };
+  const { download: startDownload, downloading } = useWallpaperDownload(wallpaper);
 
   return (
     <div className="min-w-0 flex-1 max-w-[900px]">
@@ -85,14 +81,11 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
         <DownloadActions wallpaper={wallpaper} />
       </div>
 
-      {lastDownload && (
-        <p className="mt-2 text-[12px] text-hw-green" role="status">
-          Prepared download: {lastDownload}
-        </p>
-      )}
-
       <div className="mt-5">
-        <DownloadResolutionPanel onSelect={handleResolution} />
+        <DownloadResolutionPanel
+          onSelect={(res) => startDownload(`${res.width}x${res.height}`)}
+          downloading={downloading}
+        />
       </div>
     </div>
   );

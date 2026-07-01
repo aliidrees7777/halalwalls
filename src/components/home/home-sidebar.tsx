@@ -12,10 +12,9 @@ import {
   LayoutGrid,
   TrendingUp,
 } from "lucide-react";
-import { trendingTopics } from "@/data/sidebar";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import { SidebarCollapsible } from "@/components/shared/sidebar-collapsible";
-import { useCategories, useResolutions } from "@/hooks/use-catalog";
+import { useCategories, useResolutions, useTags } from "@/hooks/use-catalog";
 import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 import dimon from "../../../public/dimon.svg";
@@ -69,6 +68,7 @@ export function HomeSidebar() {
   const [catPage, setCatPage] = useState(0);
   const { categories, loading } = useCategories();
   const res = useResolutions();
+  const tags = useTags();
   const searchParams = useSearchParams();
   const activeResolution = searchParams.get("resolution") || "";
 
@@ -212,16 +212,16 @@ export function HomeSidebar() {
 
       <SidebarPanel title="Trending" icon={TrendingUp}>
         <ul>
-          {trendingTopics.map((topic, index) => (
+          {tags.slice(0, 8).map((t, index) => (
             <li
-              key={topic}
+              key={t.tag}
               className={cn(index > 0 && "border-t border-hw-line")}
             >
               <Link
-                href={`/?q=${encodeURIComponent(topic)}`}
+                href={`/?tag=${encodeURIComponent(t.tag)}`}
                 className="block py-4 font-medium text-[15px] text-hw-foreground transition-colors  mx-4"
               >
-                {topic}
+                {t.tag}
               </Link>
             </li>
           ))}

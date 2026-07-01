@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { api, ApiError, getToken, setToken } from "@/lib/api";
+import { api, ApiError, getToken, setToken, setUnauthorizedHandler } from "@/lib/api";
 
 export interface AuthUser {
   id: string;
@@ -48,6 +48,7 @@ interface AuthContextValue {
   loading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<AuthUser>;
+  reactivate: (email: string, password: string) => Promise<AuthUser>;
   signup: (payload: SignupPayload) => Promise<AuthUser>;
   loginWithGoogle: (credential: string) => Promise<AuthUser>;
   changePassword: (
@@ -107,6 +108,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setMounted(true);
   }, []);
 
+  // When any authenticated request 401s (dead/expired session), clear the local
+  // user so the UI drops the zombie logged-in state. Action handlers (favorite,
+  // download) still open the sign-in modal to prompt a fresh login.
+  useEffect(() => {
+    setUnauthorizedHandler(() => setUser(null));
+    return () => setUnauthorizedHandler(null);
+  }, []);
+
   const isLight = mounted && resolvedTheme === "light";
   // Hydrate the session from a stored token on first load.
   useEffect(() => {
@@ -150,6 +159,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(
     async (email: string, password: string) => {
       const data = await api.post<AuthSuccess>("/auth/login", {
+        email,
+        password,
+      });
+      return persistSession(data);
+    },
+    [persistSession],
+  );
+
+  const reactivate = useCallback(
+    async (email: string, password: string) => {
+      const data = await api.post<AuthSuccess>("/auth/reactivate", {
         email,
         password,
       });
@@ -255,8 +275,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  // Permanently delete the signed-in user's account (DELETE /me), then clear
-  // the local session. Errors propagate so the caller can surface them.
+  // Deactivate (soft-delete) the signed-in user's account (DELETE /me), then
+  // clear the local session. Data is retained and the account can be restored
+  // by signing back in. Errors propagate so the caller can surface them.
   const deleteAccount = useCallback(async () => {
     await api.delete("/me");
     setToken(null);
@@ -344,6 +365,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       isAuthenticated: !!user,
       login,
+      reactivate,
       signup,
       loginWithGoogle,
       changePassword,
@@ -369,6 +391,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       loading,
       login,
+      reactivate,
       open,
       signup,
       loginWithGoogle,

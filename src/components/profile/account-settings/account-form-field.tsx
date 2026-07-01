@@ -1,17 +1,19 @@
 "use client";
 
-import { Pencil } from "lucide-react";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import pencil from "../../../../public/my-account/pencil.svg"
+import pencil from "../../../../public/my-account/pencil.svg";
+
 interface AccountFormFieldProps {
   id: string;
   label: string;
   value: string;
   onChange: (value: string) => void;
   onBlur?: () => void;
-  type?: "text" | "email";
+  type?: "text" | "email" | "password";
   error?: string;
   multiline?: boolean;
   placeholder?: string;
@@ -31,6 +33,10 @@ export function AccountFormField({
   disabled = false,
 }: AccountFormFieldProps) {
   const invalid = Boolean(error);
+  const isPassword = type === "password";
+  const [revealed, setRevealed] = useState(false);
+  // Password fields toggle between hidden/visible, matching the sign-in field.
+  const inputType = isPassword ? (revealed ? "text" : "password") : type;
 
   return (
     <div className="space-y-1.5">
@@ -61,7 +67,7 @@ export function AccountFormField({
         ) : (
           <Input
             id={id}
-            type={type}
+            type={inputType}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onBlur={onBlur}
@@ -78,10 +84,26 @@ export function AccountFormField({
             )}
           />
         )}
-        {!disabled ? (
-          <Image src={pencil} alt="pencil" className="pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-hw-foreground/50"
-            aria-hidden/>
-         
+        {isPassword ? (
+          <button
+            type="button"
+            onClick={() => setRevealed((v) => !v)}
+            aria-label={revealed ? "Hide password" : "Show password"}
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-hw-foreground/50 transition-colors hover:text-hw-foreground"
+          >
+            {revealed ? (
+              <EyeOff className="size-4" aria-hidden />
+            ) : (
+              <Eye className="size-4" aria-hidden />
+            )}
+          </button>
+        ) : !disabled ? (
+          <Image
+            src={pencil}
+            alt="pencil"
+            className="pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-hw-foreground/50"
+            aria-hidden
+          />
         ) : null}
       </div>
       {error ? (

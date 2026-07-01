@@ -20,7 +20,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { SearchBox } from "@/components/shared/search-box";
 import { HalalWallsLogo } from "@/components/home/halalwalls-logo";
-import { useAuth } from "@/context/auth-context";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -40,7 +39,6 @@ const navItems = [
 
 export function ProfileHeaderNav() {
   const router = useRouter();
-  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -93,14 +91,12 @@ export function ProfileHeaderNav() {
           >
             Upload
           </Link>
-          {!user?.isPremium && (
-            <Link
-              href="/premium"
-              className="rounded-md px-2.5 py-2 text-[13px] font-medium text-hw-yellow transition-opacity hover:opacity-90 xl:px-3"
-            >
-              Premium
-            </Link>
-          )}
+          <Link
+            href="/premium"
+            className="rounded-md px-2.5 py-2 text-[13px] font-medium text-hw-yellow transition-opacity hover:opacity-90 xl:px-3"
+          >
+            Premium
+          </Link>
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
