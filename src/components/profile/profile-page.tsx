@@ -13,7 +13,7 @@ import { MobileProfile } from "@/components/profile/mobile-profile";
 import { useAuth } from "@/context/auth-context";
 import { useMyFavorites } from "@/hooks/use-my-favorites";
 import { useMyUploads } from "@/hooks/use-my-uploads";
-import type { ProfileUser } from "@/data/profile-user";
+import { demoProfileUser, type ProfileUser } from "@/data/profile-user";
 import { api } from "@/lib/api";
 import type { Wallpaper } from "@/types/wallpaper";
 import { SiteHeader } from "../home/site-header";
@@ -57,15 +57,13 @@ export function ProfilePage() {
   // Not signed in → render nothing (the sign-in modal is opened by the effect above).
   if (!user) return null;
 
-  // Only the user's REAL data — no demo avatar/banner. When unset, the banner
-  // shows a branded gradient and the avatar shows the user's initials.
   const profileUser: ProfileUser = {
     id: user.id,
     name: user.name || user.email,
     bio: user.bio || "",
     email: user.email,
-    avatar: user.avatar || "",
-    banner: user.banner || "",
+    avatar: user.avatar || demoProfileUser.avatar,
+    banner: user.banner || demoProfileUser.banner,
     isPremium: user.isPremium,
     favoritesCount: user.favoritesCount,
     uploadsCount: user.uploadsCount ?? 0,

@@ -72,19 +72,14 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
       className="relative overflow-hidden rounded-[28px] border-3 border-hw-yellow "
     >
       <div className="relative aspect-[16/5] min-h-[600px] w-full sm:min-h-[280px] md:min-h-[470px]">
-        {user.banner ? (
-          <Image
-            src={user.banner}
-            alt=""
-            fill
-            className="object-cover"
-            priority
-            sizes="(max-width: 1400px) 100vw, 1400px"
-          />
-        ) : (
-          // Default cover when the user hasn't set a banner (branded gradient).
-          <div className="absolute inset-0 bg-gradient-to-br from-hw-deep via-hw-surface to-hw-green/20" />
-        )}
+        <Image
+          src={user.banner}
+          alt=""
+          fill
+          className="object-cover"
+          priority
+          sizes="(max-width: 1400px) 100vw, 1400px"
+        />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/60" />
       </div>
 
@@ -122,8 +117,8 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
               aria-hidden
             />
             <Avatar className="relative w-[214px] h-[214px] after:hidden mb-10">
-              <AvatarImage src={user.avatar || undefined} alt={user.name} />
-              <AvatarFallback className="bg-hw-surface text-5xl font-semibold text-hw-foreground">
+              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarFallback className="bg-hw-surface text-lg text-hw-foreground">
                 {initials}
               </AvatarFallback>
             </Avatar>

@@ -545,7 +545,7 @@ export function AccountSettingsModal({
             {!showDeleteConfirm ? (
               <button
                 type="button"
-                className="flex w-full items-center justify-between gap-3 rounded-[6px] border border-[#B10000] bg-hw-input/50 px-3.5 py-3 text-left transition-all duration-200 hover:bg-[#B10000]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B10000]/40"
+                className="flex w-full items-center justify-between gap-3 rounded-[6px] border border-[#B10000] bg-hw-input px-3.5 py-3 text-left transition-colors duration-200 hover:bg-[#B10000]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B10000]/40"
                 onClick={() => setShowDeleteConfirm(true)}
               >
                 <span className="text-[13px] font-medium text-[#B10000] sm:text-sm">
