@@ -21,8 +21,14 @@ import {
   LifeBuoy,
 } from "lucide-react";
 
-const SideBar = () => {
-  const [activeItem, setActiveItem] = useState<string>("Dashboard");
+interface SideBarProps {
+  active: string;
+  onSelect: (item: string) => void;
+}
+
+const SideBar = ({ active, onSelect }: SideBarProps) => {
+  const activeItem = active;
+  const setActiveItem = onSelect;
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   return (
