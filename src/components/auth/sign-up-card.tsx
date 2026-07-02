@@ -44,6 +44,7 @@ export function SignUpCard() {
     setSubmitting(true);
     try {
       await signup({ firstName, lastName, email, password, confirmPassword });
+      closeAuthModal(); // close the signup popup once the account is created
       router.push("/");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
@@ -183,14 +184,19 @@ export function SignUpCard() {
               aria-checked={agree}
               aria-label="I agree to the Terms of Service and Privacy Policy"
               onClick={() => setAgree((v) => !v)}
-              className={cn(
-                "grid size-[18px] shrink-0 place-items-center rounded-[4px] border-2 transition-colors",
-                agree ? "border-[#05DF8B] bg-[#05DF8B]" : "border-hw-foreground bg-transparent"
-              )}
+              className="grid shrink-0 place-items-center rounded-[5px] transition-colors"
+              style={{
+                width: 20,
+                height: 20,
+                borderWidth: 2,
+                borderStyle: "solid",
+                borderColor: agree ? "#05DF8B" : "#8b9096",
+                backgroundColor: agree ? "#05DF8B" : "rgba(255,255,255,0.06)",
+              }}
             >
-              {agree ? <Check className="size-2 text-hw-input" strokeWidth={5} /> : null}
+              {agree ? <Check className="size-3 text-black" strokeWidth={4} /> : null}
             </button>
-            <p className="text-[15px] leading-snug font-[450px]  text-hw-depw">
+            <p className="text-[15px] font-normal leading-snug text-hw-depw">
               I agree to the{" "}
               <a href="/terms" className="text-[#69A6D5] underline">Terms of Service</a> and{" "}
               <a href="/privacy" className="text-[#69A6D5] underline">Privacy Policy</a>
