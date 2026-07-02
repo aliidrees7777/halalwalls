@@ -184,13 +184,15 @@ export function SignUpCard() {
               aria-label="I agree to the Terms of Service and Privacy Policy"
               onClick={() => setAgree((v) => !v)}
               className={cn(
-                "grid size-[18px] shrink-0 place-items-center rounded-[4px] border-2 transition-colors",
-                agree ? "border-[#05DF8B] bg-[#05DF8B]" : "border-hw-foreground bg-transparent"
+                "grid size-5 shrink-0 place-items-center rounded-[5px] border-2 transition-colors",
+                agree
+                  ? "border-[#05DF8B] bg-[#05DF8B]"
+                  : "border-hw-foreground bg-transparent"
               )}
             >
-              {agree ? <Check className="size-2 text-hw-input" strokeWidth={5} /> : null}
+              {agree ? <Check className="size-3 text-hw-input" strokeWidth={4} /> : null}
             </button>
-            <p className="text-[15px] leading-snug font-[450px]  text-hw-depw">
+            <p className="text-[15px] font-normal leading-snug text-hw-depw">
               I agree to the{" "}
               <a href="/terms" className="text-[#69A6D5] underline">Terms of Service</a> and{" "}
               <a href="/privacy" className="text-[#69A6D5] underline">Privacy Policy</a>
