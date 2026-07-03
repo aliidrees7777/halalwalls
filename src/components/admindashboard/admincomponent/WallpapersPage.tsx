@@ -221,7 +221,7 @@ const WallpapersPage = () => {
       },
       {
         key: "resolution", header: "Resolution",
-        cell: (r) => <span className="restext">{String((r as AdminWallpaper).resolution || "—").replace("x", "×")}</span>,
+        cell: (r) => <span className="restext">{String((r as unknown as AdminWallpaper).resolution || "—").replace("x", "×")}</span>,
       },
       {
         key: "downloads", header: "Downloads",
