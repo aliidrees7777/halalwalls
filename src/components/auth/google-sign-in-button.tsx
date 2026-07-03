@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useAuth } from "@/context/auth-context";
+import { useAuth, type AuthUser } from "@/context/auth-context";
 import { ApiError } from "@/lib/api";
 
 /**
@@ -53,7 +53,7 @@ function loadGis(): Promise<void> {
 }
 
 interface GoogleSignInButtonProps {
-  onSuccess?: () => void;
+  onSuccess?: (user: AuthUser) => void;
   onError?: (message: string) => void;
   /** The original, styled (design) button to display. */
   children: React.ReactNode;
@@ -76,8 +76,8 @@ export function GoogleSignInButton({
         return;
       }
       try {
-        await loginWithGoogle(res.credential);
-        onSuccess?.();
+        const user = await loginWithGoogle(res.credential);
+        onSuccess?.(user);
       } catch (err) {
         onError?.(
           err instanceof ApiError

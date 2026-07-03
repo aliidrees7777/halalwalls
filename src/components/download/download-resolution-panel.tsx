@@ -15,12 +15,10 @@ function ResolutionLinkList({
   title,
   items,
   onSelect,
-  downloading,
 }: {
   title: string;
   items: DownloadResolution[];
   onSelect?: (item: DownloadResolution) => void;
-  downloading?: string | null;
 }) {
   return (
     <div>
@@ -28,22 +26,17 @@ function ResolutionLinkList({
         {title}
       </p>
       <ul className=" ml-5 flex flex-wrap gap-x-3 gap-y-1.5">
-        {items.map((item) => {
-          const busy = downloading === `${item.width}x${item.height}`;
-          return (
-            <li key={item.label}>
-              <button
-                type="button"
-                onClick={() => onSelect?.(item)}
-                disabled={downloading !== null && downloading !== undefined}
-                className="text-[16px] text-hw-foreground underline decoration-hw-foreground underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {item.label}
-                {busy ? " …" : ""}
-              </button>
-            </li>
-          );
-        })}
+        {items.map((item) => (
+          <li key={item.label}>
+            <button
+              type="button"
+              onClick={() => onSelect?.(item)}
+              className="text-[16px] text-hw-foreground underline decoration-hw-foreground underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
+            >
+              {item.label}
+            </button>
+          </li>
+        ))}
       </ul>
     </div>
   );
@@ -51,12 +44,10 @@ function ResolutionLinkList({
 
 interface DownloadResolutionPanelProps {
   onSelect?: (resolution: DownloadResolution) => void;
-  downloading?: string | null;
 }
 
 export function DownloadResolutionPanel({
   onSelect,
-  downloading,
 }: DownloadResolutionPanelProps) {
   // Live, admin-managed resolution catalog (falls back to the static list).
   const [desktop, setDesktop] = useState<DownloadResolution[]>(desktopDownloadResolutions);
@@ -94,14 +85,12 @@ export function DownloadResolutionPanel({
           title="Popular Desktop Resolutions"
           items={desktop}
           onSelect={onSelect}
-          downloading={downloading}
         />
         <div className="my-4 h-0.5 bg-hw-line" />
         <ResolutionLinkList
           title="Popular Mobile Resolutions"
           items={mobile}
           onSelect={onSelect}
-          downloading={downloading}
         />
       </SidebarPanel>
     </motion.div>

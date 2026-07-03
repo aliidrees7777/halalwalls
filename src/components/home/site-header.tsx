@@ -45,7 +45,7 @@ export function SiteHeader() {
           <Suspense fallback={null}>
             <HeaderNav className="mx-auto" />
           </Suspense>
-          {pathname === "/profile" ? (
+          {/* {pathname === "/profile" ? (
             <Link
               href="/profile"
               onClick={() => setOpen(false)}
@@ -55,9 +55,9 @@ export function SiteHeader() {
             >
               Dashboard
             </Link>
-          ) : (
+          ) : ( */}
             <HeaderAuth className="hidden sm:flex" />
-          )}
+          {/* )} */}
 
           <ThemeToggle className="hidden size-9 lg:flex" />
 

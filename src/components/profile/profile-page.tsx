@@ -1,11 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ProfileHeaderNav } from "@/components/profile/profile-header-nav";
 import { ProfileBanner } from "@/components/profile/profile-banner";
 import { ProfileSectionHeader } from "@/components/profile/profile-section-header";
+import {
+  FAVORITES_PREVIEW_COUNT,
+  getRecentFavorites,
+} from "@/components/profile/favorites-page";
+import {
+  UPLOADS_PREVIEW_COUNT,
+  getRecentUploads,
+} from "@/components/profile/uploads-page";
 import { ProfileWallpaperThumb } from "@/components/profile/profile-wallpaper-thumb";
 import { UploadPlaceholder } from "@/components/profile/upload-placeholder";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -13,38 +21,33 @@ import { MobileProfile } from "@/components/profile/mobile-profile";
 import { useAuth } from "@/context/auth-context";
 import { useMyFavorites } from "@/hooks/use-my-favorites";
 import { useMyUploads } from "@/hooks/use-my-uploads";
-import { demoProfileUser, type ProfileUser } from "@/data/profile-user";
-import { api } from "@/lib/api";
-import type { Wallpaper } from "@/types/wallpaper";
+import {
+  demoProfileUser,
+  discoverJustUploaded,
+  type ProfileUser,
+} from "@/data/profile-user";
 import { SiteHeader } from "../home/site-header";
 
 export function ProfilePage() {
   const router = useRouter();
-  const { user, loading, openAuthModal } = useAuth();
+  const { user, loading, openAuthModal, refreshMe } = useAuth();
   const { wallpapers: favorites, loading: favoritesLoading } = useMyFavorites();
-  const { wallpapers: uploads } = useMyUploads();
+  const { wallpapers: uploads, loading: uploadsLoading } = useMyUploads();
 
-  // "Discover Just Uploaded" — latest live wallpapers from the catalog.
-  const [discover, setDiscover] = useState<Wallpaper[]>([]);
   useEffect(() => {
-    let ignore = false;
-    api
-      .get<{ wallpapers: Wallpaper[] }>("/wallpapers?sort=latest&limit=8")
-      .then((d) => {
-        if (!ignore) setDiscover(d.wallpapers);
-      })
-      .catch(() => {});
-    return () => {
-      ignore = true;
-    };
-  }, []);
+    if (!user) return;
+    void refreshMe();
+  }, [user?.id, refreshMe]);
 
-  // Auth guard: the profile is private — prompt sign-in when not logged in.
+  // ⚠️ TEMP BYPASS (testing only) — auth guard disabled.
+  // Revert: uncomment this block to re-enable login requirement.
+  /*
   useEffect(() => {
     if (!loading && !user) {
       openAuthModal("full-signin");
     }
   }, [loading, user, openAuthModal]);
+  */
 
   if (loading) {
     return (
@@ -54,20 +57,26 @@ export function ProfilePage() {
     );
   }
 
-  // Not signed in → render nothing (the sign-in modal is opened by the effect above).
-  if (!user) return null;
+  // ⚠️ TEMP BYPASS: agar user nahi hai to demo user se render karo
+  // (pehle yahan `if (!user) return null;` tha — wapas laane ke liye yeh line uncomment + neeche wala fallback hatayen)
+  // if (!user) return null;
 
-  const profileUser: ProfileUser = {
-    id: user.id,
-    name: user.name || user.email,
-    bio: user.bio || "",
-    email: user.email,
-    avatar: user.avatar || demoProfileUser.avatar,
-    banner: user.banner || demoProfileUser.banner,
-    isPremium: user.isPremium,
-    favoritesCount: user.favoritesCount,
-    uploadsCount: user.uploadsCount ?? 0,
-  };
+  const profileUser: ProfileUser = user
+    ? {
+        id: user.id,
+        name: user.name || user.email,
+        bio: user.bio || "",
+        email: user.email,
+        avatar: user.avatar || demoProfileUser.avatar,
+        banner: user.banner || demoProfileUser.banner,
+        isPremium: user.isPremium,
+        favoritesCount: user.favoritesCount || user.favorites.length,
+        uploadsCount: user.uploadsCount ?? 0,
+      }
+    : demoProfileUser; // ⚠️ TEMP fallback jab user null ho
+
+  const recentFavorites = getRecentFavorites(favorites);
+  const recentUploads = getRecentUploads(uploads);
 
   return (
     <>
@@ -97,7 +106,7 @@ export function ProfilePage() {
            <ProfileSectionHeader title="" className="text-right"/>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
-            {discover.map((wallpaper, index) => (
+            {discoverJustUploaded.map((wallpaper, index) => (
               <ProfileWallpaperThumb
                 key={wallpaper.id}
                 wallpaper={wallpaper}
@@ -110,11 +119,24 @@ export function ProfilePage() {
         <section className="">
            <div className="flex items-end justify-between my-10">
           <h2 className="lg:text-4xl text-2xl font-semibold text-hw-account">Your Uploads</h2>
-          <ProfileSectionHeader title="" seeAllHref={null} />
+          <ProfileSectionHeader
+            title=""
+            seeAllHref={
+              uploads.length > UPLOADS_PREVIEW_COUNT
+                ? "/profile/uploads"
+                : null
+            }
+          />
           </div>
-          {uploads.length > 0 ? (
-            <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4 max-w-4xl">
-              {uploads.map((wallpaper, index) => (
+          {uploadsLoading ? (
+            <p className="py-12 text-center text-sm text-hw-muted">
+              Loading your uploads…
+            </p>
+          ) : uploads.length === 0 ? (
+            <UploadPlaceholder />
+          ) : (
+            <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
+              {recentUploads.map((wallpaper, index) => (
                 <ProfileWallpaperThumb
                   key={wallpaper.id}
                   wallpaper={wallpaper}
@@ -122,15 +144,20 @@ export function ProfilePage() {
                 />
               ))}
             </div>
-          ) : (
-            <UploadPlaceholder />
           )}
         </section>
 
         <section className="">
            <div className="flex items-end justify-between mb-10">
           <h2 className="lg:text-4xl text-2xl font-semibold  text-hw-account">Your Favorites</h2>
-          <ProfileSectionHeader title="" />
+          <ProfileSectionHeader
+            title=""
+            seeAllHref={
+              favorites.length > FAVORITES_PREVIEW_COUNT
+                ? "/profile/favorites"
+                : null
+            }
+          />
           </div>
           {favoritesLoading ? (
             <p className="py-12 text-center text-sm text-hw-muted">
@@ -142,7 +169,7 @@ export function ProfilePage() {
             </p>
           ) : (
             <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
-              {favorites.map((wallpaper, index) => (
+              {recentFavorites.map((wallpaper, index) => (
                 <ProfileWallpaperThumb
                   key={wallpaper.id}
                   wallpaper={wallpaper}
