@@ -11,7 +11,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "fastly.picsum.photos" },
       // Backend-served media (local dev fallback + future production media host).
       { protocol: "http", hostname: "localhost" },
-      { protocol: "https", hostname: "**.halalwalls.com" },
+      { protocol: "https", hostname: "halalwalls.com" }, // apex (user-upload URLs use this)
+      { protocol: "https", hostname: "**.halalwalls.com" }, // + any subdomain (www, cdn, …)
     ],
   },
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NextImage from "next/image";
 import Link from "next/link";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -26,7 +26,8 @@ const ALLOWED_IMAGE_TYPES = new Set([
   "image/png",
 ]);
 
-const CATEGORIES = [
+// Fallback shown only if the categories API can't be reached.
+const FALLBACK_CATEGORIES = [
   "Islamic",
   "Anime",
   "Superheroes",
@@ -59,6 +60,7 @@ export function UploadForm() {
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [category, setCategory] = useState("");
+  const [categoryOptions, setCategoryOptions] = useState<string[]>(FALLBACK_CATEGORIES);
   const [tags, setTags] = useState("");
   const [source, setSource] = useState("");
   const [agree, setAgree] = useState(false);
@@ -66,6 +68,22 @@ export function UploadForm() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Real, active categories from the API (admin-managed).
+  useEffect(() => {
+    let ignore = false;
+    api
+      .get<{ categories: { name: string }[] }>("/categories")
+      .then((d) => {
+        if (!ignore && d.categories?.length) setCategoryOptions(d.categories.map((c) => c.name));
+      })
+      .catch(() => {
+        /* keep the fallback list */
+      });
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   function handleFile(picked: File | undefined) {
     if (!picked) return;
@@ -286,7 +304,7 @@ export function UploadForm() {
             <option value="" disabled>
               Select a category
             </option>
-            {CATEGORIES.map((c) => (
+            {categoryOptions.map((c) => (
               <option
                 key={c}
                 value={c}
@@ -347,15 +365,16 @@ export function UploadForm() {
           aria-checked={agree}
           aria-label="I agree to the terms of use"
           onClick={() => setAgree((v) => !v)}
-          className={cn(
-            "grid size-[18px] shrink-0 place-items-center rounded-[4px] border-2 transition-colors",
-            agree
-              ? "border-[#05DF8B] bg-[#05DF8B]"
-              : "border-hw-foreground bg-transparent",
-          )}
+          className="grid size-5 shrink-0 place-items-center rounded-[5px] transition-colors"
+          style={{
+            borderWidth: 2,
+            borderStyle: "solid",
+            borderColor: agree ? "#05DF8B" : "#8b9096",
+            backgroundColor: agree ? "rgba(5,223,139,0.15)" : "rgba(255,255,255,0.05)",
+          }}
         >
           {agree ? (
-            <Check className="size-3 text-black" strokeWidth={3} />
+            <Check className="size-3.5 text-[#05DF8B]" strokeWidth={3.5} />
           ) : null}
         </button>
         <p className="text-sm text-hw-depw">
