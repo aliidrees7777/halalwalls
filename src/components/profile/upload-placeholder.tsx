@@ -2,7 +2,9 @@
 
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/auth-context";
 
 interface UploadPlaceholderProps {
   className?: string;
@@ -10,10 +12,25 @@ interface UploadPlaceholderProps {
 }
 
 export function UploadPlaceholder({ className, onClick }: UploadPlaceholderProps) {
+  const router = useRouter();
+  const { isAuthenticated, openAuthModal } = useAuth();
+
+  function handleClick() {
+    if (onClick) {
+      onClick();
+      return;
+    }
+    if (!isAuthenticated) {
+      openAuthModal("signin");
+      return;
+    }
+    router.push("/upload");
+  }
+
   return (
     <motion.button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       whileHover={{ scale: 1.02, borderColor: "rgba(59,130,246,0.5)" }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}

@@ -1,13 +1,15 @@
 "use client";
 import { Check } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import dimond from "../../../public/authicon/dimond.svg";
 import start from "../../../public/authicon/start.svg";
 import whitedimond from "../../../public/authicon/whitedimond.svg";
 import close from "../../../public/authicon/close.svg";
 import { useAuth } from "@/context/auth-context";
 import { api, ApiError } from "@/lib/api";
+import { useToast } from "@/components/ui/toast";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Three plans: monthly + yearly recur, lifetime is a one-time payment.
@@ -24,72 +26,51 @@ const FEATURES = [
   "24/7 Priority Support",
 ];
 
+type PlanKey = (typeof PLANS)[number]["key"];
+
+function getPlanButton(planKey: PlanKey, isPremium: boolean, currentPlan?: string | null) {
+  if (!isPremium) {
+    return { label: "Get Started", disabled: false };
+  }
+  if (currentPlan === planKey) {
+    return { label: "Current plan", disabled: true };
+  }
+  if (currentPlan === "lifetime") {
+    return { label: "Included", disabled: true };
+  }
+  // No downgrade path in checkout — only upgrades to higher tiers.
+  if (
+    (currentPlan === "yearly" && planKey === "monthly") ||
+    (currentPlan === "lifetime" && planKey !== "lifetime")
+  ) {
+    return { label: "—", disabled: true };
+  }
+  return { label: "Upgrade", disabled: false };
+}
+
 export function PremiumPlans() {
-  const { isAuthenticated, openAuthModal, closeAuthModal, refreshMe, user } =
-    useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  const isStandalonePage = pathname === "/premium";
+  const { isAuthenticated, openAuthModal, closeAuthModal, user } = useAuth();
+  const { toast } = useToast();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [message, setMessage] = useState<{ kind: "ok" | "err"; text: string } | null>(
     null,
   );
-  // The signed-in user's active plan — drives "Activated" vs "Upgrade" labels.
-  const [currentPlan, setCurrentPlan] = useState<string | null>(null);
-  // True until we've resolved the current plan for a premium user — prevents the
-  // brief "all cards say Upgrade" flash before /subscriptions/me responds.
-  const [planLoading, setPlanLoading] = useState(true);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setCurrentPlan(null);
-      setPlanLoading(false);
-      return;
-    }
-    let ignore = false;
-    setPlanLoading(true);
-    api
-      .get<{ isPremium: boolean; plan: string | null }>("/subscriptions/me")
-      .then((d) => {
-        if (!ignore) setCurrentPlan(d.isPremium ? d.plan : null);
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (!ignore) setPlanLoading(false);
-      });
-    return () => {
-      ignore = true;
-    };
-  }, [isAuthenticated, user?.isPremium]);
-
-  // Handle the return from Stripe Checkout (success_url / cancel_url).
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    const status = params.get("status");
-    if (status === "success") {
-      const sessionId = params.get("session_id");
-      (async () => {
-        try {
-          if (sessionId) await api.post("/subscriptions/confirm", { sessionId });
-          await refreshMe();
-          try {
-            const s = await api.get<{ isPremium: boolean; plan: string | null }>(
-              "/subscriptions/me",
-            );
-            setCurrentPlan(s.isPremium ? s.plan : null);
-          } catch {}
-          setMessage({ kind: "ok", text: "🎉 You're Premium! Your plan is active." });
-        } catch {
-          setMessage({ kind: "ok", text: "Payment received — your premium will activate shortly." });
-        }
-      })();
-    } else if (status === "cancelled") {
-      setMessage({ kind: "err", text: "Checkout cancelled. You can subscribe anytime." });
-    }
-  }, [refreshMe]);
 
   async function handleSubscribe(planKey: string) {
     setMessage(null);
     if (!isAuthenticated) {
       openAuthModal("signin");
+      return;
+    }
+    if (user?.isPremium && user.subscriptionPlan === planKey) {
+      setMessage({ kind: "ok", text: "You're already on this plan." });
+      return;
+    }
+    if (user?.isPremium && user.subscriptionPlan === "lifetime") {
+      setMessage({ kind: "ok", text: "You already have lifetime premium." });
       return;
     }
     setLoadingPlan(planKey);
@@ -100,10 +81,10 @@ export function PremiumPlans() {
       if (url) window.location.href = url;
       else throw new Error("No checkout URL");
     } catch (err) {
-      setMessage({
-        kind: "err",
-        text: err instanceof ApiError ? err.message : "Couldn't start checkout. Please try again.",
-      });
+      const text =
+        err instanceof ApiError ? err.message : "Couldn't start checkout. Please try again.";
+      setMessage({ kind: "err", text });
+      toast({ type: "error", message: text });
       setLoadingPlan(null);
     }
   }
@@ -120,7 +101,10 @@ export function PremiumPlans() {
       >
         {/* Close */}
         <button
-          onClick={closeAuthModal}
+          onClick={() => {
+            if (isStandalonePage) router.push("/");
+            else closeAuthModal();
+          }}
           className="absolute top-3 right-4 sm:top-4 sm:right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
         >
           <Image src={close} alt="Close" width={20} height={20} />
@@ -154,27 +138,10 @@ export function PremiumPlans() {
 
         {/* Plans */}
         <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-3 primary-font">
-          {PLANS.map((plan) => {
-            // While a premium user's plan is still loading, don't guess — show a
-            // neutral loading state instead of flashing every card as "Upgrade".
-            const resolving = !!user?.isPremium && planLoading;
-            const isCurrent =
-              !resolving && !!user?.isPremium && currentPlan === plan.key;
-            const lifetimeOwned =
-              !resolving && !!user?.isPremium && currentPlan === "lifetime";
-            // Non-current plans can be upgraded to — unless lifetime is owned.
-            const upgradable =
-              !resolving && !!user?.isPremium && !isCurrent && !lifetimeOwned;
-            const actionable = !resolving && (!user?.isPremium || upgradable);
-            return (
+          {PLANS.map((plan) => (
             <div
               key={plan.key}
-              className={
-                "flex flex-col overflow-hidden rounded-xl border border-[#05DF8B]" +
-                (isCurrent
-                  ? " ring-2 ring-[#05DF8B] ring-offset-2 ring-offset-hw-card"
-                  : "")
-              }
+              className="flex flex-col overflow-hidden rounded-xl border border-[#05DF8B]"
             >
               {/* Card header */}
               <div className="relative overflow-hidden bg-hw-deep px-4 pb-5 pt-4 h-[158px]">
@@ -217,36 +184,19 @@ export function PremiumPlans() {
                 <button
                   type="button"
                   onClick={() => handleSubscribe(plan.key)}
-                  disabled={loadingPlan !== null || !actionable}
-                  className={
-                    "primary-font mt-auto flex items-center justify-center gap-1.5 rounded-full py-2.5 text-center text-[16px] sm:text-[22px] font-medium transition-colors active:translate-y-px disabled:cursor-not-allowed " +
-                    (isCurrent
-                      ? "bg-[#05DF8B] text-hw-input disabled:opacity-100"
-                      : "bg-hw-bg text-hw-depw hover:bg-hw-pill2-hover disabled:opacity-60")
+                  disabled={
+                    loadingPlan !== null ||
+                    getPlanButton(plan.key, !!user?.isPremium, user?.subscriptionPlan).disabled
                   }
+                  className="primary-font mt-auto rounded-full bg-hw-bg py-2.5 text-center text-[16px] sm:text-[22px] font-medium text-hw-depw transition-colors hover:bg-hw-pill2-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {isCurrent && !loadingPlan && (
-                    <Check className="size-4" strokeWidth={3} />
-                  )}
-                  {resolving ? (
-                    <span className="size-4 animate-spin rounded-full border-2 border-hw-depw/40 border-t-hw-depw" />
-                  ) : null}
                   {loadingPlan === plan.key
                     ? "Redirecting…"
-                    : resolving
-                      ? "Loading…"
-                      : isCurrent
-                        ? "Activated"
-                        : !user?.isPremium
-                          ? "Get Started"
-                          : upgradable
-                            ? "Upgrade"
-                            : "Included"}
+                    : getPlanButton(plan.key, !!user?.isPremium, user?.subscriptionPlan).label}
                 </button>
               </div>
             </div>
-            );
-          })}
+          ))}
         </div>
       </motion.div>
     </AnimatePresence>

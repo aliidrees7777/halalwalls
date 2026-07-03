@@ -54,8 +54,6 @@ export function HomePage() {
     setCurrentPage(1);
   }, [category, sort, tag, resolution, search]);
 
-  // Live catalog from the backend — filters (category + sort + tag + resolution
-  // + q) combine server-side; results are paginated (18/page).
   useEffect(() => {
     let ignore = false;
     setIsLoading(true);
@@ -82,7 +80,8 @@ export function HomePage() {
         setPagination(null);
       })
       .finally(() => {
-        if (!ignore) setIsLoading(false);
+        if (ignore) return;
+        setIsLoading(false);
       });
 
     return () => {

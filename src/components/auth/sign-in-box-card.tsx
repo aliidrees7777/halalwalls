@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CornerDownRight } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
+import { useToast } from "@/components/ui/toast";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -20,17 +21,23 @@ const FEATURES = [
   "Upload Wallpapers",
 ];
 
-export function SignInBoxCard() {
+export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) {
   const router = useRouter();
-  const { authModal, openAuthModal, closeAuthModal, login, signup } = useAuth();
+  const { authModal, openAuthModal, closeAuthModal } = useAuth();
+  const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  function showLoginError(message: string) {
+    setError(message);
+    toast({ type: "error", message });
+  }
+
   return (
     <AnimatePresence>
-      {authModal.open && (
+      {(standalone || authModal.open) && (
         <motion.div
           key="modal"
           initial={{ opacity: 0, y: "100%" }}
@@ -43,7 +50,10 @@ export function SignInBoxCard() {
           className="relative flex flex-col justify-center items-center z-10 my-auto w-full max-w-[825px] lg:h-[805px]  rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] sm:p-7"
         >
           <button
-            onClick={closeAuthModal}
+            onClick={() => {
+              closeAuthModal();
+              if (standalone) router.push("/");
+            }}
             className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
           >
             <Image src={close} alt="Close" width={20} height={20} />
@@ -82,11 +92,17 @@ export function SignInBoxCard() {
             )}
             <div className="flex flex-col gap-3">
               <GoogleSignInButton
-                onSuccess={() => {
+                onSuccess={(user) => {
                   closeAuthModal();
+                  toast({
+                    type: "success",
+                    message: user.firstName
+                      ? `Welcome back, ${user.firstName}!`
+                      : "Signed in with Google.",
+                  });
                   router.push("/");
                 }}
-                onError={setError}
+                onError={showLoginError}
               >
                 <span className="flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[22px] font-bold text-hw-input transition-[filter,transform] group-hover:brightness-95">
                   <span className="grid size-7 place-items-center rounded-full bg-white">

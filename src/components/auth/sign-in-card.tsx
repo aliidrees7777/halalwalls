@@ -3,42 +3,44 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
+import { useToast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/api";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import close from "../../../public/authicon/close.svg";
 
-export function SignInCard() {
+export function SignInCard({ standalone = false }: { standalone?: boolean }) {
   const router = useRouter();
-  const { login, reactivate, closeAuthModal, authModal, openAuthModal } = useAuth();
+  const { login, closeAuthModal, authModal, openAuthModal } = useAuth();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // A deactivated (soft-deleted) account → offer reactivation.
-  const [deactivated, setDeactivated] = useState(false);
-  const [reactivating, setReactivating] = useState(false);
+
+  function showLoginError(message: string) {
+    setError(message);
+    toast({ type: "error", message });
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
-    setDeactivated(false);
     setSubmitting(true);
     try {
-      await login(email, password);
+      const user = await login(email, password);
       closeAuthModal();
+      toast({
+        type: "success",
+        message: user.firstName
+          ? `Welcome back, ${user.firstName}!`
+          : "Welcome back!",
+      });
       router.push("/");
     } catch (err) {
-      if (
-        err instanceof ApiError &&
-        err.statusCode === 403 &&
-        /deactivat/i.test(err.message)
-      ) {
-        setDeactivated(true);
-      }
-      setError(
+      showLoginError(
         err instanceof ApiError
           ? err.message
           : "Something went wrong. Please try again.",
@@ -48,28 +50,10 @@ export function SignInCard() {
     }
   }
 
-  async function handleReactivate() {
-    setError(null);
-    setReactivating(true);
-    try {
-      await reactivate(email, password);
-      closeAuthModal();
-      router.push("/");
-    } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "Couldn't reactivate your account. Please try again.",
-      );
-    } finally {
-      setReactivating(false);
-    }
-  }
-
   return (
     <>
     <AnimatePresence>
-      {authModal.open && (
+      {(standalone || authModal.open) && (
         <motion.div 
              key="modal"
           initial={{ opacity: 0, y: "100%" }}
@@ -81,7 +65,10 @@ export function SignInCard() {
           }}
         className="relative z-10 flex justify-center items-center my-auto w-full max-w-[825px] h-[600px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 sm:p-7">
           <button
-            onClick={closeAuthModal} 
+            onClick={() => {
+              closeAuthModal();
+              if (standalone) router.push("/");
+            }} 
             className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
           >
             <Image src={close} alt="Close" width={20} height={20} />
@@ -99,17 +86,6 @@ export function SignInCard() {
               >
                 {error}
               </p>
-            )}
-
-            {deactivated && (
-              <button
-                type="button"
-                onClick={handleReactivate}
-                disabled={reactivating}
-                className="rounded-full bg-[#05DF8B] py-2.5 text-center text-[16px] font-semibold text-hw-input transition-[filter] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {reactivating ? "Reactivating…" : "Reactivate my account"}
-              </button>
             )}
 
             {/* Fields + forgot link */}
@@ -215,11 +191,17 @@ export function SignInCard() {
               </span>
 
               <GoogleSignInButton
-                onSuccess={() => {
+                onSuccess={(user) => {
                   closeAuthModal();
+                  toast({
+                    type: "success",
+                    message: user.firstName
+                      ? `Welcome back, ${user.firstName}!`
+                      : "Signed in with Google.",
+                  });
                   router.push("/");
                 }}
-                onError={setError}
+                onError={showLoginError}
               >
                 <span className="flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-hw-input text-[18px] font-semibold text-hw-faint transition-colors group-hover:bg-hw-pill2-hover">
                   <svg viewBox="0 0 24 24" className="size-[18px]">

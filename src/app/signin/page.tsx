@@ -17,7 +17,7 @@ export default function SignInPage() {
             "radial-gradient(60% 60% at 50% 40%, rgba(5,223,139,0.10) 0%, rgba(11,14,17,0) 70%)",
         }}
       />
-      <SignInCard />
+      <SignInCard standalone />
     </main>
   );
 }

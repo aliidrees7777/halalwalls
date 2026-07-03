@@ -9,10 +9,22 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
-import downloadrotate from "../../../public/detail-page/downloadrotate.svg"
+import { useToast } from "@/components/ui/toast";
+import downloadrotate from "../../../public/detail-page/downloadrotate.svg";
+
+const RECAPTCHA_TEST_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 const RECAPTCHA_SITE_KEY =
-  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
-  "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || RECAPTCHA_TEST_KEY;
+const CAPTCHA_OPTIONAL =
+  process.env.NODE_ENV === "development" ||
+  RECAPTCHA_SITE_KEY === RECAPTCHA_TEST_KEY;
+
+const ALLOWED_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/pjpeg",
+  "image/png",
+]);
 
 const CATEGORIES = [
   "Islamic",
@@ -40,6 +52,7 @@ const fieldBox =
 
 export function UploadForm() {
   const { isAuthenticated, openAuthModal } = useAuth();
+  const { toast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -56,14 +69,15 @@ export function UploadForm() {
 
   function handleFile(picked: File | undefined) {
     if (!picked) return;
-    if (picked.type !== "image/jpeg") {
-      alert("JPG only.");
+    if (!ALLOWED_IMAGE_TYPES.has(picked.type)) {
+      setError("Please upload a JPG or PNG image.");
       return;
     }
     if (picked.size > 10 * 1024 * 1024) {
-      alert("Max file size is 10MB.");
+      setError("Max file size is 10MB.");
       return;
     }
+    setError(null);
     setFile(picked);
     setFileName(picked.name);
     const reader = new FileReader();
@@ -73,7 +87,15 @@ export function UploadForm() {
     reader.readAsDataURL(picked);
   }
 
-  const canSubmit = Boolean(file && category && agree && captchaToken);
+  function validateForm(): string | null {
+    if (!file) return "Please choose a wallpaper image.";
+    if (!category) return "Please select a category.";
+    if (!agree) return "Please agree to the terms of use.";
+    if (!CAPTCHA_OPTIONAL && !captchaToken) {
+      return "Please complete the reCAPTCHA verification.";
+    }
+    return null;
+  }
 
   function resetForm() {
     setFile(null);
@@ -97,7 +119,13 @@ export function UploadForm() {
       openAuthModal("signin");
       return;
     }
-    if (!canSubmit || !file) return;
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    if (!file) return;
 
     setSubmitting(true);
     try {
@@ -112,6 +140,11 @@ export function UploadForm() {
       setSuccess(
         "Wallpaper submitted! It’s now pending review — you’ll find it under your profile uploads.",
       );
+      toast({
+        type: "success",
+        message:
+          "Wallpaper submitted! It’s pending review and will appear under Your Uploads.",
+      });
       resetForm();
     } catch (err) {
       // An expired/invalid session surfaces the sign-in modal.
@@ -151,7 +184,7 @@ export function UploadForm() {
       <input
         ref={inputRef}
         type="file"
-        accept="image/jpeg"
+        accept="image/jpeg,image/png,.jpg,.jpeg,.png"
         className="sr-only"
         onChange={(e) => {
           handleFile(e.target.files?.[0]);
@@ -205,7 +238,7 @@ export function UploadForm() {
               Choose Wallpaper
             </span>
             <span className="text-[21px] text-hw-depw">
-              JPG only, up to 10MB
+              JPG or PNG, up to 10MB
             </span>
           </>
         )}
@@ -273,7 +306,7 @@ export function UploadForm() {
           htmlFor="upload-tags"
           className="text-[21px] font-semibold text-hw-depw"
         >
-          Tags<span className="text-red-400">*</span>
+          Tags
         </label>
         <input
           id="upload-tags"
@@ -291,7 +324,7 @@ export function UploadForm() {
           htmlFor="upload-source"
           className="text-[21px] font-semibold text-hw-depw"
         >
-          Source<span className="text-red-400">*</span>
+          Source
         </label>
         <textarea
           id="upload-source"
@@ -340,13 +373,20 @@ export function UploadForm() {
         theme="light"
         onChange={(token) => setCaptchaToken(token)}
         onExpired={() => setCaptchaToken(null)}
+        onErrored={() => {
+          if (!CAPTCHA_OPTIONAL) {
+            setError(
+              "reCAPTCHA failed to load. Check your site key/domain settings.",
+            );
+          }
+        }}
       />
 
       {/* Upload */}
       <div>
         <button
           type="submit"
-          disabled={!canSubmit || submitting}
+          disabled={submitting}
           className="inline-flex h-11 items-center justify-center gap-2 rounded-[5px] bg-[#4D853A] px-5 text-[17px] font-semibold text-white transition-[filter,transform] hover:brightness-110 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? "Uploading…" : "Upload Wallpaper"}

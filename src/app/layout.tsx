@@ -5,6 +5,9 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/context/auth-context";
 import { AuthModal } from "@/components/auth/auth-modal";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
+import { ToastProvider } from "@/components/ui/toast";
+import { Suspense } from "react";
+import { StripeCheckoutReturn } from "@/components/premium/stripe-checkout-return";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -27,11 +30,16 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full pb-[72px] font-sans antialiased md:pb-0">
         <ThemeProvider>
-          <AuthProvider>
-            {children}
-            <MobileBottomNav />
-            <AuthModal />
-          </AuthProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <Suspense fallback={null}>
+                <StripeCheckoutReturn />
+              </Suspense>
+              {children}
+              <MobileBottomNav />
+              <AuthModal />
+            </AuthProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

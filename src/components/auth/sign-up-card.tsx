@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Rocket, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
+import { useToast } from "@/components/ui/toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { ApiError } from "@/lib/api";
 import close from "../../../public/authicon/close.svg";
@@ -12,7 +13,8 @@ import Image from "next/image";
 
 export function SignUpCard() {
   const router = useRouter();
-  const { signup,closeAuthModal } = useAuth();
+  const { signup, closeAuthModal, authModal } = useAuth();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agree, setAgree] = useState(false);
@@ -43,8 +45,20 @@ export function SignUpCard() {
 
     setSubmitting(true);
     try {
-      await signup({ firstName, lastName, email, password, confirmPassword });
-      closeAuthModal(); // close the signup popup once the account is created
+      const user = await signup({
+        firstName,
+        lastName,
+        email,
+        password,
+        confirmPassword,
+      });
+      closeAuthModal();
+      toast({
+        type: "success",
+        message: user.firstName
+          ? `Welcome, ${user.firstName}! Check your email to verify your account.`
+          : "Welcome! Check your email to verify your account.",
+      });
       router.push("/");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
@@ -67,7 +81,10 @@ export function SignUpCard() {
       className="relative z-10 my-auto flex justify-center items-center w-full max-w-[825px] h-[670px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 sm:p-7"
     >
         <button
-        onClick={closeAuthModal}
+        onClick={() => {
+          closeAuthModal();
+          if (!authModal.open) router.push("/");
+        }}
         className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
       >
         <Image src={close} alt="Close" width={20} height={20} />
@@ -184,19 +201,14 @@ export function SignUpCard() {
               aria-checked={agree}
               aria-label="I agree to the Terms of Service and Privacy Policy"
               onClick={() => setAgree((v) => !v)}
-              className="grid shrink-0 place-items-center rounded-[5px] transition-colors"
-              style={{
-                width: 20,
-                height: 20,
-                borderWidth: 2,
-                borderStyle: "solid",
-                borderColor: agree ? "#05DF8B" : "#8b9096",
-                backgroundColor: agree ? "#05DF8B" : "rgba(255,255,255,0.06)",
-              }}
+              className={cn(
+                "grid size-[18px] shrink-0 place-items-center rounded-[4px] border-2 transition-colors",
+                agree ? "border-[#05DF8B] bg-[#05DF8B]" : "border-hw-foreground bg-transparent"
+              )}
             >
-              {agree ? <Check className="size-3 text-black" strokeWidth={4} /> : null}
+              {agree ? <Check className="size-2 text-hw-input" strokeWidth={5} /> : null}
             </button>
-            <p className="text-[15px] font-normal leading-snug text-hw-depw">
+            <p className="text-[15px] leading-snug font-[450px]  text-hw-depw">
               I agree to the{" "}
               <a href="/terms" className="text-[#69A6D5] underline">Terms of Service</a> and{" "}
               <a href="/privacy" className="text-[#69A6D5] underline">Privacy Policy</a>
