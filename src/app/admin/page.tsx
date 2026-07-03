@@ -1,14 +1,14 @@
 import Dashboard from "@/components/admindashboard/admincomponent/Dashboard";
-import React from "react";
+import AdminGuard from "@/components/admindashboard/admincomponent/AdminGuard";
 
-type Props = {};
-
-const page = (props: Props) => {
+const Page = () => {
   return (
     <div className="admin-panel" id="main">
-      <Dashboard />
+      <AdminGuard>
+        <Dashboard />
+      </AdminGuard>
     </div>
   );
 };
 
-export default page;
+export default Page;

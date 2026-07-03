@@ -24,18 +24,23 @@ import {
 interface SideBarProps {
   active: string;
   onSelect: (item: string) => void;
+  /** Mobile drawer open state (ignored ≥ lg, where the sidebar is always shown). */
+  open?: boolean;
 }
 
-const SideBar = ({ active, onSelect }: SideBarProps) => {
+const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
   const activeItem = active;
   const setActiveItem = onSelect;
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
+  // Off-canvas drawer below lg; always visible at lg+.
+  const drawer = open ? "translate-x-0" : "-translate-x-full lg:translate-x-0";
+
   return (
     <nav
       id="sb"
-      className={isCollapsed ? "collapsed" : ""}
-      style={{ position: "fixed", top: "0" }}
+      className={`${drawer} ${isCollapsed ? "collapsed" : ""}`}
+      style={{ position: "fixed", top: 0, zIndex: 60, transition: "transform 0.3s ease" }}
     >
       <div className="sb-logo" onClick={() => setIsCollapsed(!isCollapsed)}>
         <img

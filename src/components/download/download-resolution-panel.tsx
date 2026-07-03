@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import { motion } from "framer-motion";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
@@ -7,6 +8,7 @@ import {
   desktopDownloadResolutions,
   mobileDownloadResolutions,
 } from "@/data/resolutions";
+import { api } from "@/lib/api";
 import type { DownloadResolution } from "@/types/wallpaper";
 
 function ResolutionLinkList({
@@ -56,6 +58,26 @@ export function DownloadResolutionPanel({
   onSelect,
   downloading,
 }: DownloadResolutionPanelProps) {
+  // Live, admin-managed resolution catalog (falls back to the static list).
+  const [desktop, setDesktop] = useState<DownloadResolution[]>(desktopDownloadResolutions);
+  const [mobile, setMobile] = useState<DownloadResolution[]>(mobileDownloadResolutions);
+
+  useEffect(() => {
+    let ignore = false;
+    api
+      .get<{ list: DownloadResolution[] }>("/resolutions")
+      .then((d) => {
+        if (ignore) return;
+        const list = d.list ?? [];
+        const desk = list.filter((r) => r.device === "desktop");
+        const mob = list.filter((r) => r.device === "mobile");
+        if (desk.length) setDesktop(desk);
+        if (mob.length) setMobile(mob);
+      })
+      .catch(() => {});
+    return () => { ignore = true; };
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -70,14 +92,14 @@ export function DownloadResolutionPanel({
         <div className="my-4 h-0.5 bg-hw-line " />
         <ResolutionLinkList
           title="Popular Desktop Resolutions"
-          items={desktopDownloadResolutions}
+          items={desktop}
           onSelect={onSelect}
           downloading={downloading}
         />
         <div className="my-4 h-0.5 bg-hw-line" />
         <ResolutionLinkList
           title="Popular Mobile Resolutions"
-          items={mobileDownloadResolutions}
+          items={mobile}
           onSelect={onSelect}
           downloading={downloading}
         />

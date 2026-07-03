@@ -15,6 +15,9 @@ import {
   Tag as TagIcon,
   Clock,
   XCircle,
+  Users,
+  ShieldCheck,
+  UserPlus,
 } from "lucide-react";
 import { StatusBadge } from "./cells";
 import type { ListPageConfig, Row } from "./types";
@@ -98,9 +101,9 @@ const ads: ListPageConfig = {
     { key: "location", header: "Location", cell: (r) => pill(String(r.location)) },
     { key: "type", header: "Type" },
     { key: "targeting", header: "Targeting" },
-    { key: "impressions", header: "Impressions", align: "right" },
-    { key: "clicks", header: "Clicks", align: "right" },
-    { key: "ctr", header: "CTR", align: "right" },
+    { key: "impressions", header: "Impressions" },
+    { key: "clicks", header: "Clicks" },
+    { key: "ctr", header: "CTR" },
     { key: "status", header: "Status", cell: (r) => <StatusBadge value={String(r.status)} /> },
     { key: "created", header: "Created", cell: (r) => dateTime(String(r.created), String(r.createdTime)) },
   ],
@@ -138,8 +141,8 @@ const categories: ListPageConfig = {
       <div className="flex items-center gap-3">{thumb(String(r.image))}<span className="font-medium text-[var(--text)]">{String(r.category)}</span></div>
     ) },
     { key: "description", header: "Description", cell: (r) => <span className="text-[var(--text2)]">{String(r.description)}</span> },
-    { key: "wallpapers", header: "Wallpapers", align: "right" },
-    { key: "downloads", header: "Downloads", align: "right" },
+    { key: "wallpapers", header: "Wallpapers" },
+    { key: "downloads", header: "Downloads" },
     { key: "status", header: "Status", cell: (r) => <StatusBadge value={String(r.status)} /> },
     { key: "created", header: "Created" },
   ],
@@ -157,6 +160,7 @@ const resolutions: ListPageConfig = {
   title: "Resolutions",
   breadcrumb: ["Dashboard", "Resolutions"],
   primaryAction: { label: "Add Resolution" },
+  showIndex: true,
   searchPlaceholder: "Search resolutions…",
   searchKeys: ["resolution", "aspect"],
   rowId: (r) => String(r.resolution),
@@ -173,8 +177,8 @@ const resolutions: ListPageConfig = {
   columns: [
     { key: "resolution", header: "Resolution", cell: (r) => <span className="font-medium text-[var(--text)]">{String(r.resolution)}</span> },
     { key: "aspect", header: "Aspect Ratio" },
-    { key: "wallpapers", header: "Wallpapers", align: "right" },
-    { key: "downloads", header: "Downloads", align: "right" },
+    { key: "wallpapers", header: "Wallpapers" },
+    { key: "downloads", header: "Downloads" },
     { key: "status", header: "Status", cell: (r) => <StatusBadge value={String(r.status)} /> },
     { key: "created", header: "Created" },
   ],
@@ -205,6 +209,7 @@ const tags: ListPageConfig = {
   title: "Tags",
   breadcrumb: ["Dashboard", "Tags"],
   primaryAction: { label: "Add Tag" },
+  showIndex: true,
   searchPlaceholder: "Search tags…",
   searchKeys: ["tag", "description"],
   rowId: (r) => String(r.tag),
@@ -224,8 +229,8 @@ const tags: ListPageConfig = {
       return <span className={`inline-flex rounded-md px-2.5 py-1 text-xs font-medium ${TAG_COLORS[key] ?? "bg-[var(--bg3)] text-[var(--text)]"}`}>{String(r.tag)}</span>;
     } },
     { key: "description", header: "Description", cell: (r) => <span className="text-[var(--text2)]">{String(r.description)}</span> },
-    { key: "wallpapers", header: "Wallpapers", align: "right" },
-    { key: "downloads", header: "Downloads", align: "right" },
+    { key: "wallpapers", header: "Wallpapers" },
+    { key: "downloads", header: "Downloads" },
     { key: "status", header: "Status", cell: (r) => <StatusBadge value={String(r.status)} /> },
     { key: "created", header: "Created" },
   ],
@@ -253,15 +258,16 @@ const wallpapers: ListPageConfig = {
   title: "Wallpapers",
   breadcrumb: ["Dashboard", "Wallpapers"],
   primaryAction: { label: "Add Wallpaper" },
+  secondaryAction: { label: "Export", icon: <Download size={16} /> },
   searchPlaceholder: "Search wallpapers by title, uploader…",
   searchKeys: ["title", "uploader", "email", "category"],
   rowId: (r) => String(r.title) + String(r.uploaded),
   stats: [
-    { label: "Total Wallpapers", value: "11,539", trend: { text: "+12.5%", dir: "up" }, icon: <ImageIcon size={18} /> },
-    { label: "Approved", value: "9,812", trend: { text: "+10.3%", dir: "up" }, icon: <CheckCircle2 size={18} /> },
-    { label: "Pending Review", value: "642", trend: { text: "-4.2%", dir: "down" }, icon: <Clock size={18} />, accent: "#f59e0b" },
-    { label: "Rejected", value: "1,085", trend: { text: "+3.7%", dir: "up" }, icon: <XCircle size={18} />, accent: "#f87171" },
-    { label: "Total Downloads", value: "356,421", trend: { text: "+10.2%", dir: "up" }, icon: <Download size={18} /> },
+    { label: "Total Wallpapers", value: "11,539", trend: { text: "12.5%", dir: "up" }, sub: "+1,289 this month", icon: <ImageIcon size={18} /> },
+    { label: "Approved", value: "9,812", trend: { text: "10.3%", dir: "up" }, sub: "+1,023 this month", icon: <CheckCircle2 size={18} /> },
+    { label: "Pending Review", value: "642", trend: { text: "4.2%", dir: "down" }, sub: "-28 this month", icon: <Clock size={18} />, accent: "#f59e0b" },
+    { label: "Rejected", value: "1,085", trend: { text: "3.7%", dir: "up" }, sub: "+38 this month", icon: <XCircle size={18} />, accent: "#f87171" },
+    { label: "Total Downloads", value: "356,421", trend: { text: "10.2%", dir: "up" }, sub: "+32,225 this month", icon: <Download size={18} /> },
   ],
   filters: [
     { key: "category", placeholder: "All Categories", options: ["Nature", "Gaming", "Minimalist", "Islamic", "Cars", "Space", "Anime"].map((v) => ({ label: v, value: v })) },
@@ -276,7 +282,7 @@ const wallpapers: ListPageConfig = {
     { key: "uploader", header: "Uploader", cell: (r) => avatar(String(r.uploader), String(r.email)) },
     { key: "category", header: "Category", cell: (r) => pill(String(r.category), CAT_PILL[String(r.category)] ?? "bg-[var(--bg3)] text-[var(--text)]") },
     { key: "resolution", header: "Resolution" },
-    { key: "downloads", header: "Downloads", align: "right" },
+    { key: "downloads", header: "Downloads" },
     { key: "status", header: "Status", cell: (r) => <StatusBadge value={String(r.status)} /> },
     { key: "uploaded", header: "Uploaded", cell: (r) => dateTime(String(r.uploaded), String(r.uploadedTime)) },
   ],
@@ -290,6 +296,62 @@ const wallpapers: ListPageConfig = {
   ],
 };
 
+/* ── Users ─────────────────────────────────────────────────────────────── */
+const ROLE_PILL: Record<string, string> = {
+  Admin: "bg-[var(--brand-dim)] text-[var(--brand)]",
+  User: "bg-[var(--bg3)] text-[var(--text2)]",
+};
+const PLAN_PILL: Record<string, string> = {
+  Premium: "bg-[#f59e0b]/15 text-[#f59e0b]",
+  Free: "bg-[var(--bg3)] text-[var(--text2)]",
+};
+const users: ListPageConfig = {
+  title: "Users",
+  breadcrumb: ["Dashboard", "Users"],
+  primaryAction: { label: "Add User" },
+  showIndex: true,
+  searchPlaceholder: "Search users by name or email…",
+  searchKeys: ["name", "email"],
+  rowId: (r) => String(r.email),
+  stats: [
+    { label: "Total Users", value: "25,847", sub: "+2,073 this month", icon: <Users size={18} /> },
+    { label: "Premium Members", value: "3,642", sub: "14.1% of total", icon: <Star size={18} />, accent: "#f59e0b" },
+    { label: "Verified", value: "22,190", sub: "85.8% of total", icon: <CheckCircle2 size={18} /> },
+    { label: "Admins", value: "4", sub: "Super Administrators", icon: <ShieldCheck size={18} /> },
+    { label: "New This Month", value: "2,073", sub: "+8.7% vs last month", icon: <UserPlus size={18} /> },
+  ],
+  filters: [
+    { key: "role", placeholder: "All Roles", options: ["Admin", "User"].map((v) => ({ label: v, value: v })) },
+    { key: "plan", placeholder: "All Plans", options: ["Premium", "Free"].map((v) => ({ label: v, value: v })) },
+    { key: "status", placeholder: "All Status", options: ["Active", "Deactivated"].map((v) => ({ label: v, value: v })) },
+  ],
+  sortOptions: [
+    { label: "Newest", value: "newest" },
+    { label: "Name (A–Z)", value: "name" },
+    { label: "Most Uploads", value: "uploads" },
+  ],
+  actions: [{ type: "view" }, { type: "edit" }, { type: "delete" }, { type: "more" }],
+  columns: [
+    { key: "name", header: "User", cell: (r) => avatar(String(r.name), String(r.email)) },
+    { key: "role", header: "Role", cell: (r) => pill(String(r.role), ROLE_PILL[String(r.role)] ?? "bg-[var(--bg3)] text-[var(--text2)]") },
+    { key: "plan", header: "Plan", cell: (r) => pill(String(r.plan), PLAN_PILL[String(r.plan)] ?? "bg-[var(--bg3)] text-[var(--text2)]") },
+    { key: "status", header: "Status", cell: (r) => <StatusBadge value={String(r.status)} /> },
+    { key: "verified", header: "Verified", cell: (r) => <StatusBadge value={String(r.verified)} /> },
+    { key: "uploads", header: "Uploads" },
+    { key: "joined", header: "Joined" },
+  ],
+  data: [
+    { name: "Admin HalalWalls", email: "admin@halalwalls.com", role: "Admin", plan: "Free", status: "Active", verified: "Verified", uploads: "0", joined: "Jun 29, 2026" },
+    { name: "Ali Idrees", email: "aliidrees7777@gmail.com", role: "Admin", plan: "Premium", status: "Active", verified: "Verified", uploads: "34", joined: "May 2, 2026" },
+    { name: "Alee Mughal", email: "aleeemughal7777@gmail.com", role: "User", plan: "Premium", status: "Active", verified: "Verified", uploads: "18", joined: "Jun 29, 2026" },
+    { name: "Demo User", email: "user@halalwalls.com", role: "User", plan: "Free", status: "Active", verified: "Verified", uploads: "3", joined: "Jun 29, 2026" },
+    { name: "Ahmed Khan", email: "ahmed@email.com", role: "User", plan: "Free", status: "Active", verified: "Unverified", uploads: "12", joined: "May 15, 2026" },
+    { name: "Sara Art", email: "sara@email.com", role: "User", plan: "Premium", status: "Active", verified: "Verified", uploads: "27", joined: "May 14, 2026" },
+    { name: "Tech Lord", email: "techlord@email.com", role: "User", plan: "Free", status: "Deactivated", verified: "Verified", uploads: "9", joined: "Apr 10, 2026" },
+    { name: "Space Explorer", email: "space@email.com", role: "User", plan: "Free", status: "Active", verified: "Unverified", uploads: "5", joined: "May 13, 2026" },
+  ],
+};
+
 /** Sidebar item name → page config. */
 export const ADMIN_PAGES: Record<string, ListPageConfig<Row>> = {
   Ads: ads,
@@ -297,4 +359,5 @@ export const ADMIN_PAGES: Record<string, ListPageConfig<Row>> = {
   Resolutions: resolutions,
   Tags: tags,
   Wallpapers: wallpapers,
+  Users: users,
 };

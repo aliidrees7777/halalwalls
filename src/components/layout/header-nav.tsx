@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useCategories } from "@/hooks/use-catalog";
+import { useCategories, useResolutions } from "@/hooks/use-catalog";
 import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
@@ -165,7 +165,10 @@ export function HeaderNav({ className }: { className?: string }) {
     label: e.label,
     href: buildFilterHref(searchParams, e.update),
   }));
-  const resolutionItems = RESOLUTION_LABELS.map((l) => ({
+  // Live resolution catalog (admin-managed); falls back to the static list.
+  const res = useResolutions();
+  const resLabels = [...(res.desktop ?? []), ...(res.mobile ?? [])];
+  const resolutionItems = (resLabels.length ? resLabels : RESOLUTION_LABELS).map((l) => ({
     label: l,
     href: buildFilterHref(searchParams, { resolution: normalizeResolution(l) }),
   }));

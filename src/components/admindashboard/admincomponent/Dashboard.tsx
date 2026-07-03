@@ -6,17 +6,34 @@ import StatsList from "./StatsList";
 import ChartsRow from "./ChartsRow";
 import RecentUploadsPage from "./RecentUploadsPage";
 import Rightpanel from "./Rightpanel";
+import CategoriesPanel from "./CategoriesPanel";
+import ActivityFeed from "./ActivityFeed";
+import WallpapersPage from "./WallpapersPage";
+import CategoriesManagementPage from "./CategoriesManagementPage";
+import SubscribersPage from "./SubscribersPage";
+import TagsPage from "./TagsPage";
+import ResolutionsPage from "./ResolutionsPage";
+import UsersPage from "./UsersPage";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { ADMIN_PAGES } from "../reusable/adminPages";
+import { RolesPermissions } from "../reusable/RolesPermissions";
 
 const Dashboard = () => {
   const [active, setActive] = useState("Dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const config = ADMIN_PAGES[active];
 
   return (
     <div>
-      <Header />
-      <div id="content" className="ml-60">
+      <Header onMenuClick={() => setSidebarOpen((v) => !v)} />
+      {/* Mobile drawer backdrop */}
+      {sidebarOpen ? (
+        <div
+          className="fixed inset-0 z-[55] bg-black/50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      ) : null}
+      <div id="content" className="lg:ml-60">
         {active === "Dashboard" ? (
           <>
             <div className="pg-hdr ">
@@ -26,7 +43,10 @@ const Dashboard = () => {
                   Welcome back, <em>Admin!</em>
                 </p>
               </div>
-              <button className="view-site">
+              <button
+                className="view-site"
+                onClick={() => window.open("/", "_blank")}
+              >
                 View Site
                 <svg
                   width="12"
@@ -43,12 +63,44 @@ const Dashboard = () => {
               </button>
             </div>
             <StatsList />
-            <ChartsRow />
+            <ChartsRow
+              onViewActivity={() => setActive("Activity")}
+              onViewSubscribers={() => setActive("Subscribers")}
+            />
             <div className="bot-row">
-              <RecentUploadsPage />
-              <Rightpanel />
+              <RecentUploadsPage
+                variant="widget"
+                onViewAll={() => setActive("Moderation")}
+              />
+              <Rightpanel onViewAll={() => setActive("TopCategories")} />
             </div>
           </>
+        ) : active === "Moderation" ? (
+          <RecentUploadsPage
+            variant="full"
+            onBack={() => setActive("Dashboard")}
+          />
+        ) : active === "TopCategories" ? (
+          <CategoriesPanel
+            variant="full"
+            onBack={() => setActive("Dashboard")}
+          />
+        ) : active === "Categories" ? (
+          <CategoriesManagementPage />
+        ) : active === "Subscribers" ? (
+          <SubscribersPage />
+        ) : active === "Tags" ? (
+          <TagsPage />
+        ) : active === "Resolutions" ? (
+          <ResolutionsPage />
+        ) : active === "Users" ? (
+          <UsersPage />
+        ) : active === "Activity" ? (
+          <ActivityFeed onBack={() => setActive("Dashboard")} />
+        ) : active === "Wallpapers" ? (
+          <WallpapersPage />
+        ) : active === "Roles" ? (
+          <RolesPermissions />
         ) : config ? (
           <AdminListPage config={config} />
         ) : (
@@ -58,7 +110,14 @@ const Dashboard = () => {
           </div>
         )}
       </div>
-      <SideBar active={active} onSelect={setActive} />
+      <SideBar
+        active={active}
+        onSelect={(item) => {
+          setActive(item);
+          setSidebarOpen(false);
+        }}
+        open={sidebarOpen}
+      />
     </div>
   );
 };

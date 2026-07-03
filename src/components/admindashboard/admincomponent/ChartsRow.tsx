@@ -1,19 +1,85 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
+import {
+  Image as ImageIcon,
+  Users,
+  DollarSign,
+  CheckCircle,
+  CreditCard,
+} from "lucide-react";
+import { useAdminAnalytics } from "@/hooks/use-admin-analytics";
 
-type Props = {};
+const PLAN_COLORS: Record<string, string> = {
+  monthly: "#05DF8B",
+  yearly: "#02A86A",
+  lifetime: "#1F4D37",
+};
 
-const ChartsRow = (props: Props) => {
+const fmt = (n: number) => n.toLocaleString("en-US");
+
+const fmtDay = (iso: string) => {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+};
+
+const timeAgo = (iso: string) => {
+  const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m} min ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} hour${h > 1 ? "s" : ""} ago`;
+  const d = Math.floor(h / 24);
+  return `${d} day${d > 1 ? "s" : ""} ago`;
+};
+
+// Icon + accent colour per recent-activity type.
+const activityStyle = (type: string) => {
+  switch (type) {
+    case "wallpaper_uploaded":
+      return { color: "#05DF8B", bg: "rgba(5,223,139,.1)", Icon: ImageIcon };
+    case "wallpaper_approved":
+      return { color: "#05DF8B", bg: "rgba(5,223,139,.1)", Icon: CheckCircle };
+    case "user":
+      return { color: "#6366F1", bg: "rgba(99,102,241,.1)", Icon: Users };
+    case "subscription":
+      return { color: "#F59E0B", bg: "rgba(245,158,11,.1)", Icon: CreditCard };
+    default:
+      return { color: "#05DF8B", bg: "rgba(5,223,139,.1)", Icon: DollarSign };
+  }
+};
+
+const RANGE_OPTIONS = [
+  { key: "7d", label: "Last 7 days" },
+  { key: "14d", label: "Last 14 days" },
+  { key: "30d", label: "Last 30 days" },
+  { key: "month", label: "This month" },
+];
+
+const ChartsRow = ({
+  onViewActivity,
+  onViewSubscribers,
+}: {
+  onViewActivity?: () => void;
+  onViewSubscribers?: () => void;
+}) => {
+  const [range, setRange] = useState("14d");
+  const { data } = useAdminAnalytics(range);
   const dlChartRef = useRef<HTMLCanvasElement>(null);
   const donutChartRef = useRef<HTMLCanvasElement>(null);
+
+  const series = data?.trend.series ?? [];
+  const breakdown = data?.subscriptions.breakdown ?? [];
+  const totalSubs = data?.subscriptions.total ?? 0;
+  const activity = data?.recentActivity ?? [];
 
   useEffect(() => {
     let dlChart: Chart | null = null;
     let donutChart: Chart | null = null;
 
-    // Downloads line chart initialization
-    if (dlChartRef.current) {
+    // ── Trend line chart (wallpapers uploaded per day) ──
+    if (dlChartRef.current && series.length) {
       const dlCtx = dlChartRef.current.getContext("2d");
       if (dlCtx) {
         const grad = dlCtx.createLinearGradient(0, 0, 0, 190);
@@ -23,16 +89,11 @@ const ChartsRow = (props: Props) => {
         dlChart = new Chart(dlCtx, {
           type: "line",
           data: {
-            labels: Array.from({ length: 30 }, (_, i) => "May " + (i + 1)),
+            labels: series.map((p) => fmtDay(p.date)),
             datasets: [
               {
-                label: "Downloads",
-                data: [
-                  7200, 8100, 9400, 8800, 11200, 10600, 9800, 10200, 9100, 8600,
-                  9800, 12400, 14200, 16800, 18420, 16200, 14800, 15400, 14000,
-                  13800, 12600, 12000, 11400, 12800, 11200, 12600, 13800, 14200,
-                  15600, 15200,
-                ],
+                label: data?.trend.label ?? "Uploads",
+                data: series.map((p) => p.value),
                 borderColor: "#05DF8B",
                 borderWidth: 2,
                 backgroundColor: grad,
@@ -63,8 +124,8 @@ const ChartsRow = (props: Props) => {
                 padding: 10,
                 cornerRadius: 8,
                 callbacks: {
-                  title: (c: any) => "May " + (c[0].dataIndex + 1) + ", 2025",
-                  label: (c: any) => "Downloads: " + c.raw.toLocaleString(),
+                  label: (c) =>
+                    `${data?.trend.label ?? "Uploads"}: ${c.formattedValue}`,
                 },
               },
             },
@@ -84,11 +145,10 @@ const ChartsRow = (props: Props) => {
                 ticks: {
                   color: "#576468",
                   font: { size: 10 },
-                  callback: (v: any) => (v >= 1000 ? v / 1000 + "K" : v),
+                  precision: 0,
                   maxTicksLimit: 6,
                 },
                 min: 0,
-                max: 25000,
               },
             },
           },
@@ -96,15 +156,18 @@ const ChartsRow = (props: Props) => {
       }
     }
 
-    // Donut chart initialization
-    if (donutChartRef.current) {
+    // ── Subscription-plan donut ──
+    if (donutChartRef.current && breakdown.length) {
       donutChart = new Chart(donutChartRef.current, {
         type: "doughnut",
         data: {
+          labels: breakdown.map((b) => b.plan),
           datasets: [
             {
-              data: [1245, 1782, 615],
-              backgroundColor: ["#05DF8B", "#02A86A", "#1F4D37"],
+              data: breakdown.map((b) => b.count),
+              backgroundColor: breakdown.map(
+                (b) => PLAN_COLORS[b.plan] ?? "#576468"
+              ),
               borderWidth: 0,
               hoverOffset: 5,
             },
@@ -123,10 +186,8 @@ const ChartsRow = (props: Props) => {
               bodyColor: "#F0F4F5",
               cornerRadius: 8,
               callbacks: {
-                label: (c: any) =>
-                  ["Monthly", "Yearly", "Lifetime"][c.dataIndex] +
-                  ": " +
-                  c.raw.toLocaleString(),
+                label: (c) =>
+                  `${c.label.charAt(0).toUpperCase() + c.label.slice(1)}: ${c.formattedValue}`,
               },
             },
           },
@@ -138,7 +199,7 @@ const ChartsRow = (props: Props) => {
       dlChart?.destroy();
       donutChart?.destroy();
     };
-  }, []);
+  }, [series, breakdown, data]);
 
   return (
     <div>
@@ -146,19 +207,18 @@ const ChartsRow = (props: Props) => {
         <div className="card">
           <div className="card-hdr">
             <span className="card-ttl">Downloads Overview</span>
-            <button className="card-btn">
-              This Month{" "}
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-              >
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
+            <select
+              className="card-btn"
+              value={range}
+              onChange={(e) => setRange(e.target.value)}
+              style={{ cursor: "pointer", appearance: "auto" }}
+            >
+              {(data?.trend.options ?? RANGE_OPTIONS).map((o) => (
+                <option key={o.key} value={o.key}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="dl-wrap">
             <canvas ref={dlChartRef} id="dlChart"></canvas>
@@ -168,7 +228,9 @@ const ChartsRow = (props: Props) => {
         <div className="card">
           <div className="card-hdr">
             <span className="card-ttl">Subscription Plans</span>
-            <a className="vlink">View all</a>
+            <a className="vlink" style={{ cursor: "pointer" }} onClick={onViewSubscribers}>
+              View all
+            </a>
           </div>
           <div className="donut-outer">
             <div className="donut-pos">
@@ -179,147 +241,61 @@ const ChartsRow = (props: Props) => {
                 height="148"
               ></canvas>
               <div className="donut-center">
-                <div className="donut-num">3,642</div>
+                <div className="donut-num">{fmt(totalSubs)}</div>
                 <div className="donut-lbl">Total</div>
               </div>
             </div>
-            <div className="leg-row">
-              <div className="leg-l">
-                <div
-                  className="leg-dot"
-                  style={{ background: "#02A86A" }}
-                ></div>
-                Yearly
+            {breakdown.map((b) => (
+              <div className="leg-row" key={b.plan}>
+                <div className="leg-l">
+                  <div
+                    className="leg-dot"
+                    style={{ background: PLAN_COLORS[b.plan] ?? "#576468" }}
+                  ></div>
+                  <span style={{ textTransform: "capitalize" }}>{b.plan}</span>
+                </div>
+                <div className="leg-r">
+                  {fmt(b.count)} &nbsp;
+                  <span style={{ color: "var(--text3)" }}>{b.percent}%</span>
+                </div>
               </div>
-              <div className="leg-r">
-                1,782 &nbsp;<span style={{ color: "var(--text3)" }}>49.0%</span>
-              </div>
-            </div>
-            <div className="leg-row">
-              <div className="leg-l">
-                <div
-                  className="leg-dot"
-                  style={{ background: "#1F4D37" }}
-                ></div>
-                Lifetime
-              </div>
-              <div className="leg-r">
-                615 &nbsp;<span style={{ color: "var(--text3)" }}>16.8%</span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
+
         <div className="card">
           <div className="card-hdr">
             <span className="card-ttl">Recent Activity</span>
           </div>
           <div className="act-list">
-            <div className="act-row">
+            {activity.length === 0 ? (
               <div
-                className="act-ico"
-                style={{ background: "rgba(5,223,139,.1)" }}
+                className="act-desc"
+                style={{ padding: "8px 2px", color: "var(--text3)" }}
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#05DF8B"
-                  stroke-width="2"
-                >
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
+                No recent activity.
               </div>
-              <div className="act-b">
-                <div className="act-title">New wallpaper uploaded</div>
-                <div className="act-desc">Sunset in Tokyo.jpg</div>
-                <div className="act-time">2 min ago</div>
-              </div>
-            </div>
-            <div className="act-row">
-              <div
-                className="act-ico"
-                style={{ background: "rgba(99,102,241,.1)" }}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#6366F1"
-                  stroke-width="2"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-              </div>
-              <div className="act-b">
-                <div className="act-title">New user registered</div>
-                <div className="act-desc">john.doe@email.com</div>
-                <div className="act-time">15 min ago</div>
-              </div>
-            </div>
-            <div className="act-row">
-              <div
-                className="act-ico"
-                style={{ background: "rgba(245,158,11,.1)" }}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#F59E0B"
-                  stroke-width="2"
-                >
-                  <line x1="12" y1="1" x2="12" y2="23" />
-                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-              </div>
-              <div className="act-b">
-                <div className="act-title">New subscription</div>
-                <div className="act-desc">Yearly Plan – $19.99</div>
-                <div className="act-time">32 min ago</div>
-              </div>
-            </div>
-            <div className="act-row">
-              <div
-                className="act-ico"
-                style={{ background: "rgba(5,223,139,.1)" }}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#05DF8B"
-                  stroke-width="2"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              </div>
-              <div className="act-b">
-                <div className="act-title">Wallpaper approved</div>
-                <div className="act-desc">Cyberpunk City 4K</div>
-                <div className="act-time">1 hour ago</div>
-              </div>
-            </div>
-            <div className="act-row">
-              <div
-                className="act-ico"
-                style={{ background: "rgba(239,68,68,.1)" }}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#EF4444"
-                  stroke-width="2"
-                >
-                  <rect x="1" y="4" width="22" height="16" rx="2" />
-                  <line x1="1" y1="10" x2="23" y2="10" />
-                </svg>
-              </div>
-              <div className="act-b">
-                <div className="act-title">Payment received</div>
-                <div className="act-desc">$2.99 from sarah.wilson</div>
-                <div className="act-time">2 hours ago</div>
-              </div>
-            </div>
+            ) : (
+              activity.map((a, i) => {
+                const { color, bg, Icon } = activityStyle(a.type);
+                return (
+                  <div className="act-row" key={i}>
+                    <div className="act-ico" style={{ background: bg }}>
+                      <Icon size={15} style={{ stroke: color, color }} />
+                    </div>
+                    <div className="act-b">
+                      <div className="act-title">{a.title}</div>
+                      <div className="act-desc">{a.subtitle}</div>
+                      <div className="act-time">{timeAgo(a.at)}</div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
-          <button className="see-all">View all activities</button>
+          <button className="see-all" onClick={onViewActivity}>
+            View all activities
+          </button>
         </div>
       </div>
     </div>

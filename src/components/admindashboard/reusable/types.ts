@@ -41,7 +41,14 @@ export interface FilterDef {
   options: { label: string; value: string }[];
 }
 
-export type ActionType = "view" | "edit" | "toggle" | "delete" | "more";
+export type ActionType =
+  | "view"
+  | "edit"
+  | "approve"
+  | "reject"
+  | "toggle"
+  | "delete"
+  | "more";
 
 export interface ActionDef<T = Row> {
   type: ActionType;
@@ -49,6 +56,8 @@ export interface ActionDef<T = Row> {
   onClick?: (row: T) => void;
   /** For `toggle`: decides play (paused→resume) vs pause (active). */
   isActive?: (row: T) => boolean;
+  /** Show this action only for rows where this returns true (e.g. approve on pending). */
+  visible?: (row: T) => boolean;
 }
 
 export interface SortOption {
@@ -59,6 +68,19 @@ export interface SortOption {
 // Rows are arbitrary records — the config's column keys map into them.
 export type Row = Record<string, unknown>;
 
+/** Query the server-side fetcher receives (search/filter/sort/paginate). */
+export interface FetchParams {
+  search: string;
+  filters: Record<string, string>;
+  sort: string;
+  page: number;
+  pageSize: number;
+}
+export interface FetchResult<T = Row> {
+  rows: T[];
+  total: number;
+}
+
 export interface ListPageConfig<T extends Row = Row> {
   title: string;
   breadcrumb: string[];
@@ -67,12 +89,24 @@ export interface ListPageConfig<T extends Row = Row> {
   secondaryAction?: { label: string; icon?: ReactNode; onClick?: () => void };
   /** Show a leading "#" row-number column (Ads/Categories/Resolutions/Tags). */
   showIndex?: boolean;
-  stats: StatCardDef[];
+  /** Static cards (client-side pages). Server pages use `statsFetcher` instead. */
+  stats?: StatCardDef[];
   columns: ColumnDef<T>[];
   filters?: FilterDef[];
   sortOptions?: SortOption[];
   actions?: ActionDef<T>[];
-  data: T[];
+  /** Static rows (client-side pages). Provide `fetcher` for server-side data. */
+  data?: T[];
+  /** Server-side data source — when set, search/filter/sort/paginate hit the API. */
+  fetcher?: (params: FetchParams) => Promise<FetchResult<T>>;
+  /** Server-side stat cards (fetched once). Falls back to `stats` when absent. */
+  statsFetcher?: () => Promise<StatCardDef[]>;
+  /** Loading placeholder text for the table body while fetching. */
+  loadingText?: string;
+  /** Grid view (list/grid toggle): full-width card cover image URL for a row. */
+  gridImage?: (row: T) => string;
+  /** Grid view: which column key is the card's heading (defaults to first column). */
+  gridTitleKey?: string;
   /** Fields the reusable search box matches against. */
   searchKeys?: string[];
   searchPlaceholder?: string;

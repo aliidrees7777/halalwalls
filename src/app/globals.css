@@ -557,7 +557,9 @@ a {
 /* ══ STAT CARDS ══ */
 .stats {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  /* Auto-fit: 5 cards on wide screens, gracefully dropping to 4/3 as the
+     viewport narrows — no hard breakpoints needed above the phone sizes. */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 10px;
   margin-bottom: 14px;
 }
@@ -631,7 +633,21 @@ a {
   grid-template-columns: 1fr 268px 256px;
   gap: 10px;
   margin-bottom: 14px;
-  align-items: start;
+  align-items: stretch; /* equal-height cards — no empty void under the short ones */
+}
+/* Downloads card: let the chart grow to fill the (stretched) card height. */
+.charts-row > .card:first-child {
+  display: flex;
+  flex-direction: column;
+}
+/* Subscription card: center the donut vertically in the stretched height. */
+.charts-row > .card:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
+.charts-row > .card:nth-child(2) .donut-outer {
+  flex: 1;
+  justify-content: center;
 }
 .card {
   background: var(--bg2);
@@ -670,9 +686,11 @@ a {
   background: var(--bg4);
   color: var(--text);
 }
-/* Line chart */
+/* Line chart — fills the card; grows when the row stretches taller. */
 .dl-wrap {
-  height: 190px;
+  height: auto;
+  min-height: 200px;
+  flex: 1;
   position: relative;
 }
 /* Donut */
@@ -737,6 +755,8 @@ a {
 .act-list {
   display: flex;
   flex-direction: column;
+  max-height: 320px;
+  overflow-y: auto;
 }
 .act-row {
   display: flex;
@@ -1209,40 +1229,37 @@ td {
 }
 
 /* Responsive */
-@media (max-width: 1350px) {
-  .stats {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 @media (max-width: 1200px) {
+  /* Downloads chart spans the full width; donut + activity share the row below.
+     Nothing is hidden — panels reflow instead. */
   .charts-row {
-    grid-template-columns: 1fr 256px;
+    grid-template-columns: 1fr 1fr;
   }
-  .charts-row > div:last-child {
-    display: none;
+  .charts-row > .card:first-child {
+    grid-column: 1 / -1;
   }
 }
 @media (max-width: 960px) {
+  /* Recent Uploads stacks over Top Categories (both stay visible). */
   .bot-row {
     grid-template-columns: 1fr;
   }
-  .rpanel {
-    display: none;
-  }
-}
-@media (max-width: 860px) {
-  .charts-row {
-    grid-template-columns: 1fr;
-  }
-  .charts-row > div:nth-child(2) {
-    display: none;
-  }
 }
 @media (max-width: 700px) {
-  #sb {
-    display: none;
+  /* Sidebar becomes an off-canvas drawer (handled in React), so it is NOT
+     hidden here — it is translated off-screen until the hamburger opens it. */
+  .charts-row {
+    grid-template-columns: 1fr; /* stack all three cards */
+  }
+  .charts-row > .card:first-child {
+    grid-column: auto;
   }
   .stats {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .stats {
+    grid-template-columns: 1fr;
   }
 }

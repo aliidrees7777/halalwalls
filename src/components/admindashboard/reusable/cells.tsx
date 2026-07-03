@@ -6,6 +6,8 @@ import {
   Play,
   Trash2,
   MoreVertical,
+  Check,
+  X,
 } from "lucide-react";
 import type { ActionDef, Row } from "./types";
 
@@ -17,6 +19,9 @@ const STATUS_STYLES: Record<string, { text: string; bg: string }> = {
   pending: { text: "var(--warning)", bg: "rgba(245,158,11,0.10)" },
   rejected: { text: "var(--danger)", bg: "rgba(239,68,68,0.10)" },
   inactive: { text: "var(--text2)", bg: "rgba(142,155,160,0.10)" },
+  verified: { text: "var(--brand)", bg: "rgba(5,223,139,0.10)" },
+  unverified: { text: "var(--warning)", bg: "rgba(245,158,11,0.10)" },
+  deactivated: { text: "var(--text2)", bg: "rgba(142,155,160,0.10)" },
 };
 
 export function StatusBadge({ value }: { value: string }) {
@@ -42,15 +47,22 @@ export function RowActions<T extends Row>({
 }) {
   const box =
     "grid size-[28px] place-items-center rounded-[6px] border transition-colors";
+  const shown = actions.filter((a) => (a.visible ? a.visible(row) : true));
   return (
     <div className="flex items-center justify-end gap-[5px]">
-      {actions.map((a, i) => {
+      {shown.map((a, i) => {
         const active = a.isActive ? a.isActive(row) : true;
         let cls = "";
         let icon = null;
         if (a.type === "view") {
           cls = `${box} border-[var(--border2)] bg-[var(--bg3)] text-[var(--text2)] hover:bg-[var(--bg4)] hover:text-[var(--text)]`;
           icon = <Eye size={13} />;
+        } else if (a.type === "approve") {
+          cls = `${box} border-[rgba(5,223,139,0.25)] bg-[rgba(5,223,139,0.10)] text-[var(--brand)] hover:bg-[var(--brand)] hover:text-black`;
+          icon = <Check size={13} />;
+        } else if (a.type === "reject") {
+          cls = `${box} border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.08)] text-[var(--danger)] hover:bg-[var(--danger)] hover:text-white`;
+          icon = <X size={13} />;
         } else if (a.type === "edit") {
           cls = `${box} border-[var(--border2)] bg-[var(--bg3)] text-[var(--text2)] hover:bg-[var(--bg4)] hover:text-[var(--text)]`;
           icon = <Pencil size={13} />;
