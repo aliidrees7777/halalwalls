@@ -41,11 +41,11 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
   };
 
   return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-[14px]">
       <Button
         type="button"
         onClick={() => handleDownload("primary", wallpaper.preferredResolution)}
-        className="lg:h-10 py-2 flex-1 rounded-md border-2 border-hw-line bg-hw-deep px-4 text-[17px] font-medium text-hw-down-text shadow-none transition-colors  hover:bg-hw-pill2-hover sm:min-w-[240px] sm:flex-[1.4]"
+        className="h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-colors hover:bg-hw-pill2-hover sm:w-auto"
       >
         {primaryDone ? (
           <Check className="mr-2 size-4 text-hw-green" />
@@ -65,7 +65,7 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
         onClick={() =>
           handleDownload("original", wallpaper.originalResolution)
         }
-        className="lg:h-10 py-2 flex-1 rounded-md border-2 border-hw-line bg-hw-deep px-4 text-[17px] font-medium text-hw-down-text shadow-none transition-colors hover:border-hw-muted hover:bg-hw-pill2 sm:min-w-[290px]"
+        className="h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-colors hover:border-hw-muted hover:bg-hw-pill2 sm:w-auto"
       >
         {originalDone ? (
           <Check className="mr-2 size-4 text-hw-green" />
@@ -85,7 +85,7 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
           variant="outline"
           onClick={toggleFav}
           className={cn(
-            "lg:h-10 py-5 w-full rounded-md border-2 text-hw-down-text border-hw-line bg-hw-deep px-6 text-[17px] font-medium shadow-none transition-colors sm:w-auto",
+            "h-[42.67px] w-full rounded-[8px] border-2 text-hw-down-text border-hw-line bg-hw-deep px-[17.78px] text-[17px] font-medium shadow-none transition-colors sm:w-auto",
             favorited && "border-red-500/40 text-red-400"
           )}
         >

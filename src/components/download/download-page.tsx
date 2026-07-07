@@ -26,23 +26,19 @@ export function DownloadPageClient({ wallpaper, related }: DownloadPageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4 }}
-        className="mx-auto max-w-[1650px] px-4 py-6 lg:px-6 lg:py-8"
+        className="lp-container pt-10 pb-14"
       >
-        <header className="mb-6 text-center">
-          <h1 className="text-xl font-bold leading-tight text-hw-foreground sm:text-2xl lg:text-[26px]">
+        <header className="text-center">
+          <h1 className="text-[22px] font-bold leading-tight text-hw-foreground sm:text-[28px] lg:text-[34.87px]">
             {wallpaper.title}
           </h1>
-          <div className="mt-3 flex justify-center w-full">
+          <div className="mt-[6px] flex w-full justify-center">
             <DownloadBreadcrumbs wallpaper={wallpaper} />
           </div>
         </header>
 
-        <div className="flex flex-col gap-4 xl:flex-row xl:gap-5">
-          {/* <DownloadSidebarLeft
-            activeCategory={wallpaper.category}
-            tags={wallpaper.tags}
-          /> */}
-<HomeSidebar/>
+        <div className="mt-[46px] flex flex-col gap-[var(--lp-sidebar-gap)] xl:flex-row xl:gap-[var(--lp-main-gap)]">
+          <HomeSidebar tags={wallpaper.tags} activeCategory={wallpaper.category} />
           <DownloadMain wallpaper={wallpaper} />
 
           <DownloadSidebarRight related={related} />

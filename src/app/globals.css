@@ -5,6 +5,12 @@
 /* Class-based dark mode (next-themes toggles `.dark` on <html>) */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Tailwind v4 has no built-in 3px border scale; define it so `border-3`
+   (used by the header accent line, premium modal, profile banner) renders. */
+@utility border-3 {
+  border-width: 3px;
+}
+
 @theme inline {
   --color-hw-bg: var(--hw-bg);
   --color-hw-header: var(--hw-header);
@@ -117,17 +123,82 @@
   color-scheme: light;
   --font-primary: "Lexend Deca", sans-serif;
   --font-secondary: "Inter", "Inter Fallback";
+
+  /*
+   * Landing page layout tokens — from landing-page.css @ 2560px, scaled ×0.75 → 1920px.
+   */
+  --lp-content-max: 1649.78px;
+  /* Side gutters: 135.11px each at 1920 (→ 1649.78 centered content),
+     shrinking proportionally on smaller viewports, min 1rem. */
+  --lp-gutter: clamp(1rem, 7.04vw, 135.11px);
+  --lp-sidebar-w: 276px;
+  --lp-main-w: 1356.44px;
+  --lp-main-gap: 17.33px;
+  --lp-sidebar-gap: 17.78px;
+  --lp-mid-pt: 67px;
+  --lp-grid-gap: 3.56px;
+  --lp-grid-to-pagination: 39.11px;
+  --lp-search-max: 791px;
+  --lp-search-h: 42.67px;
+  --lp-search-radius: 7.11px;
+  /* Search band — landing-page.css upper section / Rectangle 2 @ 1920px */
+  --lp-search-band-h: 247.11px;
+  --lp-search-pt: 37.85px; /* search top (101.85) − header (64) */
+  --lp-search-gap: 23.11px; /* pills top (167.63) − search bottom (144.52) */
+  --lp-search-band-pb: 39.11px; /* green tail below pills inside full 247px band */
+  /* Sidebar panels — 1:1 from Figma 1920px */
+  --lp-panel-border: 1.78px;
+  --lp-panel-radius: 3.56px;
+  --lp-panel-divider: 1.78px;
+  --lp-panel-divider-thin: 0.89px;
+  --lp-panel-title: 17.78px;
+  --lp-panel-label: 14.23px;
+  --lp-panel-item: 14.23px;
+  --lp-chip-h: 30.3px;
+  --lp-chip-radius: 3.24px;
+  --lp-chip-border: 0.93px;
+  --lp-chip-gap: 6px;
+  --lp-chip-font: 12.97px;
+  --lp-play-btn-h: 60.43px;
+  --lp-play-btn-radius: 7.11px;
+  --lp-qr-size: 142.45px;
+  /* Filter "tiles" — 1:1 from Figma SVG export */
+  --lp-pill-h: 42.67px;
+  --lp-pill-px: 17.78px;
+  --lp-pill-py: 10.67px;
+  --lp-pill-gap: 8.89px;
+  --lp-pill-icon-gap: 7.11px;
+  --lp-pill-radius: 10.67px;
+  --lp-pill-font: 19.56px;
+  --lp-pill-icon: 21.33px;
+  --lp-card-radius: 3.56px;
+  --lp-card-border: 1.78px;
+  /* Pagination bar — 1:1 from Figma SVG export */
+  --lp-pagination-h: 53.41px;
+  --lp-pagination-gap: 7.11px;
+  --lp-pagination-w: 53.33px;
+  --lp-pagination-radius: 3.54px;
+  --lp-pagination-px: 17.78px;
+  --lp-pagination-font: 24.89px;
+  --lp-pagination-next-w: 112px;
+  --lp-footer-border: 3px;
+  /* Rounded header bar (curved corners + green bottom accent) */
+  --lp-header-h: 64px;
+  --lp-header-radius: 12px;
+  --lp-header-inset-x: 2px;
+  --lp-header-inset-top: 0px;
+  --lp-header-accent: 3px;
 }
 
 /* DARK theme */
 .dark {
   --hw-bg: #1d2021;
   --hw-header: #181a1b;
-  --hw-search-header: #1a2421;
+  --hw-search-header: rgba(5, 221, 138, 0.05);
   --hw-ground: #121212;
   --hw-search-input: #121212;
   --hw-pill: #181a1b;
-  --hw-sidebar: #121212;
+  --hw-sidebar: #181a1b;
   --hw-green: #05df8b;
   --hw-yellow: #ffd700;
   --hw-foreground: #a8a299;
@@ -165,6 +236,17 @@
   font-family: var(--font-secondary);
 }
 
+/* Landing page shell — content width from landing-page.css (1920 viewport)
+   with responsive side gutters. Padding lives inside max-width (border-box),
+   so at 1920 the content is exactly --lp-content-max with --lp-gutter on
+   each side, and on narrower screens it never touches the edges. */
+.lp-container {
+  width: 100%;
+  max-width: calc(var(--lp-content-max) + 2 * var(--lp-gutter));
+  margin-inline: auto;
+  padding-inline: var(--lp-gutter);
+}
+
 @layer base {
   * {
     @apply border-hw-border outline-hw-green/50;
@@ -195,27 +277,47 @@
   }
 }
 
-button {
-  cursor: pointer;
-  border: none;
-  background: none;
-  font-family: inherit;
-  color: inherit;
+@layer base {
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+    color: inherit;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
-a {
-  color: inherit;
-  text-decoration: none;
-}
-::-webkit-scrollbar {
+.admin-panel ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
 }
-::-webkit-scrollbar-track {
+.admin-panel ::-webkit-scrollbar-track {
   background: transparent;
 }
-::-webkit-scrollbar-thumb {
+.admin-panel ::-webkit-scrollbar-thumb {
   background: var(--bg4);
   border-radius: 2px;
+}
+
+/* Horizontally scrolling filter pills — fixed height so a reserved scrollbar
+   gutter can never grow the search band below the tiles. */
+.pills-scroll {
+  display: flex;
+  align-items: center;
+  gap: var(--lp-pill-gap);
+  height: var(--lp-pill-h);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.pills-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 #sb {

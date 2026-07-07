@@ -15,19 +15,21 @@ export function HeaderAuth({ className }: { className?: string }) {
 
   // Avoid a flash of "Sign In" before the session hydrates.
   if (loading) {
-    return <div className={cn("h-9 w-[84px]", className)} aria-hidden />;
+    return <div className={cn("h-[40.89px] w-[90.44px]", className)} aria-hidden />;
   }
 
   if (!isAuthenticated || !user) {
     return (
-<button
-  onClick={() => openAuthModal("signin")} // "signin" view ke liye
-  className={cn(
-    "rounded-[10px] w-[60px] h-[50px] lg:w-[110px] lg:h-[55px] lg:px-6 lg:py-4 text-[12px] lg:text-[18px] font-medium text-white transition-colors bg-hw-surface",
-  )}
->
-  Sign In
-</button>
+      <button
+        type="button"
+        onClick={() => openAuthModal("signin")}
+        className={cn(
+          "inline-flex h-[40.89px] w-[90.44px] shrink-0 items-center justify-center rounded-[9.24px] bg-black text-[14px] font-medium text-white/90 transition-colors hover:bg-black/90",
+          className,
+        )}
+      >
+        Sign In
+      </button>
     );
   }
 

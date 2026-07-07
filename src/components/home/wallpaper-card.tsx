@@ -24,10 +24,10 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
       <div className="relative overflow-hidden bg-hw-card">
         <Link
           href={`/wallpaper/${wallpaper.slug}`}
-          className="relative block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50 border-2 border-[#3A3E41] rounded-sm"
+          className="relative block w-full rounded-[var(--lp-card-radius)] border-[length:var(--lp-card-border)] border-hw-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50"
           aria-label={`View ${wallpaper.title}`}
         >
-          <div className="relative aspect-[9/16] w-full sm:aspect-[16/10]  ">
+          <div className="relative aspect-[449/254] w-full sm:aspect-[449/254]">
             <Image
               src={wallpaper.image}
               alt={wallpaper.title}

@@ -25,10 +25,12 @@ export function SiteHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-hw-header">
-      <div className="mx-auto flex h-[70px] max-w-[1650px] items-center gap-4 px-4 lg:px-6">
-        {/* {dark ? ():()} */}
-        <HalalWallsLogo className="shrink-0" />
+    <header className="sticky top-0 z-50 bg-hw-bg">
+      <div className="px-[var(--lp-header-inset-x)] pt-[var(--lp-header-inset-top)]">
+        <div className="overflow-hidden rounded-[var(--lp-header-radius)] border-b-[length:var(--lp-header-accent)] border-hw-green bg-hw-header">
+          <div className="lp-container flex h-[var(--lp-header-h)] items-center gap-4">
+            {/* {dark ? ():()} */}
+            <HalalWallsLogo className="shrink-0" />
 
         {pathname !== "/" && ( 
           <div className=" ml-25 hidden  flex-1 md:block lg:max-w-[337px] ">
@@ -75,10 +77,11 @@ export function SiteHeader() {
               <Menu className="size-[26px]" />
             )}
           </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="border-3 border-hw-green" aria-hidden />
       <AnimatePresence initial={false}>
         {open && (
           <motion.div

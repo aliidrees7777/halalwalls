@@ -52,8 +52,8 @@ function TikTokIcon({ className }: { className?: string }) {
 
 export function SiteFooter() {
   return (
-    <footer className="bg-hw-footer px-4 py-12 lg:px-6 border-t-2 border-hw-border">
-      <div className="mx-auto flex md:max-w-[1400px] max-w-[410px] flex-col items-center gap-6">
+    <footer className="border-t-[var(--lp-footer-border)] border-hw-line bg-hw-footer px-4 py-8 lg:px-0">
+      <div className="lp-container flex flex-col items-center gap-4">
         <nav
           className="flex flex-wrap items-center justify-center gap-x-1 gap-y-2 text-center  text-hw-muted"
           aria-label="Footer"
@@ -67,7 +67,7 @@ export function SiteFooter() {
               )}
               <Link
                 href={link.href}
-                className="transition-colors hover:text-hw-foreground md:text-base text-[15px] font-medium"
+                className="text-[12px] font-medium text-hw-foreground transition-colors hover:text-white"
               >
                 {link.label}
               </Link>
@@ -105,7 +105,7 @@ export function SiteFooter() {
           <Image src={insta} alt="playstore" />
           <Image src={ncn} alt="playstore" />
         </div>
-        <p className="text-center md:text-base text-[14px] font-medium text-hw-foreground">
+        <p className="text-center text-[12px] font-medium text-hw-foreground">
           © 2026 HalalWalls.com
         </p>
       </div>

@@ -13,8 +13,8 @@ interface RelatedWallpapersProps {
 export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
   if (items.length === 0) {
     return (
-      <SidebarPanel title="Related Wallpapers">
-        <p className="py-6 text-center text-[13px] text-hw-muted">
+      <SidebarPanel title="Related Content">
+        <p className="py-6 text-center text-[length:var(--lp-panel-item)] text-hw-muted">
           No related wallpapers yet.
         </p>
       </SidebarPanel>
@@ -22,10 +22,8 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
   }
 
   return (
-    <div className="lg:max-w-[360px] ">
-      <h1 className="text-center border border-hw-line py-4 text-[17px] font-bold">Related Content</h1>
-      {/* 2-col grid on mobile/tablet (matches Figma); single column in the narrow desktop sidebar */}
-      <ul className="grid grid-cols-2 gap-1 xl:grid-cols-1">
+    <SidebarPanel title="Related Content">
+      <ul className="grid grid-cols-2 gap-[var(--lp-grid-gap)] lg:grid-cols-1">
         {items.map((wallpaper, index) => (
           <motion.li
             key={wallpaper.id}
@@ -35,21 +33,19 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
           >
             <Link
               href={`/wallpaper/${wallpaper.slug}`}
-              className="group relative block overflow-hidden  border border-hw-line bg-hw-deep lg:h-[236px] rounded-[3px]"
+              className="group relative block h-[236px] overflow-hidden rounded-[var(--lp-card-radius)] border-[length:var(--lp-card-border)] border-hw-line bg-hw-deep"
             >
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
-                className="relative aspect-[16/10] w-full xl:h-[236px] "
+                className="relative h-full w-full"
               >
                 <Image
                   src={wallpaper.image}
                   alt={wallpaper.title}
                   fill
-                  className="object-cover transition-opacity duration-300 group-hover:opacity-90 "
-                 
+                  className="object-cover transition-opacity duration-300 group-hover:opacity-90"
                 />
-                {/* <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" /> */}
                 <p className="absolute bottom-2 left-2 right-2 truncate text-[11px] font-medium text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   {wallpaper.title}
                 </p>
@@ -58,6 +54,6 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
           </motion.li>
         ))}
       </ul>
-    </div>
+    </SidebarPanel>
   );
 }

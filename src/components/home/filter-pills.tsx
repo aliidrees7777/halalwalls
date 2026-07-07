@@ -13,8 +13,6 @@ import lightrocket from "../../../public/cate-icon/lightrocket.svg";
 import playdark from "../../../public/cate-icon/playdark.svg";
 import populardark from "../../../public/cate-icon/populardark.svg";
 import randomdark from "../../../public/cate-icon/randomdark.svg";
-import { useAuth } from "@/context/auth-context";
-
 /**
  * Homepage filter row: the 4 browse modes (Latest / Live / Random / Popular)
  * followed by TAG pills (tags users assign to wallpapers at upload).
@@ -26,14 +24,13 @@ import { useAuth } from "@/context/auth-context";
 
 const pillClass = (active: boolean) =>
   cn(
-    "flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-[11px] lg:text-[19px] text-[15px]  lg:font-medium font-semibold text-white ",
+    "flex h-[var(--lp-pill-h)] shrink-0 items-center gap-[var(--lp-pill-icon-gap)] rounded-[var(--lp-pill-radius)] px-[var(--lp-pill-px)] text-[length:var(--lp-pill-font)] leading-none",
     active
-      ? "bg-hw-green font-semibold  lg:text-[19px] text-[15px]"
-      : "bg-hw-pill text-hw-depw hover:bg-hw-pill2-hover",
+      ? "bg-hw-green font-semibold text-black"
+      : "bg-hw-pill font-medium text-white hover:bg-hw-pill2-hover",
   );
 
 export function FilterPills() {
-  const { isLight } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const tags = useTags();
@@ -78,7 +75,7 @@ export function FilterPills() {
 
   return (
     <div
-      className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden "
+      className="pills-scroll"
       role="tablist"
       aria-label="Wallpaper filters"
     >
@@ -98,11 +95,14 @@ export function FilterPills() {
             {/* <Icon className="size-3.5" /> */}
             {"icon" in mode && (
               <Image
-                src={isActive ? mode.icon : isLight ? mode.darkIcon : mode.icon}
+                src={mode.icon}
                 alt={mode.label}
                 width={22}
                 height={22}
-                className="lg:w-[22px] lg:h-[22px] w-[17px] h-[17px]"
+                className={cn(
+                  "w-[var(--lp-pill-icon)] h-[var(--lp-pill-icon)]",
+                  isActive ? "brightness-0" : "brightness-0 invert",
+                )}
               />
             )}
           </button>
