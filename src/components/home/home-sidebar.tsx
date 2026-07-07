@@ -63,7 +63,15 @@ function CategoryBadge({
 
 const CATEGORIES_PER_PAGE = 20;
 
-export function HomeSidebar() {
+interface HomeSidebarProps {
+  /** When provided, the third panel renders these wallpaper tags ("Tags #")
+   *  instead of the "Trending" list (wallpaper detail page variant). */
+  tags?: string[];
+  /** Slug of the category to highlight as active (wallpaper detail page). */
+  activeCategory?: string;
+}
+
+export function HomeSidebar({ tags, activeCategory }: HomeSidebarProps = {}) {
   const [qrOpen, setQrOpen] = useState(true);
   const [catPage, setCatPage] = useState(0);
   const { categories, loading } = useCategories();
@@ -204,23 +212,43 @@ export function HomeSidebar() {
         </div>
       </SidebarPanel>
 
-      <SidebarPanel title="Trending" icon={TrendingUp}>
-        <ul>
-          {trendingTopics.map((topic, index) => (
-            <li
-              key={topic}
-              className={cn(index > 0 && "border-t-[length:var(--lp-panel-divider-thin)] border-hw-line")}
-            >
-              <Link
-                href={`/?q=${encodeURIComponent(topic)}`}
-                className="block px-[11px] py-[11px] text-[length:var(--lp-panel-item)] font-medium leading-[17px] text-hw-foreground transition-colors hover:text-hw-green"
+      {tags ? (
+        <SidebarPanel title="Tags #">
+          <ul>
+            {tags.map((tag, index) => (
+              <li
+                key={tag}
+                className={cn(index > 0 && "border-t-[length:var(--lp-panel-divider-thin)] border-hw-line")}
               >
-                {topic}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </SidebarPanel>
+                <Link
+                  href={`/?q=${encodeURIComponent(tag)}`}
+                  className="block px-[11px] py-[11px] text-[length:var(--lp-panel-item)] font-medium leading-[17px] text-hw-foreground transition-colors hover:text-hw-green"
+                >
+                  {tag}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </SidebarPanel>
+      ) : (
+        <SidebarPanel title="Trending" icon={TrendingUp}>
+          <ul>
+            {trendingTopics.map((topic, index) => (
+              <li
+                key={topic}
+                className={cn(index > 0 && "border-t-[length:var(--lp-panel-divider-thin)] border-hw-line")}
+              >
+                <Link
+                  href={`/?q=${encodeURIComponent(topic)}`}
+                  className="block px-[11px] py-[11px] text-[length:var(--lp-panel-item)] font-medium leading-[17px] text-hw-foreground transition-colors hover:text-hw-green"
+                >
+                  {topic}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </SidebarPanel>
+      )}
       <SidebarPanel title="Categories" icon={LayoutGrid}>
 
         <SidebarCollapsible
@@ -241,7 +269,12 @@ export function HomeSidebar() {
                       href={buildFilterHref(searchParams, {
                         category: category.slug,
                       })}
-                      className="flex items-center justify-between gap-2 px-[10px] py-[11px]"
+                      className={cn(
+                        "flex items-center justify-between gap-2 px-[10px] py-[11px]",
+                        activeCategory &&
+                          category.slug === activeCategory &&
+                          "bg-hw-down",
+                      )}
                     >
                       <span
                         className={cn(

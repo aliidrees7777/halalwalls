@@ -30,7 +30,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
   };
 
   return (
-    <div className="min-w-0 flex-1 max-w-[900px]">
+    <div className="min-w-0 flex-1 xl:max-w-[921px]">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -70,11 +70,11 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
       <div className=" flex flex-wrap items-center ">
 
         <Image src={link} alt="link" className="mr-2"/>
-        {wallpaper.tagSlugs.map((slug, index) => (
+        {wallpaper.tagSlugs.map((slug) => (
           <Link
             key={slug}
             href="/"
-            className="text-[19px]  text-hw-muted font-medium underline decoration-hw-muted/40 underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
+            className="text-[19px] font-medium text-hw-foreground underline decoration-hw-foreground/50 underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
           >
             {slug},
           </Link>

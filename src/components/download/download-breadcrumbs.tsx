@@ -11,7 +11,7 @@ export function DownloadBreadcrumbs({ wallpaper }: DownloadBreadcrumbsProps) {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="inline-flex h-[46px] w-full items-center justify-center gap-1.5   bg-hw-pill px-3 py-1.5 text-[12px] text-hw-muted"
+      className="flex h-[46px] w-full items-center justify-center gap-1.5 bg-hw-pill px-3 py-1.5 text-[12px] text-hw-muted"
     >
       <Link
         href="/"
