@@ -2,7 +2,6 @@
 
 import { useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,6 +14,8 @@ interface SidebarCollapsibleProps {
   defaultOpen?: boolean;
   scroll?: boolean;
   maxHeightClass?: string;
+  labelClassName?: string;
+  contentClassName?: string;
   children: ReactNode;
 }
 
@@ -23,6 +24,8 @@ export function SidebarCollapsible({
   defaultOpen = false,
   scroll = false,
   maxHeightClass = "max-h-[320px]",
+  labelClassName,
+  contentClassName = "pt-3",
   children,
 }: SidebarCollapsibleProps) {
   const [open, setOpen] = useState(defaultOpen);
@@ -33,17 +36,20 @@ export function SidebarCollapsible({
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex h-13 w-full items-center justify-between  border-t border-hw-line border-b border-hw-line ext-[18px] font-bold text-hw-muted transition-colors hover:text-hw-foreground h-2.5"
+        className={cn(
+          "flex h-[39px] w-full items-center justify-between border-y-[length:var(--lp-panel-divider-thin)] border-hw-line text-[length:var(--lp-panel-label)] font-medium text-hw-foreground transition-colors hover:text-hw-green",
+          labelClassName,
+        )}
       >
-        <span className="pl-4 ">{label}</span>
+        <span className="pl-4">{label}</span>
         <svg
-          width="11"
-          height="7"
+          width="12.45"
+          height="7.11"
           viewBox="0 0 11 7"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className={cn(
-            "mr-3 transition-transform duration-200",
+            "mr-[10px] transition-transform duration-200",
             open || "rotate-180",
           )}
         >
@@ -66,7 +72,7 @@ export function SidebarCollapsible({
           >
             <div
               className={cn(
-                "pt-3",
+                contentClassName,
                 scroll &&
                   cn(
                     "overflow-y-auto pr-1",

@@ -6,7 +6,14 @@ interface WallpaperPaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  /** Show Figma placeholder layout when real data has too few pages (design preview). */
+  preview?: boolean;
 }
+
+/** Matches the Figma SVG export: 1–9, ellipsis, 10, with page 1 active. */
+const PREVIEW_PAGES: (number | "gap")[] = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, "gap", 100,
+];
 
 const WINDOW = 7;
 
@@ -37,33 +44,40 @@ export function WallpaperPagination({
   currentPage,
   totalPages,
   onPageChange,
+  preview = false,
 }: WallpaperPaginationProps) {
-  if (totalPages <= 1) return null;
+  if (!preview && totalPages <= 1) return null;
 
-  const pages = buildPages(currentPage, totalPages);
+  const pages = preview ? PREVIEW_PAGES : buildPages(currentPage, totalPages);
+  const activePage = preview ? 1 : currentPage;
+  const lastPage = preview ? 100 : totalPages;
 
   return (
     <nav
-      className="flex flex-wrap items-center justify-center gap-1 py-10"
+      className="flex flex-wrap items-center justify-center gap-[var(--lp-pagination-gap)] pt-[var(--lp-grid-to-pagination)]"
       aria-label="Pagination"
     >
       {pages.map((page, index) =>
         page === "gap" ? (
-          <span key={`gap-${index}`} className="px-1 text-hw-muted">
+          <span
+            key={`gap-${index}`}
+            className="flex h-[var(--lp-pagination-h)] min-w-[var(--lp-pagination-w)] items-center justify-center rounded-[var(--lp-pagination-radius)] bg-hw-bg text-[length:var(--lp-pagination-font)] font-medium text-white"
+          >
             ...
           </span>
         ) : (
           <button
             key={page}
             type="button"
-            onClick={() => onPageChange(page)}
+            onClick={() => !preview && onPageChange(page)}
             className={cn(
-              "flex lg:w-[54px] lg:h-[53px]  w-[32px]  h-[32px] items-center justify-center rounded-sm lg:text-2xl text-base font-medium transition-colors",
-              currentPage === page
+              "flex h-[var(--lp-pagination-h)] min-w-[var(--lp-pagination-w)] items-center justify-center rounded-[var(--lp-pagination-radius)] px-[var(--lp-pagination-px)] text-[length:var(--lp-pagination-font)] leading-none transition-colors",
+              activePage === page
                 ? "bg-[#33373A] font-semibold text-white"
-                : "bg-[#191a1c] text-[#ffffff] hover:bg-hw-surface hover:text-hw-foreground"
+                : "bg-[#222426] font-medium text-white hover:bg-[#33373A]",
+              preview && "cursor-default",
             )}
-            aria-current={currentPage === page ? "page" : undefined}
+            aria-current={activePage === page ? "page" : undefined}
           >
             {page}
           </button>
@@ -71,9 +85,14 @@ export function WallpaperPagination({
       )}
       <button
         type="button"
-        onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
-        disabled={currentPage >= totalPages}
-        className="ml-1 rounded-sm bg-[#191a1c] lg:w-[112px]  lg:h-[54px] h-[32px] w-[73px] lg:text-2xl text-base font-medium text-[#ffffff] transition-colors hover:bg-hw-surface hover:text-hw-foreground disabled:cursor-not-allowed disabled:opacity-50"
+        onClick={() =>
+          !preview && onPageChange(Math.min(activePage + 1, lastPage))
+        }
+        disabled={!preview && activePage >= lastPage}
+        className={cn(
+          "h-[var(--lp-pagination-h)] w-[var(--lp-pagination-next-w)] rounded-[var(--lp-pagination-radius)] bg-[#222426] text-[length:var(--lp-pagination-font)] font-medium leading-none text-white transition-colors hover:bg-[#33373A] disabled:cursor-not-allowed disabled:opacity-50",
+          preview && "cursor-default",
+        )}
       >
         Next »
       </button>

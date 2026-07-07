@@ -1,7 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-import download from "../../../public/download.svg"
+
 interface SidebarPanelProps {
   title: string;
   icon?: LucideIcon;
@@ -18,14 +17,23 @@ export function SidebarPanel({
   return (
     <section
       className={cn(
-        "rounded-sm border-2 border-hw-line bg-hw-sidebar py-4",
-        className
+        "overflow-hidden rounded-[var(--lp-panel-radius)] border-[length:var(--lp-panel-border)] border-hw-line bg-hw-sidebar",
+        className,
       )}
     >
-      <h2 className="mb-3 flex items-center justify-center  gap-1.5 text-[18px] font-bold text-hw-muted">
+      <h2 className="flex h-[49.7px] items-center justify-center gap-[5.33px] text-[length:var(--lp-panel-title)] font-bold leading-[22px] text-hw-foreground">
         {title}
-        {Icon && <Icon className="size-3.5 text-hw-muted" strokeWidth={4} />}
+        {Icon && (
+          <Icon
+            className="size-[17.78px] text-hw-foreground"
+            strokeWidth={2.5}
+          />
+        )}
       </h2>
+      <div
+        className="border-b-[length:var(--lp-panel-divider)] border-hw-line"
+        aria-hidden
+      />
       {children}
     </section>
   );

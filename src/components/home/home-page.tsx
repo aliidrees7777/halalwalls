@@ -9,7 +9,6 @@ import { FilterPills } from "@/components/home/filter-pills";
 import { HomeSidebar } from "@/components/home/home-sidebar";
 import { WallpaperGrid } from "@/components/home/wallpaper-grid";
 import { WallpaperPagination } from "@/components/home/wallpaper-pagination";
-import { WallpaperStats } from "@/components/home/wallpaper-stats";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { api } from "@/lib/api";
 import type { Wallpaper } from "@/types/wallpaper";
@@ -95,26 +94,27 @@ export function HomePage() {
 
       <section
         style={{ background: "var(--hw-search-header)" }}
-        className=" px-4 py-7 lg:px-6"
+        className="h-fit px-0 pt-[var(--lp-search-pt)] pb-0"
       >
-        <div className="mx-auto max-w-[1600px]">
+        <div className="lp-container">
           <WallpaperSearch value={search} onChange={setSearch} />
-          <div className="mt-4">
+          <div className="mt-[var(--lp-search-gap)] pb-10">
             <FilterPills />
           </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1650px] px-4 py-7 lg:px-6 bg-hw-bg">
-        <div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
+      <div className="lp-container bg-hw-bg pt-[var(--lp-mid-pt)]">
+        <div className="flex flex-col gap-[var(--lp-sidebar-gap)] lg:flex-row lg:gap-[var(--lp-main-gap)]">
           <HomeSidebar />
 
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1 lg:max-w-[var(--lp-main-w)]">
             <WallpaperGrid wallpapers={wallpapers} isLoading={isLoading} />
             <WallpaperPagination
               currentPage={currentPage}
               totalPages={pagination?.totalPages ?? 1}
               onPageChange={setCurrentPage}
+              preview={(pagination?.totalPages ?? 1) <= 1}
             />
 
             {/* Mobile-only app banner (matches Figma mobile homepage) */}
@@ -155,7 +155,6 @@ export function HomePage() {
         </div>
       </div>
 
-      <WallpaperStats />
       <SiteFooter />
     </div>
   );

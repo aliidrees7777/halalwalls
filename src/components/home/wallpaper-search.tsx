@@ -9,8 +9,14 @@ interface WallpaperSearchProps {
 
 export function WallpaperSearch({ value, onChange }: WallpaperSearchProps) {
   return (
-    <div className="mx-auto w-full max-w-[790px] ">
-      <SearchBox value={value} onChange={onChange} heightClass="h-11" textClass="text-[18px]" />
+    <div className="mx-auto w-full max-w-[var(--lp-search-max)]">
+      <SearchBox
+        value={value}
+        onChange={onChange}
+        heightClass="h-[var(--lp-search-h)]"
+        textClass="text-[17.78px]"
+        radiusClass="rounded-[var(--lp-search-radius)]"
+      />
     </div>
   );
 }
