@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Settings, ShoppingCart, Info, Heart, Download } from "lucide-react";
+import { ShoppingCart, Info, Heart, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { demoProfileUser } from "@/data/profile-user";
 import { useAuth } from "@/context/auth-context";
 import { useMyFavorites } from "@/hooks/use-my-favorites";
 import type { Wallpaper } from "@/types/wallpaper";
+import settings from "../../../public/my-account/settings.png";
 
 /**
  * Mobile profile screen — matches the Figma mobile design:
@@ -154,7 +155,13 @@ export function MobileProfile() {
               aria-label="Settings"
               className="grid size-9 place-items-center rounded-full bg-black/35 text-white backdrop-blur-sm transition-colors hover:bg-black/55"
             >
-              <Settings className="size-[18px]" />
+              <Image
+                src={settings}
+                alt=""
+                width={18}
+                height={18}
+                className="size-[18px]"
+              />
             </button>
 
             <div

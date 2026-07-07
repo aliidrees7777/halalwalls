@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { LogOut, Settings } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PremiumWhiteIcon } from "@/components/profile/premium-white-icon";
@@ -16,7 +16,8 @@ import {
 import { ProfileSideIconButton } from "@/components/profile/profile-side-icon-button";
 import { ProfileStatPill } from "@/components/profile/profile-stat-pill";
 import type { ProfileUser } from "@/data/profile-user";
-import logout from "../../../public/my-account/logout.svg"
+import logout from "../../../public/my-account/logout.svg";
+import settings from "../../../public/my-account/settings.png";
 interface ProfileBannerProps {
   user: ProfileUser;
 }
@@ -66,9 +67,9 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="relative overflow-hidden rounded-[28px] border-3 border-hw-yellow "
+      className="primary-font relative overflow-hidden rounded-[28px] border-3 border-hw-yellow "
     >
-      <div className="relative aspect-[16/5] min-h-[600px] w-full sm:min-h-[280px] md:min-h-[470px]">
+      <div className="relative aspect-[16/9] min-h-[420px] w-full sm:aspect-[16/6] sm:min-h-[300px] md:min-h-[420px]">
         <Image
           src={user.banner}
           alt=""
@@ -100,19 +101,19 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
 
       <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-4 pb-5 pt-14 sm:pb-6 sm:pt-14">
         {/* Avatar row with flanking icon buttons */}
-        <div className="mb-3 flex items-center justify-center gap-4 sm:gap-5">
+        <div className="mb-5 flex items-center justify-center gap-4 sm:mb-6 sm:gap-6">
           <ProfileSideIconButton
             label="Premium"
             iconNode={<PremiumWhiteIcon size={20} className="sm:size-[22px]" />}
           />
 
           <div className="relative">
-            <div
-              className="absolute -inset-1 rounded-full "
-              aria-hidden
-            />
-            <Avatar className="relative w-[214px] h-[214px] after:hidden mb-10">
-              <AvatarImage src={user.avatar} alt={user.name} />
+            <Avatar className="relative w-[150px] h-[150px] rounded-full border-[3px] border-hw-yellow shadow-[0_0_0_4px_rgba(0,0,0,0.35)] after:hidden sm:w-[180px] sm:h-[180px]">
+              <AvatarImage
+                src={user.avatar}
+                alt={user.name}
+                className="object-cover"
+              />
               <AvatarFallback className="bg-hw-surface text-lg text-hw-foreground">
                 {initials}
               </AvatarFallback>
@@ -120,8 +121,16 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
           </div>
 
           <ProfileSideIconButton
-            icon={Settings}
             label="Settings"
+            iconNode={
+              <Image
+                src={settings}
+                alt=""
+                width={18}
+                height={18}
+                className="size-[18px] sm:size-5"
+              />
+            }
             onClick={() => setSettingsOpen(true)}
           />
         </div>
@@ -134,20 +143,20 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
         />
 
         {/* User info card with stat pills flanking */}
-        <div className="flex w-full max-w-xl items-end justify-center gap-3 sm:max-w-2xl sm:gap-4">
+        <div className="flex w-full max-w-3xl items-center justify-between gap-4">
           <ProfileStatPill
             label={`${favoritesCount} Favorites`}
             className="hidden shrink-0 sm:inline-flex"
           />
 
-          <div className="w-full max-w-sm rounded-[17px] border border-white/10 bg-black/50 px-5 py-3.5 text-center  sm:max-w-md sm:px-6 sm:py-4">
-            <h1 className="text-[26px] font-bold text-[#ffffff] sm:text-lg">
+          <div className="w-full max-w-sm rounded-[17.78px] bg-black/50 px-6 py-[18px] text-center backdrop-blur-sm">
+            <h1 className="text-2xl font-bold text-white sm:text-[26px]">
               {user.name}
             </h1>
-            <p className="mt-1 text-[17px] text-[#ffffff] sm:text-[13px]">
-              {user.bio}
+            <p className="mt-1.5 text-[15px] text-white/[0.72] sm:text-[17px]">
+              &ldquo;{user.bio}&rdquo;
             </p>
-            <p className="mt-1 text-[17px] text-[#ffffff] sm:text-[12px]">
+            <p className="mt-1 text-[15px] text-white/60 sm:text-[17px]">
               {user.email}
             </p>
           </div>

@@ -5,12 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  ChevronLeft,
-  ChevronRight,
-  LayoutGrid,
-  TrendingUp,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { trendingTopics } from "@/data/sidebar";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import { SidebarCollapsible } from "@/components/shared/sidebar-collapsible";
@@ -172,7 +167,7 @@ export function HomeSidebar({ tags, activeCategory }: HomeSidebarProps = {}) {
               xmlns="http://www.w3.org/2000/svg"
               className={cn(
                 "transition-transform duration-200",
-                qrOpen || "rotate-180",
+                qrOpen && "rotate-180",
               )}
             >
               <path
@@ -231,7 +226,7 @@ export function HomeSidebar({ tags, activeCategory }: HomeSidebarProps = {}) {
           </ul>
         </SidebarPanel>
       ) : (
-        <SidebarPanel title="Trending" icon={TrendingUp}>
+        <SidebarPanel title="Trending" iconSrc="/tranding.svg">
           <ul>
             {trendingTopics.map((topic, index) => (
               <li
@@ -249,7 +244,11 @@ export function HomeSidebar({ tags, activeCategory }: HomeSidebarProps = {}) {
           </ul>
         </SidebarPanel>
       )}
-      <SidebarPanel title="Categories" icon={LayoutGrid}>
+      <SidebarPanel
+        title="Categories"
+        iconSrc="/categories.svg"
+        iconClassName="size-[17.78px] shrink-0"
+      >
 
         <SidebarCollapsible
           label="Browse Categories"
