@@ -33,7 +33,7 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
               alt={wallpaper.title}
               fill
               className={cn(
-                "object-cover transition-transform duration-500 group-hover:scale-[1.02]",
+                "object-cover",
                 loaded ? "opacity-100" : "opacity-0"
               )}
               sizes="(max-width: 1024px) 50vw, 33vw"
