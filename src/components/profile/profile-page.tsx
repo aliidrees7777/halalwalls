@@ -100,12 +100,12 @@ export function ProfilePage() {
 
         <ProfileBanner user={profileUser} />
 
-        <section className="">
-          <div className="flex items-end justify-between mb-10">
+        <section className="mt-10 lg:mt-14">
+          <div className="mb-6 flex items-end justify-between">
           <h1 className="lg:text-4xl text-2xl font-semibold  text-hw-account">Discover Just Uploaded</h1>
            <ProfileSectionHeader title="" className="text-right"/>
           </div>
-          <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {discoverJustUploaded.map((wallpaper, index) => (
               <ProfileWallpaperThumb
                 key={wallpaper.id}
@@ -116,8 +116,8 @@ export function ProfilePage() {
           </div>
         </section>
 
-        <section className="">
-           <div className="flex items-end justify-between my-10">
+        <section className="mt-10 lg:mt-14">
+           <div className="mb-6 flex items-end justify-between">
           <h2 className="lg:text-4xl text-2xl font-semibold text-hw-account">Your Uploads</h2>
           <ProfileSectionHeader
             title=""
@@ -135,7 +135,7 @@ export function ProfilePage() {
           ) : uploads.length === 0 ? (
             <UploadPlaceholder />
           ) : (
-            <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
               {recentUploads.map((wallpaper, index) => (
                 <ProfileWallpaperThumb
                   key={wallpaper.id}
@@ -147,8 +147,8 @@ export function ProfilePage() {
           )}
         </section>
 
-        <section className="">
-           <div className="flex items-end justify-between mb-10">
+        <section className="mt-10 lg:mt-14">
+           <div className="mb-6 flex items-end justify-between">
           <h2 className="lg:text-4xl text-2xl font-semibold  text-hw-account">Your Favorites</h2>
           <ProfileSectionHeader
             title=""
@@ -168,7 +168,7 @@ export function ProfilePage() {
               No favorites yet.
             </p>
           ) : (
-            <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
               {recentFavorites.map((wallpaper, index) => (
                 <ProfileWallpaperThumb
                   key={wallpaper.id}
