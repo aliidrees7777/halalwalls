@@ -50,7 +50,7 @@ export function SidebarCollapsible({
           xmlns="http://www.w3.org/2000/svg"
           className={cn(
             "mr-[10px] transition-transform duration-200",
-            open || "rotate-180",
+            open && "rotate-180",
           )}
         >
           <path

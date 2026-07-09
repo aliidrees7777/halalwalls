@@ -36,7 +36,7 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
               fill
               unoptimized={shouldUnoptimizeMedia(imageSrc)}
               className={cn(
-                "object-cover transition-transform duration-500 group-hover:scale-[1.02]",
+                "object-cover",
                 loaded ? "opacity-100" : "opacity-0"
               )}
               sizes="(max-width: 1023px) 198px, 33vw"
