@@ -7,6 +7,7 @@ import { useState } from "react";
 import type { Wallpaper } from "@/types/wallpaper";
 import { useFavorite } from "@/hooks/use-favorite";
 import { cn } from "@/lib/utils";
+import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
 
 interface WallpaperCardProps {
   wallpaper: Wallpaper;
@@ -18,25 +19,27 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
     wallpaper.favoritesCount ?? 0
   );
   const [loaded, setLoaded] = useState(false);
+  const imageSrc = resolveMediaUrl(wallpaper.image);
 
   return (
-    <article className="group relative">
-      <div className="relative overflow-hidden bg-hw-card">
+    <article className="group relative mx-auto aspect-[198/440] w-full max-w-[198px] lg:mx-0 lg:max-w-none lg:aspect-[449/254] lg:w-full">
+      <div className="relative h-full w-full overflow-hidden bg-hw-card">
         <Link
           href={`/wallpaper/${wallpaper.slug}`}
-          className="relative block w-full rounded-[var(--lp-card-radius)] border-[length:var(--lp-card-border)] border-hw-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50"
+          className="relative block h-full w-full rounded-[var(--lp-card-radius)] border-[length:var(--lp-card-border)] border-hw-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50"
           aria-label={`View ${wallpaper.title}`}
         >
-          <div className="relative aspect-[449/254] w-full sm:aspect-[449/254]">
+          <div className="relative h-full w-full">
             <Image
-              src={wallpaper.image}
+              src={imageSrc}
               alt={wallpaper.title}
               fill
+              unoptimized={shouldUnoptimizeMedia(imageSrc)}
               className={cn(
                 "object-cover",
                 loaded ? "opacity-100" : "opacity-0"
               )}
-              sizes="(max-width: 1024px) 50vw, 33vw"
+              sizes="(max-width: 1023px) 198px, 33vw"
               onLoad={() => setLoaded(true)}
             />
             {!loaded && (

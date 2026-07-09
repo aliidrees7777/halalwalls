@@ -1,103 +1,179 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Home, LayoutGrid, Plus, Heart, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/auth-context";
+
 /**
- * Mobile fixed bottom navigation (client's Note 8 + mobile Figma):
- * black bar, green top border, rounded top corners, 5 icon items with a
- * prominent circular "+" (Add/Upload) in the center. Mobile only (md:hidden).
- * Inactive icons #727272, active = brand green. Every item navigates to a
- * distinct destination and gives a tap animation so a press always responds.
+ * Mobile fixed bottom navigation: black bar, green top border, rounded top
+ * corners, 5 custom icon items with a prominent circular "+" (Upload) center.
+ * Mobile only (md:hidden). Each item has active + inactive PNG states.
  */
 const MotionLink = motion.create(Link);
 
-const sideItems = [
-  { label: "Home", href: "/", icon: Home, match: (p: string) => p === "/" },
+type NavItem = {
+  label: string;
+  href: string;
+  icon: string;
+  iconActive: string;
+  size?: number;
+  match: (pathname: string, hasCategory: boolean) => boolean;
+};
+
+const sideItems: NavItem[] = [
+  {
+    label: "Home",
+    href: "/",
+    icon: "/mobile-nav/home.png",
+    iconActive: "/mobile-nav/home-active.png",
+    match: (p, hasCategory) => p === "/" && !hasCategory,
+  },
   {
     label: "Categories",
-    href: "/?category=popular",
-    icon: LayoutGrid,
-    match: () => false,
+    href: "/?category=islamic",
+    icon: "/mobile-nav/categories.png",
+    iconActive: "/mobile-nav/categories-active.png",
+    match: (p, hasCategory) => p === "/" && hasCategory,
   },
 ];
 
-const rightItems = [
+const rightItems: NavItem[] = [
   {
     label: "Favorites",
-    href: "/profile?tab=favorites",
-    icon: Heart,
-    match: () => false,
-  },
-  {
-    label: "Profile",
-    href: "/profile",
-    icon: User,
-    match: (p: string) => p.startsWith("/profile"),
+    href: "/profile/favorites",
+    icon: "/mobile-nav/favorites.png",
+    iconActive: "/mobile-nav/favorites-active.png",
+    match: (p) => p.startsWith("/profile/favorites"),
   },
 ];
+
+const profileItem: NavItem = {
+  label: "Profile",
+  href: "/profile",
+  icon: "/mobile-nav/profile.png",
+  iconActive: "/mobile-nav/profile-active.png",
+  match: (p) => p.startsWith("/profile") && !p.startsWith("/profile/favorites"),
+};
 
 const tap = { scale: 0.82 };
 const tapTransition = { type: "spring", stiffness: 500, damping: 24 } as const;
 
+function NavIcon({
+  item,
+  active,
+}: {
+  item: NavItem;
+  active: boolean;
+}) {
+  const size = item.size ?? 40;
+
+  return (
+    <Image
+      src={active ? item.iconActive : item.icon}
+      alt=""
+      width={size}
+      height={size}
+      aria-hidden
+      className="pointer-events-none select-none"
+    />
+  );
+}
+
 export function MobileBottomNav() {
   const pathname = usePathname();
-
-  const itemClass = (active: boolean) =>
-    cn(
-      "flex items-center justify-center transition-colors",
-      active ? "text-hw-green" : "text-hw-icon hover:text-hw-foreground"
-    );
+  const searchParams = useSearchParams();
+  const hasCategory = Boolean(searchParams.get("category"));
+  const { isAuthenticated, loading, openAuthModal } = useAuth();
+  const profileActive = profileItem.match(pathname, hasCategory);
 
   return (
     <nav
       className="fixed inset-x-0 bottom-0 z-50 h-[92px] rounded-t-[28px] border-t border-hw-green bg-black md:hidden"
       aria-label="Mobile navigation"
     >
-      <div className="mx-auto flex h-full max-w-[360px] items-center justify-around ">
-        {sideItems.map(({ label, href, icon: Icon, match }) => (
-          <MotionLink
-            key={label}
-            href={href}
-            aria-label={label}
-            whileTap={tap}
-            transition={tapTransition}
-            className={itemClass(match(pathname))}
-          >
-            <Icon className="size-10" />
-          </MotionLink>
-        ))}
+      <div className="mx-auto flex h-full max-w-[360px] items-center justify-around">
+        {sideItems.map((item) => {
+          const active = item.match(pathname, hasCategory);
+          return (
+            <MotionLink
+              key={item.label}
+              href={item.href}
+              aria-label={item.label}
+              aria-current={active ? "page" : undefined}
+              whileTap={tap}
+              transition={tapTransition}
+              className="flex items-center justify-center"
+            >
+              <NavIcon item={item} active={active} />
+            </MotionLink>
+          );
+        })}
 
-        {/* Center Add (+) — prominent circular button */}
         <MotionLink
           href="/upload"
           aria-label="Add wallpaper"
+          aria-current={pathname === "/upload" ? "page" : undefined}
           whileTap={{ scale: 0.9 }}
           transition={tapTransition}
-          className={cn(
-            "grid size-14 place-items-center rounded-full border-[3px] bg-black transition-colors",
-            pathname === "/upload"
-              ? "border-hw-green text-hw-green"
-              : "border-hw-icon text-hw-icon hover:border-hw-foreground hover:text-hw-foreground"
-          )}
+          className="flex items-center justify-center"
         >
-          <Plus className="size-10" strokeWidth={2.5} />
+          <NavIcon
+            item={{
+              label: "Add",
+              href: "/upload",
+              icon: "/mobile-nav/add.png",
+              iconActive: "/mobile-nav/add-active.png",
+              size: 56,
+              match: (p) => p === "/upload",
+            }}
+            active={pathname === "/upload"}
+          />
         </MotionLink>
 
-        {rightItems.map(({ label, href, icon: Icon, match }) => (
+        {rightItems.map((item) => {
+          const active = item.match(pathname, hasCategory);
+          return (
+            <MotionLink
+              key={item.label}
+              href={item.href}
+              aria-label={item.label}
+              aria-current={active ? "page" : undefined}
+              whileTap={tap}
+              transition={tapTransition}
+              className="flex items-center justify-center"
+            >
+              <NavIcon item={item} active={active} />
+            </MotionLink>
+          );
+        })}
+
+        {loading ? (
+          <div className="size-10" aria-hidden />
+        ) : isAuthenticated ? (
           <MotionLink
-            key={label}
-            href={href}
-            aria-label={label}
+            href={profileItem.href}
+            aria-label={profileItem.label}
+            aria-current={profileActive ? "page" : undefined}
             whileTap={tap}
             transition={tapTransition}
-            className={itemClass(match(pathname))}
+            className="flex items-center justify-center"
           >
-            <Icon className="size-10" />
+            <NavIcon item={profileItem} active={profileActive} />
           </MotionLink>
-        ))}
+        ) : (
+          <motion.button
+            type="button"
+            aria-label={profileItem.label}
+            onClick={() => openAuthModal("signin")}
+            whileTap={tap}
+            transition={tapTransition}
+            className="flex items-center justify-center"
+          >
+            <NavIcon item={profileItem} active={profileActive} />
+          </motion.button>
+        )}
       </div>
     </nav>
   );

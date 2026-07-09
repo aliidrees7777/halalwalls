@@ -10,11 +10,13 @@ import { MobileFilterMenu } from "@/components/home/mobile-filter-menu";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { HeaderAuth } from "@/components/layout/header-auth";
 import { HeaderNav } from "@/components/layout/header-nav";
+import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 
 export function DownloadHeader() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  useBodyScrollLock(open);
 
   const handleSearch = (q: string) => {
     if (q.trim()) router.push(`/?q=${encodeURIComponent(q.trim())}`);
@@ -61,9 +63,9 @@ export function DownloadHeader() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden bg-hw-card lg:hidden"
+            className="overflow-hidden bg-[#191a1c] lg:hidden"
           >
-            <div className="max-h-[calc(100dvh-53px)] overflow-y-auto px-4 pt-5 pb-28">
+            <div className="max-h-[calc(100dvh-54px)] overflow-y-auto px-4 py-10 pb-28">
               <Suspense fallback={null}>
                 <MobileFilterMenu onNavigate={() => setOpen(false)} />
               </Suspense>

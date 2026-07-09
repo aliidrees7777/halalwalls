@@ -1,9 +1,23 @@
 import type { NextConfig } from "next";
 
+const mediaOrigin = (
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3662/api/v1"
+).replace(/\/api\/v\d+$/, "");
+
 const nextConfig: NextConfig = {
   // Hide the Next.js dev-tools badge (it floats bottom-left and overlaps the
   // mobile bottom nav's Home icon during local review).
   devIndicators: false,
+  async rewrites() {
+    // Proxy user-uploaded files through the frontend origin so next/image and
+    // the browser never need to hit localhost:3662 directly.
+    return [
+      {
+        source: "/uploads/:path*",
+        destination: `${mediaOrigin}/uploads/:path*`,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
