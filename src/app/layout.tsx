@@ -36,7 +36,9 @@ export default function RootLayout({
                 <StripeCheckoutReturn />
               </Suspense>
               {children}
-              <MobileBottomNav />
+              <Suspense fallback={null}>
+                <MobileBottomNav />
+              </Suspense>
               <AuthModal />
             </AuthProvider>
           </ToastProvider>

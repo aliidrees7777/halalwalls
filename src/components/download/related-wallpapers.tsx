@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import type { Wallpaper } from "@/types/wallpaper";
+import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
 
 interface RelatedWallpapersProps {
   items: Wallpaper[];
@@ -41,9 +42,10 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
                 className="relative h-full w-full"
               >
                 <Image
-                  src={wallpaper.image}
+                  src={resolveMediaUrl(wallpaper.image)}
                   alt={wallpaper.title}
                   fill
+                  unoptimized={shouldUnoptimizeMedia(resolveMediaUrl(wallpaper.image))}
                   className="object-cover transition-opacity duration-300 group-hover:opacity-90"
                 />
                 <p className="absolute bottom-2 left-2 right-2 truncate text-[11px] font-medium text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">

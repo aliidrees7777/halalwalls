@@ -23,7 +23,7 @@ export function WallpaperGrid({ wallpapers, isLoading }: WallpaperGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-[var(--lp-grid-gap)] lg:grid-cols-3">
+    <div className="grid w-full grid-cols-2 gap-[var(--lp-grid-gap)] lg:grid-cols-3">
       {wallpapers.map((wallpaper) => (
         <WallpaperCard key={wallpaper.id} wallpaper={wallpaper} />
       ))}

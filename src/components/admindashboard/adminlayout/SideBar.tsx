@@ -6,19 +6,19 @@ import {
   LayoutGrid,
   Tag,
   Maximize,
-  Megaphone,
+  // Megaphone,
   Users,
   ShieldCheck,
-  CreditCard,
+  // CreditCard,
   UserCheck,
-  Receipt,
-  ArrowLeftRight,
-  UploadCloud,
-  AlertTriangle,
-  Settings,
-  Wrench,
-  FileText,
-  LifeBuoy,
+  // Receipt,
+  // ArrowLeftRight,
+  // UploadCloud,
+  // AlertTriangle,
+  // Settings,
+  // Wrench,
+  // FileText,
+  // LifeBuoy,
 } from "lucide-react";
 
 interface SideBarProps {
@@ -71,7 +71,7 @@ const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
             { name: "Categories", icon: <LayoutGrid size={20} /> },
             { name: "Tags", icon: <Tag size={20} /> },
             { name: "Resolutions", icon: <Maximize size={20} /> },
-            { name: "Ads", icon: <Megaphone size={20} /> },
+            // { name: "Ads", icon: <Megaphone size={20} /> },
           ].map((item) => (
             <div
               key={item.name}
@@ -103,19 +103,19 @@ const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
         {/* Subscriptions */}
         <div className="sb-sec">
           <span className="sb-lbl">Subscriptions & Payments</span>
-          <div
+          {/* <div
             className={`sb-item ${activeItem === "Plans" ? "on" : ""}`}
             onClick={() => setActiveItem("Plans")}
           >
             <CreditCard size={20} /> Plans
-          </div>
+          </div> */}
           <div
             className={`sb-item ${activeItem === "Subscribers" ? "on" : ""}`}
             onClick={() => setActiveItem("Subscribers")}
           >
             <UserCheck size={20} /> Subscribers
           </div>
-          <div
+          {/* <div
             className={`sb-item ${activeItem === "Payments" ? "on" : ""}`}
             onClick={() => setActiveItem("Payments")}
           >
@@ -126,11 +126,11 @@ const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
             onClick={() => setActiveItem("Transactions")}
           >
             <ArrowLeftRight size={20} /> Transactions
-          </div>
+          </div> */}
         </div>
 
         {/* Uploads & Reviews */}
-        <div className="sb-sec">
+        {/* <div className="sb-sec">
           <span className="sb-lbl">Uploads & Reviews</span>
           <div
             className={`sb-item ${activeItem === "Pending" ? "on" : ""}`}
@@ -146,10 +146,10 @@ const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
             <AlertTriangle size={20} /> Reported Items{" "}
             <span className="sb-badge warn">5</span>
           </div>
-        </div>
+        </div> */}
 
         {/* System */}
-        <div className="sb-sec">
+        {/* <div className="sb-sec">
           <span className="sb-lbl">System</span>
           <div
             className={`sb-item ${activeItem === "Settings" ? "on" : ""}`}
@@ -169,17 +169,17 @@ const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
           >
             <FileText size={20} /> Logs
           </div>
-        </div>
+        </div> */}
       </div>
 
-      <div className="sb-footer">
+      {/* <div className="sb-footer">
         <div
           className={`sb-item ${activeItem === "Support" ? "on" : ""}`}
           onClick={() => setActiveItem("Support")}
         >
           <LifeBuoy size={20} /> Support
         </div>
-      </div>
+      </div> */}
     </nav>
   );
 };

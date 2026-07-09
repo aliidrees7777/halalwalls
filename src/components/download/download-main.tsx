@@ -10,6 +10,7 @@ import { DownloadActions } from "@/components/download/download-actions";
 import { DownloadResolutionPanel } from "@/components/download/download-resolution-panel";
 import { useWallpaperDownload } from "@/hooks/use-wallpaper-download";
 import type { DownloadResolution, WallpaperDetail } from "@/types/wallpaper";
+import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
 import download from "../../../public/download.svg";
 import link from "../../../public/link.svg";
 interface DownloadMainProps {
@@ -20,6 +21,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
   const [loaded, setLoaded] = useState(false);
   const [lastDownload, setLastDownload] = useState<string | null>(null);
   const { download: downloadWallpaper } = useWallpaperDownload(wallpaper);
+  const imageSrc = resolveMediaUrl(wallpaper.image);
 
   const handleResolution = async (res: DownloadResolution) => {
     const ok = await downloadWallpaper(res.label);
@@ -43,10 +45,11 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
           className="relative aspect-[16/9] w-full"
         >
           <Image
-            src={wallpaper.image}
+            src={imageSrc}
             alt={wallpaper.title}
             fill
             priority
+            unoptimized={shouldUnoptimizeMedia(imageSrc)}
             className={`object-cover transition-opacity duration-500 ${
               loaded ? "opacity-100" : "opacity-0"
             }`}

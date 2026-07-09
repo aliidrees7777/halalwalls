@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { SiteHeader } from "@/components/home/site-header";
 import { WallpaperSearch } from "@/components/home/wallpaper-search";
@@ -10,9 +9,9 @@ import { HomeSidebar } from "@/components/home/home-sidebar";
 import { WallpaperGrid } from "@/components/home/wallpaper-grid";
 import { WallpaperPagination } from "@/components/home/wallpaper-pagination";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { MobileAppBanner } from "@/components/shared/mobile-app-banner";
 import { api } from "@/lib/api";
 import type { Wallpaper } from "@/types/wallpaper";
-import logodark from "../../../public/authicon/logodark.svg";
 interface Pagination {
   total: number;
   page: number;
@@ -117,40 +116,7 @@ export function HomePage() {
               preview={(pagination?.totalPages ?? 1) <= 1}
             />
 
-            {/* Mobile-only app banner (matches Figma mobile homepage) */}
-            <div className="mt-4 flex items-center justify-center gap-[22px] rounded-xl border border-hw-green/40 bg-[#CBFFEB] p-3 lg:hidden h-[120px]">
-              <div className="grid shrink-0">
-                <span className="text-lg font-bold text-hw-green">
-                  <Image src={logodark} alt="logodark" className="w-[84px]" />
-                </span>
-              </div>
-              <div className="min-w-0 ">
-                <p className="text-[20px] font-bold text-[#000000]">
-                  HalalWalls App
-                </p>
-                <p className="text-[12px] text-[#000000]">
-                  Download wallpapers on the go
-                </p>
-                <a
-                  href="https://play.google.com/store/apps"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex shrink-0 items-center gap-2 rounded-lg bg-hw-pill px-3 py-2  mt-2 w-[150px]"
-                >
-                  <Image
-                    src="/google-play-logo.png"
-                    alt=""
-                    width={16}
-                    height={16}
-                    className="size-6 object-contain"
-                  />
-                  <div>
-                    <p className="text-[10px] font-semibold">Get it on</p>
-                    <p className="text-[13px] font-semibold">Google Play</p>
-                  </div>
-                </a>
-              </div>
-            </div>
+            <MobileAppBanner className="mt-4" />
           </div>
         </div>
       </div>
