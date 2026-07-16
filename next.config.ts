@@ -18,7 +18,8 @@ function resolveMediaOrigin(): string {
   try {
     const host = new URL(fromApi).hostname;
     if (host === "halalwalls.com" || host === "www.halalwalls.com") {
-      return "http://127.0.0.1:3662";
+      // Production VPS: Express (halalwalls-api) listens on 4000, not 3662.
+      return "http://127.0.0.1:4000";
     }
   } catch {
     /* fall through */

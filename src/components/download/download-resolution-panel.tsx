@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import { motion } from "framer-motion";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import {
   desktopDownloadResolutions,
   mobileDownloadResolutions,
+  filterResolutionsForSource,
 } from "@/data/resolutions";
-import { api } from "@/lib/api";
-import type { DownloadResolution } from "@/types/wallpaper";
+import type { DownloadResolution, WallpaperDetail } from "@/types/wallpaper";
 
 function ResolutionLinkList({
   title,
@@ -20,12 +19,25 @@ function ResolutionLinkList({
   items: DownloadResolution[];
   onSelect?: (item: DownloadResolution) => void;
 }) {
+  if (!items.length) {
+    return (
+      <div>
+        <p className="mb-2 ml-5 text-[16px] font-semibold tracking-wider text-hw-foreground">
+          {title}
+        </p>
+        <p className="ml-5 text-[14px] text-hw-muted">
+          No sizes available without upscaling this image.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <p className="mb-2 ml-5 text-[16px] font-semibold  tracking-wider text-hw-foreground">
+      <p className="mb-2 ml-5 text-[16px] font-semibold tracking-wider text-hw-foreground">
         {title}
       </p>
-      <ul className=" ml-5 flex flex-wrap gap-x-3 gap-y-1.5">
+      <ul className="ml-5 flex flex-wrap gap-x-3 gap-y-1.5">
         {items.map((item) => (
           <li key={item.label}>
             <button
@@ -43,31 +55,29 @@ function ResolutionLinkList({
 }
 
 interface DownloadResolutionPanelProps {
+  wallpaper: WallpaperDetail;
   onSelect?: (resolution: DownloadResolution) => void;
 }
 
 export function DownloadResolutionPanel({
+  wallpaper,
   onSelect,
 }: DownloadResolutionPanelProps) {
-  // Live, admin-managed resolution catalog (falls back to the static list).
-  const [desktop, setDesktop] = useState<DownloadResolution[]>(desktopDownloadResolutions);
-  const [mobile, setMobile] = useState<DownloadResolution[]>(mobileDownloadResolutions);
-
-  useEffect(() => {
-    let ignore = false;
-    api
-      .get<{ list: DownloadResolution[] }>("/resolutions")
-      .then((d) => {
-        if (ignore) return;
-        const list = d.list ?? [];
-        const desk = list.filter((r) => r.device === "desktop");
-        const mob = list.filter((r) => r.device === "mobile");
-        if (desk.length) setDesktop(desk);
-        if (mob.length) setMobile(mob);
-      })
-      .catch(() => {});
-    return () => { ignore = true; };
-  }, []);
+  // Prefer server-filtered catalog; fall back to client filter on source dims.
+  const desktop =
+    wallpaper.downloadResolutions?.desktop ??
+    filterResolutionsForSource(
+      desktopDownloadResolutions,
+      wallpaper.width,
+      wallpaper.height,
+    );
+  const mobile =
+    wallpaper.downloadResolutions?.mobile ??
+    filterResolutionsForSource(
+      mobileDownloadResolutions,
+      wallpaper.width,
+      wallpaper.height,
+    );
 
   return (
     <motion.div

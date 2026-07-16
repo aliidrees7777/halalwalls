@@ -313,11 +313,30 @@ function WallpaperFormModal({
   const [image, setImage] = useState(initial?.image ?? "");
   const [file, setFile] = useState<File | null>(null);
   const [category, setCategory] = useState(initial?.categorySlug ?? categories[0]?.value ?? "");
-  const [resolution, setResolution] = useState(initial?.resolution ?? "1920x1080");
+  const [detectedRes, setDetectedRes] = useState<string | null>(
+    initial?.resolution ? String(initial.resolution).replace("x", "×") : null,
+  );
   const [tags, setTags] = useState((initial?.tags ?? []).join(", "));
   const [isPremium, setIsPremium] = useState(initial?.isPremium ?? false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const onFileChange = (f: File | null) => {
+    setFile(f);
+    setDetectedRes(null);
+    if (!f) return;
+    const url = URL.createObjectURL(f);
+    const img = new window.Image();
+    img.onload = () => {
+      setDetectedRes(`${img.naturalWidth}×${img.naturalHeight}`);
+      URL.revokeObjectURL(url);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      setDetectedRes(null);
+    };
+    img.src = url;
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -325,7 +344,8 @@ function WallpaperFormModal({
     setError(null);
     const cat = categories.find((c) => c.value === category);
 
-    // Edit → patch metadata (image stays a URL).
+    // Edit → patch metadata (image stays a URL). Resolution is set by the
+    // upload pipeline from real pixels — not edited here.
     if (isEdit) {
       if (!title.trim() || !image.trim()) {
         setError("Title and image URL are required.");
@@ -338,7 +358,6 @@ function WallpaperFormModal({
           image: image.trim(),
           category: cat?.label,
           categorySlug: cat?.value,
-          resolution: resolution.trim(),
           tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
           isPremium,
         });
@@ -353,6 +372,7 @@ function WallpaperFormModal({
 
     // Add → upload the actual image file through the Sharp pipeline. Because the
     // uploader is an admin, it publishes immediately (active, no approval).
+    // Resolution + download options come from the image itself (no manual field).
     if (!file) {
       setError("Please choose an image file to upload.");
       return;
@@ -387,7 +407,9 @@ function WallpaperFormModal({
           {isEdit ? "Edit Wallpaper" : "Add Wallpaper"}
         </h2>
         <p style={{ fontSize: 12.5, color: "var(--text2)" }}>
-          {isEdit ? "Update this wallpaper's details." : "Upload an image file — it publishes immediately (no approval)."}
+          {isEdit
+            ? "Update this wallpaper's details."
+            : "Upload an image — resolution is detected automatically. Download sizes will only include same or smaller options (no upscaling)."}
         </p>
 
         {error ? (
@@ -410,7 +432,7 @@ function WallpaperFormModal({
             <input
               type="file"
               accept="image/jpeg,image/png"
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
               style={inputStyle}
             />
             {file ? (
@@ -428,7 +450,18 @@ function WallpaperFormModal({
           </div>
           <div style={{ flex: 1 }}>
             <label style={label}>Resolution</label>
-            <input value={resolution} onChange={(e) => setResolution(e.target.value)} placeholder="1920x1080" style={inputStyle} />
+            <div
+              style={{
+                ...inputStyle,
+                display: "flex",
+                alignItems: "center",
+                minHeight: 40,
+                color: detectedRes ? "var(--text)" : "var(--text3)",
+                cursor: "default",
+              }}
+            >
+              {detectedRes || (isEdit ? "—" : "Detected from image")}
+            </div>
           </div>
         </div>
 

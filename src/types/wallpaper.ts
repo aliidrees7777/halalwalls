@@ -40,6 +40,16 @@ export interface WallpaperDetail extends Wallpaper {
   originalSizeMB: number;
   preferredResolution: string;
   relatedIds: string[];
+  /** Source pixel size (used to filter download options). */
+  width?: number | null;
+  height?: number | null;
+  /** Keys of sizes offered for this wallpaper (same + below only). */
+  resolutions?: string[];
+  /** Pre-filtered 3 desktop + 3 mobile catalog for this wallpaper. */
+  downloadResolutions?: {
+    desktop: DownloadResolution[];
+    mobile: DownloadResolution[];
+  };
 }
 
 export interface SidebarCategory {

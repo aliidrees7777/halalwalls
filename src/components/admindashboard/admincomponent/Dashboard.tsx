@@ -73,7 +73,7 @@ const Dashboard = () => {
                 variant="widget"
                 onViewAll={() => setActive("Moderation")}
               />
-              {/* <Rightpanel onViewAll={() => setActive("TopCategories")} /> */}
+              <Rightpanel onViewAll={() => setActive("TopCategories")} />
             </div>
           </>
         ) : active === "Moderation" ? (

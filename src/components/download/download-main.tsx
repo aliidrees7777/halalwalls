@@ -100,7 +100,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
       )}
 
       <div className="mt-5">
-        <DownloadResolutionPanel onSelect={handleResolution} />
+        <DownloadResolutionPanel wallpaper={wallpaper} onSelect={handleResolution} />
       </div>
     </div>
   );

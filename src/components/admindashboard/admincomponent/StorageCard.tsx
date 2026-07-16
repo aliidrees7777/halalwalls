@@ -38,10 +38,34 @@ const StorageCard = () => {
     };
   }, []);
 
-  const used = s ? fmtSize(s.usedBytes) : "—";
-  const quota = s ? fmtSize(s.quotaBytes) : "—";
-  const pct = s ? s.percent : 0;
-  const remaining = s ? fmtSize(s.remainingBytes) : "—";
+  // Prefer real server-disk figures when available; fall back to uploads vs quota.
+  const diskUsed =
+    s?.disk != null ? Math.max(0, s.disk.totalBytes - s.disk.freeBytes) : null;
+  const diskTotal = s?.disk?.totalBytes ?? null;
+  const diskPct =
+    diskUsed != null && diskTotal
+      ? Math.round((diskUsed / diskTotal) * 1000) / 10
+      : null;
+
+  const used = s
+    ? diskUsed != null
+      ? fmtSize(diskUsed)
+      : fmtSize(s.usedBytes)
+    : "—";
+  const total = s
+    ? diskTotal != null
+      ? fmtSize(diskTotal)
+      : fmtSize(s.quotaBytes)
+    : "—";
+  const pct = diskPct ?? (s ? s.percent : 0);
+  const remaining = s
+    ? s.disk != null
+      ? fmtSize(s.disk.freeBytes)
+      : fmtSize(s.remainingBytes)
+    : "—";
+  const mediaNote = s
+    ? `Media: ${fmtSize(s.usedBytes)} · ${s.fileCount.toLocaleString()} files`
+    : "";
 
   return (
     <div className="rcard">
@@ -50,16 +74,21 @@ const StorageCard = () => {
       </div>
       <div className="stor-hdr">
         <span className="stor-used">
-          {used} / {quota}
+          {used} / {total}
         </span>
         <span className="stor-pct">{pct}% Used</span>
       </div>
       <div className="stor-sub">
         {remaining} remaining
-        {s ? ` · ${s.fileCount.toLocaleString()} files` : ""}
+        {mediaNote ? ` · ${mediaNote}` : ""}
       </div>
       <div className="stor-bg">
-        <div className="stor-fill" style={{ width: `${Math.min(100, Math.max(pct, pct > 0 ? 1 : 0))}%` }} />
+        <div
+          className="stor-fill"
+          style={{
+            width: `${Math.min(100, Math.max(pct, pct > 0 ? 1 : 0))}%`,
+          }}
+        />
       </div>
     </div>
   );
