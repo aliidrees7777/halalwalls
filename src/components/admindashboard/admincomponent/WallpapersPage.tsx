@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { api, API_BASE_URL, ApiError, getToken } from "@/lib/api";
 import { resolveMediaUrl } from "@/lib/media-url";
+import { parseSourceUrl } from "@/lib/source-url";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { StatusBadge } from "../reusable/cells";
 import type { ListPageConfig, StatCardDef } from "../reusable/types";
@@ -18,6 +19,7 @@ interface AdminWallpaper {
   id: string;
   title: string;
   slug: string;
+  description?: string;
   tags: string[];
   image: string | null;
   thumbnailUrl: string | null;
@@ -293,6 +295,7 @@ const WallpapersPage = () => {
   );
 };
 
+const DEFAULT_SOURCE = "https://halalwalls.com";
 const border = "1px solid rgba(255,255,255,0.08)";
 const inputStyle: React.CSSProperties = {
   width: "100%", background: "var(--bg3)", border: "1px solid var(--border2)",
@@ -317,6 +320,7 @@ function WallpaperFormModal({
     initial?.resolution ? String(initial.resolution).replace("x", "×") : null,
   );
   const [tags, setTags] = useState((initial?.tags ?? []).join(", "));
+  const [source, setSource] = useState(initial?.description?.trim() || DEFAULT_SOURCE);
   const [isPremium, setIsPremium] = useState(initial?.isPremium ?? false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -343,6 +347,7 @@ function WallpaperFormModal({
     if (busy) return;
     setError(null);
     const cat = categories.find((c) => c.value === category);
+    const sourceValue = source.trim() || DEFAULT_SOURCE;
 
     // Edit → patch metadata (image stays a URL). Resolution is set by the
     // upload pipeline from real pixels — not edited here.
@@ -359,6 +364,8 @@ function WallpaperFormModal({
           category: cat?.label,
           categorySlug: cat?.value,
           tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+          description: sourceValue,
+          author: parseSourceUrl(sourceValue).username || initial!.author || "HalalWalls",
           isPremium,
         });
         onSaved();
@@ -386,6 +393,9 @@ function WallpaperFormModal({
       if (cat?.value) fd.append("categorySlug", cat.value);
       const tagList = tags.split(",").map((t) => t.trim()).filter(Boolean);
       if (tagList.length) fd.append("tags", tagList.join(","));
+      fd.append("source", sourceValue);
+      const username = parseSourceUrl(sourceValue).username;
+      if (username) fd.append("author", username);
       fd.append("isPremium", String(isPremium));
       await api.post("/uploads", fd);
       onSaved();
@@ -467,6 +477,14 @@ function WallpaperFormModal({
 
         <label style={label}>Tags (comma-separated)</label>
         <input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="city, sunset" style={inputStyle} />
+
+        <label style={label}>Source</label>
+        <input
+          value={source}
+          onChange={(e) => setSource(e.target.value)}
+          placeholder={DEFAULT_SOURCE}
+          style={inputStyle}
+        />
 
         <label style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 14, fontSize: 13, color: "var(--text)", cursor: "pointer" }}>
           <input type="checkbox" checked={isPremium} onChange={(e) => setIsPremium(e.target.checked)} />

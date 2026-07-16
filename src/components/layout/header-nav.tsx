@@ -43,17 +43,23 @@ const triggerClass =
   "flex items-center gap-0.5 rounded-md px-3 py-2 text-[18px] transition-colors text-hw-foreground font-medium";
 const itemClass =
   "text-[18px] text-hw-muted focus:bg-hw-surface focus:text-hw-foreground font-medium";
+const itemActiveClass =
+  "bg-hw-green/10 font-bold text-hw-green focus:bg-hw-green/15 focus:text-hw-green";
 
 function LinkDropdown({
   label,
   items,
+  activeHref,
 }: {
   label: string;
-  items: { label: string; href: string }[];
+  items: { label: string; href: string; active?: boolean }[];
+  activeHref?: boolean;
 }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={triggerClass}>
+      <DropdownMenuTrigger
+        className={cn(triggerClass, activeHref && "text-hw-green")}
+      >
         {label}
         <ChevronDown className="size-6 opacity-80" />
       </DropdownMenuTrigger>
@@ -65,7 +71,7 @@ function LinkDropdown({
           <DropdownMenuItem
             key={it.label}
             render={<Link href={it.href} />}
-            className={itemClass}
+            className={cn(itemClass, it.active && itemActiveClass)}
           >
             {it.label}
           </DropdownMenuItem>
@@ -80,9 +86,9 @@ function CategoriesDropdown({
 }: {
   searchParams: ReturnType<typeof useSearchParams>;
 }) {
-  
   const { categories } = useCategories();
   const [page, setPage] = useState(0);
+  const activeCategory = searchParams.get("category") || "";
 
   const totalPages = Math.max(
     1,
@@ -92,30 +98,36 @@ function CategoriesDropdown({
   const start = safePage * CATEGORIES_PER_PAGE;
   const slice = categories.slice(start, start + CATEGORIES_PER_PAGE);
   const showPager = categories.length > CATEGORIES_PER_PAGE;
+  const activeName = categories.find((c) => c.slug === activeCategory)?.name;
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={triggerClass}>
-        Categories
+      <DropdownMenuTrigger
+        className={cn(triggerClass, activeCategory && "text-hw-green")}
+      >
+        {activeName || "Categories"}
         <ChevronDown className="size-6 opacity-80" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
         className="min-w-[200px] border-hw-border bg-hw-card"
       >
-        {slice.map((c) => (
-          <DropdownMenuItem
-            key={c.id}
-            render={
-              <Link
-                href={buildFilterHref(searchParams, { category: c.slug })}
-              />
-            }
-            className={itemClass}
-          >
-            {c.name}
-          </DropdownMenuItem>
-        ))}
+        {slice.map((c) => {
+          const isActive = activeCategory === c.slug;
+          return (
+            <DropdownMenuItem
+              key={c.id}
+              render={
+                <Link
+                  href={buildFilterHref(searchParams, { category: c.slug })}
+                />
+              }
+              className={cn(itemClass, isActive && itemActiveClass)}
+            >
+              {c.name}
+            </DropdownMenuItem>
+          );
+        })}
 
         {showPager && (
           <>
@@ -161,17 +173,28 @@ function CategoriesDropdown({
 export function HeaderNav({ className }: { className?: string }) {
   const searchParams = useSearchParams();
   const { openAuthModal, user } = useAuth();
+  const activeSort = searchParams.get("sort") || "latest";
+  const activeResolution = searchParams.get("resolution") || "";
+
   const exploreItems = EXPLORE.map((e) => ({
     label: e.label,
     href: buildFilterHref(searchParams, e.update),
+    active: activeSort === e.update.sort,
   }));
   // Live resolution catalog (admin-managed); falls back to the static list.
   const res = useResolutions();
   const resLabels = [...(res.desktop ?? []), ...(res.mobile ?? [])];
-  const resolutionItems = (resLabels.length ? resLabels : RESOLUTION_LABELS).map((l) => ({
-    label: l,
-    href: buildFilterHref(searchParams, { resolution: normalizeResolution(l) }),
-  }));
+  const resolutionItems = (resLabels.length ? resLabels : RESOLUTION_LABELS).map(
+    (l) => {
+      const key = normalizeResolution(l);
+      return {
+        label: l,
+        href: buildFilterHref(searchParams, { resolution: key }),
+        active: activeResolution === key,
+      };
+    },
+  );
+  const activeResLabel = resolutionItems.find((r) => r.active)?.label;
 
   return (
     <nav
@@ -180,7 +203,11 @@ export function HeaderNav({ className }: { className?: string }) {
     >
       <LinkDropdown label="Explore" items={exploreItems} />
       <CategoriesDropdown searchParams={searchParams} />
-      <LinkDropdown label="Resolutions" items={resolutionItems} />
+      <LinkDropdown
+        label={activeResLabel || "Resolutions"}
+        items={resolutionItems}
+        activeHref={!!activeResolution}
+      />
       <Link href="/upload" className={triggerClass}>
         Upload
       </Link>
@@ -189,7 +216,9 @@ export function HeaderNav({ className }: { className?: string }) {
         onClick={() => openAuthModal("premium")}
         className="rounded-md px-3 py-2 text-[18px] font-medium text-hw-yellow transition-opacity hover:opacity-90"
       >
-        {user?.isPremium && user.subscriptionPlan !== "lifetime" ? "Upgrade" : "Premium"}
+        {user?.isPremium && user.subscriptionPlan !== "lifetime"
+          ? "Upgrade"
+          : "Premium"}
       </button>
     </nav>
   );

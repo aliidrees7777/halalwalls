@@ -12,6 +12,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { MobileAppBanner } from "@/components/shared/mobile-app-banner";
 import { api } from "@/lib/api";
 import type { Wallpaper } from "@/types/wallpaper";
+
 interface Pagination {
   total: number;
   page: number;
@@ -26,6 +27,14 @@ interface WallpapersResponse {
   pagination: Pagination;
 }
 
+// function titleCaseSlug(slug: string) {
+//   return slug
+//     .split("-")
+//     .filter(Boolean)
+//     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+//     .join(" ");
+// }
+
 export function HomePage() {
   const searchParams = useSearchParams();
   // Filters live in the URL so they COMBINE: category (sidebar/header) + sort
@@ -35,6 +44,7 @@ export function HomePage() {
   const tag = searchParams.get("tag") || "";
   const resolution = searchParams.get("resolution") || "";
   const qParam = searchParams.get("q") || "";
+  // const { categories } = useCategories();
 
   const [search, setSearch] = useState(qParam);
   const [currentPage, setCurrentPage] = useState(1);
@@ -87,7 +97,28 @@ export function HomePage() {
     };
   }, [category, sort, tag, resolution, search, currentPage]);
 
-  console.log("build 1.0");
+  // const resultsHeading = useMemo(() => {
+  //   const total = pagination?.total;
+  //   if (total == null) return null;
+
+  //   if (category) {
+  //     const name =
+  //       categories.find((c) => c.slug === category)?.name ||
+  //       titleCaseSlug(category);
+  //     return `${total.toLocaleString()} ${name} Wallpapers`;
+  //   }
+  //   if (resolution) {
+  //     const label = resolution.replace(/x/gi, "×");
+  //     return `${total.toLocaleString()} ${label} Wallpapers`;
+  //   }
+  //   if (tag) {
+  //     return `${total.toLocaleString()} ${titleCaseSlug(tag)} Wallpapers`;
+  //   }
+  //   if (search.trim()) {
+  //     return `${total.toLocaleString()} Wallpapers for “${search.trim()}”`;
+  //   }
+  //   return null;
+  // }, [pagination?.total, category, resolution, tag, search, categories]);
 
   return (
     <div className="min-h-screen ">
@@ -106,8 +137,14 @@ export function HomePage() {
       </section>
 
       <div className="lp-container bg-hw-bg pt-[var(--lp-mid-pt)]">
+        {/* {resultsHeading ? (
+          <h1 className="mb-6 text-center text-[28px] font-bold leading-tight text-hw-foreground sm:mb-8 sm:text-[36px] lg:text-[42px]">
+            {resultsHeading}
+          </h1>
+        ) : null} */}
+
         <div className="flex flex-col gap-[var(--lp-sidebar-gap)] lg:flex-row lg:gap-[var(--lp-main-gap)]">
-          <HomeSidebar />
+          <HomeSidebar searchQuery={search} />
 
           <div className="min-w-0 flex-1 lg:max-w-[var(--lp-main-w)]">
             <WallpaperGrid wallpapers={wallpapers} isLoading={isLoading} />

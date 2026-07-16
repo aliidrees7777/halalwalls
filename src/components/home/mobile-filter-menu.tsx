@@ -98,6 +98,9 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
   const res = useResolutions();
   const resolutions = [...res.desktop, ...res.mobile];
   const searchParams = useSearchParams();
+  const activeCategory = searchParams.get("category") || "";
+  const activeResolution = searchParams.get("resolution") || "";
+  const activeSort = searchParams.get("sort") || "latest";
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -106,16 +109,22 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
       <section className="flex flex-col gap-3">
         <p className={sectionLabel}>Explore</p>
         <div className="flex flex-wrap gap-[10px]">
-          {browse.map((p) => (
-            <Link
-              key={p.id}
-              href={buildFilterHref(searchParams, { sort: p.id })}
-              onClick={onNavigate}
-              className={explorePill}
-            >
-              {p.label}
-            </Link>
-          ))}
+          {browse.map((p) => {
+            const isActive = activeSort === p.id;
+            return (
+              <Link
+                key={p.id}
+                href={buildFilterHref(searchParams, { sort: p.id })}
+                onClick={onNavigate}
+                className={cn(
+                  explorePill,
+                  isActive && "bg-hw-green/20 font-bold text-hw-green",
+                )}
+              >
+                {p.label}
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -124,6 +133,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
         <div className="flex flex-wrap gap-2">
           {categories.map((c) => {
             const isPremium = c.isPremium || c.slug === "premium";
+            const isActive = activeCategory === c.slug;
             return (
               <Link
                 key={c.id}
@@ -133,6 +143,12 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
                   filterPill,
                   isPremium &&
                     "gap-[3px] border-[#ffd700] text-[#ffd700]",
+                  isActive &&
+                    !isPremium &&
+                    "border-hw-green bg-hw-green/10 font-bold text-hw-green",
+                  isActive &&
+                    isPremium &&
+                    "border-[#ffd700] bg-[#ffd700]/10 font-bold",
                 )}
               >
                 {c.name}
@@ -156,18 +172,26 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
       <section className="flex flex-col gap-3">
         <p className={sectionLabel}>Resolutions</p>
         <div className="flex flex-wrap gap-2">
-          {resolutions.map((r) => (
-            <Link
-              key={r}
-              href={buildFilterHref(searchParams, {
-                resolution: normalizeResolution(r),
-              })}
-              onClick={onNavigate}
-              className={filterPill}
-            >
-              {r}
-            </Link>
-          ))}
+          {resolutions.map((r) => {
+            const key = normalizeResolution(r);
+            const isActive = activeResolution === key;
+            return (
+              <Link
+                key={r}
+                href={buildFilterHref(searchParams, {
+                  resolution: key,
+                })}
+                onClick={onNavigate}
+                className={cn(
+                  filterPill,
+                  isActive &&
+                    "border-hw-green bg-hw-green/10 font-bold text-hw-green",
+                )}
+              >
+                {r}
+              </Link>
+            );
+          })}
         </div>
       </section>
 

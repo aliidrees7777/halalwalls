@@ -25,9 +25,11 @@ function ResolutionChip({
   return (
     <Link
       href={href}
+      aria-current={active ? "page" : undefined}
       className={cn(
-        "flex h-[var(--lp-chip-h)] min-w-0 items-center justify-center rounded-[var(--lp-chip-radius)] border-[length:var(--lp-chip-border)] border-hw-line bg-transparent px-1 text-center text-[length:var(--lp-chip-font)] font-medium uppercase leading-none text-hw-foreground",
-        active && "text-hw-green",
+        "flex h-[var(--lp-chip-h)] min-w-0 items-center justify-center rounded-[var(--lp-chip-radius)] border-[length:var(--lp-chip-border)] border-hw-line bg-transparent px-1 text-center text-[length:var(--lp-chip-font)] font-medium uppercase leading-none text-hw-foreground transition-colors",
+        active &&
+          "border-hw-green bg-hw-green/10 font-bold text-hw-green",
       )}
     >
       {label}
@@ -64,15 +66,31 @@ interface HomeSidebarProps {
   tags?: string[];
   /** Slug of the category to highlight as active (wallpaper detail page). */
   activeCategory?: string;
+  /** Live search query (home page) — highlights matching Trending / Tags items. */
+  searchQuery?: string;
 }
 
-export function HomeSidebar({ tags, activeCategory }: HomeSidebarProps = {}) {
+export function HomeSidebar({
+  tags,
+  activeCategory,
+  searchQuery,
+}: HomeSidebarProps = {}) {
   const [qrOpen, setQrOpen] = useState(true);
   const [catPage, setCatPage] = useState(0);
   const { categories, loading } = useCategories();
   const res = useResolutions();
   const searchParams = useSearchParams();
   const activeResolution = searchParams.get("resolution") || "";
+  const activeQuery = (
+    searchQuery ??
+    searchParams.get("q") ??
+    ""
+  )
+    .trim()
+    .toLowerCase();
+  // Prefer explicit prop (detail page), else URL ?category= (home filters).
+  const selectedCategory =
+    activeCategory || searchParams.get("category") || "";
 
   const totalCatPages = Math.max(
     1,
@@ -210,37 +228,55 @@ export function HomeSidebar({ tags, activeCategory }: HomeSidebarProps = {}) {
       {tags ? (
         <SidebarPanel title="Tags #">
           <ul>
-            {tags.map((tag, index) => (
+            {tags.map((tag, index) => {
+              const isActive = activeQuery === tag.trim().toLowerCase();
+              return (
               <li
                 key={tag}
                 className={cn(index > 0 && "border-t-[length:var(--lp-panel-divider-thin)] border-hw-line")}
               >
                 <Link
                   href={`/?q=${encodeURIComponent(tag)}`}
-                  className="block px-[11px] py-[11px] text-[length:var(--lp-panel-item)] font-medium leading-[17px] text-hw-foreground transition-colors hover:text-hw-green"
+                  aria-current={isActive ? "page" : undefined}
+                  className={cn(
+                    "block px-[11px] py-[11px] text-[length:var(--lp-panel-item)] font-medium leading-[17px] transition-colors hover:text-hw-green",
+                    isActive
+                      ? "bg-hw-green/10 font-bold text-hw-green"
+                      : "text-hw-foreground",
+                  )}
                 >
                   {tag}
                 </Link>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </SidebarPanel>
       ) : (
         <SidebarPanel title="Trending" iconSrc="/tranding.svg">
           <ul>
-            {trendingTopics.map((topic, index) => (
+            {trendingTopics.map((topic, index) => {
+              const isActive = activeQuery === topic.trim().toLowerCase();
+              return (
               <li
                 key={topic}
                 className={cn(index > 0 && "border-t-[length:var(--lp-panel-divider-thin)] border-hw-line")}
               >
                 <Link
                   href={`/?q=${encodeURIComponent(topic)}`}
-                  className="block px-[11px] py-[11px] text-[length:var(--lp-panel-item)] font-medium leading-[17px] text-hw-foreground transition-colors hover:text-hw-green"
+                  aria-current={isActive ? "page" : undefined}
+                  className={cn(
+                    "block px-[11px] py-[11px] text-[length:var(--lp-panel-item)] font-medium leading-[17px] transition-colors hover:text-hw-green",
+                    isActive
+                      ? "bg-hw-green/10 font-bold text-hw-green"
+                      : "text-hw-foreground",
+                  )}
                 >
                   {topic}
                 </Link>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </SidebarPanel>
       )}
@@ -259,7 +295,9 @@ export function HomeSidebar({ tags, activeCategory }: HomeSidebarProps = {}) {
           <ul>
             {loading && categories.length === 0
               ? null
-              : catSlice.map((category, index) => (
+              : catSlice.map((category, index) => {
+                  const isActive = selectedCategory === category.slug;
+                  return (
                   <li
                     key={category.id}
                     className={cn(index > 0 && "border-t-[length:var(--lp-panel-divider-thin)] border-hw-line")}
@@ -268,11 +306,10 @@ export function HomeSidebar({ tags, activeCategory }: HomeSidebarProps = {}) {
                       href={buildFilterHref(searchParams, {
                         category: category.slug,
                       })}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "flex items-center justify-between gap-2 px-[10px] py-[11px]",
-                        activeCategory &&
-                          category.slug === activeCategory &&
-                          "bg-hw-down",
+                        "flex items-center justify-between gap-2 px-[10px] py-[11px] transition-colors",
+                        isActive && "bg-hw-green/10",
                       )}
                     >
                       <span
@@ -280,7 +317,9 @@ export function HomeSidebar({ tags, activeCategory }: HomeSidebarProps = {}) {
                           "flex min-w-0 items-center gap-1 text-[length:var(--lp-panel-item)] font-medium leading-[17px]",
                           category.isPremium
                             ? "text-hw-yellow"
-                            : "text-hw-foreground",
+                            : isActive
+                              ? "font-bold text-hw-green"
+                              : "text-hw-foreground",
                         )}
                       >
                         {category.name}
@@ -300,7 +339,8 @@ export function HomeSidebar({ tags, activeCategory }: HomeSidebarProps = {}) {
                       />
                     </Link>
                   </li>
-                ))}
+                  );
+                })}
           </ul>
 
           {showCatPager && (

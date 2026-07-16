@@ -27,7 +27,7 @@ function formatBio(bio: string) {
 }
 
 export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
-  const { user: authUser, updateProfile, logout, openAuthModal } = useAuth();
+  const { user: authUser, updateProfile, openAuthModal } = useAuth();
   const [user, setUser] = useState(initialUser);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [accountSettings, setAccountSettings] = useState<AccountSettingsData>(
@@ -82,21 +82,6 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
           priority
           sizes="(max-width: 768px) 100vw, 1400px"
         />
-
-        <button
-          type="button"
-          onClick={logout}
-          className="absolute right-[13.41px] top-[13.41px] z-20 flex size-[28.744px] items-center justify-center md:right-5 md:top-5 md:size-10"
-          aria-label="Sign out"
-        >
-          <Image
-            src="/profile-banner/exit.svg"
-            alt=""
-            width={29}
-            height={29}
-            className="size-full object-contain"
-          />
-        </button>
 
         {/* Figma: Full account container — 197.377 × 225.163 */}
         <div className="absolute inset-x-0 top-[13.414px] flex justify-center md:top-1/2 md:-translate-y-1/2">

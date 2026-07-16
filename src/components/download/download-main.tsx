@@ -11,6 +11,7 @@ import { DownloadResolutionPanel } from "@/components/download/download-resoluti
 import { useWallpaperDownload } from "@/hooks/use-wallpaper-download";
 import type { DownloadResolution, WallpaperDetail } from "@/types/wallpaper";
 import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
+import { isHttpUrl, parseSourceUrl } from "@/lib/source-url";
 import download from "../../../public/download.svg";
 import link from "../../../public/link.svg";
 interface DownloadMainProps {
@@ -22,6 +23,15 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
   const [lastDownload, setLastDownload] = useState<string | null>(null);
   const { download: downloadWallpaper } = useWallpaperDownload(wallpaper);
   const imageSrc = resolveMediaUrl(wallpaper.image);
+
+  const sourceParsed = parseSourceUrl(wallpaper.description);
+  const sourceUrl =
+    sourceParsed.url && isHttpUrl(sourceParsed.url) ? sourceParsed.url : null;
+  const sourceLabel =
+    sourceParsed.username ||
+    (wallpaper.author && wallpaper.author !== "HalalWalls"
+      ? wallpaper.author
+      : null);
 
   const handleResolution = async (res: DownloadResolution) => {
     const ok = await downloadWallpaper(res.label);
@@ -68,7 +78,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
         >
           {/* <Download className="size-3.5" /> */}
           <Image src={download} alt="download" />
-          {wallpaper.views.toLocaleString()}
+          {(wallpaper.downloadCount ?? 0).toLocaleString()}
         </Badge>
       <div className=" flex flex-wrap items-center ">
 
@@ -86,7 +96,22 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
  </div>
       <p className="mt-3 ml-21 text-[17px] leading-relaxed text-hw-muted">
         — Published on {wallpaper.publishedAt} | Original Resolution:{" "}
-        {wallpaper.originalResolution} | Author: {wallpaper.author}
+        {wallpaper.originalResolution} |{" "}
+        {sourceUrl && sourceLabel ? (
+          <>
+            Source:{" "}
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-hw-foreground underline decoration-hw-foreground/50 underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
+            >
+              {sourceLabel}
+            </a>
+          </>
+        ) : (
+          <>Author: {wallpaper.author}</>
+        )}
       </p>
 
       <div className="mt-5">

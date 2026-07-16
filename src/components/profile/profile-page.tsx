@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { ProfileBanner } from "@/components/profile/profile-banner";
+import { DesktopProfileBanner } from "@/components/profile/desktop-profile-banner";
 import { ProfileSectionHeader } from "@/components/profile/profile-section-header";
 import { ProfileCarouselSection } from "@/components/profile/profile-carousel-section";
 import { ProfileCarouselThumb } from "@/components/profile/profile-carousel-thumb";
@@ -122,7 +123,7 @@ export function ProfilePage() {
         </div>
       </div>
 
-      {/* Desktop / tablet */}
+      {/* Desktop — Figma My Account @ node 901:6475 */}
       <div className="hidden min-h-screen bg-hw-bg md:block">
         <SiteHeader />
         <main className="mx-auto max-w-[1650px] px-4 py-8 lg:px-6 lg:py-10">
@@ -130,21 +131,21 @@ export function ProfilePage() {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-6 text-center text-xl font-bold text-hw-account sm:mb-8 sm:text-[39px]"
+            className="mb-8 text-center text-[39px] font-bold text-hw-account"
           >
             My Account
           </motion.h1>
 
-          <ProfileBanner user={profileUser} />
+          <DesktopProfileBanner user={profileUser} />
 
-          <section>
+          <section className="mt-10">
             <div className="mb-10 flex items-end justify-between">
-              <h2 className="text-2xl font-semibold text-hw-account lg:text-4xl">
+              <h2 className="text-4xl font-semibold text-hw-account">
                 Discover Just Uploaded
               </h2>
               <ProfileSectionHeader title="" seeAllHref="/" className="text-right" />
             </div>
-            <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+            <div className="grid grid-cols-4 gap-2">
               {discoverJustUploaded.map((wallpaper, index) => (
                 <ProfileWallpaperThumb
                   key={wallpaper.id}
@@ -157,7 +158,7 @@ export function ProfilePage() {
 
           <section>
             <div className="my-10 flex items-end justify-between">
-              <h2 className="text-2xl font-semibold text-hw-account lg:text-4xl">
+              <h2 className="text-4xl font-semibold text-hw-account">
                 Your Uploads
               </h2>
               <ProfileSectionHeader
@@ -174,7 +175,7 @@ export function ProfilePage() {
             ) : uploads.length === 0 ? (
               <UploadPlaceholder />
             ) : (
-              <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+              <div className="grid grid-cols-4 gap-2">
                 {recentUploads.map((wallpaper, index) => (
                   <ProfileWallpaperThumb
                     key={wallpaper.id}
@@ -188,7 +189,7 @@ export function ProfilePage() {
 
           <section>
             <div className="mb-10 flex items-end justify-between">
-              <h2 className="text-2xl font-semibold text-hw-account lg:text-4xl">
+              <h2 className="text-4xl font-semibold text-hw-account">
                 Your Favorites
               </h2>
               <ProfileSectionHeader
@@ -209,7 +210,7 @@ export function ProfilePage() {
                 No favorites yet.
               </p>
             ) : (
-              <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+              <div className="grid grid-cols-4 gap-2">
                 {recentFavorites.map((wallpaper, index) => (
                   <ProfileWallpaperThumb
                     key={wallpaper.id}

@@ -348,7 +348,7 @@ export function UploadForm() {
           id="upload-source"
           value={source}
           onChange={(e) => setSource(e.target.value)}
-          placeholder="Credit the original source..."
+          placeholder="https://www.instagram.com/username"
           rows={4}
           className={cn(
             fieldBox,

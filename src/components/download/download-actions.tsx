@@ -62,9 +62,7 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
       <Button
         type="button"
         variant="outline"
-        onClick={() =>
-          handleDownload("original", wallpaper.originalResolution)
-        }
+        onClick={() => handleDownload("original", "original")}
         className="h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-colors hover:border-hw-muted hover:bg-hw-pill2 sm:w-auto"
       >
         {originalDone ? (

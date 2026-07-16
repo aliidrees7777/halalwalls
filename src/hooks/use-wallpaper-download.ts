@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 import type { WallpaperDetail } from "@/types/wallpaper";
+import { hasPremiumAccess } from "@/lib/premium-access";
 
 /** Normalise "1920×1080" / "1920x1080" for the download API. */
 export function toDownloadResolution(resolution: string): string {
@@ -12,7 +13,7 @@ export function toDownloadResolution(resolution: string): string {
 
 export function useWallpaperDownload(wallpaper: WallpaperDetail) {
   const { isAuthenticated, openAuthModal, user } = useAuth();
-  const locked = !!wallpaper.isPremium && !user?.isPremium;
+  const locked = !!wallpaper.isPremium && !hasPremiumAccess(user);
 
   const download = useCallback(
     async (resolution: string) => {

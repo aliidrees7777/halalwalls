@@ -36,6 +36,8 @@ export interface WallpaperDetail extends Wallpaper {
   publishedAt: string;
   views: number;
   author: string;
+  /** Original credit URL (e.g. Instagram profile) when provided at upload. */
+  description?: string;
   originalResolution: string;
   originalSizeMB: number;
   preferredResolution: string;
