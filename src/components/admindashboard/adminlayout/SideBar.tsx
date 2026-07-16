@@ -15,7 +15,7 @@ import {
   // ArrowLeftRight,
   // UploadCloud,
   // AlertTriangle,
-  // Settings,
+  Settings,
   // Wrench,
   // FileText,
   // LifeBuoy,
@@ -92,12 +92,12 @@ const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
           >
             <Users size={20} /> Users
           </div>
-          <div
+          {/* <div
             className={`sb-item ${activeItem === "Roles" ? "on" : ""}`}
             onClick={() => setActiveItem("Roles")}
           >
             <ShieldCheck size={20} /> Roles & Permissions
-          </div>
+          </div> */}
         </div>
 
         {/* Subscriptions */}
@@ -149,7 +149,7 @@ const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
         </div> */}
 
         {/* System */}
-        {/* <div className="sb-sec">
+        <div className="sb-sec">
           <span className="sb-lbl">System</span>
           <div
             className={`sb-item ${activeItem === "Settings" ? "on" : ""}`}
@@ -157,7 +157,7 @@ const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
           >
             <Settings size={20} /> Settings
           </div>
-          <div
+          {/* <div
             className={`sb-item ${activeItem === "Maintenance" ? "on" : ""}`}
             onClick={() => setActiveItem("Maintenance")}
           >
@@ -168,8 +168,8 @@ const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
             onClick={() => setActiveItem("Logs")}
           >
             <FileText size={20} /> Logs
-          </div>
-        </div> */}
+          </div> */}
+        </div>
       </div>
 
       {/* <div className="sb-footer">

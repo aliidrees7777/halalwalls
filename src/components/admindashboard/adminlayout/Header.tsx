@@ -48,7 +48,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
           <input type="text" placeholder="Search wallpapers, users..." />
         </div>
         <div className="top-right">
-          <div className="notif" title="Notifications">
+          {/* <div className="notif" title="Notifications">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -59,7 +59,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
             <div className="nbadge">6</div>
-          </div>
+          </div> */}
 
           <div style={{ position: "relative" }}>
             <div

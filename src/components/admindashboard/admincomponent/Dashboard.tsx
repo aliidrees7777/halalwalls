@@ -14,6 +14,7 @@ import SubscribersPage from "./SubscribersPage";
 import TagsPage from "./TagsPage";
 import ResolutionsPage from "./ResolutionsPage";
 import UsersPage from "./UsersPage";
+import SettingsPage from "./SettingsPage";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { ADMIN_PAGES } from "../reusable/adminPages";
 import { RolesPermissions } from "../reusable/RolesPermissions";
@@ -72,7 +73,7 @@ const Dashboard = () => {
                 variant="widget"
                 onViewAll={() => setActive("Moderation")}
               />
-              <Rightpanel onViewAll={() => setActive("TopCategories")} />
+              {/* <Rightpanel onViewAll={() => setActive("TopCategories")} /> */}
             </div>
           </>
         ) : active === "Moderation" ? (
@@ -101,6 +102,8 @@ const Dashboard = () => {
           <WallpapersPage />
         ) : active === "Roles" ? (
           <RolesPermissions />
+        ) : active === "Settings" ? (
+          <SettingsPage />
         ) : config ? (
           <AdminListPage config={config} />
         ) : (
