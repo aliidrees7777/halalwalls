@@ -73,7 +73,12 @@ const WallpapersPage = () => {
     let ignore = false;
     api.get<WpStats>("/admin/wallpapers/stats").then((d) => {
       if (!ignore) setStats(d);
-    }).catch(() => {});
+    }).catch((e) => {
+      if (!ignore) {
+        console.error("Failed to load wallpaper stats:", e);
+        setStats(null);
+      }
+    });
     return () => { ignore = true; };
   }, [reloadTick]);
 
