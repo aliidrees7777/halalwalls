@@ -87,6 +87,8 @@ export function HomePage() {
     };
   }, [category, sort, tag, resolution, search, currentPage]);
 
+  console.log("build 1.0");
+
   return (
     <div className="min-h-screen ">
       <SiteHeader />
