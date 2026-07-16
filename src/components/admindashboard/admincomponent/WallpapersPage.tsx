@@ -9,6 +9,7 @@ import {
   Upload,
 } from "lucide-react";
 import { api, API_BASE_URL, ApiError, getToken } from "@/lib/api";
+import { resolveMediaUrl } from "@/lib/media-url";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { StatusBadge } from "../reusable/cells";
 import type { ListPageConfig, StatCardDef } from "../reusable/types";
@@ -44,12 +45,8 @@ interface WpStats {
   };
 }
 
-const ORIGIN = API_BASE_URL.replace(/\/api\/v\d+$/, "");
-const imgSrc = (raw?: string | null) => {
-  if (!raw) return "";
-  if (/^(https?:|data:)/.test(raw)) return raw;
-  return raw.startsWith("/") ? ORIGIN + raw : `${ORIGIN}/${raw}`;
-};
+/** Use same-origin `/uploads/…` (Next rewrite → backend), not raw API host. */
+const imgSrc = (raw?: string | null) => resolveMediaUrl(raw);
 const CAT_CLASS: Record<string, string> = {
   nature: "cat-n", sport: "cat-n", space: "cat-i", islamic: "cat-i",
   movies: "cat-m", minimalist: "cat-m", gaming: "cat-g", anime: "cat-g",
@@ -189,7 +186,21 @@ const WallpapersPage = () => {
         cell: (r) => {
           const w = r as unknown as AdminWallpaper;
           const src = imgSrc(w.thumbnailUrl || w.image);
-          return <div className="thumb">{src ? <img src={src} alt={w.title} /> : null}</div>;
+          return (
+            <div className="thumb">
+              {src ? (
+                // eslint-disable-next-line @next/next/no-img-element -- admin table thumb
+                <img
+                  src={src}
+                  alt={w.title}
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    e.currentTarget.parentElement?.classList.add("thumb-broken");
+                  }}
+                />
+              ) : null}
+            </div>
+          );
         },
       },
       {

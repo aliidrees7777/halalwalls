@@ -13,7 +13,8 @@ import {
   ArrowLeft,
   Search,
 } from "lucide-react";
-import { api, API_BASE_URL, ApiError } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
+import { resolveMediaUrl } from "@/lib/media-url";
 
 // ── types ──
 interface AdminWallpaper {
@@ -75,11 +76,8 @@ const CAT_CLASS: Record<string, string> = {
   superheroes: "cat-c",
 };
 
-const ORIGIN = API_BASE_URL.replace(/\/api\/v\d+$/, "");
 function imgSrc(raw?: string | null): string {
-  if (!raw) return "";
-  if (/^(https?:|data:)/.test(raw)) return raw;
-  return raw.startsWith("/") ? ORIGIN + raw : `${ORIGIN}/${raw}`;
+  return resolveMediaUrl(raw);
 }
 
 const fmtDate = (iso: string) =>

@@ -21,7 +21,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
   return (
     <div>
       <div id="topbar" className="lg:ml-60">
-        <button className="ham-btn" title="Toggle sidebar" onClick={onMenuClick}>
+        {/* <button className="ham-btn" title="Toggle sidebar" onClick={onMenuClick}>
           <svg
             width="17"
             height="17"
@@ -46,7 +46,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             <path d="m21 21-4.35-4.35" />
           </svg>
           <input type="text" placeholder="Search wallpapers, users..." />
-        </div>
+        </div> */}
         <div className="top-right">
           {/* <div className="notif" title="Notifications">
             <svg

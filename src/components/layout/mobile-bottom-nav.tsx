@@ -85,7 +85,7 @@ export function MobileBottomNav() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const hasCategory = Boolean(searchParams.get("category"));
-  const { isAuthenticated, loading, openAuthModal } = useAuth();
+  const { isAuthenticated, openAuthModal } = useAuth();
   const profileActive = profileItem.match(pathname, hasCategory);
 
   return (
@@ -149,31 +149,24 @@ export function MobileBottomNav() {
           );
         })}
 
-        {loading ? (
-          <div className="size-10" aria-hidden />
-        ) : isAuthenticated ? (
-          <MotionLink
-            href={profileItem.href}
-            aria-label={profileItem.label}
-            aria-current={profileActive ? "page" : undefined}
-            whileTap={tap}
-            transition={tapTransition}
-            className="flex items-center justify-center"
-          >
-            <NavIcon item={profileItem} active={profileActive} />
-          </MotionLink>
-        ) : (
-          <motion.button
-            type="button"
-            aria-label={profileItem.label}
-            onClick={() => openAuthModal("signin")}
-            whileTap={tap}
-            transition={tapTransition}
-            className="flex items-center justify-center"
-          >
-            <NavIcon item={profileItem} active={profileActive} />
-          </motion.button>
-        )}
+        {/* Always the same element type so SSR (auth still loading) and the
+            client (Suspense may resume after auth has settled) don't mismatch. */}
+        <MotionLink
+          href={profileItem.href}
+          aria-label={profileItem.label}
+          aria-current={profileActive ? "page" : undefined}
+          whileTap={tap}
+          transition={tapTransition}
+          className="flex items-center justify-center"
+          onClick={(e) => {
+            if (!isAuthenticated) {
+              e.preventDefault();
+              openAuthModal("signin");
+            }
+          }}
+        >
+          <NavIcon item={profileItem} active={profileActive} />
+        </MotionLink>
       </div>
     </nav>
   );
