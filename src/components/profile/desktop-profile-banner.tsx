@@ -11,6 +11,7 @@ import {
   type AccountSettingsData,
 } from "@/components/profile/account-settings/account-settings-modal";
 import type { ProfileUser } from "@/data/profile-user";
+import { shouldUnoptimizeMedia } from "@/lib/media-url";
 
 interface DesktopProfileBannerProps {
   user: ProfileUser;
@@ -235,6 +236,7 @@ export function DesktopProfileBanner({
               src={user.avatar}
               alt={user.name}
               fill
+              unoptimized={shouldUnoptimizeMedia(user.avatar)}
               className="object-cover"
               sizes="214px"
             />

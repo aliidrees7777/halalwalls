@@ -151,7 +151,10 @@ export function HomePage() {
             <WallpaperPagination
               currentPage={currentPage}
               totalPages={pagination?.totalPages ?? 1}
-              onPageChange={setCurrentPage}
+              onPageChange={(page) => {
+                setCurrentPage(page);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
               preview={(pagination?.totalPages ?? 1) <= 1}
             />
 

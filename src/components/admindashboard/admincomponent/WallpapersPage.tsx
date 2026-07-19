@@ -384,11 +384,15 @@ function WallpaperFormModal({
       setError("Please choose an image file to upload.");
       return;
     }
+    if (!title.trim()) {
+      setError("Title is required.");
+      return;
+    }
     setBusy(true);
     try {
       const fd = new FormData();
       fd.append("image", file);
-      if (title.trim()) fd.append("title", title.trim());
+      fd.append("title", title.trim());
       if (cat?.label) fd.append("category", cat.label);
       if (cat?.value) fd.append("categorySlug", cat.value);
       const tagList = tags.split(",").map((t) => t.trim()).filter(Boolean);
@@ -428,8 +432,14 @@ function WallpaperFormModal({
           </div>
         ) : null}
 
-        <label style={label}>Title</label>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Sunset in Tokyo" style={inputStyle} />
+        <label style={label}>Title <span style={{ color: "#ef4444" }}>*</span></label>
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="e.g. Sunset in Tokyo"
+          required
+          style={inputStyle}
+        />
 
         {isEdit ? (
           <>

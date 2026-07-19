@@ -15,6 +15,7 @@ import { useAuth } from "@/context/auth-context";
 import { SearchBox } from "@/components/shared/search-box";
 import { usePathname } from "next/navigation";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
+import { shouldUnoptimizeMedia } from "@/lib/media-url";
 
 function MobileHeaderActions({
   open,
@@ -39,6 +40,7 @@ function MobileHeaderActions({
               alt=""
               width={28}
               height={28}
+              unoptimized={shouldUnoptimizeMedia(user.avatar)}
               className="size-7 rounded-full object-cover"
             />
           ) : (

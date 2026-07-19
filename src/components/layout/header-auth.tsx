@@ -5,6 +5,7 @@ import Image from "next/image";
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { cn } from "@/lib/utils";
+import { shouldUnoptimizeMedia } from "@/lib/media-url";
 
 /**
  * Header auth control: shows "Sign In" for guests, or the user's avatar
@@ -44,7 +45,14 @@ export function HeaderAuth({ className }: { className?: string }) {
         className="grid size-9 place-items-center overflow-hidden rounded-full border border-hw-border bg-hw-pill2 text-sm font-semibold text-hw-foreground transition-colors hover:border-hw-green"
       >
         {user.avatar ? (
-          <Image src={user.avatar} alt="" width={36} height={36} className="size-full object-cover" />
+          <Image
+            src={user.avatar}
+            alt=""
+            width={36}
+            height={36}
+            unoptimized={shouldUnoptimizeMedia(user.avatar)}
+            className="size-full object-cover"
+          />
         ) : (
           initial
         )}

@@ -54,6 +54,9 @@ const nextConfig: NextConfig = {
       { protocol: "http", hostname: "127.0.0.1" },
       { protocol: "https", hostname: "halalwalls.com" }, // apex (user-upload URLs use this)
       { protocol: "https", hostname: "**.halalwalls.com" }, // + any subdomain (www, cdn, …)
+      // Google OAuth profile pictures
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      { protocol: "https", hostname: "**.googleusercontent.com" },
     ],
   },
 };

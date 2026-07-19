@@ -26,17 +26,18 @@ const ALLOWED_IMAGE_TYPES = new Set([
   "image/png",
 ]);
 
-// Fallback shown only if the categories API can't be reached.
-const FALLBACK_CATEGORIES = [
-  "Islamic",
-  "Anime",
-  "Superheroes",
-  "Minimalist",
-  "Gaming",
-  "Movies",
-  "Cars",
-  "Sport",
-  "Space",
+type CategoryOption = { name: string; isPremium: boolean };
+
+const FALLBACK_CATEGORIES: CategoryOption[] = [
+  { name: "Islamic", isPremium: false },
+  { name: "Anime", isPremium: false },
+  { name: "Superheroes", isPremium: false },
+  { name: "Minimalist", isPremium: false },
+  { name: "Gaming", isPremium: false },
+  { name: "Movies", isPremium: false },
+  { name: "Cars", isPremium: false },
+  { name: "Sport", isPremium: false },
+  { name: "Space", isPremium: false },
 ];
 
 const DONT_PUBLISH = [
@@ -52,15 +53,18 @@ const fieldBox =
   "w-full rounded-[5px] border h-[16px] border-hw-input-border bg-hw-input px-4 text-[21px] text-hw-foreground outline-none transition-colors focus:border-[#05DF8B] placeholder:text-hw-faint/50";
 
 export function UploadForm() {
-  const { isAuthenticated, openAuthModal } = useAuth();
+  const { isAuthenticated, user, openAuthModal } = useAuth();
   const { toast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const pendingSubmitRef = useRef(false);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
-  const [categoryOptions, setCategoryOptions] = useState<string[]>(FALLBACK_CATEGORIES);
+  const [categoryOptions, setCategoryOptions] =
+    useState<CategoryOption[]>(FALLBACK_CATEGORIES);
   const [tags, setTags] = useState("");
   const [source, setSource] = useState("");
   const [agree, setAgree] = useState(false);
@@ -69,13 +73,22 @@ export function UploadForm() {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const isPremiumUser = Boolean(user?.isPremium);
+
   // Real, active categories from the API (admin-managed).
   useEffect(() => {
     let ignore = false;
     api
-      .get<{ categories: { name: string }[] }>("/categories")
+      .get<{ categories: { name: string; isPremium?: boolean }[] }>("/categories")
       .then((d) => {
-        if (!ignore && d.categories?.length) setCategoryOptions(d.categories.map((c) => c.name));
+        if (!ignore && d.categories?.length) {
+          setCategoryOptions(
+            d.categories.map((c) => ({
+              name: c.name,
+              isPremium: Boolean(c.isPremium),
+            })),
+          );
+        }
       })
       .catch(() => {
         /* keep the fallback list */
@@ -84,6 +97,14 @@ export function UploadForm() {
       ignore = true;
     };
   }, []);
+
+  // After guest clicks Upload → signs in, auto-submit the pending form.
+  useEffect(() => {
+    if (!isAuthenticated || !pendingSubmitRef.current) return;
+    pendingSubmitRef.current = false;
+    void submitUpload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: fire once after auth
+  }, [isAuthenticated]);
 
   function handleFile(picked: File | undefined) {
     if (!picked) return;
@@ -107,7 +128,12 @@ export function UploadForm() {
 
   function validateForm(): string | null {
     if (!file) return "Please choose a wallpaper image.";
+    if (!title.trim()) return "Please enter a title.";
     if (!category) return "Please select a category.";
+    const selected = categoryOptions.find((c) => c.name === category);
+    if (selected?.isPremium && !isPremiumUser) {
+      return "Premium Walls is available to Premium members only.";
+    }
     if (!agree) return "Please agree to the terms of use.";
     if (!CAPTCHA_OPTIONAL && !captchaToken) {
       return "Please complete the reCAPTCHA verification.";
@@ -119,6 +145,7 @@ export function UploadForm() {
     setFile(null);
     setPreview(null);
     setFileName(null);
+    setTitle("");
     setCategory("");
     setTags("");
     setSource("");
@@ -127,17 +154,7 @@ export function UploadForm() {
     recaptchaRef.current?.reset();
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
-    // Submitting requires a signed-in user (the backend route is auth-guarded).
-    if (!isAuthenticated) {
-      openAuthModal("signin");
-      return;
-    }
-
+  async function submitUpload() {
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
@@ -146,9 +163,12 @@ export function UploadForm() {
     if (!file) return;
 
     setSubmitting(true);
+    setError(null);
+    setSuccess(null);
     try {
       const formData = new FormData();
       formData.append("image", file);
+      formData.append("title", title.trim());
       formData.append("category", category);
       if (tags.trim()) formData.append("tags", tags.trim());
       if (source.trim()) formData.append("source", source.trim());
@@ -165,8 +185,8 @@ export function UploadForm() {
       });
       resetForm();
     } catch (err) {
-      // An expired/invalid session surfaces the sign-in modal.
       if (err instanceof ApiError && err.statusCode === 401) {
+        pendingSubmitRef.current = true;
         openAuthModal("signin");
       }
       setError(
@@ -177,6 +197,27 @@ export function UploadForm() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    // Guest: open sign-in, then auto-submit once authenticated.
+    if (!isAuthenticated) {
+      pendingSubmitRef.current = true;
+      openAuthModal("signin");
+      return;
+    }
+
+    await submitUpload();
   }
 
   return (
@@ -215,21 +256,21 @@ export function UploadForm() {
         className="group mx-auto relative w-full lg:w-[733px] h-[412px] flex flex-col items-center justify-center gap-4 overflow-hidden rounded-4xl bg-hw-input p-6 text-center"
       >
         <svg
-  className="absolute inset-0 h-full w-full pointer-events-none"
-  preserveAspectRatio="none"
->
-  <rect
-    x="2"
-    y="2"
-    width="calc(100% - 4px)"
-    height="calc(100% - 4px)"
-    rx="24"
-    fill="none"
-    stroke="#909098"
-    strokeWidth="3"
-    strokeDasharray="18 10"
-  />
-</svg>
+          className="absolute inset-0 h-full w-full pointer-events-none"
+          preserveAspectRatio="none"
+        >
+          <rect
+            x="2"
+            y="2"
+            width="calc(100% - 4px)"
+            height="calc(100% - 4px)"
+            rx="24"
+            fill="none"
+            stroke="#909098"
+            strokeWidth="3"
+            strokeDasharray="18 10"
+          />
+        </svg>
         {preview ? (
           <>
             <NextImage
@@ -265,7 +306,9 @@ export function UploadForm() {
       {/* Don't publish notice */}
       <div className="flex flex-col justify-center lg:items-center">
         <div className="rounded-[9px]  lg:w-[1191px] border border-[#2F2805] bg-[#2F2805] px-6 py-5 text-[#C1A36F]">
-          <h2 className="text-[28px] font-semibold text-[#C1A36F]">Don&rsquo;t publish:</h2>
+          <h2 className="text-[28px] font-semibold text-[#C1A36F]">
+            Don&rsquo;t publish:
+          </h2>
           <ol className="mt-4 space-y-2 text-[21px] text-[#C1A36F] font-medium">
             {DONT_PUBLISH.map((item, i) => (
               <li key={item}>
@@ -281,6 +324,26 @@ export function UploadForm() {
           </Link>
         </div>
       </div>
+
+      {/* Title */}
+      <div className="flex flex-col gap-2">
+        <label
+          htmlFor="upload-title"
+          className="text-[21px] font-semibold text-hw-depw"
+        >
+          Title <span className="text-red-400">*</span>
+        </label>
+        <input
+          id="upload-title"
+          type="text"
+          required
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="e.g. Sunset over the mosque"
+          className={cn(fieldBox, "h-12")}
+        />
+      </div>
+
       {/* Category */}
       <div className="flex flex-col gap-2">
         <label
@@ -304,18 +367,39 @@ export function UploadForm() {
             <option value="" disabled>
               Select a category
             </option>
-            {categoryOptions.map((c) => (
-              <option
-                key={c}
-                value={c}
-                className="bg-hw-input text-hw-foreground"
-              >
-                {c}
-              </option>
-            ))}
+            {categoryOptions.map((c) => {
+              const locked = c.isPremium && !isPremiumUser;
+              return (
+                <option
+                  key={c.name}
+                  value={c.name}
+                  disabled={locked}
+                  className="bg-hw-input text-hw-foreground"
+                >
+                  {c.isPremium
+                    ? locked
+                      ? `${c.name} (Premium only)`
+                      : `${c.name} ★`
+                    : c.name}
+                </option>
+              );
+            })}
           </select>
           <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-5 -translate-y-1/2 text-hw-faint" />
         </div>
+        {!isPremiumUser ? (
+          <p className="text-sm text-hw-muted">
+            Premium Walls is available to{" "}
+            <button
+              type="button"
+              onClick={() => openAuthModal("premium")}
+              className="text-[#FFD700] underline"
+            >
+              Premium members
+            </button>{" "}
+            only.
+          </p>
+        ) : null}
       </div>
 
       {/* Tags */}
@@ -370,7 +454,9 @@ export function UploadForm() {
             borderWidth: 2,
             borderStyle: "solid",
             borderColor: agree ? "#05DF8B" : "#8b9096",
-            backgroundColor: agree ? "rgba(5,223,139,0.15)" : "rgba(255,255,255,0.05)",
+            backgroundColor: agree
+              ? "rgba(5,223,139,0.15)"
+              : "rgba(255,255,255,0.05)",
           }}
         >
           {agree ? (
@@ -409,7 +495,7 @@ export function UploadForm() {
           className="inline-flex h-11 items-center justify-center gap-2 rounded-[5px] bg-[#4D853A] px-5 text-[17px] font-semibold text-white transition-[filter,transform] hover:brightness-110 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? "Uploading…" : "Upload Wallpaper"}
-          <Image src={downloadrotate} alt="" className="text-white"/>
+          <Image src={downloadrotate} alt="" className="text-white" />
         </button>
       </div>
     </form>

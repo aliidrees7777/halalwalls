@@ -10,6 +10,7 @@ import { demoProfileUser } from "@/data/profile-user";
 import { useAuth } from "@/context/auth-context";
 import { useMyFavorites } from "@/hooks/use-my-favorites";
 import type { Wallpaper } from "@/types/wallpaper";
+import { shouldUnoptimizeMedia } from "@/lib/media-url";
 import settings from "../../../public/my-account/settings.png";
 
 /**
@@ -168,7 +169,14 @@ export function MobileProfile() {
               className="relative size-24 shrink-0 overflow-hidden rounded-full border-[3px] border-white/80"
               style={{ boxShadow: "0 0 14px rgba(215,0,185,0.65)" }}
             >
-              <Image src={user.avatar} alt={user.name} fill className="object-cover" sizes="96px" />
+              <Image
+                src={user.avatar}
+                alt={user.name}
+                fill
+                unoptimized={shouldUnoptimizeMedia(user.avatar)}
+                className="object-cover"
+                sizes="96px"
+              />
             </div>
 
             <button

@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { compressImageToDataUrl } from "@/lib/image";
+import { shouldUnoptimizeMedia } from "@/lib/media-url";
 import pencil from "../../../../public/my-account/pencil.svg"
 interface AccountImageUploadProps {
   label: string;
@@ -73,7 +74,7 @@ export function AccountImageUpload({
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           sizes={variant === "avatar" ? "96px" : "400px"}
-          unoptimized={src.startsWith("data:")}
+          unoptimized={shouldUnoptimizeMedia(src)}
         />
         <span
           className="absolute inset-0 flex items-center justify-center bg-black/35 opacity-90 transition-opacity duration-200 group-hover:bg-black/45"

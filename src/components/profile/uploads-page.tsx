@@ -7,8 +7,11 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/home/site-header";
 import { useMyUploads } from "@/hooks/use-my-uploads";
 
-/** One desktop row (lg:grid-cols-4). */
-export const UPLOADS_PREVIEW_COUNT = 4;
+/**
+ * Desktop preview reserves the 4th grid slot for "Add Wallpaper",
+ * so only the latest 3 uploads are shown on the profile page.
+ */
+export const UPLOADS_PREVIEW_COUNT = 3;
 
 /** API returns newest-first; take the latest N. */
 export function getRecentUploads<T>(items: T[], count = UPLOADS_PREVIEW_COUNT): T[] {
@@ -35,8 +38,6 @@ export function UploadsPage() {
           <p className="py-12 text-center text-sm text-hw-muted">
             Loading your uploads…
           </p>
-        ) : uploads.length === 0 ? (
-          <UploadPlaceholder />
         ) : (
           <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
             {uploads.map((wallpaper, index) => (
@@ -46,6 +47,7 @@ export function UploadsPage() {
                 index={index}
               />
             ))}
+            <UploadPlaceholder className="max-w-none" />
           </div>
         )}
       </main>

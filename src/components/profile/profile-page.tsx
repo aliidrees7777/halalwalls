@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ProfileBanner } from "@/components/profile/profile-banner";
 import { DesktopProfileBanner } from "@/components/profile/desktop-profile-banner";
@@ -23,22 +23,49 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { useAuth } from "@/context/auth-context";
 import { useMyFavorites } from "@/hooks/use-my-favorites";
 import { useMyUploads } from "@/hooks/use-my-uploads";
-import {
-  demoProfileUser,
-  discoverJustUploaded,
-  type ProfileUser,
-} from "@/data/profile-user";
+import { api } from "@/lib/api";
+import type { Wallpaper } from "@/types/wallpaper";
+import { demoProfileUser, type ProfileUser } from "@/data/profile-user";
 import { SiteHeader } from "../home/site-header";
+
+const DISCOVER_LIMIT = 4;
 
 export function ProfilePage() {
   const { user, loading, refreshMe } = useAuth();
   const { wallpapers: favorites, loading: favoritesLoading } = useMyFavorites();
   const { wallpapers: uploads, loading: uploadsLoading } = useMyUploads();
+  const [justUploaded, setJustUploaded] = useState<Wallpaper[]>([]);
+  const [justUploadedLoading, setJustUploadedLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
     void refreshMe();
   }, [user?.id, refreshMe]);
+
+  // Same source as homepage default: latest published wallpapers.
+  useEffect(() => {
+    let ignore = false;
+    setJustUploadedLoading(true);
+    api
+      .get<{ wallpapers: Wallpaper[] }>(
+        `/wallpapers?sort=latest&limit=${DISCOVER_LIMIT}&page=1`,
+      )
+      .then((data) => {
+        if (ignore) return;
+        setJustUploaded(data.wallpapers ?? []);
+      })
+      .catch(() => {
+        if (ignore) return;
+        setJustUploaded([]);
+      })
+      .finally(() => {
+        if (ignore) return;
+        setJustUploadedLoading(false);
+      });
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -75,9 +102,11 @@ export function ProfilePage() {
         <div className="flex flex-col items-center pt-[30px]">
           <div className="flex w-full max-w-[412px] flex-col gap-[30px] px-[6px]">
             <ProfileCarouselSection title="Discover Just Uploaded" seeAllHref="/">
-              {discoverJustUploaded.map((wallpaper) => (
-                <ProfileCarouselThumb key={wallpaper.id} wallpaper={wallpaper} />
-              ))}
+              {justUploadedLoading
+                ? null
+                : justUploaded.map((wallpaper) => (
+                    <ProfileCarouselThumb key={wallpaper.id} wallpaper={wallpaper} />
+                  ))}
             </ProfileCarouselSection>
 
             <ProfileCarouselSection
@@ -88,12 +117,12 @@ export function ProfilePage() {
               carouselHeightClass="h-[279px]"
               itemGapClass="gap-1.5 pl-px"
             >
-              <ProfileUploadCarouselCard />
               {uploadsLoading
                 ? null
                 : recentUploads.map((wallpaper) => (
                     <ProfileCarouselThumb key={wallpaper.id} wallpaper={wallpaper} />
                   ))}
+              <ProfileUploadCarouselCard />
             </ProfileCarouselSection>
 
             <ProfileCarouselSection
@@ -145,15 +174,25 @@ export function ProfilePage() {
               </h2>
               <ProfileSectionHeader title="" seeAllHref="/" className="text-right" />
             </div>
-            <div className="grid grid-cols-4 gap-2">
-              {discoverJustUploaded.map((wallpaper, index) => (
-                <ProfileWallpaperThumb
-                  key={wallpaper.id}
-                  wallpaper={wallpaper}
-                  index={index}
-                />
-              ))}
-            </div>
+            {justUploadedLoading ? (
+              <p className="py-12 text-center text-sm text-hw-muted">
+                Loading latest uploads…
+              </p>
+            ) : justUploaded.length === 0 ? (
+              <p className="py-12 text-center text-sm text-hw-muted">
+                No new wallpapers yet.
+              </p>
+            ) : (
+              <div className="grid grid-cols-4 gap-2">
+                {justUploaded.map((wallpaper, index) => (
+                  <ProfileWallpaperThumb
+                    key={wallpaper.id}
+                    wallpaper={wallpaper}
+                    index={index}
+                  />
+                ))}
+              </div>
+            )}
           </section>
 
           <section>
@@ -172,8 +211,6 @@ export function ProfilePage() {
               <p className="py-12 text-center text-sm text-hw-muted">
                 Loading your uploads…
               </p>
-            ) : uploads.length === 0 ? (
-              <UploadPlaceholder />
             ) : (
               <div className="grid grid-cols-4 gap-2">
                 {recentUploads.map((wallpaper, index) => (
@@ -183,6 +220,7 @@ export function ProfilePage() {
                     index={index}
                   />
                 ))}
+                <UploadPlaceholder className="max-w-none" />
               </div>
             )}
           </section>

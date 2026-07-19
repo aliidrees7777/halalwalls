@@ -37,9 +37,14 @@ export function shouldUnoptimizeMedia(url: string): boolean {
   if (url.startsWith("/uploads/")) return true;
 
   try {
-    const host = new URL(url).hostname;
+    const parsed = new URL(url);
+    const host = parsed.hostname;
     if (host === "localhost" || host === "127.0.0.1" || host === "::1") return true;
-    if (new URL(url).pathname.startsWith("/uploads/")) return true;
+    if (parsed.pathname.startsWith("/uploads/")) return true;
+    // Google OAuth avatars (and similar CDNs) often fail through the optimizer.
+    if (host === "lh3.googleusercontent.com" || host.endsWith(".googleusercontent.com")) {
+      return true;
+    }
   } catch {
     return false;
   }

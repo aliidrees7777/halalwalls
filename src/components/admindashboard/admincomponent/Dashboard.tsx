@@ -18,11 +18,18 @@ import SettingsPage from "./SettingsPage";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { ADMIN_PAGES } from "../reusable/adminPages";
 import { RolesPermissions } from "../reusable/RolesPermissions";
+import { useAuth } from "@/context/auth-context";
 
 const Dashboard = () => {
+  const { user } = useAuth();
   const [active, setActive] = useState("Dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const config = ADMIN_PAGES[active];
+  const welcomeName =
+    user?.name?.trim() ||
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
+    user?.email?.split("@")[0] ||
+    "Admin";
 
   return (
     <div>
@@ -41,7 +48,7 @@ const Dashboard = () => {
               <div>
                 <h1>Dashboard</h1>
                 <p>
-                  Welcome back, <em>Admin!</em>
+                  Welcome back, <em>{welcomeName}!</em>
                 </p>
               </div>
               <button

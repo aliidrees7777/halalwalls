@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LayoutGrid, CheckCircle, Image as ImageIcon, Download, Star } from "lucide-react";
 import { api, API_BASE_URL, ApiError } from "@/lib/api";
+import { invalidateCategoriesCache } from "@/hooks/use-catalog";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { StatusBadge } from "../reusable/cells";
 import type { ListPageConfig, StatCardDef } from "../reusable/types";
@@ -43,7 +44,10 @@ const CategoriesManagementPage = () => {
   const [showAdd, setShowAdd] = useState(false);
   const [editRow, setEditRow] = useState<AdminCategory | null>(null);
 
-  const reload = useCallback(() => setReloadTick((t) => t + 1), []);
+  const reload = useCallback(() => {
+    invalidateCategoriesCache();
+    setReloadTick((t) => t + 1);
+  }, []);
 
   useEffect(() => {
     let ignore = false;
