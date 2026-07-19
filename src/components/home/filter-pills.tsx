@@ -1,8 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Flame, Play, Shuffle } from "lucide-react";
-import { useTags } from "@/hooks/use-catalog";
+import { useCategories } from "@/hooks/use-catalog";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import rocket from "../../../public/rocket.svg";
@@ -13,13 +13,12 @@ import lightrocket from "../../../public/cate-icon/lightrocket.svg";
 import playdark from "../../../public/cate-icon/playdark.svg";
 import populardark from "../../../public/cate-icon/populardark.svg";
 import randomdark from "../../../public/cate-icon/randomdark.svg";
+
 /**
- * Homepage filter row: the 4 browse modes (Latest / Live / Random / Popular)
- * followed by TAG pills (tags users assign to wallpapers at upload).
- *
- * Filters COMBINE via the URL: a browse mode sets ?sort, a tag sets ?tag, and
- * the current category (?category, chosen from the sidebar/header) is preserved
- * — so "Cars" + "Latest" → latest cars; "+ #neon" → latest neon cars.
+ * Homepage filter row below the search box:
+ * - Browse modes set ?sort= (Latest / Live / Random / Popular)
+ * - Category pills set ?category= like the sidebar
+ * Mouse wheel scrolls this strip horizontally (no Shift required).
  */
 
 const pillClass = (active: boolean) =>
@@ -30,13 +29,26 @@ const pillClass = (active: boolean) =>
       : "bg-hw-pill font-medium text-white hover:bg-hw-pill2-hover",
   );
 
+const SORT_MODES = [
+  {
+    id: "latest",
+    label: "Latest",
+    icon: lightrocket,
+    darkIcon: rocket,
+  },
+  { id: "live", label: "Live Walls", icon: play, darkIcon: playdark },
+  { id: "random", label: "Random", icon: shuffle, darkIcon: randomdark },
+  { id: "popular", label: "Popular", icon: flame, darkIcon: populardark },
+] as const;
+
 export function FilterPills() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const tags = useTags();
+  const { categories } = useCategories();
+  const scrollerRef = useRef<HTMLDivElement>(null);
 
   const activeSort = searchParams.get("sort") || "latest";
-  const activeTag = searchParams.get("tag") || "";
+  const activeCategory = searchParams.get("category") || "";
 
   // Merge an update into the current query (preserving the other filters).
   const go = (updates: Record<string, string | null>) => {
@@ -50,37 +62,33 @@ export function FilterPills() {
     router.push(qs ? `/?${qs}` : "/");
   };
 
-  const BROWSE_MODES = [
-    {
-      id: "latest",
-      label: "Latest",
-      icon: lightrocket,
-      darkIcon: rocket,
-    },
-    { id: "live", label: "Live Walls", icon: play, darkIcon: playdark },
-    { id: "random", label: "Random", icon: shuffle, darkIcon: randomdark },
-    { id: "popular", label: "Popular", icon: flame, darkIcon: populardark },
-    { id: "anime", label: "Anime" },
-    { id: "superheroes", label: "Superheroes" },
-    { id: "minimalist", label: "Minimalist" },
-    { id: "gaming", label: "Gaming" },
-    { id: "movies", label: "Movies" },
-    { id: "cars", label: "Cars" },
-    { id: "sport", label: "Sport" },
-    { id: "space", label: "Space" },
-    { id: "animals", label: "Animals" },
-    { id: "tvshows", label: "TV Shows" },
-    { id: "3D", label: "3D" },
-  ] as const;
+  // Vertical mouse wheel → horizontal scroll for this row.
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    const onWheel = (event: WheelEvent) => {
+      if (el.scrollWidth <= el.clientWidth) return;
+
+      const dominantY = Math.abs(event.deltaY) >= Math.abs(event.deltaX);
+      if (!dominantY || event.deltaY === 0) return;
+
+      event.preventDefault();
+      el.scrollLeft += event.deltaY;
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
 
   return (
     <div
+      ref={scrollerRef}
       className="pills-scroll"
       role="tablist"
       aria-label="Wallpaper filters"
     >
-      {BROWSE_MODES.map((mode) => {
-        // const Icon = mode.icon;
+      {SORT_MODES.map((mode) => {
         const isActive = activeSort === mode.id;
         return (
           <button
@@ -92,34 +100,34 @@ export function FilterPills() {
             className={pillClass(isActive)}
           >
             {mode.label}
-            {/* <Icon className="size-3.5" /> */}
-            {"icon" in mode && (
-              <Image
-                src={mode.icon}
-                alt={mode.label}
-                width={22}
-                height={22}
-                className={cn(
-                  "w-[var(--lp-pill-icon)] h-[var(--lp-pill-icon)]",
-                  isActive ? "brightness-0" : "brightness-0 invert",
-                )}
-              />
-            )}
+            <Image
+              src={mode.icon}
+              alt=""
+              width={22}
+              height={22}
+              className={cn(
+                "w-[var(--lp-pill-icon)] h-[var(--lp-pill-icon)]",
+                isActive ? "brightness-0" : "brightness-0 invert",
+              )}
+            />
           </button>
         );
       })}
 
-      {tags.map((t) => {
-        const isActive = activeTag === t.tag;
+      {categories.map((category) => {
+        const isActive = activeCategory === category.slug;
         return (
           <button
-            key={t.tag}
+            key={category.id}
             type="button"
-            aria-pressed={isActive}
-            onClick={() => go({ tag: isActive ? null : t.tag })}
+            role="tab"
+            aria-selected={isActive}
+            onClick={() =>
+              go({ category: isActive ? null : category.slug })
+            }
             className={pillClass(isActive)}
           >
-            #{t.tag}
+            {category.name}
           </button>
         );
       })}

@@ -144,7 +144,7 @@ export function HomePage() {
         ) : null} */}
 
         <div className="flex flex-col gap-[var(--lp-sidebar-gap)] lg:flex-row lg:gap-[var(--lp-main-gap)]">
-          <HomeSidebar searchQuery={search} />
+          <HomeSidebar />
 
           <div className="min-w-0 flex-1 lg:max-w-[var(--lp-main-w)]">
             <WallpaperGrid wallpapers={wallpapers} isLoading={isLoading} />

@@ -9,7 +9,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { trendingTopics } from "@/data/sidebar";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import { SidebarCollapsible } from "@/components/shared/sidebar-collapsible";
-import { useCategories, useResolutions } from "@/hooks/use-catalog";
+import { useCategories, useResolutions, useTags } from "@/hooks/use-catalog";
 import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 import dimon from "../../../public/dimon.svg";
@@ -66,32 +66,32 @@ interface HomeSidebarProps {
   tags?: string[];
   /** Slug of the category to highlight as active (wallpaper detail page). */
   activeCategory?: string;
-  /** Live search query (home page) — highlights matching Trending / Tags items. */
-  searchQuery?: string;
 }
 
 export function HomeSidebar({
   tags,
   activeCategory,
-  searchQuery,
 }: HomeSidebarProps = {}) {
   const [qrOpen, setQrOpen] = useState(true);
   const [catPage, setCatPage] = useState(0);
   const { categories, loading } = useCategories();
   const res = useResolutions();
+  const catalogTags = useTags();
   const searchParams = useSearchParams();
   const activeResolution = searchParams.get("resolution") || "";
-  const activeQuery = (
-    searchQuery ??
-    searchParams.get("q") ??
-    ""
-  )
-    .trim()
-    .toLowerCase();
   const activeTag = (searchParams.get("tag") || "").trim().toLowerCase();
   // Prefer explicit prop (detail page), else URL ?category= (home filters).
   const selectedCategory =
     activeCategory || searchParams.get("category") || "";
+
+  // Trending = most-used tags from the API; fall back to static list.
+  const trending =
+    catalogTags.length > 0
+      ? [...catalogTags]
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 8)
+          .map((t) => t.tag)
+      : trendingTopics;
 
   const totalCatPages = Math.max(
     1,
@@ -256,15 +256,15 @@ export function HomeSidebar({
       ) : (
         <SidebarPanel title="Trending" iconSrc="/tranding.svg">
           <ul>
-            {trendingTopics.map((topic, index) => {
-              const isActive = activeQuery === topic.trim().toLowerCase();
+            {trending.map((topic, index) => {
+              const isActive = activeTag === topic.trim().toLowerCase();
               return (
               <li
                 key={topic}
                 className={cn(index > 0 && "border-t-[length:var(--lp-panel-divider-thin)] border-hw-line")}
               >
                 <Link
-                  href={`/?q=${encodeURIComponent(topic)}`}
+                  href={buildFilterHref(searchParams, { tag: topic })}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
                     "block px-[11px] py-[11px] text-[length:var(--lp-panel-item)] font-medium leading-[17px] transition-colors hover:text-hw-green",

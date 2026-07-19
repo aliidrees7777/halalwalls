@@ -12,15 +12,13 @@ export function toDownloadResolution(resolution: string): string {
 }
 
 export function useWallpaperDownload(wallpaper: WallpaperDetail) {
-  const { isAuthenticated, openAuthModal, user } = useAuth();
+  const { openAuthModal, user } = useAuth();
+  // Guests may download free wallpapers (ads will gate the button later).
+  // Premium wallpapers still require an entitled account.
   const locked = !!wallpaper.isPremium && !hasPremiumAccess(user);
 
   const download = useCallback(
     async (resolution: string) => {
-      if (!isAuthenticated) {
-        openAuthModal("signin");
-        return false;
-      }
       if (locked) {
         openAuthModal("premium");
         return false;
@@ -37,10 +35,6 @@ export function useWallpaperDownload(wallpaper: WallpaperDetail) {
         window.open(data.url, "_blank", "noopener");
         return true;
       } catch (e) {
-        if (e instanceof ApiError && e.statusCode === 401) {
-          openAuthModal("signin");
-          return false;
-        }
         if (e instanceof ApiError && e.statusCode === 403) {
           openAuthModal("premium");
           return false;
@@ -49,7 +43,7 @@ export function useWallpaperDownload(wallpaper: WallpaperDetail) {
         return false;
       }
     },
-    [isAuthenticated, locked, openAuthModal, wallpaper.slug]
+    [locked, openAuthModal, wallpaper.slug],
   );
 
   return { download, locked };
