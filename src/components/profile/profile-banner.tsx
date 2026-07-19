@@ -11,7 +11,7 @@ import {
 } from "@/components/profile/account-settings/account-settings-modal";
 import type { ProfileUser } from "@/data/profile-user";
 import { cn } from "@/lib/utils";
-import { shouldUnoptimizeMedia } from "@/lib/media-url";
+import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 
 interface ProfileBannerProps {
   user: ProfileUser;
@@ -19,6 +19,7 @@ interface ProfileBannerProps {
 
 /** Figma Halal-Stock-Mobile-App — Profile and Carousel @ 412px (node 1612:5367) */
 const GOLD = "#ffd700";
+const FREE_GREY = "#9ca3af";
 
 function formatBio(bio: string) {
   const trimmed = bio.trim();
@@ -65,14 +66,17 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
     .toUpperCase();
 
   const bio = formatBio(user.bio);
+  const isPremium = authUser?.isPremium ?? user.isPremium;
+  const accent = isPremium ? GOLD : FREE_GREY;
+  const avatarSrc = upgradeAvatarUrl(user.avatar, 512);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="relative w-full overflow-hidden border-t-[1.437px] border-b-[0.6px] md:rounded-[28px] md:border-3 md:border-hw-yellow"
-      style={{ borderColor: GOLD }}
+      className="relative w-full overflow-hidden border-t-[1.437px] border-b-[0.6px] md:rounded-[28px] md:border-3"
+      style={{ borderColor: accent }}
     >
       <div className="relative h-[252px] w-full md:aspect-[16/5] md:min-h-[470px]">
         <Image
@@ -87,12 +91,14 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
         {/* Figma: Full account container — 197.377 × 225.163 */}
         <div className="absolute inset-x-0 top-[13.414px] flex justify-center md:top-1/2 md:-translate-y-1/2">
           <div className="relative h-[225.163px] w-[197.377px] shrink-0 md:h-[320px] md:w-[280px]">
-            {user.isPremium && (
-              <div className="absolute left-[38.8px] top-0 z-10 md:left-1/2 md:-translate-x-1/2">
-                <span
-                  className="inline-flex items-center gap-[3.833px] rounded-[15.622px] border-[0.958px] bg-black/50 px-[9.581px] py-[5.749px] text-[9.581px] font-medium text-[#ffd700] md:gap-1.5 md:rounded-2xl md:px-3.5 md:py-1.5 md:text-xs"
-                  style={{ borderColor: GOLD }}
-                >
+            <div className="absolute left-[38.8px] top-0 z-10 md:left-1/2 md:-translate-x-1/2">
+              <span
+                className={cn(
+                  "inline-flex items-center gap-[3.833px] rounded-[15.622px] border-[0.958px] bg-black/50 px-[9.581px] py-[5.749px] text-[9.581px] font-medium md:gap-1.5 md:rounded-2xl md:px-3.5 md:py-1.5 md:text-xs",
+                )}
+                style={{ borderColor: accent, color: accent }}
+              >
+                {isPremium ? (
                   <Image
                     src="/profile-banner/premium-gem.svg"
                     alt=""
@@ -100,10 +106,10 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
                     height={10}
                     className="h-[9.901px] w-[11.498px] md:h-3 md:w-3.5"
                   />
-                  Premium Member
-                </span>
-              </div>
-            )}
+                ) : null}
+                {isPremium ? "Premium Member" : "Free Member"}
+              </span>
+            </div>
 
             <button
               type="button"
@@ -121,17 +127,23 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
             </button>
 
             <div
-              className="absolute left-[40.72px] top-[33.85px] size-[114.977px] overflow-hidden rounded-full border-[1.437px] shadow-[0px_0px_5.749px_0px_rgba(255,215,0,0.6)] md:left-1/2 md:top-12 md:size-[160px] md:-translate-x-1/2 md:border-2"
-              style={{ borderColor: GOLD }}
+              className="absolute left-[40.72px] top-[33.85px] size-[114.977px] overflow-hidden rounded-full border-[1.437px] md:left-1/2 md:top-12 md:size-[160px] md:-translate-x-1/2 md:border-2"
+              style={{
+                borderColor: accent,
+                boxShadow: isPremium
+                  ? "0px 0px 5.749px 0px rgba(255,215,0,0.6)"
+                  : "0px 0px 5.749px 0px rgba(156,163,175,0.45)",
+              }}
             >
-              {user.avatar ? (
+              {avatarSrc ? (
                 <Image
-                  src={user.avatar}
+                  src={avatarSrc}
                   alt={user.name}
                   fill
-                  unoptimized={shouldUnoptimizeMedia(user.avatar)}
+                  unoptimized={shouldUnoptimizeMedia(avatarSrc)}
+                  quality={95}
                   className="object-cover"
-                  sizes="115px"
+                  sizes="320px"
                 />
               ) : (
                 <div className="flex size-full items-center justify-center bg-black/60 text-lg font-semibold text-white">

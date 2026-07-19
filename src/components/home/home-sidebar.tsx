@@ -88,6 +88,7 @@ export function HomeSidebar({
   )
     .trim()
     .toLowerCase();
+  const activeTag = (searchParams.get("tag") || "").trim().toLowerCase();
   // Prefer explicit prop (detail page), else URL ?category= (home filters).
   const selectedCategory =
     activeCategory || searchParams.get("category") || "";
@@ -229,14 +230,14 @@ export function HomeSidebar({
         <SidebarPanel title="Tags #">
           <ul>
             {tags.map((tag, index) => {
-              const isActive = activeQuery === tag.trim().toLowerCase();
+              const isActive = activeTag === tag.trim().toLowerCase();
               return (
               <li
                 key={tag}
                 className={cn(index > 0 && "border-t-[length:var(--lp-panel-divider-thin)] border-hw-line")}
               >
                 <Link
-                  href={`/?q=${encodeURIComponent(tag)}`}
+                  href={`/?tag=${encodeURIComponent(tag)}`}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
                     "block px-[11px] py-[11px] text-[length:var(--lp-panel-item)] font-medium leading-[17px] transition-colors hover:text-hw-green",

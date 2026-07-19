@@ -83,13 +83,15 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
       <div className=" flex flex-wrap items-center ">
 
         <Image src={link} alt="link" className="mr-2"/>
-        {wallpaper.tagSlugs.map((slug) => (
+        {wallpaper.tags.map((tag, index) => (
           <Link
-            key={slug}
-            href="/"
+            key={`${tag}-${index}`}
+            href={`/?tag=${encodeURIComponent(tag)}`}
             className="text-[19px] font-medium text-hw-foreground underline decoration-hw-foreground/50 underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
           >
-            {slug},
+            {tag}
+            {index < wallpaper.tags.length - 1 ? "," : ""}
+            {index < wallpaper.tags.length - 1 ? "\u00A0" : ""}
           </Link>
         ))}
       </div>

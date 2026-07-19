@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { compressImageToDataUrl } from "@/lib/image";
-import { shouldUnoptimizeMedia } from "@/lib/media-url";
+import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 import pencil from "../../../../public/my-account/pencil.svg"
 interface AccountImageUploadProps {
   label: string;
@@ -26,11 +26,11 @@ export function AccountImageUpload({
 
   async function handleFile(file: File | undefined) {
     if (!file?.type.startsWith("image/")) return;
-    // Compress in the browser so the data URL stays small (avatars ~256px,
-    // banners ~1280px). Keeps the PATCH /me payload under the body limit.
-    const maxDim = variant === "avatar" ? 256 : 1280;
+    // Compress in the browser so the data URL stays under the body limit,
+    // but keep enough resolution for retina profile displays (avatar ~214px CSS).
+    const maxDim = variant === "avatar" ? 720 : 1920;
     try {
-      const dataUrl = await compressImageToDataUrl(file, maxDim, 0.82);
+      const dataUrl = await compressImageToDataUrl(file, maxDim, 0.92);
       onChange(dataUrl);
     } catch {
       // Fallback: raw read if canvas/compression isn't available.
@@ -69,11 +69,12 @@ export function AccountImageUpload({
         aria-label={`Change ${label}`}
       >
         <Image
-          src={src}
+          src={upgradeAvatarUrl(src, variant === "avatar" ? 512 : 1280) || src}
           alt={alt}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes={variant === "avatar" ? "96px" : "400px"}
+          sizes={variant === "avatar" ? "326px" : "800px"}
+          quality={95}
           unoptimized={shouldUnoptimizeMedia(src)}
         />
         <span

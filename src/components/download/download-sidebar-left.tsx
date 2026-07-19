@@ -57,7 +57,7 @@ export function DownloadSidebarLeft({
               className={cn(index > 0 && "border-t border-hw-line")}
             >
               <Link
-                href="/"
+                href={`/?tag=${encodeURIComponent(tag)}`}
                 className="block py-2.5 text-[13px] text-hw-foreground transition-colors hover:text-hw-green"
               >
                 {tag}

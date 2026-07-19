@@ -15,7 +15,7 @@ import { useAuth } from "@/context/auth-context";
 import { SearchBox } from "@/components/shared/search-box";
 import { usePathname } from "next/navigation";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
-import { shouldUnoptimizeMedia } from "@/lib/media-url";
+import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 
 function MobileHeaderActions({
   open,
@@ -36,11 +36,11 @@ function MobileHeaderActions({
         >
           {user.avatar ? (
             <Image
-              src={user.avatar}
+              src={upgradeAvatarUrl(user.avatar, 96)}
               alt=""
               width={28}
               height={28}
-              unoptimized={shouldUnoptimizeMedia(user.avatar)}
+              unoptimized={shouldUnoptimizeMedia(upgradeAvatarUrl(user.avatar, 96))}
               className="size-7 rounded-full object-cover"
             />
           ) : (

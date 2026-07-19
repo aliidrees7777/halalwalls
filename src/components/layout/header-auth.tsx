@@ -5,7 +5,7 @@ import Image from "next/image";
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { cn } from "@/lib/utils";
-import { shouldUnoptimizeMedia } from "@/lib/media-url";
+import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 
 /**
  * Header auth control: shows "Sign In" for guests, or the user's avatar
@@ -35,6 +35,7 @@ export function HeaderAuth({ className }: { className?: string }) {
   }
 
   const initial = (user.firstName || user.name || user.email || "?").charAt(0).toUpperCase();
+  const avatarSrc = upgradeAvatarUrl(user.avatar, 128);
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
@@ -44,13 +45,13 @@ export function HeaderAuth({ className }: { className?: string }) {
         title={user.name || user.email}
         className="grid size-9 place-items-center overflow-hidden rounded-full border border-hw-border bg-hw-pill2 text-sm font-semibold text-hw-foreground transition-colors hover:border-hw-green"
       >
-        {user.avatar ? (
+        {avatarSrc ? (
           <Image
-            src={user.avatar}
+            src={avatarSrc}
             alt=""
             width={36}
             height={36}
-            unoptimized={shouldUnoptimizeMedia(user.avatar)}
+            unoptimized={shouldUnoptimizeMedia(avatarSrc)}
             className="size-full object-cover"
           />
         ) : (

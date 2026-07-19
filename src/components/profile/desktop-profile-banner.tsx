@@ -11,7 +11,7 @@ import {
   type AccountSettingsData,
 } from "@/components/profile/account-settings/account-settings-modal";
 import type { ProfileUser } from "@/data/profile-user";
-import { shouldUnoptimizeMedia } from "@/lib/media-url";
+import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 
 interface DesktopProfileBannerProps {
   user: ProfileUser;
@@ -24,6 +24,7 @@ interface DesktopProfileBannerProps {
  * Scale: 214 / 114.977 ≈ 1.861 (avatar size is the design anchor).
  */
 const GOLD = "#ffd700";
+const FREE_GREY = "#9ca3af";
 const S = 214 / 114.977;
 
 const D = {
@@ -117,6 +118,9 @@ export function DesktopProfileBanner({
     .toUpperCase();
 
   const bio = formatBio(user.bio);
+  const isPremium = authUser?.isPremium ?? user.isPremium;
+  const accent = isPremium ? GOLD : FREE_GREY;
+  const avatarSrc = upgradeAvatarUrl(user.avatar, 512);
 
   return (
     <motion.div
@@ -128,7 +132,7 @@ export function DesktopProfileBanner({
         height: D.bannerH,
         borderRadius: 28,
         borderWidth: 3,
-        borderColor: GOLD,
+        borderColor: accent,
       }}
     >
       <Image
@@ -167,33 +171,34 @@ export function DesktopProfileBanner({
         className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
         style={{ width: D.stageW, height: D.stageH }}
       >
-        {user.isPremium && (
-          <div
-            className="absolute z-10"
-            style={{ left: D.badgeLeft, top: 0 }}
+        <div
+          className="absolute z-10"
+          style={{ left: D.badgeLeft, top: 0 }}
+        >
+          <span
+            className="inline-flex items-center font-medium"
+            style={{
+              gap: D.badgeGap,
+              paddingInline: D.badgePx,
+              paddingBlock: D.badgePy,
+              borderRadius: D.badgeRadius,
+              borderWidth: D.badgeBorder,
+              borderStyle: "solid",
+              borderColor: accent,
+              color: accent,
+              backgroundColor: "rgba(0,0,0,0.5)",
+              fontSize: D.badgeFont,
+            }}
           >
-            <span
-              className="inline-flex items-center font-medium text-[#ffd700]"
-              style={{
-                gap: D.badgeGap,
-                paddingInline: D.badgePx,
-                paddingBlock: D.badgePy,
-                borderRadius: D.badgeRadius,
-                borderWidth: D.badgeBorder,
-                borderStyle: "solid",
-                borderColor: GOLD,
-                backgroundColor: "rgba(0,0,0,0.5)",
-                fontSize: D.badgeFont,
-              }}
-            >
+            {isPremium ? (
               <PremiumIcon
                 size={Math.round(D.gemW)}
                 className="shrink-0 object-contain"
               />
-              Premium Member
-            </span>
-          </div>
-        )}
+            ) : null}
+            {isPremium ? "Premium Member" : "Free Member"}
+          </span>
+        </div>
 
         {/* Premium side button */}
         <button
@@ -219,26 +224,28 @@ export function DesktopProfileBanner({
 
         {/* Avatar */}
         <div
-          className="absolute overflow-hidden rounded-full"
+          className="absolute overflow-hidden rounded-full border-solid"
           style={{
             left: D.avatarLeft,
             top: D.avatarTop,
             width: D.avatar,
             height: D.avatar,
-            // borderWidth: 3,
-            // borderStyle: "solid",
-            // borderColor: GOLD,
-            boxShadow: `0 0 ${D.avatarGlow}px rgba(255,215,0,0.6)`,
+            borderWidth: 3,
+            borderColor: accent,
+            boxShadow: isPremium
+              ? `0 0 ${D.avatarGlow}px rgba(255,215,0,0.6)`
+              : `0 0 ${D.avatarGlow}px rgba(156,163,175,0.45)`,
           }}
         >
-          {user.avatar ? (
+          {avatarSrc ? (
             <Image
-              src={user.avatar}
+              src={avatarSrc}
               alt={user.name}
               fill
-              unoptimized={shouldUnoptimizeMedia(user.avatar)}
+              unoptimized={shouldUnoptimizeMedia(avatarSrc)}
+              quality={95}
               className="object-cover"
-              sizes="214px"
+              sizes="428px"
             />
           ) : (
             <div className="flex size-full items-center justify-center bg-black/60 text-2xl font-semibold text-white">

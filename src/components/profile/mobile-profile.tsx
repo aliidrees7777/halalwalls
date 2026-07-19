@@ -10,7 +10,7 @@ import { demoProfileUser } from "@/data/profile-user";
 import { useAuth } from "@/context/auth-context";
 import { useMyFavorites } from "@/hooks/use-my-favorites";
 import type { Wallpaper } from "@/types/wallpaper";
-import { shouldUnoptimizeMedia } from "@/lib/media-url";
+import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 import settings from "../../../public/my-account/settings.png";
 
 /**
@@ -166,16 +166,22 @@ export function MobileProfile() {
             </button>
 
             <div
-              className="relative size-24 shrink-0 overflow-hidden rounded-full border-[3px] border-white/80"
-              style={{ boxShadow: "0 0 14px rgba(215,0,185,0.65)" }}
+              className="relative size-24 shrink-0 overflow-hidden rounded-full border-[3px]"
+              style={{
+                borderColor: user.isPremium ? "#ffd700" : "#9ca3af",
+                boxShadow: user.isPremium
+                  ? "0 0 14px rgba(215,0,185,0.65)"
+                  : "0 0 14px rgba(156,163,175,0.45)",
+              }}
             >
               <Image
-                src={user.avatar}
+                src={upgradeAvatarUrl(user.avatar, 512)}
                 alt={user.name}
                 fill
-                unoptimized={shouldUnoptimizeMedia(user.avatar)}
+                unoptimized={shouldUnoptimizeMedia(upgradeAvatarUrl(user.avatar, 512))}
+                quality={95}
                 className="object-cover"
-                sizes="96px"
+                sizes="192px"
               />
             </div>
 

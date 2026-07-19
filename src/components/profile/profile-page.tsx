@@ -26,6 +26,7 @@ import { useMyUploads } from "@/hooks/use-my-uploads";
 import { api } from "@/lib/api";
 import type { Wallpaper } from "@/types/wallpaper";
 import { demoProfileUser, type ProfileUser } from "@/data/profile-user";
+import { upgradeAvatarUrl } from "@/lib/media-url";
 import { SiteHeader } from "../home/site-header";
 
 const DISCOVER_LIMIT = 4;
@@ -81,7 +82,7 @@ export function ProfilePage() {
         name: user.name || user.email,
         bio: user.bio || "",
         email: user.email,
-        avatar: user.avatar || demoProfileUser.avatar,
+        avatar: upgradeAvatarUrl(user.avatar, 512) || demoProfileUser.avatar,
         banner: user.banner || demoProfileUser.banner,
         isPremium: user.isPremium,
         favoritesCount: user.favoritesCount || user.favorites.length,
