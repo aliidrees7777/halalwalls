@@ -56,7 +56,7 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
         )}
         {locked
           ? "Premium — Go Premium to Download"
-          : `Download Wallpaper (${wallpaper.preferredResolution})`}
+          : `Download Wallpaper (${wallpaper.preferredResolutionLabel || wallpaper.preferredResolution})`}
       </Button>
 
       <Button

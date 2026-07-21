@@ -41,6 +41,8 @@ export interface WallpaperDetail extends Wallpaper {
   originalResolution: string;
   originalSizeMB: number;
   preferredResolution: string;
+  /** Friendly label for primary download (4K / 2K / Full HD). */
+  preferredResolutionLabel?: string;
   relatedIds: string[];
   /** Source pixel size (used to filter download options). */
   width?: number | null;

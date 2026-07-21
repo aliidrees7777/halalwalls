@@ -116,6 +116,8 @@ const CategoriesManagementPage = () => {
     searchPlaceholder: "Search categories…",
     fetcher,
     rowId: (r) => String((r as unknown as AdminCategory).id),
+    gridTitleKey: "name",
+    gridImage: (r) => imgSrc((r as unknown as AdminCategory).image),
     filters: [
       {
         key: "status", placeholder: "All Status",

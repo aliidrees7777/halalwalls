@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ProfileBanner } from "@/components/profile/profile-banner";
 import { DesktopProfileBanner } from "@/components/profile/desktop-profile-banner";
@@ -32,11 +33,20 @@ import { SiteHeader } from "../home/site-header";
 const DISCOVER_LIMIT = 4;
 
 export function ProfilePage() {
-  const { user, loading, refreshMe } = useAuth();
+  const router = useRouter();
+  const { user, loading, refreshMe, openAuthModal } = useAuth();
   const { wallpapers: favorites, loading: favoritesLoading } = useMyFavorites();
   const { wallpapers: uploads, loading: uploadsLoading } = useMyUploads();
   const [justUploaded, setJustUploaded] = useState<Wallpaper[]>([]);
   const [justUploadedLoading, setJustUploadedLoading] = useState(true);
+
+  // Guests cannot view /profile — redirect home and open sign-in (mobile + desktop).
+  useEffect(() => {
+    if (loading) return;
+    if (user) return;
+    openAuthModal("signin");
+    router.replace("/");
+  }, [loading, user, openAuthModal, router]);
 
   useEffect(() => {
     if (!user) return;
@@ -45,6 +55,7 @@ export function ProfilePage() {
 
   // Same source as homepage default: latest published wallpapers.
   useEffect(() => {
+    if (!user) return;
     let ignore = false;
     setJustUploadedLoading(true);
     api
@@ -66,9 +77,9 @@ export function ProfilePage() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [user?.id]);
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="grid min-h-screen place-items-center bg-hw-bg">
         <div className="size-8 animate-spin rounded-full border-2 border-hw-muted border-t-hw-foreground" />
@@ -76,19 +87,17 @@ export function ProfilePage() {
     );
   }
 
-  const profileUser: ProfileUser = user
-    ? {
-        id: user.id,
-        name: user.name || user.email,
-        bio: user.bio || "",
-        email: user.email,
-        avatar: upgradeAvatarUrl(user.avatar, 512) || demoProfileUser.avatar,
-        banner: user.banner || demoProfileUser.banner,
-        isPremium: user.isPremium,
-        favoritesCount: user.favoritesCount || user.favorites.length,
-        uploadsCount: user.uploadsCount ?? 0,
-      }
-    : demoProfileUser;
+  const profileUser: ProfileUser = {
+    id: user.id,
+    name: user.name || user.email,
+    bio: user.bio || "",
+    email: user.email,
+    avatar: upgradeAvatarUrl(user.avatar, 512) || demoProfileUser.avatar,
+    banner: user.banner || demoProfileUser.banner,
+    isPremium: user.isPremium,
+    favoritesCount: user.favoritesCount || user.favorites.length,
+    uploadsCount: user.uploadsCount ?? 0,
+  };
 
   const recentFavorites = getRecentFavorites(favorites);
   const recentUploads = getRecentUploads(uploads);

@@ -97,6 +97,12 @@ export function HomePage() {
     };
   }, [category, sort, tag, resolution, search, currentPage]);
 
+  // Scroll to top after the new page of results has loaded (avoids racing the skeleton).
+  useEffect(() => {
+    if (isLoading) return;
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [currentPage, isLoading]);
+
   // const resultsHeading = useMemo(() => {
   //   const total = pagination?.total;
   //   if (total == null) return null;
@@ -153,7 +159,6 @@ export function HomePage() {
               totalPages={pagination?.totalPages ?? 1}
               onPageChange={(page) => {
                 setCurrentPage(page);
-                window.scrollTo({ top: 0, behavior: "smooth" });
               }}
               preview={(pagination?.totalPages ?? 1) <= 1}
             />

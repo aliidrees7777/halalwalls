@@ -39,6 +39,10 @@ export function useWallpaperDownload(wallpaper: WallpaperDetail) {
           openAuthModal("premium");
           return false;
         }
+        if (e instanceof ApiError && (e.statusCode === 401 || e.isAuth)) {
+          openAuthModal("signin");
+          return false;
+        }
         console.error(e);
         return false;
       }

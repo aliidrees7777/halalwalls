@@ -12,7 +12,7 @@ import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 
 const browse = filterPills.filter((p) =>
-  ["latest", "random", "popular"].includes(p.id),
+  ["latest", "live", "random", "popular"].includes(p.id),
 );
 
 /** Figma Halal-Stock-Mobile-App — Opening menu 2 @ 412px */

@@ -130,7 +130,7 @@ export function useTags() {
     }
     if (!_tagsPromise) {
       _tagsPromise = api
-        .get<{ tags: TagItem[] }>("/tags")
+        .get<{ tags: TagItem[] }>("/wallpapers/tags")
         .then((d) => {
           _tagsCache = d.tags ?? [];
           return _tagsCache;

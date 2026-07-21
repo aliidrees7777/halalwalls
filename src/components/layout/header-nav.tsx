@@ -24,10 +24,10 @@ import { useAuth } from "@/context/auth-context";
  * Items are real <Link>s for reliable navigation.
  */
 const EXPLORE = [
-  { label: "Latest Wallpapers", update: { sort: "latest" } },
-  { label: "Top Rated", update: { sort: "popular" } },
-  { label: "Editor's Picks", update: { sort: "popular" } },
-  { label: "New Uploads", update: { sort: "latest" } },
+  { label: "Latest", update: { sort: "latest" } },
+  { label: "Live Walls", update: { sort: "live" } },
+  { label: "Random", update: { sort: "random" } },
+  { label: "Popular", update: { sort: "popular" } },
 ];
 
 const RESOLUTION_LABELS = [
