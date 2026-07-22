@@ -37,6 +37,22 @@ export function AdminListPage<T extends Row>({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
+  // Boxed view uses a multi-column card grid — page size must fill complete
+  // rows (12/24/48), otherwise the last row looks "empty" and items spill
+  // onto the next page (e.g. 10 items → 6 + 4 gap on a 6-col layout).
+  const GRID_PAGE_SIZES = [12, 24, 48];
+  const LIST_PAGE_SIZES = [10, 25, 50];
+
+  const handleViewChange = (next: "list" | "grid") => {
+    setView(next);
+    setPage(1);
+    if (next === "grid" && !GRID_PAGE_SIZES.includes(pageSize)) {
+      setPageSize(12);
+    } else if (next === "list" && !LIST_PAGE_SIZES.includes(pageSize)) {
+      setPageSize(10);
+    }
+  };
+
   // Debounce the search box so we don't refetch on every keystroke.
   useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(search), 350);
@@ -173,7 +189,7 @@ export function AdminListPage<T extends Row>({
           sort={sort}
           onSort={setSort}
           view={view}
-          onView={setView}
+          onView={handleViewChange}
         />
 
         <div className="relative mt-4">
@@ -208,7 +224,11 @@ export function AdminListPage<T extends Row>({
           pageSize={pageSize}
           total={total}
           onPage={setPage}
-          onPageSize={setPageSize}
+          onPageSize={(n) => {
+            setPageSize(n);
+            setPage(1);
+          }}
+          pageSizeOptions={view === "grid" ? GRID_PAGE_SIZES : LIST_PAGE_SIZES}
           noun={config.title.toLowerCase()}
         />
       </div>

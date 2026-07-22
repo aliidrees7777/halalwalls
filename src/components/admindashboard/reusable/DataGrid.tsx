@@ -47,7 +47,7 @@ export function DataGrid<T extends Row>({
   }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
       {rows.map((row) => {
         const titleText =
           (titleKey && row[titleKey] != null ? String(row[titleKey]) : null) ||

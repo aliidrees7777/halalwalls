@@ -160,7 +160,6 @@ export function HomePage() {
               onPageChange={(page) => {
                 setCurrentPage(page);
               }}
-              preview={(pagination?.totalPages ?? 1) <= 1}
             />
 
             <MobileAppBanner className="mt-4" />

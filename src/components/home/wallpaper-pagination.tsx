@@ -6,14 +6,7 @@ interface WallpaperPaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  /** Show Figma placeholder layout when real data has too few pages (design preview). */
-  preview?: boolean;
 }
-
-/** Matches the Figma SVG export: 1–9, ellipsis, 10, with page 1 active. */
-const PREVIEW_PAGES: (number | "gap")[] = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, "gap", 100,
-];
 
 const WINDOW = 7;
 
@@ -44,13 +37,10 @@ export function WallpaperPagination({
   currentPage,
   totalPages,
   onPageChange,
-  preview = false,
 }: WallpaperPaginationProps) {
-  if (!preview && totalPages <= 1) return null;
+  if (totalPages <= 1) return null;
 
-  const pages = preview ? PREVIEW_PAGES : buildPages(currentPage, totalPages);
-  const activePage = preview ? 1 : currentPage;
-  const lastPage = preview ? 100 : totalPages;
+  const pages = buildPages(currentPage, totalPages);
 
   return (
     <nav
@@ -69,30 +59,24 @@ export function WallpaperPagination({
           <button
             key={page}
             type="button"
-            onClick={() => !preview && onPageChange(page)}
+            onClick={() => onPageChange(page)}
             className={cn(
               "flex h-[var(--lp-pagination-h)] min-w-[var(--lp-pagination-w)] items-center justify-center rounded-[var(--lp-pagination-radius)] px-[var(--lp-pagination-px)] text-[length:var(--lp-pagination-font)] leading-none transition-colors",
-              activePage === page
+              currentPage === page
                 ? "bg-[#33373A] font-semibold text-white"
                 : "bg-[#222426] font-medium text-white hover:bg-[#33373A]",
-              preview && "cursor-default",
             )}
-            aria-current={activePage === page ? "page" : undefined}
+            aria-current={currentPage === page ? "page" : undefined}
           >
             {page}
           </button>
-        )
+        ),
       )}
       <button
         type="button"
-        onClick={() =>
-          !preview && onPageChange(Math.min(activePage + 1, lastPage))
-        }
-        disabled={!preview && activePage >= lastPage}
-        className={cn(
-          "h-[var(--lp-pagination-h)] w-[var(--lp-pagination-next-w)] rounded-[var(--lp-pagination-radius)] bg-[#222426] text-[length:var(--lp-pagination-font)] font-medium leading-none text-white transition-colors hover:bg-[#33373A] disabled:cursor-not-allowed disabled:opacity-50",
-          preview && "cursor-default",
-        )}
+        onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
+        disabled={currentPage >= totalPages}
+        className="h-[var(--lp-pagination-h)] w-[var(--lp-pagination-next-w)] rounded-[var(--lp-pagination-radius)] bg-[#222426] text-[length:var(--lp-pagination-font)] font-medium leading-none text-white transition-colors hover:bg-[#33373A] disabled:cursor-not-allowed disabled:opacity-50"
       >
         Next »
       </button>

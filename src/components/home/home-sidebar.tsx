@@ -60,6 +60,16 @@ function CategoryBadge({
 
 const CATEGORIES_PER_PAGE = 20;
 
+/** Display tag as Title Case ("anime" → "Anime"). */
+function formatTrendingTag(tag: string) {
+  return tag
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
 interface HomeSidebarProps {
   /** When provided, the third panel renders these wallpaper tags ("Tags #")
    *  instead of the "Trending" list (wallpaper detail page variant). */
@@ -84,14 +94,14 @@ export function HomeSidebar({
   const selectedCategory =
     activeCategory || searchParams.get("category") || "";
 
-  // Trending = most-used tags from the API; fall back to static list.
+  // Trending = top 6 most-used tags from the API; fall back to static list.
   const trending =
     catalogTags.length > 0
       ? [...catalogTags]
           .sort((a, b) => b.count - a.count)
-          .slice(0, 8)
+          .slice(0, 6)
           .map((t) => t.tag)
-      : trendingTopics;
+      : trendingTopics.slice(0, 6);
 
   const totalCatPages = Math.max(
     1,
@@ -273,7 +283,7 @@ export function HomeSidebar({
                       : "text-hw-foreground",
                   )}
                 >
-                  {topic}
+                  {formatTrendingTag(topic)}
                 </Link>
               </li>
               );

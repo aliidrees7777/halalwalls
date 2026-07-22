@@ -112,8 +112,8 @@ export function UploadForm() {
       setError("Please upload a JPG or PNG image.");
       return;
     }
-    if (picked.size > 10 * 1024 * 1024) {
-      setError("Max file size is 10MB.");
+    if (picked.size > 25 * 1024 * 1024) {
+      setError("Max file size is 25MB.");
       return;
     }
     setError(null);
@@ -297,7 +297,7 @@ export function UploadForm() {
               Choose Wallpaper
             </span>
             <span className="text-[21px] text-hw-depw">
-              JPG or PNG, up to 10MB
+              JPG or PNG, up to 25MB
             </span>
           </>
         )}

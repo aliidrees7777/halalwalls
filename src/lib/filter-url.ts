@@ -2,7 +2,8 @@ import type { ReadonlyURLSearchParams } from "next/navigation";
 
 /**
  * Extract a clean "WIDTHxHEIGHT" from a resolution label like "3840×2160 (4K)"
- * → "3840x2160" (so it matches the wallpaper's stored native resolution).
+ * → "3840x2160". Used as the browse filter key; the API matches wallpapers that
+ * can serve this size (native pixels ≥ target — cascade down, never up).
  */
 export function normalizeResolution(label: string): string {
   const m = label.match(/(\d+)\s*[×x]\s*(\d+)/);
