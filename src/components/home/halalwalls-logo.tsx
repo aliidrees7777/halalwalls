@@ -21,11 +21,11 @@ export function HalalWallsLogo({ className }: { className?: string }) {
   return (
     <Link href="/" className={cn("flex items-center gap-2.5", className)}>
       <Image
-        src={isLight ?  "/logolisgt.svg":"/logo.svg"}
+        src={isLight ? "/logolisgt.svg" : "/logo.svg"}
         alt="Logo"
         width={185}
         height={36}
-        className="shrink-0 w-[175px] md:w-[185px] h-auto"
+        className="h-[34px] w-[175px] shrink-0 md:h-9 md:w-[185px]"
         priority
       />
     </Link>

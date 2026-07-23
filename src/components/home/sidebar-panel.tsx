@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,13 +28,10 @@ export function SidebarPanel({
       <h2 className="flex h-[49.7px] items-center justify-center gap-[5.33px] text-[length:var(--lp-panel-title)] font-bold leading-[22px] text-hw-foreground">
         {title}
         {iconSrc ? (
-          <Image
-            src={iconSrc}
-            alt=""
-            width={22}
-            height={18}
-            className={iconClassName}
-          />
+          // Decorative SVG icons — plain <img> avoids next/image aspect warnings
+          // on tiny assets where CSS size differs from intrinsic SVG dims.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={iconSrc} alt="" className={iconClassName} />
         ) : (
           Icon && (
             <Icon

@@ -13,7 +13,14 @@ export function MobileAppBanner({ className }: { className?: string }) {
     >
       <div className="grid shrink-0">
         <span className="text-lg font-bold text-hw-green">
-          <Image src={logodark} alt="HalalWalls" className="w-[84px]" />
+          <Image
+            src={logodark}
+            alt="HalalWalls"
+            width={84}
+            height={20}
+            className="w-[84px]"
+            style={{ height: "auto" }}
+          />
         </span>
       </div>
       <div className="min-w-0">

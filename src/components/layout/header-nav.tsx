@@ -15,6 +15,7 @@ import { useCategories, useResolutions } from "@/hooks/use-catalog";
 import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
+import { hasPremiumAccess } from "@/lib/premium-access";
 /**
  * Desktop primary navigation (shared by the home + download headers).
  * Every entry MERGES into the current filters (combine), targeting the homepage:
@@ -216,7 +217,7 @@ export function HeaderNav({ className }: { className?: string }) {
         onClick={() => openAuthModal("premium")}
         className="rounded-md px-3 py-2 text-[18px] font-medium text-hw-yellow transition-opacity hover:opacity-90"
       >
-        {user?.isPremium && user.subscriptionPlan !== "lifetime"
+        {hasPremiumAccess(user) && user?.subscriptionPlan !== "lifetime"
           ? "Upgrade"
           : "Premium"}
       </button>

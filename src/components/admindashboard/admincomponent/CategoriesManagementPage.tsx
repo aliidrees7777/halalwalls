@@ -5,6 +5,11 @@ import { api, API_BASE_URL, ApiError } from "@/lib/api";
 import { invalidateCategoriesCache } from "@/hooks/use-catalog";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { StatusBadge } from "../reusable/cells";
+import {
+  AdminModalCloseButton,
+  AdminModalOverlay,
+  adminModalPanelStyle,
+} from "../reusable/AdminModal";
 import type { ListPageConfig, StatCardDef } from "../reusable/types";
 
 interface AdminCategory {
@@ -230,9 +235,9 @@ function CategoryFormModal({
   };
 
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "grid", placeItems: "center", padding: 20, zIndex: 70 }}>
-      <form onClick={(e) => e.stopPropagation()} onSubmit={submit}
-        style={{ width: "100%", maxWidth: 440, background: "var(--bg2)", border, borderRadius: 16, padding: 22, boxShadow: "0 24px 60px rgba(0,0,0,0.5)" }}>
+    <AdminModalOverlay>
+      <form onSubmit={submit} style={adminModalPanelStyle(440)}>
+        <AdminModalCloseButton onClose={onClose} />
         <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>{isEdit ? "Edit Category" : "Add Category"}</h2>
         <p style={{ fontSize: 12.5, color: "var(--text2)" }}>{isEdit ? "Update this category." : "Create a new wallpaper category."}</p>
 
@@ -261,7 +266,7 @@ function CategoryFormModal({
           </button>
         </div>
       </form>
-    </div>
+    </AdminModalOverlay>
   );
 }
 

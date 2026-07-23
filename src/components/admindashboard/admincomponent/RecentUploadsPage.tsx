@@ -15,6 +15,11 @@ import {
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { resolveMediaUrl } from "@/lib/media-url";
+import {
+  AdminModalCloseButton,
+  AdminModalOverlay,
+  adminModalPanelStyle,
+} from "../reusable/AdminModal";
 
 // ── types ──
 interface AdminWallpaper {
@@ -658,31 +663,16 @@ function DetailModal({
   const w = detail?.wallpaper;
   const u = detail?.uploader;
   return (
-    <div
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.6)",
-        display: "grid",
-        placeItems: "center",
-        padding: 20,
-        zIndex: 70,
-      }}
-    >
+    <AdminModalOverlay>
       <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          width: "100%",
-          maxWidth: 720,
+        style={adminModalPanelStyle(720, {
           maxHeight: "90vh",
           overflowY: "auto",
-          background: "var(--bg2)",
-          border,
-          borderRadius: 16,
-          boxShadow: "0 24px 60px rgba(0,0,0,0.5)",
-        }}
+          padding: 0,
+          paddingRight: 0,
+        })}
       >
+        <AdminModalCloseButton onClose={onClose} />
         {loading || !w ? (
           <div style={{ padding: 40, textAlign: "center", color: "var(--text2)" }}>Loading…</div>
         ) : (
@@ -845,7 +835,7 @@ function DetailModal({
           </>
         )}
       </div>
-    </div>
+    </AdminModalOverlay>
   );
 }
 

@@ -43,6 +43,7 @@ export function QrCodePanel() {
                   width={160}
                   height={160}
                   className="size-[140px] object-contain"
+                  loading="eager"
                 />
               </div>
               <p className="mt-2 text-center text-[11px] text-hw-muted">

@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { SearchBox } from "@/components/shared/search-box";
 import { HalalWallsLogo } from "@/components/home/halalwalls-logo";
 import { useAuth } from "@/context/auth-context";
+import { hasPremiumAccess } from "@/lib/premium-access";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -98,7 +99,7 @@ export function ProfileHeaderNav() {
             onClick={() => openAuthModal("premium")}
             className="rounded-md px-2.5 py-2 text-[13px] font-medium text-hw-yellow transition-opacity hover:opacity-90 xl:px-3"
           >
-            {user?.isPremium && user.subscriptionPlan !== "lifetime"
+            {hasPremiumAccess(user) && user.subscriptionPlan !== "lifetime"
               ? "Upgrade"
               : "Premium"}
           </button>

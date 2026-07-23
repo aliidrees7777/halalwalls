@@ -10,6 +10,7 @@ import { demoProfileUser } from "@/data/profile-user";
 import { useAuth } from "@/context/auth-context";
 import { useMyFavorites } from "@/hooks/use-my-favorites";
 import type { Wallpaper } from "@/types/wallpaper";
+import { hasPremiumAccess } from "@/lib/premium-access";
 import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 import settings from "../../../public/my-account/settings.png";
 
@@ -131,7 +132,7 @@ export function MobileProfile() {
     email: authUser.email,
     avatar: authUser.avatar || demoProfileUser.avatar,
     banner: authUser.banner || demoProfileUser.banner,
-    isPremium: authUser.isPremium,
+    isPremium: hasPremiumAccess(authUser),
     favoritesCount: authUser.favoritesCount,
     uploadsCount: authUser.uploadsCount ?? 0,
   };

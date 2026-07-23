@@ -53,10 +53,10 @@ function ResolutionLinkList({
                 onClick={() => onSelect?.(item)}
                 aria-current={isSelected ? "true" : undefined}
                 className={cn(
-                  "text-[16px] underline underline-offset-2 transition-colors",
+                  "rounded-md px-2 py-0.5 text-[16px] transition-colors",
                   isSelected
-                    ? "font-bold text-hw-green decoration-hw-green"
-                    : "text-hw-foreground decoration-hw-foreground hover:text-hw-green hover:decoration-hw-green/50",
+                    ? "bg-hw-pill2 font-semibold text-hw-foreground no-underline"
+                    : "underline underline-offset-2 text-hw-foreground decoration-hw-foreground hover:text-hw-green hover:decoration-hw-green/50",
                 )}
               >
                 {item.label}

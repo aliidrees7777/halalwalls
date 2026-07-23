@@ -10,6 +10,7 @@ import {
   type AccountSettingsData,
 } from "@/components/profile/account-settings/account-settings-modal";
 import type { ProfileUser } from "@/data/profile-user";
+import { hasPremiumAccess } from "@/lib/premium-access";
 import { cn } from "@/lib/utils";
 import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 
@@ -66,7 +67,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
     .toUpperCase();
 
   const bio = formatBio(user.bio);
-  const isPremium = authUser?.isPremium ?? user.isPremium;
+  const isPremium = authUser ? hasPremiumAccess(authUser) : user.isPremium;
   const accent = isPremium ? GOLD : FREE_GREY;
   const avatarSrc = upgradeAvatarUrl(user.avatar, 512);
 

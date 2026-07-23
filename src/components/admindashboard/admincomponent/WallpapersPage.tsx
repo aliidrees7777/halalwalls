@@ -13,6 +13,11 @@ import { resolveMediaUrl } from "@/lib/media-url";
 import { parseSourceUrl } from "@/lib/source-url";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { StatusBadge } from "../reusable/cells";
+import {
+  AdminModalCloseButton,
+  AdminModalOverlay,
+  adminModalPanelStyle,
+} from "../reusable/AdminModal";
 import type { ListPageConfig, StatCardDef } from "../reusable/types";
 
 interface AdminWallpaper {
@@ -454,12 +459,12 @@ function WallpaperFormModal({
   };
 
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "grid", placeItems: "center", padding: 20, zIndex: 70 }}>
+    <AdminModalOverlay>
       <form
-        onClick={(e) => e.stopPropagation()}
         onSubmit={submit}
-        style={{ width: "100%", maxWidth: 520, background: "var(--bg2)", border, borderRadius: 16, padding: 22, boxShadow: "0 24px 60px rgba(0,0,0,0.5)" }}
+        style={adminModalPanelStyle(520)}
       >
+        <AdminModalCloseButton onClose={onClose} />
         <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>
           {isEdit ? "Edit Wallpaper" : "Add Wallpaper"}
         </h2>
@@ -625,7 +630,7 @@ function WallpaperFormModal({
           </button>
         </div>
       </form>
-    </div>
+    </AdminModalOverlay>
   );
 };
 

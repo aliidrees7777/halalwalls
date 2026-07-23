@@ -9,6 +9,7 @@ import whitedimond from "../../../public/authicon/whitedimond.svg";
 import close from "../../../public/authicon/close.svg";
 import { useAuth } from "@/context/auth-context";
 import { api, ApiError } from "@/lib/api";
+import { hasPremiumAccess } from "@/lib/premium-access";
 import { useToast } from "@/components/ui/toast";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -65,11 +66,11 @@ export function PremiumPlans() {
       openAuthModal("signin");
       return;
     }
-    if (user?.isPremium && user.subscriptionPlan === planKey) {
+    if (hasPremiumAccess(user) && user?.subscriptionPlan === planKey) {
       setMessage({ kind: "ok", text: "You're already on this plan." });
       return;
     }
-    if (user?.isPremium && user.subscriptionPlan === "lifetime") {
+    if (hasPremiumAccess(user) && user?.subscriptionPlan === "lifetime") {
       setMessage({ kind: "ok", text: "You already have lifetime premium." });
       return;
     }
@@ -186,13 +187,13 @@ export function PremiumPlans() {
                   onClick={() => handleSubscribe(plan.key)}
                   disabled={
                     loadingPlan !== null ||
-                    getPlanButton(plan.key, !!user?.isPremium, user?.subscriptionPlan).disabled
+                    getPlanButton(plan.key, hasPremiumAccess(user), user?.subscriptionPlan).disabled
                   }
                   className="primary-font mt-auto rounded-full bg-hw-bg py-2.5 text-center text-[16px] sm:text-[22px] font-medium text-hw-depw transition-colors hover:bg-hw-pill2-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {loadingPlan === plan.key
                     ? "Redirecting…"
-                    : getPlanButton(plan.key, !!user?.isPremium, user?.subscriptionPlan).label}
+                    : getPlanButton(plan.key, hasPremiumAccess(user), user?.subscriptionPlan).label}
                 </button>
               </div>
             </div>

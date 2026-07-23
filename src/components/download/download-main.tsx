@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { DownloadActions } from "@/components/download/download-actions";
 import { DownloadResolutionPanel } from "@/components/download/download-resolution-panel";
-import { useWallpaperDownload } from "@/hooks/use-wallpaper-download";
 import {
   findAvailableResolution,
   normalizeResKey,
@@ -27,8 +26,6 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loaded, setLoaded] = useState(false);
-  const [lastDownload, setLastDownload] = useState<string | null>(null);
-  const { download: downloadWallpaper } = useWallpaperDownload(wallpaper);
   const imageSrc = resolveMediaUrl(wallpaper.image);
 
   const urlResolution = searchParams.get("resolution");
@@ -59,13 +56,9 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
     router.replace(`?${params.toString()}`, { scroll: false });
   };
 
-  const handleResolution = async (res: DownloadResolution) => {
+  // Resolution chips only select — download happens via the main button.
+  const handleResolutionSelect = (res: DownloadResolution) => {
     setResolutionQuery(res.label);
-    const ok = await downloadWallpaper(res.label);
-    if (ok) {
-      setLastDownload(`${res.label} · ${res.fileSizeMB.toFixed(2)} MB`);
-      setTimeout(() => setLastDownload(null), 2500);
-    }
   };
 
   return (
@@ -149,17 +142,11 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
         />
       </div>
 
-      {lastDownload && (
-        <p className="mt-2 text-[12px] text-hw-green" role="status">
-          Prepared download: {lastDownload}
-        </p>
-      )}
-
       <div className="mt-5">
         <DownloadResolutionPanel
           wallpaper={wallpaper}
           selectedResolution={selectedResolution}
-          onSelect={handleResolution}
+          onSelect={handleResolutionSelect}
         />
       </div>
     </div>

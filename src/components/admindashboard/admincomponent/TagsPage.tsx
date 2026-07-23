@@ -4,6 +4,11 @@ import { Tag as TagIcon, CheckCircle, Image as ImageIcon, Download, TrendingUp }
 import { api, ApiError } from "@/lib/api";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { StatusBadge } from "../reusable/cells";
+import {
+  AdminModalCloseButton,
+  AdminModalOverlay,
+  adminModalPanelStyle,
+} from "../reusable/AdminModal";
 import type { ListPageConfig, StatCardDef } from "../reusable/types";
 
 interface AdminTag {
@@ -161,8 +166,9 @@ function TagFormModal({ initial, onClose, onSaved }: { initial?: AdminTag; onClo
   };
 
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "grid", placeItems: "center", padding: 20, zIndex: 70 }}>
-      <form onClick={(e) => e.stopPropagation()} onSubmit={submit} style={{ width: "100%", maxWidth: 420, background: "var(--bg2)", border, borderRadius: 16, padding: 22, boxShadow: "0 24px 60px rgba(0,0,0,0.5)" }}>
+    <AdminModalOverlay>
+      <form onSubmit={submit} style={adminModalPanelStyle(420)}>
+        <AdminModalCloseButton onClose={onClose} />
         <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>{isEdit ? "Edit Tag" : "Add Tag"}</h2>
         <p style={{ fontSize: 12.5, color: "var(--text2)" }}>{isEdit ? "Update this tag." : "Create a new tag for discovery."}</p>
         {error ? <div style={{ marginTop: 12, background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.3)", color: "#f7a7a7", fontSize: 12.5, padding: "9px 12px", borderRadius: 9 }}>{error}</div> : null}
@@ -175,7 +181,7 @@ function TagFormModal({ initial, onClose, onSaved }: { initial?: AdminTag; onClo
           <button type="submit" disabled={busy} style={{ padding: "9px 18px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: busy ? "default" : "pointer", border: "none", background: "var(--brand)", color: "#04120c", opacity: busy ? 0.7 : 1 }}>{busy ? "Saving…" : isEdit ? "Save changes" : "Create"}</button>
         </div>
       </form>
-    </div>
+    </AdminModalOverlay>
   );
 }
 

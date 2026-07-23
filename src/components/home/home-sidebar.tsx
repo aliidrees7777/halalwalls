@@ -224,6 +224,8 @@ export function HomeSidebar({
                       width={143}
                       height={143}
                       className="size-[var(--lp-qr-size)] object-contain"
+                      loading="eager"
+                      priority
                     />
                   </div>
                   <p className="text-center text-[12.45px] font-medium text-hw-foreground/60">

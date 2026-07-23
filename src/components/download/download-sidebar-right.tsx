@@ -71,6 +71,7 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
                 width={116}
                 height={156}
                 className="w-[150px] object-contain"
+                style={{ height: "auto" }}
               />
               <a
                 href="https://play.google.com/store/apps"
@@ -95,7 +96,7 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
                 </div>
               </a>
             </div>
-            <Image src={mobilelog} alt="mobile-logo" width={150} className="h-[282px]" />
+            <Image src={mobilelog} alt="mobile-logo" width={150} height={282} className="h-[282px]" style={{ width: "auto" }} />
           </div>
         </SidebarPanel>
       </motion.div>

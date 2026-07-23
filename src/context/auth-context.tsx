@@ -34,14 +34,15 @@ export interface AuthUser {
 function normalizeAuthUser(user: AuthUser): AuthUser {
   if (!user) return user;
   if (!hasPremiumAccess(user)) return user;
-  return {
-    ...user,
-    isPremium: true,
-    subscriptionPlan:
-      user.role === "admin"
-        ? user.subscriptionPlan || "lifetime"
-        : user.subscriptionPlan,
-  };
+  if (user.role === "admin") {
+    return {
+      ...user,
+      isPremium: true,
+      subscriptionPlan: "lifetime",
+      subscriptionStatus: "active",
+    };
+  }
+  return { ...user, isPremium: true };
 }
 
 interface SignupPayload {
