@@ -99,7 +99,7 @@ export function ProfileHeaderNav() {
             onClick={() => openAuthModal("premium")}
             className="rounded-md px-2.5 py-2 text-[13px] font-medium text-hw-yellow transition-opacity hover:opacity-90 xl:px-3"
           >
-            {hasPremiumAccess(user) && user.subscriptionPlan !== "lifetime"
+            {hasPremiumAccess(user) && user?.subscriptionPlan !== "lifetime"
               ? "Upgrade"
               : "Premium"}
           </button>
