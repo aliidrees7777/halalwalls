@@ -336,11 +336,6 @@
     min-width 0.3s ease;
 }
 
-#sb.collapsed {
-  width: 0;
-  min-width: 0;
-  border-right: none;
-}
 .sb-logo {
   display: flex;
   align-items: center;
@@ -351,6 +346,9 @@
   flex-shrink: 0;
   overflow: hidden;
   white-space: nowrap;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
 }
 
 .sb-logo img {

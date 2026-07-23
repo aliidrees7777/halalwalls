@@ -149,6 +149,10 @@ const ChartsRow = ({
                   maxTicksLimit: 6,
                 },
                 min: 0,
+                // Keep peaks off the top edge so a day with e.g. 20 downloads
+                // doesn't look like the axis is hard-capped at 20.
+                grace: "15%",
+                beginAtZero: true,
               },
             },
           },
