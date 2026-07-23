@@ -10,6 +10,7 @@ import Image from "next/image";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/components/ui/toast";
+import { hasPremiumAccess } from "@/lib/premium-access";
 import downloadrotate from "../../../public/detail-page/downloadrotate.svg";
 
 const RECAPTCHA_TEST_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
@@ -73,7 +74,7 @@ export function UploadForm() {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const isPremiumUser = Boolean(user?.isPremium);
+  const isPremiumUser = hasPremiumAccess(user);
 
   // Real, active categories from the API (admin-managed).
   useEffect(() => {

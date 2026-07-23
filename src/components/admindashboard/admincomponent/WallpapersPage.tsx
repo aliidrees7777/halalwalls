@@ -26,6 +26,8 @@ interface AdminWallpaper {
   resolution: string;
   category: string | null;
   categorySlug: string | null;
+  categories?: string[];
+  categorySlugs?: string[];
   author: string;
   isPremium?: boolean;
   status: "active" | "pending" | "hidden";
@@ -84,7 +86,7 @@ const WallpapersPage = () => {
   // Stable server fetcher.
   const fetcher = useCallback(
     async ({ search, filters, sort, page, pageSize }: {
-      search: string; filters: Record<string, string>; sort: string; page: number; pageSize: number;
+      search: string; filters: Record<string, string>; sort: string; page: number; pageSize: number | "all";
     }) => {
       const p = new URLSearchParams({ page: String(page), limit: String(pageSize) });
       if (search) p.set("q", search);
@@ -233,8 +235,26 @@ const WallpapersPage = () => {
         key: "category", header: "Category",
         cell: (r) => {
           const w = r as unknown as AdminWallpaper;
-          const cls = w.categorySlug ? CAT_CLASS[w.categorySlug] || "cat-n" : "cat-n";
-          return <span className={`catb ${cls}`}>{w.category || "—"}</span>;
+          const labels =
+            w.categories?.length
+              ? w.categories
+              : w.category
+                ? [w.category]
+                : [];
+          if (!labels.length) return <span className="restext">—</span>;
+          return (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+              {labels.map((name, i) => {
+                const slug = w.categorySlugs?.[i] || w.categorySlug || "";
+                const cls = slug ? CAT_CLASS[slug] || "cat-n" : "cat-n";
+                return (
+                  <span key={`${slug}-${name}`} className={`catb ${cls}`}>
+                    {name}
+                  </span>
+                );
+              })}
+            </div>
+          );
         },
       },
       {
@@ -315,7 +335,11 @@ function WallpaperFormModal({
   const [title, setTitle] = useState(initial?.title ?? "");
   const [image, setImage] = useState(initial?.image ?? "");
   const [file, setFile] = useState<File | null>(null);
-  const [category, setCategory] = useState(initial?.categorySlug ?? categories[0]?.value ?? "");
+  const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
+    if (initial?.categorySlugs?.length) return [...initial.categorySlugs];
+    if (initial?.categorySlug) return [initial.categorySlug];
+    return categories[0]?.value ? [categories[0].value] : [];
+  });
   const [detectedRes, setDetectedRes] = useState<string | null>(
     initial?.resolution ? String(initial.resolution).replace("x", "×") : null,
   );
@@ -324,6 +348,12 @@ function WallpaperFormModal({
   const [isPremium, setIsPremium] = useState(initial?.isPremium ?? false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const toggleCategory = (slug: string) => {
+    setSelectedSlugs((prev) =>
+      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug],
+    );
+  };
 
   const onFileChange = (f: File | null) => {
     setFile(f);
@@ -346,7 +376,13 @@ function WallpaperFormModal({
     e.preventDefault();
     if (busy) return;
     setError(null);
-    const cat = categories.find((c) => c.value === category);
+    if (!selectedSlugs.length) {
+      setError("Select at least one category.");
+      return;
+    }
+    const selectedCats = categories.filter((c) => selectedSlugs.includes(c.value));
+    const categorySlugs = selectedCats.map((c) => c.value);
+    const categoryLabels = selectedCats.map((c) => c.label);
     const sourceValue = source.trim() || DEFAULT_SOURCE;
 
     // Edit → patch metadata (image stays a URL). Resolution is set by the
@@ -361,8 +397,10 @@ function WallpaperFormModal({
         await api.patch(`/admin/wallpapers/${initial!.id}`, {
           title: title.trim(),
           image: image.trim(),
-          category: cat?.label,
-          categorySlug: cat?.value,
+          category: categoryLabels[0],
+          categorySlug: categorySlugs[0],
+          categories: categoryLabels,
+          categorySlugs,
           tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
           description: sourceValue,
           author: parseSourceUrl(sourceValue).username || initial!.author || "HalalWalls",
@@ -393,8 +431,10 @@ function WallpaperFormModal({
       const fd = new FormData();
       fd.append("image", file);
       fd.append("title", title.trim());
-      if (cat?.label) fd.append("category", cat.label);
-      if (cat?.value) fd.append("categorySlug", cat.value);
+      if (categoryLabels[0]) fd.append("category", categoryLabels[0]);
+      if (categorySlugs[0]) fd.append("categorySlug", categorySlugs[0]);
+      fd.append("categories", categoryLabels.join(","));
+      fd.append("categorySlugs", categorySlugs.join(","));
       const tagList = tags.split(",").map((t) => t.trim()).filter(Boolean);
       if (tagList.length) fd.append("tags", tagList.join(","));
       fd.append("source", sourceValue);
@@ -415,7 +455,7 @@ function WallpaperFormModal({
       <form
         onClick={(e) => e.stopPropagation()}
         onSubmit={submit}
-        style={{ width: "100%", maxWidth: 460, background: "var(--bg2)", border, borderRadius: 16, padding: 22, boxShadow: "0 24px 60px rgba(0,0,0,0.5)" }}
+        style={{ width: "100%", maxWidth: 520, background: "var(--bg2)", border, borderRadius: 16, padding: 22, boxShadow: "0 24px 60px rgba(0,0,0,0.5)" }}
       >
         <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>
           {isEdit ? "Edit Wallpaper" : "Add Wallpaper"}
@@ -441,34 +481,81 @@ function WallpaperFormModal({
           style={inputStyle}
         />
 
-        {isEdit ? (
-          <>
-            <label style={label}>Image URL</label>
-            <input value={image} onChange={(e) => setImage(e.target.value)} placeholder="https://…" style={inputStyle} />
-          </>
-        ) : (
-          <>
-            <label style={label}>Image file</label>
-            <input
-              type="file"
-              accept="image/jpeg,image/png"
-              onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
-              style={inputStyle}
-            />
-            {file ? (
-              <p style={{ fontSize: 12, color: "var(--text2)", marginTop: 4 }}>{file.name}</p>
-            ) : null}
-          </>
-        )}
-
-        <div style={{ display: "flex", gap: 10 }}>
-          <div style={{ flex: 1 }}>
-            <label style={label}>Category</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ ...inputStyle, appearance: "auto" }}>
-              {categories.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
-            </select>
+        <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <label style={label}>
+              Categories <span style={{ color: "#ef4444" }}>*</span>
+            </label>
+            <div
+              style={{
+                ...inputStyle,
+                display: "flex",
+                flexDirection: "column",
+                gap: 6,
+                maxHeight: 200,
+                overflowY: "auto",
+                padding: "10px 12px",
+              }}
+            >
+              {categories.length === 0 ? (
+                <span style={{ color: "var(--text3)", fontSize: 12 }}>No categories available</span>
+              ) : (
+                categories.map((c) => {
+                  const checked = selectedSlugs.includes(c.value);
+                  return (
+                    <label
+                      key={c.value}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        fontSize: 13,
+                        color: "var(--text)",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleCategory(c.value)}
+                      />
+                      {c.label}
+                    </label>
+                  );
+                })
+              )}
+            </div>
+            <p style={{ fontSize: 11, color: "var(--text3)", marginTop: 4 }}>
+              Select one or more. The first category in the list that is checked is primary.
+            </p>
           </div>
-          <div style={{ flex: 1 }}>
+
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {isEdit ? (
+              <>
+                <label style={label}>Image URL</label>
+                <input
+                  value={image}
+                  onChange={(e) => setImage(e.target.value)}
+                  placeholder="https://…"
+                  style={inputStyle}
+                />
+              </>
+            ) : (
+              <>
+                <label style={label}>Image file</label>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png"
+                  onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
+                  style={inputStyle}
+                />
+                {file ? (
+                  <p style={{ fontSize: 12, color: "var(--text2)", marginTop: 4 }}>{file.name}</p>
+                ) : null}
+              </>
+            )}
+
             <label style={label}>Resolution</label>
             <div
               style={{

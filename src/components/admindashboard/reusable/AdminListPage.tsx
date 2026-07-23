@@ -5,7 +5,7 @@ import { StatCards } from "./StatCards";
 import { Toolbar } from "./Toolbar";
 import { DataTable } from "./DataTable";
 import { DataGrid } from "./DataGrid";
-import { Pagination } from "./Pagination";
+import { Pagination, SEE_ALL_PAGE_SIZE } from "./Pagination";
 import type { ListPageConfig, Row, StatCardDef } from "./types";
 
 /**
@@ -40,12 +40,16 @@ export function AdminListPage<T extends Row>({
   // Boxed view uses a multi-column card grid — page size must fill complete
   // rows (12/24/48), otherwise the last row looks "empty" and items spill
   // onto the next page (e.g. 10 items → 6 + 4 gap on a 6-col layout).
-  const GRID_PAGE_SIZES = [12, 24, 48];
-  const LIST_PAGE_SIZES = [10, 25, 50];
+  // SEE_ALL_PAGE_SIZE (-1) loads every matching row into a scrollable panel.
+  const GRID_PAGE_SIZES = [12, 24, 48, SEE_ALL_PAGE_SIZE];
+  const LIST_PAGE_SIZES = [10, 25, 50, SEE_ALL_PAGE_SIZE];
+  const seeAll = pageSize === SEE_ALL_PAGE_SIZE;
+  const fetchLimit = seeAll ? "all" : pageSize;
 
   const handleViewChange = (next: "list" | "grid") => {
     setView(next);
     setPage(1);
+    if (seeAll) return;
     if (next === "grid" && !GRID_PAGE_SIZES.includes(pageSize)) {
       setPageSize(12);
     } else if (next === "list" && !LIST_PAGE_SIZES.includes(pageSize)) {
@@ -72,7 +76,13 @@ export function AdminListPage<T extends Row>({
     if (!fetcher) return;
     let ignore = false;
     setLoading(true);
-    fetcher({ search: debouncedSearch, filters: filterValues, sort, page, pageSize })
+    fetcher({
+      search: debouncedSearch,
+      filters: filterValues,
+      sort,
+      page: seeAll ? 1 : page,
+      pageSize: fetchLimit,
+    })
       .then((r) => {
         if (ignore) return;
         setServerRows(r.rows);
@@ -89,7 +99,7 @@ export function AdminListPage<T extends Row>({
     return () => {
       ignore = true;
     };
-  }, [fetcher, debouncedSearch, filterValues, sort, page, pageSize, refreshKey]);
+  }, [fetcher, debouncedSearch, filterValues, sort, page, pageSize, seeAll, fetchLimit, refreshKey]);
 
   // ── server stat cards ──
   const [fetchedStats, setFetchedStats] = useState<StatCardDef[] | null>(null);
@@ -131,7 +141,9 @@ export function AdminListPage<T extends Row>({
   const total = server ? serverTotal : clientFiltered.length;
   const rows = server
     ? serverRows
-    : clientFiltered.slice((page - 1) * pageSize, page * pageSize);
+    : seeAll
+      ? clientFiltered
+      : clientFiltered.slice((page - 1) * pageSize, page * pageSize);
   const stats = fetchedStats ?? config.stats ?? [];
 
   return (
@@ -192,7 +204,13 @@ export function AdminListPage<T extends Row>({
           onView={handleViewChange}
         />
 
-        <div className="relative mt-4">
+        <div
+          className={
+            seeAll
+              ? "relative mt-4 max-h-[min(65vh,720px)] overflow-y-auto overflow-x-auto pr-1"
+              : "relative mt-4"
+          }
+        >
           {view === "grid" ? (
             <DataGrid
               columns={config.columns}
@@ -209,7 +227,7 @@ export function AdminListPage<T extends Row>({
               actions={config.actions}
               rowId={config.rowId}
               showIndex={config.showIndex}
-              startIndex={(page - 1) * pageSize}
+              startIndex={seeAll ? 0 : (page - 1) * pageSize}
             />
           )}
           {loading ? (

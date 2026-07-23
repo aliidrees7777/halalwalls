@@ -8,15 +8,19 @@ import {
   mobileDownloadResolutions,
   filterResolutionsForSource,
 } from "@/data/resolutions";
+import { normalizeResKey } from "@/lib/download-resolution";
+import { cn } from "@/lib/utils";
 import type { DownloadResolution, WallpaperDetail } from "@/types/wallpaper";
 
 function ResolutionLinkList({
   title,
   items,
+  selectedKey,
   onSelect,
 }: {
   title: string;
   items: DownloadResolution[];
+  selectedKey?: string | null;
   onSelect?: (item: DownloadResolution) => void;
 }) {
   if (!items.length) {
@@ -32,23 +36,34 @@ function ResolutionLinkList({
     );
   }
 
+  const active = selectedKey ? normalizeResKey(selectedKey) : "";
+
   return (
     <div>
       <p className="mb-2 ml-5 text-[16px] font-semibold tracking-wider text-hw-foreground">
         {title}
       </p>
       <ul className="ml-5 flex flex-wrap gap-x-3 gap-y-1.5">
-        {items.map((item) => (
-          <li key={item.label}>
-            <button
-              type="button"
-              onClick={() => onSelect?.(item)}
-              className="text-[16px] text-hw-foreground underline decoration-hw-foreground underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
-            >
-              {item.label}
-            </button>
-          </li>
-        ))}
+        {items.map((item) => {
+          const isSelected = active === normalizeResKey(item.label);
+          return (
+            <li key={item.label}>
+              <button
+                type="button"
+                onClick={() => onSelect?.(item)}
+                aria-current={isSelected ? "true" : undefined}
+                className={cn(
+                  "text-[16px] underline underline-offset-2 transition-colors",
+                  isSelected
+                    ? "font-bold text-hw-green decoration-hw-green"
+                    : "text-hw-foreground decoration-hw-foreground hover:text-hw-green hover:decoration-hw-green/50",
+                )}
+              >
+                {item.label}
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
@@ -56,11 +71,13 @@ function ResolutionLinkList({
 
 interface DownloadResolutionPanelProps {
   wallpaper: WallpaperDetail;
+  selectedResolution?: string | null;
   onSelect?: (resolution: DownloadResolution) => void;
 }
 
 export function DownloadResolutionPanel({
   wallpaper,
+  selectedResolution,
   onSelect,
 }: DownloadResolutionPanelProps) {
   // Prefer server-filtered catalog; fall back to client filter on source dims.
@@ -94,12 +111,14 @@ export function DownloadResolutionPanel({
         <ResolutionLinkList
           title="Popular Desktop Resolutions"
           items={desktop}
+          selectedKey={selectedResolution}
           onSelect={onSelect}
         />
         <div className="my-4 h-0.5 bg-hw-line" />
         <ResolutionLinkList
           title="Popular Mobile Resolutions"
           items={mobile}
+          selectedKey={selectedResolution}
           onSelect={onSelect}
         />
       </SidebarPanel>

@@ -1,21 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Check, Heart, Loader2, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useFavorite } from "@/hooks/use-favorite";
 import { useWallpaperDownload } from "@/hooks/use-wallpaper-download";
+import {
+  findAvailableResolution,
+} from "@/lib/download-resolution";
 import type { WallpaperDetail } from "@/types/wallpaper";
 import Image from "next/image";
 import downloadrotate from "../../../public/detail-page/downloadrotate.svg";
 
 interface DownloadActionsProps {
   wallpaper: WallpaperDetail;
+  /** Browse resolution from homepage (`?resolution=`), when available for this wallpaper. */
+  selectedResolution?: string | null;
+  onSelectedResolutionChange?: (resolution: string) => void;
 }
 
-export function DownloadActions({ wallpaper }: DownloadActionsProps) {
+export function DownloadActions({
+  wallpaper,
+  selectedResolution,
+  onSelectedResolutionChange,
+}: DownloadActionsProps) {
   const { download, locked } = useWallpaperDownload(wallpaper);
   const {
     isFavorite: favorited,
@@ -25,6 +35,18 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
   const [primaryDone, setPrimaryDone] = useState(false);
   const [originalDone, setOriginalDone] = useState(false);
   const [busy, setBusy] = useState<"primary" | "original" | null>(null);
+
+  const browseMatch = useMemo(
+    () => findAvailableResolution(wallpaper, selectedResolution),
+    [wallpaper, selectedResolution],
+  );
+
+  const primaryKey =
+    browseMatch?.label.replace(/×/g, "x") ?? wallpaper.preferredResolution;
+  // Browse filter → show exact size (e.g. 2560×1440); otherwise friendly 4K/2K/Full HD.
+  const primaryLabel = browseMatch
+    ? browseMatch.label
+    : wallpaper.preferredResolutionLabel || wallpaper.preferredResolution;
 
   const flashDone = (type: "primary" | "original") => {
     if (type === "primary") setPrimaryDone(true);
@@ -57,9 +79,14 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
       <Button
         type="button"
         disabled={busy !== null}
-        onClick={() =>
-          handleDownload("primary", wallpaper.preferredResolution)
-        }
+        onClick={() => {
+          if (browseMatch) {
+            onSelectedResolutionChange?.(
+              browseMatch.label.replace(/×/g, "x"),
+            );
+          }
+          handleDownload("primary", primaryKey);
+        }}
         className="h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-colors hover:bg-hw-pill2-hover disabled:opacity-70 sm:w-auto"
       >
         {busy === "primary" ? (
@@ -80,7 +107,7 @@ export function DownloadActions({ wallpaper }: DownloadActionsProps) {
           ? "Downloading…"
           : locked
             ? "Premium — Go Premium to Download"
-            : `Download Wallpaper (${wallpaper.preferredResolutionLabel || wallpaper.preferredResolution})`}
+            : `Download Wallpaper (${primaryLabel})`}
       </Button>
 
       <Button

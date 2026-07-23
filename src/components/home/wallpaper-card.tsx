@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Heart } from "lucide-react";
 import { useState } from "react";
 import type { Wallpaper } from "@/types/wallpaper";
@@ -14,6 +15,7 @@ interface WallpaperCardProps {
 }
 
 export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
+  const searchParams = useSearchParams();
   const { isFavorite: favorited, toggle } = useFavorite(
     wallpaper.id,
     wallpaper.favoritesCount ?? 0
@@ -21,11 +23,18 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
   const [loaded, setLoaded] = useState(false);
   const imageSrc = resolveMediaUrl(wallpaper.image);
 
+  // Carry browse resolution onto the detail page so the primary download
+  // matches the sidebar filter the user picked on the homepage.
+  const resolution = searchParams.get("resolution");
+  const detailHref = resolution
+    ? `/wallpaper/${wallpaper.slug}?resolution=${encodeURIComponent(resolution)}`
+    : `/wallpaper/${wallpaper.slug}`;
+
   return (
     <article className="group relative mx-auto aspect-[198/440] w-full max-w-[198px] lg:mx-0 lg:max-w-none lg:aspect-[449/254] lg:w-full">
       <div className="relative h-full w-full overflow-hidden bg-hw-card">
         <Link
-          href={`/wallpaper/${wallpaper.slug}`}
+          href={detailHref}
           className="relative block h-full w-full rounded-[var(--lp-card-radius)] border-[length:var(--lp-card-border)] border-hw-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50"
           aria-label={`View ${wallpaper.title}`}
         >

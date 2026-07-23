@@ -2,27 +2,47 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { Download } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { DownloadActions } from "@/components/download/download-actions";
 import { DownloadResolutionPanel } from "@/components/download/download-resolution-panel";
 import { useWallpaperDownload } from "@/hooks/use-wallpaper-download";
+import {
+  findAvailableResolution,
+  normalizeResKey,
+} from "@/lib/download-resolution";
 import type { DownloadResolution, WallpaperDetail } from "@/types/wallpaper";
 import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
 import { isHttpUrl, parseSourceUrl } from "@/lib/source-url";
 import download from "../../../public/download.svg";
 import link from "../../../public/link.svg";
+
 interface DownloadMainProps {
   wallpaper: WallpaperDetail;
 }
 
 export function DownloadMain({ wallpaper }: DownloadMainProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [loaded, setLoaded] = useState(false);
   const [lastDownload, setLastDownload] = useState<string | null>(null);
   const { download: downloadWallpaper } = useWallpaperDownload(wallpaper);
   const imageSrc = resolveMediaUrl(wallpaper.image);
+
+  const urlResolution = searchParams.get("resolution");
+  const browseMatch = useMemo(
+    () => findAvailableResolution(wallpaper, urlResolution),
+    [wallpaper, urlResolution],
+  );
+
+  // Highlight browse choice when valid; otherwise the wallpaper's preferred size.
+  const selectedResolution =
+    browseMatch?.label.replace(/×/g, "x") ??
+    (wallpaper.preferredResolution
+      ? normalizeResKey(wallpaper.preferredResolution)
+      : null);
 
   const sourceParsed = parseSourceUrl(wallpaper.description);
   const sourceUrl =
@@ -33,7 +53,14 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
       ? wallpaper.author
       : null);
 
+  const setResolutionQuery = (key: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("resolution", normalizeResKey(key));
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
+
   const handleResolution = async (res: DownloadResolution) => {
+    setResolutionQuery(res.label);
     const ok = await downloadWallpaper(res.label);
     if (ok) {
       setLastDownload(`${res.label} · ${res.fileSizeMB.toFixed(2)} MB`);
@@ -74,29 +101,27 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
       <div className="mt-4 flex">
         <Badge
           variant="outline"
-          className="gap-2 mr-3 rounded-full border-hw-line bg-hw-down w-[74px] h-[26px] text-[15px] font-semibold text-[#ffffff]"
+          className="mr-3 h-[26px] w-[74px] gap-2 rounded-full border-hw-line bg-hw-down text-[15px] font-semibold text-[#ffffff]"
         >
-          {/* <Download className="size-3.5" /> */}
           <Image src={download} alt="download" />
           {(wallpaper.downloadCount ?? 0).toLocaleString()}
         </Badge>
-      <div className=" flex flex-wrap items-center ">
-
-        <Image src={link} alt="link" className="mr-2"/>
-        {wallpaper.tags.map((tag, index) => (
-          <Link
-            key={`${tag}-${index}`}
-            href={`/?tag=${encodeURIComponent(tag)}`}
-            className="text-[19px] font-medium text-hw-foreground underline decoration-hw-foreground/50 underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
-          >
-            {tag}
-            {index < wallpaper.tags.length - 1 ? "," : ""}
-            {index < wallpaper.tags.length - 1 ? "\u00A0" : ""}
-          </Link>
-        ))}
+        <div className="flex flex-wrap items-center">
+          <Image src={link} alt="link" className="mr-2" />
+          {wallpaper.tags.map((tag, index) => (
+            <Link
+              key={`${tag}-${index}`}
+              href={`/?tag=${encodeURIComponent(tag)}`}
+              className="text-[19px] font-medium text-hw-foreground underline decoration-hw-foreground/50 underline-offset-2 transition-colors hover:text-hw-green hover:decoration-hw-green/50"
+            >
+              {tag}
+              {index < wallpaper.tags.length - 1 ? "," : ""}
+              {index < wallpaper.tags.length - 1 ? "\u00A0" : ""}
+            </Link>
+          ))}
+        </div>
       </div>
- </div>
-      <p className="mt-3 ml-21 text-[17px] leading-relaxed text-hw-muted">
+      <p className="ml-21 mt-3 text-[17px] leading-relaxed text-hw-muted">
         — Published on {wallpaper.publishedAt} | Original Resolution:{" "}
         {wallpaper.originalResolution} |{" "}
         {sourceUrl && sourceLabel ? (
@@ -117,7 +142,11 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
       </p>
 
       <div className="mt-5">
-        <DownloadActions wallpaper={wallpaper} />
+        <DownloadActions
+          wallpaper={wallpaper}
+          selectedResolution={selectedResolution}
+          onSelectedResolutionChange={setResolutionQuery}
+        />
       </div>
 
       {lastDownload && (
@@ -127,7 +156,11 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
       )}
 
       <div className="mt-5">
-        <DownloadResolutionPanel wallpaper={wallpaper} onSelect={handleResolution} />
+        <DownloadResolutionPanel
+          wallpaper={wallpaper}
+          selectedResolution={selectedResolution}
+          onSelect={handleResolution}
+        />
       </div>
     </div>
   );

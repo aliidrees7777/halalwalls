@@ -74,7 +74,8 @@ export interface FetchParams {
   filters: Record<string, string>;
   sort: string;
   page: number;
-  pageSize: number;
+  /** Page size, or `"all"` for admin “See all” (scrollable full list). */
+  pageSize: number | "all";
 }
 export interface FetchResult<T = Row> {
   rows: T[];

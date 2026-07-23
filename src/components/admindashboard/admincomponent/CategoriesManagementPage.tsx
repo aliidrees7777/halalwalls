@@ -59,7 +59,7 @@ const CategoriesManagementPage = () => {
 
   const fetcher = useCallback(
     async ({ search, filters, sort, page, pageSize }: {
-      search: string; filters: Record<string, string>; sort: string; page: number; pageSize: number;
+      search: string; filters: Record<string, string>; sort: string; page: number; pageSize: number | "all";
     }) => {
       const p = new URLSearchParams({ page: String(page), limit: String(pageSize) });
       if (search) p.set("q", search);

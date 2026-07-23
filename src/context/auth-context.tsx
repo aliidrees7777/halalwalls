@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { api, ApiError, getToken, setToken } from "@/lib/api";
+import { hasPremiumAccess } from "@/lib/premium-access";
 
 export interface AuthUser {
   id: string;
@@ -27,6 +28,20 @@ export interface AuthUser {
   favorites: string[];
   favoritesCount: number;
   uploadsCount?: number;
+}
+
+/** Admins are always premium on the public site, even if DB flag was cleared. */
+function normalizeAuthUser(user: AuthUser): AuthUser {
+  if (!user) return user;
+  if (!hasPremiumAccess(user)) return user;
+  return {
+    ...user,
+    isPremium: true,
+    subscriptionPlan:
+      user.role === "admin"
+        ? user.subscriptionPlan || "lifetime"
+        : user.subscriptionPlan,
+  };
 }
 
 interface SignupPayload {
@@ -125,11 +140,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           uploadsCount: number;
         }>("/me");
         if (active)
-          setUser({
-            ...data.user,
-            favoritesCount: data.favoritesCount,
-            uploadsCount: data.uploadsCount,
-          });
+          setUser(
+            normalizeAuthUser({
+              ...data.user,
+              favoritesCount: data.favoritesCount,
+              uploadsCount: data.uploadsCount,
+            }),
+          );
       } catch {
         // Token invalid/expired → drop it.
         setToken(null);
@@ -145,8 +162,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const persistSession = useCallback((data: AuthSuccess) => {
     setToken(data.token);
-    setUser(data.user);
-    return data.user;
+    const next = normalizeAuthUser(data.user);
+    setUser(next);
+    return next;
   }, []);
 
   const login = useCallback(
@@ -203,15 +221,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }) => {
       const data = await api.patch<{ user: AuthUser }>("/me", payload);
       setUser((u) =>
-        u
-          ? {
-              ...data.user,
-              uploadsCount: u.uploadsCount,
-              favoritesCount: u.favoritesCount,
-            }
-          : data.user,
+        normalizeAuthUser(
+          u
+            ? {
+                ...data.user,
+                uploadsCount: u.uploadsCount,
+                favoritesCount: u.favoritesCount,
+              }
+            : data.user,
+        ),
       );
-      return data.user;
+      return normalizeAuthUser(data.user);
     },
     [],
   );
@@ -232,11 +252,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           favoritesCount: number;
           uploadsCount: number;
         }>("/me");
-        setUser({
-          ...data.user,
-          favoritesCount: data.favoritesCount,
-          uploadsCount: data.uploadsCount,
-        });
+        setUser(
+          normalizeAuthUser({
+            ...data.user,
+            favoritesCount: data.favoritesCount,
+            uploadsCount: data.uploadsCount,
+          }),
+        );
       } catch {
         /* not signed in on this device — that's fine */
       }
@@ -250,11 +272,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       favoritesCount: number;
       uploadsCount: number;
     }>("/me");
-    setUser({
-      ...data.user,
-      favoritesCount: data.favoritesCount,
-      uploadsCount: data.uploadsCount,
-    });
+    setUser(
+      normalizeAuthUser({
+        ...data.user,
+        favoritesCount: data.favoritesCount,
+        uploadsCount: data.uploadsCount,
+      }),
+    );
   }, []);
 
   // Permanently delete the signed-in user's account (DELETE /me), then clear
