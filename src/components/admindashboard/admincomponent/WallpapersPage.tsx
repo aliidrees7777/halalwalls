@@ -385,18 +385,21 @@ function WallpaperFormModal({
     const categoryLabels = selectedCats.map((c) => c.label);
     const sourceValue = source.trim() || DEFAULT_SOURCE;
 
-    // Edit → patch metadata (image stays a URL). Resolution is set by the
-    // upload pipeline from real pixels — not edited here.
+    // Edit → patch metadata; optionally replace the image file (old files deleted server-side).
     if (isEdit) {
-      if (!title.trim() || !image.trim()) {
-        setError("Title and image URL are required.");
+      if (!title.trim()) {
+        setError("Title is required.");
         return;
       }
       setBusy(true);
       try {
+        if (file) {
+          const fd = new FormData();
+          fd.append("image", file);
+          await api.post(`/admin/wallpapers/${initial!.id}/image`, fd);
+        }
         await api.patch(`/admin/wallpapers/${initial!.id}`, {
           title: title.trim(),
-          image: image.trim(),
           category: categoryLabels[0],
           categorySlug: categorySlugs[0],
           categories: categoryLabels,
@@ -533,13 +536,38 @@ function WallpaperFormModal({
           <div style={{ flex: 1, minWidth: 0 }}>
             {isEdit ? (
               <>
-                <label style={label}>Image URL</label>
+                <label style={label}>Replace image (optional)</label>
+                {image ? (
+                  <div
+                    style={{
+                      marginBottom: 8,
+                      borderRadius: 8,
+                      overflow: "hidden",
+                      border,
+                      background: "var(--bg3)",
+                      aspectRatio: "16 / 9",
+                      maxHeight: 120,
+                    }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imgSrc(image) || image}
+                      alt="Current wallpaper"
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    />
+                  </div>
+                ) : null}
                 <input
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
-                  placeholder="https://…"
+                  type="file"
+                  accept="image/jpeg,image/png"
+                  onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
                   style={inputStyle}
                 />
+                <p style={{ fontSize: 11, color: "var(--text3)", marginTop: 4 }}>
+                  {file
+                    ? `New file: ${file.name} — previous image files will be deleted on save.`
+                    : "Leave empty to keep the current image. Choosing a file replaces it and deletes the old one."}
+                </p>
               </>
             ) : (
               <>

@@ -38,9 +38,11 @@ export function WallpaperPagination({
   totalPages,
   onPageChange,
 }: WallpaperPaginationProps) {
-  if (totalPages <= 1) return null;
-
-  const pages = buildPages(currentPage, totalPages);
+  // Always show pagination (even for a single page of tag/filter results),
+  // so the control doesn't disappear when there are few wallpapers.
+  const pagesTotal = Math.max(1, totalPages || 1);
+  const activePage = Math.min(Math.max(1, currentPage), pagesTotal);
+  const pages = buildPages(activePage, pagesTotal);
 
   return (
     <nav
@@ -62,11 +64,11 @@ export function WallpaperPagination({
             onClick={() => onPageChange(page)}
             className={cn(
               "flex h-[var(--lp-pagination-h)] min-w-[var(--lp-pagination-w)] items-center justify-center rounded-[var(--lp-pagination-radius)] px-[var(--lp-pagination-px)] text-[length:var(--lp-pagination-font)] leading-none transition-colors",
-              currentPage === page
+              activePage === page
                 ? "bg-[#33373A] font-semibold text-white"
                 : "bg-[#222426] font-medium text-white hover:bg-[#33373A]",
             )}
-            aria-current={currentPage === page ? "page" : undefined}
+            aria-current={activePage === page ? "page" : undefined}
           >
             {page}
           </button>
@@ -74,8 +76,8 @@ export function WallpaperPagination({
       )}
       <button
         type="button"
-        onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
-        disabled={currentPage >= totalPages}
+        onClick={() => onPageChange(Math.min(activePage + 1, pagesTotal))}
+        disabled={activePage >= pagesTotal}
         className="h-[var(--lp-pagination-h)] w-[var(--lp-pagination-next-w)] rounded-[var(--lp-pagination-radius)] bg-[#222426] text-[length:var(--lp-pagination-font)] font-medium leading-none text-white transition-colors hover:bg-[#33373A] disabled:cursor-not-allowed disabled:opacity-50"
       >
         Next »
