@@ -18,6 +18,16 @@ const PLAN_COLORS: Record<string, string> = {
 
 const fmt = (n: number) => n.toLocaleString("en-US");
 
+/** Compact axis labels: 1.2K / 3.4M so large download days stay readable. */
+const fmtCompact = (n: number) => {
+  if (!Number.isFinite(n)) return "0";
+  const abs = Math.abs(n);
+  if (abs >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(abs >= 10_000_000_000 ? 0 : 1)}B`;
+  if (abs >= 1_000_000) return `${(n / 1_000_000).toFixed(abs >= 10_000_000 ? 0 : 1)}M`;
+  if (abs >= 1_000) return `${(n / 1_000).toFixed(abs >= 10_000 ? 0 : 1)}K`;
+  return String(Math.round(n));
+};
+
 const fmtDay = (iso: string) => {
   const d = new Date(iso + "T00:00:00");
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -92,7 +102,7 @@ const ChartsRow = ({
             labels: series.map((p) => fmtDay(p.date)),
             datasets: [
               {
-                label: data?.trend.label ?? "Uploads",
+                label: data?.trend.label ?? "Downloads",
                 data: series.map((p) => p.value),
                 borderColor: "#05DF8B",
                 borderWidth: 2,
@@ -125,7 +135,7 @@ const ChartsRow = ({
                 cornerRadius: 8,
                 callbacks: {
                   label: (c) =>
-                    `${data?.trend.label ?? "Uploads"}: ${c.formattedValue}`,
+                    `${data?.trend.label ?? "Downloads"}: ${fmt(Number(c.raw) || 0)}`,
                 },
               },
             },
@@ -147,10 +157,11 @@ const ChartsRow = ({
                   font: { size: 10 },
                   precision: 0,
                   maxTicksLimit: 6,
+                  callback: (value) => fmtCompact(Number(value)),
                 },
                 min: 0,
-                // Keep peaks off the top edge so a day with e.g. 20 downloads
-                // doesn't look like the axis is hard-capped at 20.
+                // Auto-scales to the data max (20 today, millions tomorrow).
+                // grace keeps the peak off the top edge of the chart.
                 grace: "15%",
                 beginAtZero: true,
               },
