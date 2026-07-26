@@ -593,6 +593,7 @@
   font-weight: 800;
   color: #000;
   flex-shrink: 0;
+  overflow: hidden;
 }
 .admin-info {
   line-height: 1.25;

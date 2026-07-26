@@ -1,7 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useAuth } from "@/context/auth-context";
 import { LogOut } from "lucide-react";
+import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 
 interface HeaderProps {
   /** Toggles the mobile sidebar drawer. */
@@ -11,12 +13,21 @@ interface HeaderProps {
 const Header = ({ onMenuClick }: HeaderProps) => {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [avatarFailed, setAvatarFailed] = useState(false);
 
   const displayName =
     user?.name?.trim() ||
     `${user?.firstName ?? ""} ${user?.lastName ?? ""}`.trim() ||
     "Admin";
   const initial = (user?.firstName || user?.email || "A").charAt(0).toUpperCase();
+  // Same source as HalalWalls /profile — one account photo everywhere.
+  const avatarSrc = upgradeAvatarUrl(user?.avatar, 128);
+  const showPhoto = Boolean(avatarSrc) && !avatarFailed;
+
+  // Retry the image if the account avatar URL changes (e.g. after profile edit).
+  useEffect(() => {
+    setAvatarFailed(false);
+  }, [user?.avatar]);
 
   return (
     <div>
@@ -67,9 +78,29 @@ const Header = ({ onMenuClick }: HeaderProps) => {
               role="button"
               tabIndex={0}
               onClick={() => setMenuOpen((o) => !o)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setMenuOpen((o) => !o);
+                }
+              }}
               style={{ cursor: "pointer" }}
             >
-              <div className="av">{initial}</div>
+              <div className="av" aria-hidden>
+                {showPhoto ? (
+                  <Image
+                    src={avatarSrc}
+                    alt=""
+                    width={32}
+                    height={32}
+                    unoptimized={shouldUnoptimizeMedia(avatarSrc)}
+                    className="size-full object-cover"
+                    onError={() => setAvatarFailed(true)}
+                  />
+                ) : (
+                  initial
+                )}
+              </div>
               <div className="admin-info">
                 <div className="admin-name">{displayName}</div>
                 <div className="admin-role">Administrator</div>
@@ -115,29 +146,49 @@ const Header = ({ onMenuClick }: HeaderProps) => {
                 >
                   <div
                     style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
                       padding: "8px 10px 10px",
                       borderBottom: "1px solid rgba(255,255,255,0.06)",
                       marginBottom: 6,
                     }}
                   >
-                    <div
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 600,
-                        color: "var(--text)",
-                      }}
-                    >
-                      {displayName}
+                    <div className="av" aria-hidden style={{ width: 36, height: 36 }}>
+                      {showPhoto ? (
+                        <Image
+                          src={avatarSrc}
+                          alt=""
+                          width={36}
+                          height={36}
+                          unoptimized={shouldUnoptimizeMedia(avatarSrc)}
+                          className="size-full object-cover"
+                          onError={() => setAvatarFailed(true)}
+                        />
+                      ) : (
+                        initial
+                      )}
                     </div>
-                    <div
-                      style={{
-                        fontSize: 11.5,
-                        color: "var(--text3)",
-                        marginTop: 2,
-                        wordBreak: "break-all",
-                      }}
-                    >
-                      {user?.email}
+                    <div style={{ minWidth: 0 }}>
+                      <div
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 600,
+                          color: "var(--text)",
+                        }}
+                      >
+                        {displayName}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 11.5,
+                          color: "var(--text3)",
+                          marginTop: 2,
+                          wordBreak: "break-all",
+                        }}
+                      >
+                        {user?.email}
+                      </div>
                     </div>
                   </div>
                   <button
