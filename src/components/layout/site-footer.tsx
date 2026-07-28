@@ -4,6 +4,7 @@ import playstore from "../../../public/authicon/playstore.svg";
 import tiktok from "../../../public/authicon/tiktok.svg";
 import insta from "../../../public/authicon/insta.svg";
 import ncn from "../../../public/authicon/ncn.svg";
+import { cn } from "@/lib/utils";
 const footerLinks = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
@@ -75,24 +76,29 @@ function TikTokIcon({ className }: { className?: string }) {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ className }: { className?: string }) {
   return (
-    <footer className="border-t-[var(--lp-footer-border)] border-hw-line bg-hw-footer px-4 py-8 lg:px-0">
+    <footer
+      className={cn(
+        "mt-60 border-t-[3px] border-hw-line bg-hw-footer px-4 py-8 lg:px-0",
+        className,
+      )}
+    >
       <div className="lp-container flex flex-col items-center gap-4">
         <nav
-          className="flex flex-wrap items-center justify-center gap-x-1 gap-y-2 text-center  text-hw-muted"
+          className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-center text-hw-muted"
           aria-label="Footer"
         >
           {footerLinks.map((link, i) => (
             <span key={link.label} className="flex items-center">
               {i > 0 && (
-                <span className="mx-2 text-hw-line" aria-hidden>
+                <span className="mx-4 text-hw-line" aria-hidden>
                   |
                 </span>
               )}
               <Link
                 href={link.href}
-                className="text-[12px] font-medium text-hw-foreground transition-colors hover:text-white"
+                className="text-[18px] font-medium text-hw-foreground transition-colors hover:text-white"
               >
                 {link.label}
               </Link>
@@ -100,7 +106,7 @@ export function SiteFooter() {
           ))}
         </nav>
 
-        <div className="flex flex-wrap items-center justify-center gap-2 md:flex hidden">
+        <div className="hidden flex-wrap items-center justify-center gap-5 md:flex">
           <a href="https://play.google.com/store/apps" target="_blank" rel="noopener noreferrer" className={socialButtonClass}>
             <PlayStoreIcon className="size-3.5" />
             Google Play
@@ -117,7 +123,7 @@ export function SiteFooter() {
             <NcnIcon className="h-3.5 w-auto" />
           </a>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-3 md:hidden ">
+        <div className="flex flex-wrap items-center justify-center gap-5 md:hidden">
           <Image src={playstore} alt="playstore" />
           <Image src={tiktok} alt="playstore" />
           <Image src={insta} alt="playstore" />

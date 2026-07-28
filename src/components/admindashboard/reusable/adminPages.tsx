@@ -24,7 +24,9 @@ import { AdminThumb } from "./AdminThumb";
 import type { ListPageConfig, Row } from "./types";
 
 /* ── small reusable cell renderers ─────────────────────────────────────── */
-const thumb = (url: string) => <AdminThumb src={url} />;
+const thumb = (url: string, variant: "rect" | "square" = "rect") => (
+  <AdminThumb src={url} variant={variant} />
+);
 
 const titleSub = (title: string, sub: string) => (
   <div className="min-w-0">
@@ -137,7 +139,7 @@ const categories: ListPageConfig = {
   actions: [{ type: "edit" }, { type: "delete" }, { type: "more" }],
   columns: [
     { key: "category", header: "Category", cell: (r) => (
-      <div className="flex items-center gap-3">{thumb(String(r.image))}<span className="font-medium text-[var(--text)]">{String(r.category)}</span></div>
+      <div className="flex items-center gap-3">{thumb(String(r.image), "square")}<span className="font-medium text-[var(--text)]">{String(r.category)}</span></div>
     ) },
     { key: "description", header: "Description", cell: (r) => <span className="text-[var(--text2)]">{String(r.description)}</span> },
     { key: "wallpapers", header: "Wallpapers" },

@@ -169,7 +169,7 @@ html:has(.admin-panel) body {
   --lp-main-gap: 17.33px;
   --lp-sidebar-gap: 17.78px;
   --lp-mid-pt: 67px;
-  --lp-grid-gap: 3.56px;
+  --lp-grid-gap: 5.56px;
   --lp-grid-to-pagination: 39.11px;
   --lp-search-max: 791px;
   --lp-search-h: 42.67px;
@@ -1058,6 +1058,19 @@ td {
   vertical-align: middle;
 }
 .thumb {
+  width: 60px !important;
+  height: 36px !important;
+  min-width: 60px !important;
+  min-height: 36px !important;
+  max-width: 60px !important;
+  max-height: 36px !important;
+  aspect-ratio: 60 / 36;
+  border-radius: var(--rs);
+  overflow: hidden;
+  background: var(--bg3);
+  flex-shrink: 0;
+}
+.thumb.thumb-square {
   width: 44px !important;
   height: 44px !important;
   min-width: 44px !important;
@@ -1065,10 +1078,6 @@ td {
   max-width: 44px !important;
   max-height: 44px !important;
   aspect-ratio: 1 / 1;
-  border-radius: var(--rs);
-  overflow: hidden;
-  background: var(--bg3);
-  flex-shrink: 0;
 }
 .thumb img {
   width: 100% !important;

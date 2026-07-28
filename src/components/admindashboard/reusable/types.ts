@@ -106,6 +106,8 @@ export interface ListPageConfig<T extends Row = Row> {
   loadingText?: string;
   /** Grid view (list/grid toggle): full-width card cover image URL for a row. */
   gridImage?: (row: T) => string;
+  /** Grid cover aspect. Categories use square; wallpapers stay landscape. */
+  gridImageAspect?: "rect" | "square";
   /** Grid view: which column key is the card's heading (defaults to first column). */
   gridTitleKey?: string;
   /** Fields the reusable search box matches against. */

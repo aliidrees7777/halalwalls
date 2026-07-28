@@ -219,6 +219,7 @@ export function AdminListPage<T extends Row>({
               actions={config.actions}
               rowId={config.rowId}
               image={config.gridImage}
+              imageAspect={config.gridImageAspect}
               titleKey={config.gridTitleKey}
             />
           ) : (

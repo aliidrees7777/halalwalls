@@ -124,6 +124,7 @@ const CategoriesManagementPage = () => {
     rowId: (r) => String((r as unknown as AdminCategory).id),
     gridTitleKey: "name",
     gridImage: (r) => imgSrc((r as unknown as AdminCategory).image),
+    gridImageAspect: "square",
     filters: [
       {
         key: "status", placeholder: "All Status",
@@ -148,7 +149,7 @@ const CategoriesManagementPage = () => {
           const src = imgSrc(c.image);
           return (
             <div className="flex items-center gap-3">
-              <AdminThumb src={src || null} alt={c.name} />
+              <AdminThumb src={src || null} alt={c.name} variant="square" />
               <div>
                 <div className="wtitle">{c.name}</div>
                 <div className="wtags">/{c.slug}</div>

@@ -3,39 +3,48 @@
 
 import { cn } from "@/lib/utils";
 
-/** Square preview size used in every admin list/table. */
-export const ADMIN_THUMB_PX = 44;
+export type AdminThumbVariant = "rect" | "square";
+
+/** Landscape wallpaper previews (original admin table size). */
+export const ADMIN_THUMB_RECT = { w: 60, h: 36 } as const;
+/** Square category / boxed previews. */
+export const ADMIN_THUMB_SQUARE = { w: 44, h: 44 } as const;
 
 interface AdminThumbProps {
   src?: string | null;
   alt?: string;
+  /** `rect` = wallpapers (default). `square` = categories. */
+  variant?: AdminThumbVariant;
   className?: string;
   onClick?: () => void;
   style?: React.CSSProperties;
 }
 
 /**
- * Forced 1×1 preview. Inline dimensions beat Tailwind preflight
- * (`img { height: auto }`) which otherwise lets landscape images stay rectangular.
+ * Admin table preview thumb. Inline size beats Tailwind preflight
+ * (`img { height: auto }`) so landscape sources don't force a wrong frame.
  */
 export function AdminThumb({
   src,
   alt = "",
+  variant = "rect",
   className,
   onClick,
   style,
 }: AdminThumbProps) {
+  const size = variant === "square" ? ADMIN_THUMB_SQUARE : ADMIN_THUMB_RECT;
+
   return (
     <div
       className={cn("shrink-0 overflow-hidden rounded-md bg-[var(--bg3)]", className)}
       style={{
-        width: ADMIN_THUMB_PX,
-        height: ADMIN_THUMB_PX,
-        minWidth: ADMIN_THUMB_PX,
-        minHeight: ADMIN_THUMB_PX,
-        maxWidth: ADMIN_THUMB_PX,
-        maxHeight: ADMIN_THUMB_PX,
-        aspectRatio: "1 / 1",
+        width: size.w,
+        height: size.h,
+        minWidth: size.w,
+        minHeight: size.h,
+        maxWidth: size.w,
+        maxHeight: size.h,
+        aspectRatio: `${size.w} / ${size.h}`,
         ...style,
       }}
       onClick={onClick}

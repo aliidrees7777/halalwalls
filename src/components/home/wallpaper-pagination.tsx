@@ -49,6 +49,14 @@ export function WallpaperPagination({
       className="flex flex-wrap items-center justify-center gap-[var(--lp-pagination-gap)] pt-[var(--lp-grid-to-pagination)]"
       aria-label="Pagination"
     >
+      <button
+        type="button"
+        onClick={() => onPageChange(Math.max(activePage - 1, 1))}
+        disabled={activePage <= 1}
+        className="h-[var(--lp-pagination-h)] min-w-[var(--lp-pagination-next-w)] rounded-[var(--lp-pagination-radius)] bg-[#222426] px-4 text-[length:var(--lp-pagination-font)] font-medium leading-none text-white transition-colors hover:bg-[#33373A] disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        « Previous
+      </button>
       {pages.map((page, index) =>
         page === "gap" ? (
           <span
@@ -78,7 +86,7 @@ export function WallpaperPagination({
         type="button"
         onClick={() => onPageChange(Math.min(activePage + 1, pagesTotal))}
         disabled={activePage >= pagesTotal}
-        className="h-[var(--lp-pagination-h)] w-[var(--lp-pagination-next-w)] rounded-[var(--lp-pagination-radius)] bg-[#222426] text-[length:var(--lp-pagination-font)] font-medium leading-none text-white transition-colors hover:bg-[#33373A] disabled:cursor-not-allowed disabled:opacity-50"
+        className="h-[var(--lp-pagination-h)] min-w-[var(--lp-pagination-next-w)] rounded-[var(--lp-pagination-radius)] bg-[#222426] px-4 text-[length:var(--lp-pagination-font)] font-medium leading-none text-white transition-colors hover:bg-[#33373A] disabled:cursor-not-allowed disabled:opacity-50"
       >
         Next »
       </button>

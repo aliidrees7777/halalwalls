@@ -158,9 +158,9 @@ export function ProfilePage() {
             </ProfileCarouselSection>
           </div>
 
-          <div className="mt-[60px] flex w-full flex-col items-center gap-[60px] px-4">
+          <div className="mt-[60px] flex w-full flex-col items-center px-4">
             <MobileAppBanner />
-            <SiteFooter />
+            <SiteFooter className="w-full" />
           </div>
         </div>
       </div>

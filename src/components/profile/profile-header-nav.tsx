@@ -59,7 +59,7 @@ export function ProfileHeaderNav() {
         </div>
 
         <nav
-          className="hidden items-center gap-0.5 lg:flex"
+          className="hidden items-center gap-8 lg:flex"
           aria-label="Primary"
         >
           {navItems.map((item) => (

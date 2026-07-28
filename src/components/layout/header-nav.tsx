@@ -199,7 +199,7 @@ export function HeaderNav({ className }: { className?: string }) {
 
   return (
     <nav
-      className={cn("hidden items-center gap-0.5 lg:flex", className)}
+      className={cn("hidden items-center gap-8 lg:flex", className)}
       aria-label="Primary"
     >
       <LinkDropdown label="Explore" items={exploreItems} />

@@ -9,6 +9,8 @@ interface DataGridProps<T extends Row> {
   rowId: (row: T) => string;
   /** Full-width cover image URL for the card. */
   image?: (row: T) => string;
+  /** Cover aspect — wallpapers landscape (default), categories square. */
+  imageAspect?: "rect" | "square";
   /** Column key OR raw row field used as the card heading. */
   titleKey?: string;
 }
@@ -24,6 +26,7 @@ export function DataGrid<T extends Row>({
   actions,
   rowId,
   image,
+  imageAspect = "rect",
   titleKey,
 }: DataGridProps<T>) {
   const titleCol = titleKey
@@ -62,7 +65,9 @@ export function DataGrid<T extends Row>({
             {image ? (
               <div
                 className="w-full overflow-hidden bg-[var(--bg4)]"
-                style={{ aspectRatio: "1 / 1" }}
+                style={{
+                  aspectRatio: imageAspect === "square" ? "1 / 1" : "16 / 10",
+                }}
               >
                 {cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
