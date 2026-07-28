@@ -7,6 +7,7 @@ import { DataTable } from "./DataTable";
 import { DataGrid } from "./DataGrid";
 import { Pagination, SEE_ALL_PAGE_SIZE } from "./Pagination";
 import type { ListPageConfig, Row, StatCardDef } from "./types";
+import { LoadingSpinner } from "@/components/shared/loading-spinner";
 
 /**
  * One reusable admin list page. Give it a ListPageConfig and it renders the
@@ -231,8 +232,8 @@ export function AdminListPage<T extends Row>({
             />
           )}
           {loading ? (
-            <div className="absolute inset-0 grid place-items-center bg-[var(--bg2)]/60 text-sm text-[var(--text2)]">
-              {config.loadingText ?? "Loading…"}
+            <div className="absolute inset-0 grid place-items-center bg-[var(--bg2)]/60">
+              <LoadingSpinner />
             </div>
           ) : null}
         </div>

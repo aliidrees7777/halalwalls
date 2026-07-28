@@ -1,5 +1,5 @@
 "use client";
-import { Search, Filter, ChevronDown, LayoutGrid, List } from "lucide-react";
+import { Search, ChevronDown, LayoutGrid, List } from "lucide-react";
 import type { FilterDef, SortOption } from "./types";
 
 interface ToolbarProps {
@@ -70,13 +70,6 @@ export function Toolbar({
           />
         </div>
       ))}
-
-      <button
-        type="button"
-        className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg3)] px-3 py-2 text-sm text-[var(--text)] hover:border-[var(--brand)]"
-      >
-        <Filter size={15} /> Filter
-      </button>
 
       <div className="ml-auto flex items-center gap-3">
         {sortOptions?.length ? (

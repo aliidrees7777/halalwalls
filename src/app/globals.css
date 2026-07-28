@@ -59,9 +59,27 @@
   --radius-xl: 1rem;
 }
 
-/* LIGHT theme (default) — soft-gray HDQwalls-like palette */
+/*
+ * Admin panel — always dark. Ignores the public site's light/dark toggle
+ * so /admin never flips to a light chrome.
+ */
 .admin-panel {
-  --hw-bg: #f5f6f7;
+  --hw-bg: #1d2021;
+  --hw-header: #181a1b;
+  --hw-foreground: #f0f4f5;
+  --hw-muted: #8e9ba0;
+  --hw-card: #242a2b;
+  --hw-border: #2e3537;
+  --hw-surface: #000000;
+  --hw-deep: #181c1d;
+  --hw-depw: #ffffff;
+  --hw-pill2: #2c3133;
+  --hw-pill2-hover: #363d40;
+  --hw-input: #2c3133;
+  --hw-input-border: #3a4245;
+  --hw-line: #2e3537;
+  --hw-faint: #8e9ba0;
+  --hw-icon: #8e9ba0;
   --bg: #1d2021;
   --bg2: #242a2b;
   --bg3: #2c3133;
@@ -81,7 +99,22 @@
   --hh: 60px;
   --r: 10px;
   --rs: 6px;
+  background: var(--bg);
+  color: var(--text);
+  color-scheme: dark;
+  min-height: 100vh;
 }
+
+/* Keep page chrome dark while admin is mounted (even if html is light). */
+html:has(.admin-panel) {
+  color-scheme: dark;
+}
+html:has(.admin-panel) body {
+  background: #1d2021;
+  color: #f0f4f5;
+}
+
+/* LIGHT theme (default) — soft-gray HDQwalls-like palette */
 :root {
   --hw-header: #ffffff;
   --hw-search-header: linear-gradient(
@@ -627,6 +660,7 @@
   font-weight: 800;
   margin-bottom: 3px;
   letter-spacing: -0.02em;
+  color: var(--text);
 }
 .pg-hdr p {
   font-size: 0.82rem;
@@ -1024,16 +1058,24 @@ td {
   vertical-align: middle;
 }
 .thumb {
-  width: 60px;
-  height: 36px;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  max-width: 44px !important;
+  max-height: 44px !important;
+  aspect-ratio: 1 / 1;
   border-radius: var(--rs);
   overflow: hidden;
   background: var(--bg3);
+  flex-shrink: 0;
 }
 .thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: cover !important;
+  object-position: center;
   display: block;
 }
 .wtitle {

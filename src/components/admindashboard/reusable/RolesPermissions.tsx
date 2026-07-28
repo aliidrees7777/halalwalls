@@ -10,6 +10,7 @@ import {
   AdminModalOverlay,
   adminModalPanelStyle,
 } from "./AdminModal";
+import { LoadingBlock } from "@/components/shared/loading-spinner";
 
 interface Role {
   id: string;
@@ -123,7 +124,7 @@ export function RolesPermissions() {
         </div>
 
         {loading ? (
-          <div className="p-16 text-center text-[var(--text2)]">Loading…</div>
+          <LoadingBlock className="p-16" size="lg" />
         ) : tab === "Permissions Matrix" ? (
           <div className="overflow-x-auto p-4">
             <table className="w-full min-w-[760px] border-collapse text-sm">

@@ -20,12 +20,11 @@ import {
   UserPlus,
 } from "lucide-react";
 import { StatusBadge } from "./cells";
+import { AdminThumb } from "./AdminThumb";
 import type { ListPageConfig, Row } from "./types";
 
 /* ── small reusable cell renderers ─────────────────────────────────────── */
-const thumb = (url: string) => (
-  <img src={url} alt="" className="h-10 w-14 shrink-0 rounded-md object-cover" />
-);
+const thumb = (url: string) => <AdminThumb src={url} />;
 
 const titleSub = (title: string, sub: string) => (
   <div className="min-w-0">

@@ -3,7 +3,7 @@ import AdminGuard from "@/components/admindashboard/admincomponent/AdminGuard";
 
 const Page = () => {
   return (
-    <div className="admin-panel" id="main">
+    <div className="admin-panel dark" id="main">
       <AdminGuard>
         <Dashboard />
       </AdminGuard>

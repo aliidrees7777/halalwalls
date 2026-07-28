@@ -9,9 +9,10 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/home/site-header";
 import { useMyUploads } from "@/hooks/use-my-uploads";
 import { useAuth } from "@/context/auth-context";
+import { LoadingBlock, LoadingSpinner } from "@/components/shared/loading-spinner";
 
 /**
- * Desktop preview reserves the 4th grid slot for "Add Wallpaper",
+ * Desktop preview reserves the leftmost grid slot for "Add Wallpaper",
  * so only the latest 3 uploads are shown on the profile page.
  */
 export const UPLOADS_PREVIEW_COUNT = 3;
@@ -36,7 +37,7 @@ export function UploadsPage() {
   if (authLoading || !user) {
     return (
       <div className="grid min-h-screen place-items-center bg-hw-bg">
-        <div className="size-8 animate-spin rounded-full border-2 border-hw-muted border-t-hw-foreground" />
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
@@ -55,11 +56,10 @@ export function UploadsPage() {
         </motion.h1>
 
         {loading ? (
-          <p className="py-12 text-center text-sm text-hw-muted">
-            Loading your uploads…
-          </p>
+          <LoadingBlock />
         ) : (
           <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
+            <UploadPlaceholder className="max-w-none" />
             {uploads.map((wallpaper, index) => (
               <ProfileWallpaperThumb
                 key={wallpaper.id}
@@ -67,7 +67,6 @@ export function UploadsPage() {
                 index={index}
               />
             ))}
-            <UploadPlaceholder className="max-w-none" />
           </div>
         )}
       </main>

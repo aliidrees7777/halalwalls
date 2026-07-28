@@ -7,29 +7,36 @@ import {
   CreditCard,
   DollarSign,
   ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
+import { LoadingBlock } from "@/components/shared/loading-spinner";
+import { Pagination, SEE_ALL_PAGE_SIZE } from "../reusable/Pagination";
 
 interface Activity {
   type: string;
   title: string;
   subtitle: string;
   slug?: string;
-  at: string;
+  at: string | null;
 }
 
-const timeAgo = (iso: string) => {
-  const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
-  if (s < 60) return `${s}s ago`;
-  const m = Math.floor(s / 60);
-  if (m < 60) return `${m} min ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h} hour${h > 1 ? "s" : ""} ago`;
-  const d = Math.floor(h / 24);
-  if (d < 30) return `${d} day${d > 1 ? "s" : ""} ago`;
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+/** Absolute local date/time — same style as other admin tables. */
+const fmtDate = (iso: string | null | undefined) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+const fmtTime = (iso: string | null | undefined) => {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 };
 
 const activityStyle = (type: string) => {
@@ -47,29 +54,34 @@ const activityStyle = (type: string) => {
   }
 };
 
-const RANGE_LIMITS = [15, 30, 50];
+const PAGE_SIZE_OPTIONS = [15, 30, 50, SEE_ALL_PAGE_SIZE];
 
 const ActivityFeed = ({ onBack }: { onBack?: () => void }) => {
   const [items, setItems] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(15);
-  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(15);
   const [total, setTotal] = useState(0);
+
+  const seeAll = pageSize === SEE_ALL_PAGE_SIZE;
+  const fetchLimit = seeAll ? "all" : pageSize;
 
   useEffect(() => {
     let ignore = false;
     setLoading(true);
     setError(null);
+    const qs = new URLSearchParams({
+      page: String(seeAll ? 1 : page),
+      limit: String(fetchLimit),
+    });
     api
-      .get<{ activity: Activity[]; pagination?: { totalPages: number; total: number } }>(
-        `/admin/activity?page=${page}&limit=${limit}`
+      .get<{ activity: Activity[]; pagination?: { total: number } }>(
+        `/admin/activity?${qs}`,
       )
       .then((d) => {
         if (ignore) return;
         setItems(d.activity || []);
-        setTotalPages(d.pagination?.totalPages || 1);
         setTotal(d.pagination?.total || 0);
       })
       .catch((e) => {
@@ -81,7 +93,7 @@ const ActivityFeed = ({ onBack }: { onBack?: () => void }) => {
     return () => {
       ignore = true;
     };
-  }, [page, limit]);
+  }, [page, pageSize, seeAll, fetchLimit]);
 
   return (
     <div className="ucard">
@@ -102,29 +114,6 @@ const ActivityFeed = ({ onBack }: { onBack?: () => void }) => {
         >
           <ArrowLeft size={16} /> Recent Activity
         </button>
-        <select
-          value={limit}
-          onChange={(e) => {
-            setLimit(Number(e.target.value));
-            setPage(1);
-          }}
-          style={{
-            background: "var(--bg3)",
-            border: "1px solid var(--border2)",
-            color: "var(--text2)",
-            fontSize: "0.77rem",
-            padding: "7px 10px",
-            borderRadius: "var(--rs)",
-            cursor: "pointer",
-            appearance: "auto",
-          }}
-        >
-          {RANGE_LIMITS.map((n) => (
-            <option key={n} value={n}>
-              {n} / page
-            </option>
-          ))}
-        </select>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -132,7 +121,7 @@ const ActivityFeed = ({ onBack }: { onBack?: () => void }) => {
           const { color, bg, Icon } = activityStyle(a.type);
           return (
             <div
-              key={i}
+              key={`${a.type}-${a.at}-${i}`}
               style={{
                 display: "flex",
                 alignItems: "flex-start",
@@ -163,17 +152,16 @@ const ActivityFeed = ({ onBack }: { onBack?: () => void }) => {
                   {a.subtitle}
                 </div>
               </div>
-              <div style={{ fontSize: 11.5, color: "var(--text3)", whiteSpace: "nowrap" }}>
-                {timeAgo(a.at)}
+              <div style={{ textAlign: "right", whiteSpace: "nowrap", flexShrink: 0 }}>
+                <div className="ddate">{fmtDate(a.at)}</div>
+                <div className="dtime">{fmtTime(a.at)}</div>
               </div>
             </div>
           );
         })}
       </div>
 
-      {loading && (
-        <div style={{ padding: "22px 4px", color: "var(--text3)", fontSize: 13 }}>Loading…</div>
-      )}
+      {loading && <LoadingBlock className="py-[22px]" />}
       {!loading && error && (
         <div style={{ padding: "22px 4px", color: "#f0a0a0", fontSize: 13 }}>{error}</div>
       )}
@@ -183,41 +171,19 @@ const ActivityFeed = ({ onBack }: { onBack?: () => void }) => {
         </div>
       )}
 
-      {totalPages > 1 && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 10,
-            marginTop: 14,
-            fontSize: 13,
-            color: "var(--text2)",
+      {!loading && !error && total > 0 && (
+        <Pagination
+          page={seeAll ? 1 : page}
+          pageSize={pageSize}
+          total={total}
+          onPage={setPage}
+          onPageSize={(n) => {
+            setPageSize(n);
+            setPage(1);
           }}
-        >
-          <span style={{ color: "var(--text3)", fontSize: 12 }}>{total} recent events</span>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <button
-              className="amore"
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              style={{ opacity: page <= 1 ? 0.4 : 1 }}
-            >
-              <ChevronLeft size={15} />
-            </button>
-            <span>
-              Page {page} of {totalPages}
-            </span>
-            <button
-              className="amore"
-              disabled={page >= totalPages}
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              style={{ opacity: page >= totalPages ? 0.4 : 1 }}
-            >
-              <ChevronRight size={15} />
-            </button>
-          </div>
-        </div>
+          pageSizeOptions={PAGE_SIZE_OPTIONS}
+          noun="events"
+        />
       )}
     </div>
   );

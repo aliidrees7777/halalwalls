@@ -12,6 +12,7 @@ import { useMyFavorites } from "@/hooks/use-my-favorites";
 import type { Wallpaper } from "@/types/wallpaper";
 import { hasPremiumAccess } from "@/lib/premium-access";
 import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
+import { LoadingSpinner } from "@/components/shared/loading-spinner";
 import settings from "../../../public/my-account/settings.png";
 
 /**
@@ -120,7 +121,7 @@ export function MobileProfile() {
   if (loading) {
     return (
       <div className="grid min-h-dvh place-items-center bg-hw-bg">
-        <div className="size-8 animate-spin rounded-full border-2 border-hw-muted border-t-hw-foreground" />
+        <LoadingSpinner size="lg" />
       </div>
     );
   }

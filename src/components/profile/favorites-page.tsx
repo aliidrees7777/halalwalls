@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/home/site-header";
 import { useMyFavorites } from "@/hooks/use-my-favorites";
 import { useAuth } from "@/context/auth-context";
+import { LoadingBlock, LoadingSpinner } from "@/components/shared/loading-spinner";
 
 /** One desktop row (lg:grid-cols-4). */
 export const FAVORITES_PREVIEW_COUNT = 4;
@@ -32,7 +33,7 @@ export function FavoritesPage() {
   if (authLoading || !user) {
     return (
       <div className="grid min-h-screen place-items-center bg-hw-bg">
-        <div className="size-8 animate-spin rounded-full border-2 border-hw-muted border-t-hw-foreground" />
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
@@ -51,9 +52,7 @@ export function FavoritesPage() {
         </motion.h1>
 
         {loading ? (
-          <p className="py-12 text-center text-sm text-hw-muted">
-            Loading your favorites…
-          </p>
+          <LoadingBlock />
         ) : favorites.length === 0 ? (
           <p className="py-12 text-center text-sm text-hw-muted">
             No favorites yet.

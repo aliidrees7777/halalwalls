@@ -33,15 +33,21 @@ const fmtDay = (iso: string) => {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 };
 
-const timeAgo = (iso: string) => {
-  const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
-  if (s < 60) return `${s}s ago`;
-  const m = Math.floor(s / 60);
-  if (m < 60) return `${m} min ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h} hour${h > 1 ? "s" : ""} ago`;
-  const d = Math.floor(h / 24);
-  return `${d} day${d > 1 ? "s" : ""} ago`;
+/** Absolute local date/time — matches other admin tables (not relative "ago"). */
+const fmtActivityAt = (iso: string | null | undefined) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  const date = d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+  const time = d.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  return `${date} · ${time}`;
 };
 
 // Icon + accent colour per recent-activity type.
@@ -301,7 +307,7 @@ const ChartsRow = ({
                     <div className="act-b">
                       <div className="act-title">{a.title}</div>
                       <div className="act-desc">{a.subtitle}</div>
-                      <div className="act-time">{timeAgo(a.at)}</div>
+                      <div className="act-time">{fmtActivityAt(a.at)}</div>
                     </div>
                   </div>
                 );

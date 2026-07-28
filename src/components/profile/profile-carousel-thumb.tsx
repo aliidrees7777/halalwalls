@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Heart } from "lucide-react";
 import { useState } from "react";
 import type { Wallpaper } from "@/types/wallpaper";
+import { useFavorite } from "@/hooks/use-favorite";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
 
@@ -41,6 +43,10 @@ export function ProfileCarouselThumb({
   const imageSrc = resolveMediaUrl(wallpaper.image);
   const status = wallpaper.status;
   const isPublished = !status || status === "active";
+  const { isFavorite: favorited, toggle } = useFavorite(
+    wallpaper.id,
+    wallpaper.favoritesCount ?? 0,
+  );
 
   const media = (
     <>
@@ -68,11 +74,20 @@ export function ProfileCarouselThumb({
       {!loaded && !failed ? (
         <div className="absolute inset-0 animate-pulse bg-hw-surface" />
       ) : null}
+
+      {/* Same as homepage: title on a gradient that fades in */}
+      {isPublished && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent px-2 pb-1.5 pt-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <p className="line-clamp-2 text-[11px] font-medium leading-tight text-white drop-shadow">
+            {wallpaper.title}
+          </p>
+        </div>
+      )}
     </>
   );
 
   const shellClass = cn(
-    "relative h-full w-[124.2px] shrink-0 overflow-hidden rounded-[3.802px] border-[0.634px] border-[#5b6268] bg-hw-card",
+    "group relative h-full w-[124.2px] shrink-0 overflow-hidden rounded-[3.802px] border-[0.634px] border-[#5b6268] bg-hw-card",
     className,
   );
 
@@ -88,12 +103,35 @@ export function ProfileCarouselThumb({
   }
 
   return (
-    <Link
-      href={`/wallpaper/${wallpaper.slug}`}
-      className={shellClass}
-      aria-label={`View ${wallpaper.title}`}
-    >
-      {media}
-    </Link>
+    <div className={shellClass}>
+      <Link
+        href={`/wallpaper/${wallpaper.slug}`}
+        className="absolute inset-0 block"
+        aria-label={`View ${wallpaper.title}`}
+      >
+        {media}
+      </Link>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggle();
+        }}
+        className={cn(
+          "absolute right-1.5 top-1.5 z-10 flex size-6 items-center justify-center",
+          !favorited &&
+            "rounded-full bg-black/55 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100",
+        )}
+        aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+      >
+        <Heart
+          className={cn(
+            "size-3.5",
+            favorited ? "fill-red-500 text-red-500" : "text-white",
+          )}
+        />
+      </button>
+    </div>
   );
 }

@@ -25,6 +25,7 @@ import {
 import { useAuth } from "@/context/auth-context";
 import { api, ApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { LoadingSpinner } from "@/components/shared/loading-spinner";
 
 // The editable account form values (profile fields). Subscription + payment
 // state is fetched live from the backend, not carried in here.
@@ -420,9 +421,9 @@ export function AccountSettingsModal({
             <AccountSectionTitle className="text-xl sm:text-2xl text-hw-depw">Subscription Plan</AccountSectionTitle>
 
             {subLoading ? (
-              <p className="rounded-[6px] border border-hw-faint/40 bg-hw-input px-3.5 py-2.5 text-[13px] text-hw-muted">
-                Loading subscription…
-              </p>
+              <div className="flex items-center justify-center rounded-[6px] border border-hw-faint/40 bg-hw-input px-3.5 py-4">
+                <LoadingSpinner size="sm" label="Loading subscription" />
+              </div>
             ) : (
               <>
                 <div

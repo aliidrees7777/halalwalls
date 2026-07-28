@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/context/auth-context";
+import { LoadingSpinner } from "@/components/shared/loading-spinner";
 import AdminLogin from "./AdminLogin";
 
 /**
@@ -18,11 +19,9 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
           display: "grid",
           placeItems: "center",
           background: "var(--bg)",
-          color: "var(--text2)",
-          fontSize: 14,
         }}
       >
-        Loading…
+        <LoadingSpinner size="lg" />
       </div>
     );
   }

@@ -135,7 +135,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
                     position: "absolute",
                     right: 0,
                     top: "calc(100% + 8px)",
-                    minWidth: 200,
+                    minWidth: 280,
                     background: "var(--bg2)",
                     border: "1px solid rgba(255,255,255,0.08)",
                     borderRadius: 12,
@@ -154,7 +154,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
                       marginBottom: 6,
                     }}
                   >
-                    <div className="av" aria-hidden style={{ width: 36, height: 36 }}>
+                    <div className="av" aria-hidden style={{ width: 36, height: 36, flexShrink: 0 }}>
                       {showPhoto ? (
                         <Image
                           src={avatarSrc}
@@ -169,12 +169,13 @@ const Header = ({ onMenuClick }: HeaderProps) => {
                         initial
                       )}
                     </div>
-                    <div style={{ minWidth: 0 }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
                       <div
                         style={{
                           fontSize: 13,
                           fontWeight: 600,
                           color: "var(--text)",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {displayName}
@@ -184,7 +185,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
                           fontSize: 11.5,
                           color: "var(--text3)",
                           marginTop: 2,
-                          wordBreak: "break-all",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {user?.email}

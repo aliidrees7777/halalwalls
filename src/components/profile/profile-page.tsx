@@ -23,6 +23,7 @@ import { UploadPlaceholder } from "@/components/profile/upload-placeholder";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { useAuth } from "@/context/auth-context";
 import { useMyFavorites } from "@/hooks/use-my-favorites";
+import { LoadingBlock, LoadingSpinner } from "@/components/shared/loading-spinner";
 import { useMyUploads } from "@/hooks/use-my-uploads";
 import { api } from "@/lib/api";
 import type { Wallpaper } from "@/types/wallpaper";
@@ -82,7 +83,7 @@ export function ProfilePage() {
   if (loading || !user) {
     return (
       <div className="grid min-h-screen place-items-center bg-hw-bg">
-        <div className="size-8 animate-spin rounded-full border-2 border-hw-muted border-t-hw-foreground" />
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
@@ -127,12 +128,14 @@ export function ProfilePage() {
               carouselHeightClass="h-[279px]"
               itemGapClass="gap-1.5 pl-px"
             >
-              {uploadsLoading
-                ? null
-                : recentUploads.map((wallpaper) => (
+              {uploadsLoading ? null : (
+                <>
+                  <ProfileUploadCarouselCard />
+                  {recentUploads.map((wallpaper) => (
                     <ProfileCarouselThumb key={wallpaper.id} wallpaper={wallpaper} />
                   ))}
-              <ProfileUploadCarouselCard />
+                </>
+              )}
             </ProfileCarouselSection>
 
             <ProfileCarouselSection
@@ -185,9 +188,7 @@ export function ProfilePage() {
               <ProfileSectionHeader title="" seeAllHref="/" className="text-right" />
             </div>
             {justUploadedLoading ? (
-              <p className="py-12 text-center text-sm text-hw-muted">
-                Loading latest uploads…
-              </p>
+              <LoadingBlock />
             ) : justUploaded.length === 0 ? (
               <p className="py-12 text-center text-sm text-hw-muted">
                 No new wallpapers yet.
@@ -218,11 +219,10 @@ export function ProfilePage() {
               />
             </div>
             {uploadsLoading ? (
-              <p className="py-12 text-center text-sm text-hw-muted">
-                Loading your uploads…
-              </p>
+              <LoadingBlock />
             ) : (
               <div className="grid grid-cols-4 gap-2">
+                <UploadPlaceholder className="max-w-none" />
                 {recentUploads.map((wallpaper, index) => (
                   <ProfileWallpaperThumb
                     key={wallpaper.id}
@@ -230,7 +230,6 @@ export function ProfilePage() {
                     index={index}
                   />
                 ))}
-                <UploadPlaceholder className="max-w-none" />
               </div>
             )}
           </section>
@@ -250,9 +249,7 @@ export function ProfilePage() {
               />
             </div>
             {favoritesLoading ? (
-              <p className="py-12 text-center text-sm text-hw-muted">
-                Loading your favorites…
-              </p>
+              <LoadingBlock />
             ) : favorites.length === 0 ? (
               <p className="py-12 text-center text-sm text-hw-muted">
                 No favorites yet.

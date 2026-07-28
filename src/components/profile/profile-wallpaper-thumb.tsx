@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import type { Wallpaper } from "@/types/wallpaper";
+import { useFavorite } from "@/hooks/use-favorite";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
 
@@ -41,9 +43,13 @@ export function ProfileWallpaperThumb({
   const imageSrc = resolveMediaUrl(wallpaper.image);
   const status = wallpaper.status;
   const isPublished = !status || status === "active";
+  const { isFavorite: favorited, toggle } = useFavorite(
+    wallpaper.id,
+    wallpaper.favoritesCount ?? 0,
+  );
 
   const media = (
-    <div className="relative aspect-[16/10] w-full overflow-hidden bg-hw-card">
+    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[var(--lp-card-radius)] border-[length:var(--lp-card-border)] border-hw-line bg-hw-card">
       <StatusPill status={status} />
       {!failed ? (
         <Image
@@ -52,7 +58,7 @@ export function ProfileWallpaperThumb({
           fill
           unoptimized={shouldUnoptimizeMedia(imageSrc)}
           className={cn(
-            "object-cover transition-transform duration-500 group-hover:scale-[1.04]",
+            "object-cover",
             loaded ? "opacity-100" : "opacity-0",
             !isPublished && "opacity-80",
           )}
@@ -68,6 +74,15 @@ export function ProfileWallpaperThumb({
       {!loaded && !failed && (
         <div className="absolute inset-0 animate-pulse bg-hw-surface" />
       )}
+
+      {/* Same as homepage: title on a gradient that fades in */}
+      {isPublished && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent px-3 pb-2.5 pt-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <p className="line-clamp-2 text-[13px] font-medium leading-tight text-white drop-shadow">
+            {wallpaper.title}
+          </p>
+        </div>
+      )}
     </div>
   );
 
@@ -80,17 +95,41 @@ export function ProfileWallpaperThumb({
         delay: index * 0.06,
         ease: [0.22, 1, 0.36, 1],
       }}
-      whileHover={isPublished ? { scale: 1.02 } : undefined}
-      className="group relative overflow-hidden rounded-md"
+      className="group relative"
     >
       {isPublished ? (
-        <Link
-          href={`/wallpaper/${wallpaper.slug}`}
-          className="relative block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50"
-          aria-label={`View ${wallpaper.title}`}
-        >
-          {media}
-        </Link>
+        <>
+          <Link
+            href={`/wallpaper/${wallpaper.slug}`}
+            className="relative block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50"
+            aria-label={`View ${wallpaper.title}`}
+          >
+            {media}
+          </Link>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggle();
+            }}
+            className={cn(
+              "absolute right-2 top-2 z-10 flex size-7 items-center justify-center",
+              !favorited &&
+                "rounded-full bg-black/55 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100",
+            )}
+            aria-label={
+              favorited ? "Remove from favorites" : "Add to favorites"
+            }
+          >
+            <Heart
+              className={cn(
+                "size-4",
+                favorited ? "fill-red-500 text-red-500" : "text-white",
+              )}
+            />
+          </button>
+        </>
       ) : (
         <div
           className="relative block cursor-default"

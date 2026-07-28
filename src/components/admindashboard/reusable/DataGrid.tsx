@@ -60,10 +60,22 @@ export function DataGrid<T extends Row>({
             className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg3)] transition-colors hover:border-[var(--border2)]"
           >
             {image ? (
-              <div className="aspect-[16/10] w-full overflow-hidden bg-[var(--bg4)]">
+              <div
+                className="w-full overflow-hidden bg-[var(--bg4)]"
+                style={{ aspectRatio: "1 / 1" }}
+              >
                 {cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={cover} alt="" className="h-full w-full object-cover" />
+                  <img
+                    src={cover}
+                    alt=""
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
                 ) : null}
               </div>
             ) : null}

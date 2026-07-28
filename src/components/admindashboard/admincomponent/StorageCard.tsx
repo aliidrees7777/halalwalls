@@ -70,7 +70,7 @@ const StorageCard = () => {
   return (
     <div className="rcard">
       <div className="rcard-ttl">
-        Storage Usage <a>Details</a>
+        Storage Usage
       </div>
       <div className="stor-hdr">
         <span className="stor-used">

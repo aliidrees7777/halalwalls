@@ -12,6 +12,7 @@ import { api, API_BASE_URL, ApiError, getToken } from "@/lib/api";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { parseSourceUrl } from "@/lib/source-url";
 import { AdminListPage } from "../reusable/AdminListPage";
+import { AdminThumb } from "../reusable/AdminThumb";
 import { StatusBadge } from "../reusable/cells";
 import {
   AdminModalCloseButton,
@@ -195,21 +196,7 @@ const WallpapersPage = () => {
         cell: (r) => {
           const w = r as unknown as AdminWallpaper;
           const src = imgSrc(w.thumbnailUrl || w.image);
-          return (
-            <div className="thumb">
-              {src ? (
-                // eslint-disable-next-line @next/next/no-img-element -- admin table thumb
-                <img
-                  src={src}
-                  alt={w.title}
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                    e.currentTarget.parentElement?.classList.add("thumb-broken");
-                  }}
-                />
-              ) : null}
-            </div>
-          );
+          return <AdminThumb src={src || null} alt={w.title} />;
         },
       },
       {

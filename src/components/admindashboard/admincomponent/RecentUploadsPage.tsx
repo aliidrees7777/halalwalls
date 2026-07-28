@@ -15,11 +15,13 @@ import {
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { resolveMediaUrl } from "@/lib/media-url";
+import { AdminThumb } from "../reusable/AdminThumb";
 import {
   AdminModalCloseButton,
   AdminModalOverlay,
   adminModalPanelStyle,
 } from "../reusable/AdminModal";
+import { LoadingBlock } from "@/components/shared/loading-spinner";
 
 // ── types ──
 interface AdminWallpaper {
@@ -400,13 +402,12 @@ const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => 
               return (
                 <tr key={w.id} style={busyId === w.id ? { opacity: 0.5 } : undefined}>
                   <td>
-                    <div
-                      className="thumb"
+                    <AdminThumb
+                      src={src || null}
+                      alt={w.title}
                       style={{ cursor: "pointer" }}
                       onClick={() => openDetail(w.id)}
-                    >
-                      {src ? <img src={src} alt={w.title} /> : null}
-                    </div>
+                    />
                   </td>
                   <td>
                     <div
@@ -475,7 +476,7 @@ const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => 
         </table>
 
         {loading && (
-          <div style={{ padding: "22px 4px", color: "var(--text3)", fontSize: 13 }}>Loading…</div>
+          <LoadingBlock className="py-[22px]" />
         )}
         {!loading && error && (
           <div style={{ padding: "22px 4px", color: "#f0a0a0", fontSize: 13 }}>{error}</div>
@@ -674,7 +675,7 @@ function DetailModal({
       >
         <AdminModalCloseButton onClose={onClose} />
         {loading || !w ? (
-          <div style={{ padding: 40, textAlign: "center", color: "var(--text2)" }}>Loading…</div>
+          <LoadingBlock className="p-10" />
         ) : (
           <>
             <div style={{ display: "flex", gap: 16, padding: 20, flexWrap: "wrap" }}>

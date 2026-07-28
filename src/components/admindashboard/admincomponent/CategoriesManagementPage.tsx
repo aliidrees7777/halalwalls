@@ -4,6 +4,7 @@ import { LayoutGrid, CheckCircle, Image as ImageIcon, Download, Star } from "luc
 import { api, API_BASE_URL, ApiError } from "@/lib/api";
 import { invalidateCategoriesCache } from "@/hooks/use-catalog";
 import { AdminListPage } from "../reusable/AdminListPage";
+import { AdminThumb } from "../reusable/AdminThumb";
 import { StatusBadge } from "../reusable/cells";
 import {
   AdminModalCloseButton,
@@ -147,7 +148,7 @@ const CategoriesManagementPage = () => {
           const src = imgSrc(c.image);
           return (
             <div className="flex items-center gap-3">
-              <div className="thumb">{src ? <img src={src} alt={c.name} /> : null}</div>
+              <AdminThumb src={src || null} alt={c.name} />
               <div>
                 <div className="wtitle">{c.name}</div>
                 <div className="wtags">/{c.slug}</div>

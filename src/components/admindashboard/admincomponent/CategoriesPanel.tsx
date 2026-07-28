@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
+import { LoadingBlock, LoadingSpinner } from "@/components/shared/loading-spinner";
 
 interface Category {
   id: string;
@@ -91,7 +92,9 @@ const CategoriesPanel = ({ variant = "widget", onViewAll, onBack }: Props) => {
           </a>
         </div>
         {loading && (
-          <div style={{ color: "var(--text3)", fontSize: 13, padding: "6px 0" }}>Loading…</div>
+          <div style={{ padding: "10px 0", display: "grid", placeItems: "center" }}>
+            <LoadingSpinner size="sm" />
+          </div>
         )}
         {!loading && top.length === 0 && (
           <div style={{ color: "var(--text3)", fontSize: 13, padding: "6px 0" }}>
@@ -278,7 +281,7 @@ const CategoriesPanel = ({ variant = "widget", onViewAll, onBack }: Props) => {
         </table>
 
         {loading && (
-          <div style={{ padding: "22px 4px", color: "var(--text3)", fontSize: 13 }}>Loading…</div>
+          <LoadingBlock className="py-[22px]" />
         )}
         {!loading && error && (
           <div style={{ padding: "22px 4px", color: "#f0a0a0", fontSize: 13 }}>{error}</div>
