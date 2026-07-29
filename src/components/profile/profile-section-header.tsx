@@ -6,32 +6,44 @@ interface ProfileSectionHeaderProps {
   title: string;
   seeAllHref?: string | null;
   className?: string;
+  titleClassName?: string;
+  seeAllClassName?: string;
 }
 
 export function ProfileSectionHeader({
   title,
   seeAllHref = "#",
   className,
+  titleClassName,
+  seeAllClassName,
 }: ProfileSectionHeaderProps) {
   return (
     <div
       className={cn(
-        "lg:mb-4 flex items-center justify-between gap-4",
-        className
+        "mb-6 flex items-center justify-between gap-4",
+        className,
       )}
     >
-      <h2 className="text-[15px] font-semibold text-hw-foreground sm:text-base">
+      <h2
+        className={cn(
+          "text-[31px] font-semibold leading-none text-hw-foreground",
+          titleClassName,
+        )}
+      >
         {title}
       </h2>
-      {seeAllHref && (
+      {seeAllHref ? (
         <Link
           href={seeAllHref}
-          className="flex shrink-0 items-center gap-[9.53px] text-[13.342px] font-semibold text-[#69a6d5] transition-opacity hover:opacity-80 md:text-2xl"
+          className={cn(
+            "flex shrink-0 items-center gap-2 text-[13.342px] font-semibold leading-none text-[#69a6d5] transition-opacity hover:opacity-80 md:gap-[9.53px] md:text-2xl",
+            seeAllClassName,
+          )}
         >
           See All
-          <ChevronRight className="size-3.5 md:size-6" />
+          <ChevronRight className="size-3.5 shrink-0 md:size-6" aria-hidden />
         </Link>
-      )}
+      ) : null}
     </div>
   );
 }

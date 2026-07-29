@@ -174,7 +174,7 @@ export function DesktopProfileBanner({
       >
         <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2">
           <span
-            className="inline-flex items-center font-medium"
+            className="inline-flex items-center whitespace-nowrap font-medium"
             style={{
               gap: D.badgeGap,
               paddingInline: D.badgePx,

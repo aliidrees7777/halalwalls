@@ -95,7 +95,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
             <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2">
               <span
                 className={cn(
-                  "inline-flex items-center gap-[3.833px] rounded-[15.622px] border-[0.958px] bg-black/50 px-[9.581px] py-[5.749px] text-[9.581px] font-medium md:gap-1.5 md:rounded-2xl md:px-3.5 md:py-1.5 md:text-xs",
+                  "inline-flex items-center gap-[3.833px] whitespace-nowrap rounded-[15.622px] border-[0.958px] bg-black/50 px-[9.581px] py-[5.749px] text-[9.581px] font-medium md:gap-1.5 md:rounded-2xl md:px-3.5 md:py-1.5 md:text-xs",
                 )}
                 style={{ borderColor: accent, color: accent }}
               >

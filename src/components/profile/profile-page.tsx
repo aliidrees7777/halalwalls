@@ -180,13 +180,12 @@ export function ProfilePage() {
 
           <DesktopProfileBanner user={profileUser} />
 
-          <section className="mt-10">
-            <div className="mb-10 flex items-end justify-between">
-              <h2 className="text-4xl font-semibold text-hw-account">
-                Discover Just Uploaded
-              </h2>
-              <ProfileSectionHeader title="" seeAllHref="/" className="text-right" />
-            </div>
+          <section className="mt-12">
+            <ProfileSectionHeader
+              title="Discover Just Uploaded"
+              seeAllHref="/"
+              titleClassName="font-semibold text-hw-account"
+            />
             {justUploadedLoading ? (
               <LoadingBlock />
             ) : justUploaded.length === 0 ? (
@@ -206,18 +205,12 @@ export function ProfilePage() {
             )}
           </section>
 
-          <section>
-            <div className="my-10 flex items-end justify-between">
-              <h2 className="text-4xl font-semibold text-hw-account">
-                Your Uploads
-              </h2>
-              <ProfileSectionHeader
-                title=""
-                seeAllHref={
-                  uploads.length > UPLOADS_PREVIEW_COUNT ? "/profile/uploads" : null
-                }
-              />
-            </div>
+          <section className="mt-12">
+            <ProfileSectionHeader
+              title="Your Uploads"
+              seeAllHref="/profile/uploads"
+              titleClassName="font-semibold text-hw-account"
+            />
             {uploadsLoading ? (
               <LoadingBlock />
             ) : (
@@ -234,20 +227,12 @@ export function ProfilePage() {
             )}
           </section>
 
-          <section>
-            <div className="mb-10 flex items-end justify-between">
-              <h2 className="text-4xl font-semibold text-hw-account">
-                Your Favorites
-              </h2>
-              <ProfileSectionHeader
-                title=""
-                seeAllHref={
-                  favorites.length > FAVORITES_PREVIEW_COUNT
-                    ? "/profile/favorites"
-                    : null
-                }
-              />
-            </div>
+          <section className="mt-12">
+            <ProfileSectionHeader
+              title="Your Favorites"
+              seeAllHref="/profile/favorites"
+              titleClassName="font-semibold text-hw-account"
+            />
             {favoritesLoading ? (
               <LoadingBlock />
             ) : favorites.length === 0 ? (
