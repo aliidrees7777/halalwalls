@@ -5,10 +5,69 @@ import { motion } from "framer-motion";
 import { RelatedWallpapers } from "@/components/download/related-wallpapers";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
 import type { Wallpaper } from "@/types/wallpaper";
-import mobilelog from "../../../public/detail-page/mobile-logo.svg";
 
 interface DownloadSidebarRightProps {
   related: Wallpaper[];
+}
+
+function GooglePlayButton({ className }: { className?: string }) {
+  return (
+    <a
+      href="https://play.google.com/store/apps"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={
+        className ??
+        "flex w-full max-w-[200px] items-center justify-center gap-2.5 rounded-md border border-hw-line bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90"
+      }
+    >
+      <Image
+        src="/google-logo.svg"
+        alt=""
+        width={32}
+        height={32}
+        className="size-8 shrink-0 object-contain"
+      />
+      <div className="leading-tight">
+        <p className="text-[11px] font-semibold text-hw-foreground/60">
+          Get it on
+        </p>
+        <p className="text-[15px] font-semibold text-hw-foreground">
+          Google Play
+        </p>
+      </div>
+    </a>
+  );
+}
+
+function OurAppContent() {
+  return (
+    <div className="flex items-center justify-between gap-3 px-4 py-5 sm:gap-4 sm:px-5">
+      <div className="flex min-w-0 flex-1 flex-col items-center gap-3">
+        <Image
+          src="/detail-page/our-app-logo.png"
+          alt="HalalWalls app"
+          width={112}
+          height={112}
+          className="size-[88px] rounded-[14px] object-cover sm:size-[100px] sm:rounded-2xl"
+        />
+        <p className="text-center text-[20px] font-bold leading-none tracking-tight sm:text-[22px]">
+          <span className="text-hw-foreground">Halal</span>
+          <span className="text-hw-green">Walls</span>
+        </p>
+        <GooglePlayButton />
+      </div>
+
+      <Image
+        src="/detail-page/our-app-phone.png"
+        alt="HalalWalls mobile app preview"
+        width={156}
+        height={322}
+        className="h-[240px] w-auto shrink-0 object-contain sm:h-[282px]"
+        priority
+      />
+    </div>
+  );
 }
 
 export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
@@ -20,84 +79,7 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
         transition={{ duration: 0.45, delay: 0.1 }}
       >
         <SidebarPanel title="Our App">
-          <div className="flex flex-col items-center gap-6 px-4 pb-4 pt-4 lg:hidden">
-            <div className="flex w-full items-center justify-around">
-              <div className="flex flex-col items-center">
-                <div className="overflow-hidden rounded-lg bg-white p-2">
-                  <Image
-                    src="/qr-code-logo.png"
-                    alt="Scan to download on Google Play"
-                    width={110}
-                    height={110}
-                    className="size-[100px] object-contain"
-                  />
-                </div>
-                <p className="mt-2 text-center text-[13px] font-medium text-hw-muted">
-                  Google Play
-                </p>
-              </div>
-              <Image src={mobilelog} alt="mobile-logo" width={100} height={150} />
-            </div>
-
-            <a
-              href="https://play.google.com/store/apps"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mb-2 flex w-full max-w-[216px] items-center justify-center gap-3 rounded-md border border-hw-line bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90"
-            >
-              <Image
-                src="/google-logo.svg"
-                alt=""
-                width={80}
-                height={40}
-                className="size-10 shrink-0 object-contain"
-              />
-              <div className="leading-tight">
-                <p className="text-[12px] font-semibold uppercase tracking-wide text-hw-muted">
-                  Get it on
-                </p>
-                <p className="text-base font-semibold text-hw-muted">
-                  Google Play
-                </p>
-              </div>
-            </a>
-          </div>
-
-          <div className="hidden items-start justify-between gap-2 px-4 pb-4 pt-4 lg:flex">
-            <div className="flex h-[282px] flex-col items-center justify-between">
-              <Image
-                src="/detail-page/scanlogo.svg"
-                alt="Scan to download on Google Play"
-                width={116}
-                height={156}
-                className="w-[150px] object-contain"
-                style={{ height: "auto" }}
-              />
-              <a
-                href="https://play.google.com/store/apps"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-[216px] items-center justify-center gap-3 rounded-md border border-hw-line bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90"
-              >
-                <Image
-                  src="/google-logo.svg"
-                  alt=""
-                  width={80}
-                  height={40}
-                  className="size-10 shrink-0 object-contain"
-                />
-                <div className="leading-tight">
-                  <p className="text-[12px] font-semibold uppercase tracking-wide text-hw-muted">
-                    Get it on
-                  </p>
-                  <p className="text-base font-semibold text-hw-muted">
-                    Google Play
-                  </p>
-                </div>
-              </a>
-            </div>
-            <Image src={mobilelog} alt="mobile-logo" width={150} height={282} className="h-[282px]" style={{ width: "auto" }} />
-          </div>
+          <OurAppContent />
         </SidebarPanel>
       </motion.div>
 

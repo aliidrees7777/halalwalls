@@ -194,7 +194,7 @@ export function ProfilePage() {
                 No new wallpapers yet.
               </p>
             ) : (
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-4 gap-1">
                 {justUploaded.map((wallpaper, index) => (
                   <ProfileWallpaperThumb
                     key={wallpaper.id}
@@ -221,7 +221,7 @@ export function ProfilePage() {
             {uploadsLoading ? (
               <LoadingBlock />
             ) : (
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-4 gap-1">
                 <UploadPlaceholder className="max-w-none" />
                 {recentUploads.map((wallpaper, index) => (
                   <ProfileWallpaperThumb
@@ -255,7 +255,7 @@ export function ProfilePage() {
                 No favorites yet.
               </p>
             ) : (
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-4 gap-1">
                 {recentFavorites.map((wallpaper, index) => (
                   <ProfileWallpaperThumb
                     key={wallpaper.id}

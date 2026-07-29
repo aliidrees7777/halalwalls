@@ -172,10 +172,7 @@ export function DesktopProfileBanner({
         className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
         style={{ width: D.stageW, height: D.stageH }}
       >
-        <div
-          className="absolute z-10"
-          style={{ left: D.badgeLeft, top: 0 }}
-        >
+        <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2">
           <span
             className="inline-flex items-center font-medium"
             style={{

@@ -11,7 +11,7 @@ import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/components/ui/toast";
 import { hasPremiumAccess } from "@/lib/premium-access";
-import downloadrotate from "../../../public/detail-page/downloadrotate.svg";
+import uploadButtonIcon from "../../../public/upload-button-icon.png";
 
 const RECAPTCHA_TEST_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 const RECAPTCHA_SITE_KEY =
@@ -496,7 +496,14 @@ export function UploadForm() {
           className="inline-flex h-11 items-center justify-center gap-2 rounded-[5px] bg-[#4D853A] px-5 text-[17px] font-semibold text-white transition-[filter,transform] hover:brightness-110 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? "Uploading…" : "Upload Wallpaper"}
-          <Image src={downloadrotate} alt="" className="text-white" />
+          <Image
+            src={uploadButtonIcon}
+            alt=""
+            width={18}
+            height={18}
+            className="size-[18px] shrink-0"
+            aria-hidden
+          />
         </button>
       </div>
     </form>

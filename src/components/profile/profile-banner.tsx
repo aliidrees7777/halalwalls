@@ -92,7 +92,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
         {/* Figma: Full account container — 197.377 × 225.163 */}
         <div className="absolute inset-x-0 top-[13.414px] flex justify-center md:top-1/2 md:-translate-y-1/2">
           <div className="relative h-[225.163px] w-[197.377px] shrink-0 md:h-[320px] md:w-[280px]">
-            <div className="absolute left-[38.8px] top-0 z-10 md:left-1/2 md:-translate-x-1/2">
+            <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2">
               <span
                 className={cn(
                   "inline-flex items-center gap-[3.833px] rounded-[15.622px] border-[0.958px] bg-black/50 px-[9.581px] py-[5.749px] text-[9.581px] font-medium md:gap-1.5 md:rounded-2xl md:px-3.5 md:py-1.5 md:text-xs",

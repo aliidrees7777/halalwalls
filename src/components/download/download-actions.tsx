@@ -14,6 +14,15 @@ import type { WallpaperDetail } from "@/types/wallpaper";
 import Image from "next/image";
 import downloadrotate from "../../../public/detail-page/downloadrotate.svg";
 
+const downloadBtnBgStyle = {
+  backgroundImage: "url('/detail-page/download-btn-bg.jpg')",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+} as const;
+
+const downloadBtnClass =
+  "h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-[filter] hover:brightness-110 disabled:opacity-70 sm:w-auto";
+
 interface DownloadActionsProps {
   wallpaper: WallpaperDetail;
   /** Browse resolution from homepage (`?resolution=`), when available for this wallpaper. */
@@ -87,7 +96,8 @@ export function DownloadActions({
           }
           handleDownload("primary", primaryKey);
         }}
-        className="h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-colors hover:bg-hw-pill2-hover disabled:opacity-70 sm:w-auto"
+        className={downloadBtnClass}
+        style={downloadBtnBgStyle}
       >
         {busy === "primary" ? (
           <Loader2 className="mr-2 size-4 animate-spin" aria-hidden />
@@ -115,7 +125,8 @@ export function DownloadActions({
         variant="outline"
         disabled={busy !== null}
         onClick={() => handleDownload("original", "original")}
-        className="h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-colors hover:border-hw-muted hover:bg-hw-pill2 disabled:opacity-70 sm:w-auto"
+        className={downloadBtnClass}
+        style={downloadBtnBgStyle}
       >
         {busy === "original" ? (
           <Loader2 className="mr-2 size-4 animate-spin" aria-hidden />
@@ -144,9 +155,11 @@ export function DownloadActions({
           variant="outline"
           onClick={toggleFav}
           className={cn(
-            "h-[42.67px] w-full rounded-[8px] border-2 border-hw-line bg-hw-deep px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-colors sm:w-auto",
+            downloadBtnClass,
+            "w-full sm:w-auto",
             favorited && "border-red-500/40 text-red-400",
           )}
+          style={downloadBtnBgStyle}
         >
           <Heart
             className={cn(
