@@ -44,8 +44,10 @@ function OurAppContent() {
   return (
     <div className="flex items-center justify-between gap-3 px-4 py-5 sm:gap-4 sm:px-5">
       <div className="flex min-w-0 flex-1 flex-col items-center gap-3">
-        <Image
-          src="/detail-page/our-app-logo.png"
+        {/* Native <img> for SVGs — next/image often breaks local SVG (optimizer/CSP). */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/detail-page/our-app-logo.svg"
           alt="HalalWalls app"
           width={112}
           height={112}
@@ -56,15 +58,18 @@ function OurAppContent() {
           <span className="text-hw-green">Walls</span>
         </p>
         <GooglePlayButton />
+        <p className="text-center text-[15px] font-medium text-hw-foreground sm:text-[16px]">
+          Coming Soon...
+        </p>
       </div>
 
-      <Image
-        src="/detail-page/our-app-phone.png"
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/detail-page/our-app-phone.svg"
         alt="HalalWalls mobile app preview"
         width={156}
         height={322}
         className="h-[240px] w-auto shrink-0 object-contain sm:h-[282px]"
-        priority
       />
     </div>
   );

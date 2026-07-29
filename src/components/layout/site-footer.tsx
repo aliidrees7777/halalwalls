@@ -129,7 +129,7 @@ export function SiteFooter({ className }: { className?: string }) {
           <Image src={insta} alt="playstore" />
           <Image src={ncn} alt="playstore" />
         </div>
-        <p className="text-center text-[12px] font-medium text-hw-foreground">
+        <p className="text-center text-[15px] font-medium text-hw-foreground">
           © 2026 HalalWalls.com
         </p>
       </div>

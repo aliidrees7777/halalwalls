@@ -48,9 +48,9 @@ function ResolutionLinkList({
                 onClick={() => onSelect?.(item)}
                 aria-current={isSelected ? "true" : undefined}
                 className={cn(
-                  "text-[16px] transition-colors",
+                  "rounded-md px-2 py-0.5 text-[16px] transition-colors",
                   isSelected
-                    ? "font-semibold text-hw-foreground underline underline-offset-2 decoration-hw-foreground"
+                    ? "bg-hw-pill2 font-semibold text-hw-foreground no-underline"
                     : "text-hw-muted underline underline-offset-2 decoration-hw-muted/70 hover:text-hw-foreground hover:decoration-hw-foreground",
                 )}
               >
@@ -99,9 +99,9 @@ export function DownloadResolutionPanel({
     >
       <SidebarPanel
         title="Download Different Resolutions"
-        iconSrc="/detail-page/download-resolutions-icon.png"
+        iconSrc="/Download%20icon.svg"
         iconPosition="before"
-        iconClassName="h-4 w-[21px] shrink-0 mix-blend-lighten"
+        iconClassName="h-4 w-[21px] shrink-0"
         className="bg-hw-deep"
         titleClassName="justify-start gap-2.5 px-5"
       >

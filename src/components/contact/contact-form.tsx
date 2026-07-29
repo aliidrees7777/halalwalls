@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import ReCAPTCHA from "react-google-recaptcha";
-import { ChevronDown, Send } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import sendIcon from "../../../public/send-icon.png";
 
 /**
  * reCAPTCHA v2 site key. Uses NEXT_PUBLIC_RECAPTCHA_SITE_KEY in production;
@@ -194,7 +196,14 @@ export function ContactForm() {
           className="inline-flex h-11 items-center justify-center gap-2 rounded-[7px] bg-[#4D853A] px-5 text-sm font-semibold text-white transition-[filter,transform] hover:brightness-110 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? "Sending…" : "Send Message"}
-          <Send className="size-4" />
+          <Image
+            src={sendIcon}
+            alt=""
+            width={18}
+            height={17}
+            className="h-[17px] w-[18px] shrink-0 mix-blend-lighten"
+            aria-hidden
+          />
         </button>
       </div>
     </form>
