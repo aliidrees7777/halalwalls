@@ -33,10 +33,11 @@ export function UploadPlaceholder({ className, onClick }: UploadPlaceholderProps
       className={cn(
         "flex aspect-[16/10] w-full flex-col items-center justify-center gap-3 rounded-md",
         "border-2 border-dashed border-hw-border bg-hw-card/50",
+        "transition-[border-color] duration-200 hover:border-blue-500/50",
         className,
       )}
     >
-      <span className="flex size-12 items-center justify-center rounded-full bg-[#2F4577] text-white sm:size-15">
+      <span className="flex size-12 items-center justify-center rounded-full bg-[#2F4577] text-white shadow-lg shadow-[#3b82f6]/25 sm:size-15">
         <Plus className="size-5" strokeWidth={2.5} />
       </span>
       <span className="text-sm font-medium text-hw-depw sm:text-[15px]">Add Wallpaper</span>

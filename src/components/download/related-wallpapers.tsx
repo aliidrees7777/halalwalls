@@ -26,7 +26,7 @@ function WallpaperThumb({
     <Link
       href={`/wallpaper/${wallpaper.slug}`}
       className={cn(
-        "relative block aspect-video w-full overflow-hidden bg-hw-deep",
+        "group relative block aspect-video w-full overflow-hidden bg-hw-deep",
         className,
       )}
     >
@@ -35,9 +35,14 @@ function WallpaperThumb({
         alt={wallpaper.title}
         fill
         unoptimized={shouldUnoptimizeMedia(src)}
-        className="object-cover transition-opacity duration-300 hover:opacity-90"
+        className="object-cover transition-opacity duration-300 group-hover:opacity-90"
         sizes="418px"
       />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent px-3 pb-2.5 pt-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <p className="line-clamp-2 text-[13px] font-medium leading-tight text-white drop-shadow">
+          {wallpaper.title}
+        </p>
+      </div>
     </Link>
   );
 }

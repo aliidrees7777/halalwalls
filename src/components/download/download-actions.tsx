@@ -7,21 +7,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useFavorite } from "@/hooks/use-favorite";
 import { useWallpaperDownload } from "@/hooks/use-wallpaper-download";
-import {
-  findAvailableResolution,
-} from "@/lib/download-resolution";
+import { findAvailableResolution } from "@/lib/download-resolution";
 import type { WallpaperDetail } from "@/types/wallpaper";
 import Image from "next/image";
 import downloadrotate from "../../../public/detail-page/downloadrotate.svg";
 
-const downloadBtnBgStyle = {
-  backgroundImage: "url('/detail-page/download-btn-bg.jpg')",
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-} as const;
-
+/** Textured fill stays fixed — hover only brightens (lighting). */
 const downloadBtnClass =
-  "h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-[filter] hover:brightness-110 disabled:opacity-70 sm:w-auto";
+  "h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep bg-[url('/detail-page/download-btn-bg.jpg')] bg-cover bg-center px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-[filter] hover:brightness-125 disabled:opacity-70 sm:w-auto";
 
 interface DownloadActionsProps {
   wallpaper: WallpaperDetail;
@@ -97,7 +90,6 @@ export function DownloadActions({
           handleDownload("primary", primaryKey);
         }}
         className={downloadBtnClass}
-        style={downloadBtnBgStyle}
       >
         {busy === "primary" ? (
           <Loader2 className="mr-2 size-4 animate-spin" aria-hidden />
@@ -126,7 +118,6 @@ export function DownloadActions({
         disabled={busy !== null}
         onClick={() => handleDownload("original", "original")}
         className={downloadBtnClass}
-        style={downloadBtnBgStyle}
       >
         {busy === "original" ? (
           <Loader2 className="mr-2 size-4 animate-spin" aria-hidden />
@@ -159,7 +150,6 @@ export function DownloadActions({
             "w-full sm:w-auto",
             favorited && "border-red-500/40 text-red-400",
           )}
-          style={downloadBtnBgStyle}
         >
           <Heart
             className={cn(
