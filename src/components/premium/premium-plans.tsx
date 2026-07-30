@@ -145,7 +145,7 @@ export function PremiumPlans() {
               className="flex flex-col overflow-hidden rounded-xl border border-[#05DF8B]"
             >
               {/* Card header */}
-              <div className="relative overflow-hidden bg-hw-deep px-4 pb-5 pt-4 h-[158px]">
+              <div className="relative h-[158px] overflow-hidden bg-hw-deep px-4 pb-5 pt-4">
                 <Image src={dimond} alt="" className="absolute right-6 top-9 rotate-12 text-[#05DF8B]/80" width={170} />
                 <Image src={start} alt="" className="absolute right-7 top-7 size-7 text-[#05DF8B]/80" />
                 <Image src={start} alt="" className="absolute right-28 top-2 size-4 text-[#05DF8B]/80" />
@@ -162,8 +162,8 @@ export function PremiumPlans() {
                 </div>
               </div>
 
-              {/* Features panel */}
-              <div className="flex flex-1 flex-col gap-4 sm:gap-6 rounded-[20px] bg-[#323639] px-4 py-6 w-full">
+              {/* Features panel — rounded top only; bottom stays flush with card edge */}
+              <div className="flex w-full flex-1 flex-col gap-4 rounded-t-[20px] bg-[#323639] px-4 py-6 sm:gap-6">
                 <p className="text-[28px] sm:text-[41px] leading-none text-hw-depw primary-font">
                   {plan.price}
                   <span className="text-[18px] sm:text-[28px] text-hw-depw primary-font">

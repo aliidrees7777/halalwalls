@@ -14,7 +14,7 @@ import downloadrotate from "../../../public/detail-page/downloadrotate.svg";
 
 /** Textured fill stays fixed — hover only brightens (lighting). */
 const downloadBtnClass =
-  "h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep bg-[url('/detail-page/download-btn-bg.jpg')] bg-cover bg-center px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-[filter] hover:brightness-125 disabled:opacity-70 sm:w-auto";
+  "h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep bg-[url('/detail-page/download-btn-bg.jpg')] bg-cover bg-center px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-[filter] hover:brightness-[1.75] disabled:opacity-70 sm:w-auto";
 
 interface DownloadActionsProps {
   wallpaper: WallpaperDetail;
