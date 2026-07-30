@@ -23,7 +23,7 @@ export function DownloadBreadcrumbs({ wallpaper }: DownloadBreadcrumbsProps) {
       </Link>
       <span className="text-hw-line text-[19px] font-bold">/</span>
       <Link
-        href={`/?filter=${wallpaper.category}`}
+        href={`/?category=${wallpaper.category}`}
         className="transition-colors text-hw-foreground text-[19px]"
       >
         {wallpaper.categoryLabel}
