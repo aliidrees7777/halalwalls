@@ -128,12 +128,13 @@ export function DesktopProfileBanner({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="relative w-full overflow-hidden border-solid"
+      className="primary-font relative w-full overflow-hidden border-solid"
       style={{
         height: D.bannerH,
         borderRadius: 28,
         borderWidth: 3,
         borderColor: accent,
+        fontFamily: "var(--font-primary)",
       }}
     >
       <Image
@@ -183,7 +184,7 @@ export function DesktopProfileBanner({
               borderWidth: D.badgeBorder,
               borderStyle: "solid",
               borderColor: accent,
-              color: accent,
+              color: isPremium ? accent : "#ffffff",
               backgroundColor: "rgba(0,0,0,0.5)",
               fontSize: D.badgeFont,
             }}
@@ -298,7 +299,7 @@ export function DesktopProfileBanner({
 
           {/* Owner Info — Figma Owner Info card (name / bio / email) */}
           <div
-            className="primary-font relative flex shrink-0 flex-col items-center justify-center overflow-clip bg-[rgba(0,0,0,0.5)]"
+            className="relative flex shrink-0 flex-col items-center justify-center overflow-clip bg-[rgba(0,0,0,0.5)]"
             style={{
               width: D.infoW,
               minHeight: D.infoH,

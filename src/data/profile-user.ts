@@ -18,7 +18,7 @@ export const demoProfileUser: ProfileUser = {
   bio: "A Pro level Artist and Photographer",
   email: "HRivandi@gmail.com",
   avatar:
-    "/my-account/profile.png",
+    "/my-account/anonymous-profile.png",
   banner:
     "/small-memory-lp.jpg",
   isPremium: true,

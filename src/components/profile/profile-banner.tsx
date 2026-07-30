@@ -76,8 +76,8 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="relative w-full overflow-hidden border-t-[1.437px] border-b-[0.6px] md:rounded-[28px] md:border-3"
-      style={{ borderColor: accent }}
+      className="primary-font relative w-full overflow-hidden border-t-[1.437px] border-b-[0.6px] md:rounded-[28px] md:border-3"
+      style={{ borderColor: accent, fontFamily: "var(--font-primary)" }}
     >
       <div className="relative h-[252px] w-full md:aspect-[16/5] md:min-h-[470px]">
         <Image
@@ -97,7 +97,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
                 className={cn(
                   "inline-flex items-center gap-[3.833px] whitespace-nowrap rounded-[15.622px] border-[0.958px] bg-black/50 px-[9.581px] py-[5.749px] text-[9.581px] font-medium md:gap-1.5 md:rounded-2xl md:px-3.5 md:py-1.5 md:text-xs",
                 )}
-                style={{ borderColor: accent, color: accent }}
+                style={{ borderColor: accent, color: isPremium ? accent : "#ffffff" }}
               >
                 {isPremium ? (
                   <Image
