@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { Check, Heart, Loader2, Lock } from "lucide-react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useFavorite } from "@/hooks/use-favorite";
@@ -140,29 +139,27 @@ export function DownloadActions({
             : `Download Original (${wallpaper.originalSizeMB.toFixed(2)}MB)`}
       </Button>
 
-      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={toggleFav}
+      <Button
+        type="button"
+        variant="outline"
+        onClick={toggleFav}
+        className={cn(
+          downloadBtnClass,
+          "w-full sm:w-auto",
+          favorited && "border-red-500/40 text-red-400",
+        )}
+      >
+        <Heart
           className={cn(
-            downloadBtnClass,
-            "w-full sm:w-auto",
-            favorited && "border-red-500/40 text-red-400",
+            "mr-2 size-4",
+            favorited && "fill-red-500 text-red-500",
           )}
-        >
-          <Heart
-            className={cn(
-              "mr-2 size-4",
-              favorited && "fill-red-500 text-red-500",
-            )}
-          />
-          {favorited ? "Favorited" : "Favorite"}
-          {favCount > 0 && (
-            <span className="ml-1.5 text-hw-muted">· {favCount}</span>
-          )}
-        </Button>
-      </motion.div>
+        />
+        {favorited ? "Favorited" : "Favorite"}
+        {favCount > 0 && (
+          <span className="ml-1.5 text-hw-muted">· {favCount}</span>
+        )}
+      </Button>
     </div>
   );
 }
