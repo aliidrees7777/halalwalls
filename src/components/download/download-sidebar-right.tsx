@@ -18,7 +18,7 @@ function GooglePlayButton({ className }: { className?: string }) {
       rel="noopener noreferrer"
       className={
         className ??
-        "flex w-full max-w-[200px] items-center justify-center gap-2.5 rounded-md border border-hw-line bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90"
+        "my-5 flex w-full max-w-[200px] items-center justify-center gap-2.5 rounded-md border border-hw-line bg-hw-play px-3 py-2.5 transition-opacity hover:opacity-90"
       }
     >
       <Image

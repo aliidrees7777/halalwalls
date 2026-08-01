@@ -64,6 +64,18 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
           </div>
         </Link>
 
+        {wallpaper.isPremium ? (
+          <Image
+            src="/Premium Icon.svg"
+            alt=""
+            width={25}
+            height={25}
+            unoptimized
+            aria-hidden
+            className="pointer-events-none absolute left-2 top-2 z-10 size-[25px]"
+          />
+        ) : null}
+
         <button
           type="button"
           onClick={(e) => {

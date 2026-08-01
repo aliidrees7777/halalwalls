@@ -91,16 +91,16 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
           )}
         </motion.div>
       </motion.div>
-      <div className="mt-4 flex">
+      <div className="mt-4 flex items-start gap-3">
         <Badge
           variant="outline"
-          className="mr-3 h-[26px] w-[74px] gap-2 rounded-full border-hw-line bg-hw-down text-[15px] font-semibold text-[#ffffff]"
+          className="h-[26px] w-auto shrink-0 gap-2 rounded-full border-hw-line bg-hw-down px-3 text-[15px] font-semibold text-[#ffffff]"
         >
           <Image src={download} alt="download" />
           {(wallpaper.downloadCount ?? 0).toLocaleString()}
         </Badge>
-        <div className="flex flex-wrap items-center">
-          <Image src={link} alt="link" className="mr-2" />
+        <div className="flex min-w-0 flex-1 flex-wrap items-center">
+          <Image src={link} alt="link" className="mr-2 shrink-0" />
           {wallpaper.tags.map((tag, index) => (
             <span key={`${tag}-${index}`} className="inline-flex items-center">
               <Link
@@ -120,7 +120,10 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
       </div>
       <p className="ml-21 mt-3 text-[17px] leading-relaxed text-hw-muted">
         — Published on {wallpaper.publishedAt} | Original Resolution:{" "}
-        {wallpaper.originalResolution} |{" "}
+        <span className="underline decoration-hw-foreground/50 underline-offset-2">
+          {wallpaper.originalResolution}
+        </span>{" "}
+        |{" "}
         {sourceUrl && sourceLabel ? (
           <>
             Source:{" "}

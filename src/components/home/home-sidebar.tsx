@@ -27,7 +27,7 @@ function ResolutionChip({
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex h-[var(--lp-chip-h)] min-w-0 items-center justify-center rounded-[var(--lp-chip-radius)] border-[length:var(--lp-chip-border)] border-hw-line bg-transparent px-1 text-center text-[length:var(--lp-chip-font)] font-medium uppercase leading-none text-hw-foreground transition-colors",
+        "flex h-[var(--lp-chip-h)] min-w-0 items-center justify-center rounded-[var(--lp-chip-radius)] border-[length:var(--lp-chip-border)] border-hw-line bg-transparent px-1 text-center text-[11px] font-medium uppercase leading-none text-hw-foreground transition-colors",
         active &&
           "border-hw-green bg-hw-green/10 font-bold text-hw-green",
       )}
