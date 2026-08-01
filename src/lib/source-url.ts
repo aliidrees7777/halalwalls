@@ -19,6 +19,7 @@ const PATH_RESERVED = new Set([
   "share",
   "video",
   "photos",
+  "people",
   "about",
   "home",
   "login",
@@ -45,9 +46,25 @@ export function parseSourceUrl(input: string | null | undefined): {
   const parts = url.pathname.split("/").filter(Boolean);
   if (parts.length === 0) return { url: href, username: null };
 
+  const host = url.hostname.replace(/^www\./i, "").toLowerCase();
+
+  // LinkedIn: /in/username
   if (
-    url.hostname.includes("linkedin.com") &&
+    host.includes("linkedin.com") &&
     parts[0]?.toLowerCase() === "in" &&
+    parts[1]
+  ) {
+    return {
+      url: href,
+      username: decodeURIComponent(parts[1].replace(/^@/, "")),
+    };
+  }
+
+  // Flickr: /photos/username or /people/username
+  if (
+    host.includes("flickr.com") &&
+    (parts[0]?.toLowerCase() === "photos" ||
+      parts[0]?.toLowerCase() === "people") &&
     parts[1]
   ) {
     return {

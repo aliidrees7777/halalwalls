@@ -48,6 +48,15 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
     sourceParsed.username ||
     (wallpaper.author && wallpaper.author !== "HalalWalls"
       ? wallpaper.author
+      : null) ||
+    (sourceUrl
+      ? (() => {
+          try {
+            return new URL(sourceUrl).hostname.replace(/^www\./i, "");
+          } catch {
+            return "Source";
+          }
+        })()
       : null);
 
   const setResolutionQuery = (key: string) => {
