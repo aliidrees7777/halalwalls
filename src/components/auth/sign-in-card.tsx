@@ -63,7 +63,7 @@ export function SignInCard({ standalone = false }: { standalone?: boolean }) {
             duration: 0.4,
             ease: "easeInOut",
           }}
-        className="relative z-10 flex justify-center items-center my-auto w-full max-w-[825px] h-[600px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 sm:p-7">
+        className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 sm:p-7">
           <button
             onClick={() => {
               closeAuthModal();
@@ -73,20 +73,21 @@ export function SignInCard({ standalone = false }: { standalone?: boolean }) {
           >
             <Image src={close} alt="Close" width={20} height={20} />
           </button>
-          <form className="flex flex-col gap-12 w-xl" onSubmit={handleSubmit}>
-            {/* Title */}
-            <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw">
-              Sign In
-            </h1>
-
-            {error && (
-              <p
-                role="alert"
-                className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-center text-sm text-red-400"
-              >
-                {error}
-              </p>
-            )}
+          <form className="flex w-xl flex-col gap-8 sm:gap-10" onSubmit={handleSubmit}>
+            {/* Title + error */}
+            <div className="flex flex-col items-center gap-3">
+              <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw">
+                Sign In
+              </h1>
+              {error ? (
+                <p
+                  role="alert"
+                  className="w-full rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-center text-sm text-red-400"
+                >
+                  {error}
+                </p>
+              ) : null}
+            </div>
 
             {/* Fields + forgot link */}
             <div className="flex flex-col gap-3.5">
@@ -168,6 +169,7 @@ export function SignInCard({ standalone = false }: { standalone?: boolean }) {
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => openAuthModal("forgot")}
                 className="text-[13px] font-[450px] text-[#69A6D5] underline text-left"
               >

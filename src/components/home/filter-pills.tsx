@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCategories } from "@/hooks/use-catalog";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import rocket from "../../../public/rocket.svg";
+import rocket from "../../../public/Rocket.svg";
 import play from "../../../public/play.svg";
 import shuffle from "../../../public/shuffle.svg";
 import flame from "../../../public/flame.svg";

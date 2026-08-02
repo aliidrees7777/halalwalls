@@ -107,27 +107,76 @@ export function SiteFooter({ className }: { className?: string }) {
         </nav>
 
         <div className="hidden flex-wrap items-center justify-center gap-5 md:flex">
-          <a href="https://play.google.com/store/apps" target="_blank" rel="noopener noreferrer" className={socialButtonClass}>
+          <a
+            href="https://play.google.com/store/apps/dev?id=7741165919079882693"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={socialButtonClass}
+          >
             <PlayStoreIcon className="size-3.5" />
             Google Play
           </a>
-          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" className={socialButtonClass}>
+          <a
+            href="https://www.tiktok.com/@kidoshistudios"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={socialButtonClass}
+          >
             <TikTokIcon className="size-3.5" />
             TikTok
           </a>
-          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className={socialButtonClass}>
+          <a
+            href="https://www.instagram.com/kidoshistudios/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={socialButtonClass}
+          >
             <InstagramIcon className="size-3.5" />
             Instagram
           </a>
-          <a href="#" target="_blank" rel="noopener noreferrer" className={socialButtonClass} aria-label="NCN">
+          <a
+            href="https://nocopyrightnasheeds.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={socialButtonClass}
+            aria-label="NCN"
+          >
             <NcnIcon className="h-3.5 w-auto" />
           </a>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-5 md:hidden">
-          <Image src={playstore} alt="playstore" />
-          <Image src={tiktok} alt="playstore" />
-          <Image src={insta} alt="playstore" />
-          <Image src={ncn} alt="playstore" />
+          <a
+            href="https://play.google.com/store/apps/dev?id=7741165919079882693"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Google Play"
+          >
+            <Image src={playstore} alt="" />
+          </a>
+          <a
+            href="https://www.tiktok.com/@kidoshistudios"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="TikTok"
+          >
+            <Image src={tiktok} alt="" />
+          </a>
+          <a
+            href="https://www.instagram.com/kidoshistudios/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            <Image src={insta} alt="" />
+          </a>
+          <a
+            href="https://nocopyrightnasheeds.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="NCN"
+          >
+            <Image src={ncn} alt="" />
+          </a>
         </div>
         <p className="text-center text-[15px] font-medium text-hw-foreground">
           © 2026 HalalWalls.com

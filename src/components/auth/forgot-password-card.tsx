@@ -6,6 +6,7 @@ import { api, ApiError } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import close from "../../../public/authicon/close.svg";
+import sendIcon from "../../../public/Send icon black.svg";
 import { useAuth } from "@/context/auth-context";
 export function ForgotPasswordCard() {
   const { signup,closeAuthModal,openAuthModal } = useAuth();
@@ -105,9 +106,14 @@ export function ForgotPasswordCard() {
         >
           {submitting ? "Please wait…" : "Send Recovery Link"}
           {!submitting && (
-            <svg viewBox="0 0 24 24" fill="currentColor" className="size-[18px]">
-              <path d="M3 11l18-8-8 18-2.5-7.5L3 11z" />
-            </svg>
+            <Image
+              src={sendIcon}
+              alt=""
+              width={18}
+              height={17}
+              className="h-[17px] w-[18px] shrink-0"
+              aria-hidden
+            />
           )}
         </button>
 

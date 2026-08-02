@@ -469,7 +469,7 @@ export function AccountSettingsModal({
           </div>
 
           {/* Danger Zone */}
-          <div className="mt-7 space-y-3 sm:mt-8">
+          <div className="mt-7 mb-6 space-y-3 sm:mt-8 sm:mb-8">
             <AccountSectionTitle variant="danger">Danger Zone</AccountSectionTitle>
 
             {!showDeleteConfirm ? (

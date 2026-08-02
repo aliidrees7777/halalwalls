@@ -1,10 +1,10 @@
 "use client";
 
-import { Pencil } from "lucide-react";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-import pencil from "../../../../public/my-account/pencil.svg"
+import pencil from "../../../../public/Pencil.svg";
+
 interface AccountFormFieldProps {
   id: string;
   label: string;
@@ -55,7 +55,7 @@ export function AccountFormField({
               "focus-visible:border-hw-green/60 focus-visible:ring-2 focus-visible:ring-hw-green/20",
               invalid
                 ? "border-red-500/80 ring-2 ring-red-500/15"
-                : "border-hw-faint/40 hover:border-hw-faint/60"
+                : "border-hw-faint/40 hover:border-hw-faint/60",
             )}
           />
         ) : (
@@ -74,14 +74,21 @@ export function AccountFormField({
               disabled && "cursor-not-allowed opacity-60",
               invalid
                 ? "border-red-500/80 ring-2 ring-red-500/15"
-                : "border-hw-faint/40 hover:border-hw-faint/60"
+                : "border-hw-faint/40 hover:border-hw-faint/60",
             )}
           />
         )}
         {!disabled ? (
-          <Image src={pencil} alt="pencil" className="pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-hw-foreground/50"
-            aria-hidden/>
-         
+          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center justify-center">
+            <Image
+              src={pencil}
+              alt=""
+              width={16}
+              height={16}
+              className="size-3.5 object-contain"
+              aria-hidden
+            />
+          </span>
         ) : null}
       </div>
       {error ? (

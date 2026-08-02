@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { compressImageToDataUrl } from "@/lib/image";
 import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
-import pencil from "../../../../public/my-account/pencil.svg"
+import pencil from "../../../../public/Pencil.svg";
+
 interface AccountImageUploadProps {
   label: string;
   src: string;
@@ -59,12 +59,12 @@ export function AccountImageUpload({
         type="button"
         onClick={() => inputRef.current?.click()}
         className={cn(
-          "group relative block overflow-hidden  bg-hw-card transition-all duration-200",
+          "group relative block overflow-hidden bg-hw-card transition-all duration-200",
           "hover:border-hw-green/40 hover:shadow-[0_0_20px_rgba(0,255,163,0.08)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50",
           variant === "avatar"
-            ? " rounded-full ] w-[163px] h-[163px]"
-            : "h-[88px] w-full rounded-md sm:h-[163px]"
+            ? "h-[163px] w-[163px] rounded-full"
+            : "h-[88px] w-full rounded-md sm:h-[163px]",
         )}
         aria-label={`Change ${label}`}
       >
@@ -81,8 +81,13 @@ export function AccountImageUpload({
           className="absolute inset-0 flex items-center justify-center bg-black/35 opacity-90 transition-opacity duration-200 group-hover:bg-black/45"
           aria-hidden
         >
-          <Image src={pencil} alt="pencil" className="size-4 text-white drop-shadow-sm sm:size-[35px]" />
-          {/* <Pencil /> */}
+          <Image
+            src={pencil}
+            alt=""
+            width={36}
+            height={36}
+            className="size-9 object-contain drop-shadow-sm sm:size-10"
+          />
         </span>
       </button>
     </div>

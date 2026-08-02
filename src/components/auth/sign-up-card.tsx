@@ -170,7 +170,7 @@ export function SignUpCard() {
 
           {/* Confirm Password */}
           <div className="space-y-1.5">
-            <label htmlFor="signup-confirm" className="block text-[19px] font-semibold text-hw-foreground">
+            <label htmlFor="signup-confirm" className="block text-[19px] font-semibold text-hw-depw">
               Confirm Password
             </label>
             <div className="flex h-11 items-center gap-2 rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
