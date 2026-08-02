@@ -98,7 +98,7 @@ export function PremiumPlans() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: "100%" }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="relative z-10 my-auto flex w-full max-w-[1275px] max-h-[95dvh] overflow-y-auto flex-col items-center gap-6 sm:gap-10 rounded-2xl border-3 border-[#05DF8B] p-4 sm:p-10 bg-hw-card/80"
+        className="relative z-10 my-auto flex h-auto w-full max-w-[1275px] max-h-[95dvh] overflow-y-auto flex-col items-center gap-6 sm:gap-10 rounded-2xl border-3 border-[#05DF8B] p-4 sm:p-10 bg-hw-card/80"
       >
         {/* Close */}
         <button

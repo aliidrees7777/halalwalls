@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Rocket, Check } from "lucide-react";
+import { Eye, EyeOff, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/components/ui/toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { ApiError } from "@/lib/api";
 import close from "../../../public/authicon/close.svg";
+import rocket from "../../../public/rocket.svg";
 import Image from "next/image";
 
 export function SignUpCard() {
@@ -78,7 +79,7 @@ export function SignUpCard() {
             duration: 0.4,
             ease: "easeInOut",
           }}
-      className="relative z-10 my-auto flex justify-center items-center w-full max-w-[825px] h-[670px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 sm:p-7"
+      className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 sm:p-7"
     >
         <button
         onClick={() => {
@@ -90,7 +91,7 @@ export function SignUpCard() {
         <Image src={close} alt="Close" width={20} height={20} />
       </button>
       <form
-        className="flex flex-col gap-12 w-[570px]"
+        className="flex w-full max-w-xl flex-col gap-8"
         onSubmit={handleSubmit}
       >
         {/* Title */}
@@ -222,7 +223,14 @@ export function SignUpCard() {
           disabled={submitting}
           className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[22px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <Rocket className="size-[22px]" />
+          <Image
+            src={rocket}
+            alt=""
+            width={22}
+            height={22}
+            className="size-[22px] shrink-0 object-contain"
+            aria-hidden
+          />
           {submitting ? "Please wait…" : "Start Your Journey"}
         </button>
       </form>

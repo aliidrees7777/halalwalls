@@ -47,7 +47,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
             duration: 0.4,
             ease: "easeInOut",
           }}
-          className="relative flex flex-col justify-center items-center z-10 my-auto w-full max-w-[825px] lg:h-[805px]  rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] sm:p-7"
+          className="relative z-10 my-auto flex h-auto w-full max-w-[825px] flex-col items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] sm:p-7"
         >
           <button
             onClick={() => {
@@ -58,7 +58,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
           >
             <Image src={close} alt="Close" width={20} height={20} />
           </button>
-          <div className="flex flex-col gap-12 ld:w-md ">
+          <div className="flex w-full max-w-xl flex-col gap-8">
             <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw">
               Sign in
             </h1>

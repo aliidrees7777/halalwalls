@@ -140,9 +140,9 @@ function DesktopSiteHeader({
 }) {
   return (
     <div className="hidden bg-hw-bg lg:block">
-      <div className="px-[var(--lp-header-inset-x)] pt-[var(--lp-header-inset-top)]">
+      <div className="pt-[var(--lp-header-inset-top)]">
         <div className="overflow-hidden rounded-[var(--lp-header-radius)] border-b-[length:var(--lp-header-accent)] border-hw-green bg-hw-header">
-          <div className="lp-container flex h-[var(--lp-header-h)] items-center gap-4">
+          <div className="mx-auto flex h-[var(--lp-header-h)] w-full max-w-[calc(var(--lp-content-max)+2*var(--lp-gutter))] items-center gap-4 pl-[max(1rem,calc(var(--lp-gutter)-12px))] pr-[var(--lp-gutter)]">
             <HalalWallsLogo className="shrink-0" />
 
             {showSearch && (

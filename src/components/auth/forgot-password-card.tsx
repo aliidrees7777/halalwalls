@@ -42,7 +42,7 @@ export function ForgotPasswordCard() {
             duration: 0.4,
             ease: "easeInOut",
           }}
-      className="relative z-10 my-auto flex justify-center items-center w-full max-w-[825px] h-[480px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 sm:p-7 p-5"
+      className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-5 sm:p-7"
     >
      <button
         onClick={closeAuthModal}
@@ -51,7 +51,7 @@ export function ForgotPasswordCard() {
         <Image src={close} alt="Close" width={20} height={20} />
       </button>
       <form
-        className="flex flex-col gap-12 w-xl"
+        className="flex w-full max-w-xl flex-col gap-8"
         onSubmit={handleSubmit}
       >
         {message && (
