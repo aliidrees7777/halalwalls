@@ -5,14 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCategories } from "@/hooks/use-catalog";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import rocket from "../../../public/Rocket.svg";
 import play from "../../../public/play.svg";
 import shuffle from "../../../public/shuffle.svg";
 import flame from "../../../public/flame.svg";
 import lightrocket from "../../../public/cate-icon/lightrocket.svg";
-import playdark from "../../../public/cate-icon/playdark.svg";
-import populardark from "../../../public/cate-icon/populardark.svg";
-import randomdark from "../../../public/cate-icon/randomdark.svg";
 
 /**
  * Homepage filter row below the search box:
@@ -30,15 +26,10 @@ const pillClass = (active: boolean) =>
   );
 
 const SORT_MODES = [
-  {
-    id: "latest",
-    label: "Latest",
-    icon: lightrocket,
-    darkIcon: rocket,
-  },
-  { id: "live", label: "Live Walls", icon: play, darkIcon: playdark },
-  { id: "random", label: "Random", icon: shuffle, darkIcon: randomdark },
-  { id: "popular", label: "Popular", icon: flame, darkIcon: populardark },
+  { id: "latest", label: "Latest", icon: lightrocket },
+  { id: "live", label: "Live Walls", icon: play },
+  { id: "random", label: "Random", icon: shuffle },
+  { id: "popular", label: "Popular", icon: flame },
 ] as const;
 
 export function FilterPills() {
