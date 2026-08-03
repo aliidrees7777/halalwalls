@@ -25,7 +25,7 @@ export function HalalWallsLogo({ className }: { className?: string }) {
         alt="Logo"
         width={185}
         height={36}
-        className="h-[34px] w-[175px] shrink-0 md:h-9 md:w-[185px]"
+        className="h-[34px] w-[175px] shrink-0 pl-[9px] md:h-9 md:w-[185px]"
         priority
       />
     </Link>
