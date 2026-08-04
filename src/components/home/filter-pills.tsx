@@ -14,15 +14,19 @@ import lightrocket from "../../../public/cate-icon/lightrocket.svg";
  * Homepage filter row below the search box:
  * - Browse modes set ?sort= (Latest / Live / Random / Popular)
  * - Category pills set ?category= like the sidebar
+ * Only one pill in this row is highlighted at a time (category wins over sort).
  * Mouse wheel scrolls this strip horizontally (no Shift required).
  */
 
-const pillClass = (active: boolean) =>
+const pillClass = (active: boolean, premium = false) =>
   cn(
     "flex h-[var(--lp-pill-h)] shrink-0 items-center gap-[var(--lp-pill-icon-gap)] rounded-[var(--lp-pill-radius)] px-[var(--lp-pill-px)] text-[length:var(--lp-pill-font)] leading-none",
     active
-      ? "bg-hw-green font-semibold text-black"
-      : "bg-hw-pill font-medium text-white hover:bg-hw-pill2-hover",
+      ? "bg-hw-green font-semibold text-white"
+      : cn(
+          "bg-hw-pill font-medium hover:bg-hw-pill2-hover",
+          premium ? "text-hw-yellow" : "text-black dark:text-white",
+        ),
   );
 
 const SORT_MODES = [
@@ -80,14 +84,15 @@ export function FilterPills() {
       aria-label="Wallpaper filters"
     >
       {SORT_MODES.map((mode) => {
-        const isActive = activeSort === mode.id;
+        // Category selection owns the highlight when both params are present.
+        const isActive = !activeCategory && activeSort === mode.id;
         return (
           <button
             key={mode.id}
             type="button"
             role="tab"
             aria-selected={isActive}
-            onClick={() => go({ sort: mode.id })}
+            onClick={() => go({ sort: mode.id, category: null })}
             className={pillClass(isActive)}
           >
             {mode.label}
@@ -97,8 +102,9 @@ export function FilterPills() {
               width={22}
               height={22}
               className={cn(
-                "w-[var(--lp-pill-icon)] h-[var(--lp-pill-icon)]",
-                isActive ? "brightness-0" : "brightness-0 invert",
+                "h-[var(--lp-pill-icon)] w-[var(--lp-pill-icon)]",
+                // SVGs are white: selected → white; idle → black in light, white in dark
+                isActive ? undefined : "brightness-0 dark:invert",
               )}
             />
           </button>
@@ -116,7 +122,7 @@ export function FilterPills() {
             onClick={() =>
               go({ category: isActive ? null : category.slug })
             }
-            className={pillClass(isActive)}
+            className={pillClass(isActive, category.isPremium)}
           >
             {category.name}
           </button>

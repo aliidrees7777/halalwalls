@@ -175,10 +175,10 @@ html:has(.admin-panel) body {
   --lp-search-h: 42.67px;
   --lp-search-radius: 7.11px;
   /* Search band — landing-page.css upper section / Rectangle 2 @ 1920px */
-  --lp-search-band-h: 247.11px;
-  --lp-search-pt: 37.85px; /* search top (101.85) − header (64) */
+  --lp-search-band-h: 300px;
+  --lp-search-pt: 26px; /* was 37.85 — tightened top space under header */
   --lp-search-gap: 23.11px; /* pills top (167.63) − search bottom (144.52) */
-  --lp-search-band-pb: 39.11px; /* green tail below pills inside full 247px band */
+  --lp-search-band-pb: 56px; /* green tail below pills */
   /* Sidebar panels — 1:1 from Figma 1920px */
   --lp-panel-border: 1.78px;
   --lp-panel-radius: 3.56px;

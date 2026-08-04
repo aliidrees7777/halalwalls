@@ -44,6 +44,15 @@ export function WallpaperPagination({
   const activePage = Math.min(Math.max(1, currentPage), pagesTotal);
   const pages = buildPages(activePage, pagesTotal);
 
+  const btnBase =
+    "flex h-[var(--lp-pagination-h)] items-center justify-center rounded-[var(--lp-pagination-radius)] text-[length:var(--lp-pagination-font)] leading-none transition-colors disabled:cursor-not-allowed disabled:opacity-50";
+
+  // Light: idle light-gray / selected charcoal. Dark: keep existing charcoal buttons.
+  const btnIdle =
+    "bg-[#eeeeee] font-medium text-[#555555] hover:bg-[#e0e0e0] dark:bg-[#222426] dark:text-white dark:hover:bg-[#33373A]";
+  const btnActive =
+    "bg-[#333333] font-semibold text-white dark:bg-[#33373A]";
+
   return (
     <nav
       className="flex flex-wrap items-center justify-center gap-[var(--lp-pagination-gap)] pt-[var(--lp-grid-to-pagination)]"
@@ -53,7 +62,11 @@ export function WallpaperPagination({
         type="button"
         onClick={() => onPageChange(Math.max(activePage - 1, 1))}
         disabled={activePage <= 1}
-        className="h-[var(--lp-pagination-h)] min-w-[var(--lp-pagination-next-w)] rounded-[var(--lp-pagination-radius)] bg-[#222426] px-4 text-[length:var(--lp-pagination-font)] font-medium leading-none text-white transition-colors hover:bg-[#33373A] disabled:cursor-not-allowed disabled:opacity-50"
+        className={cn(
+          btnBase,
+          btnIdle,
+          "min-w-[var(--lp-pagination-next-w)] px-4",
+        )}
       >
         « Previous
       </button>
@@ -61,7 +74,10 @@ export function WallpaperPagination({
         page === "gap" ? (
           <span
             key={`gap-${index}`}
-            className="flex h-[var(--lp-pagination-h)] min-w-[var(--lp-pagination-w)] items-center justify-center rounded-[var(--lp-pagination-radius)] bg-hw-bg text-[length:var(--lp-pagination-font)] font-medium text-white"
+            className={cn(
+              btnBase,
+              "min-w-[var(--lp-pagination-w)] bg-[#eeeeee] font-medium text-[#555555] dark:bg-[#222426] dark:text-white",
+            )}
           >
             ...
           </span>
@@ -71,10 +87,9 @@ export function WallpaperPagination({
             type="button"
             onClick={() => onPageChange(page)}
             className={cn(
-              "flex h-[var(--lp-pagination-h)] min-w-[var(--lp-pagination-w)] items-center justify-center rounded-[var(--lp-pagination-radius)] px-[var(--lp-pagination-px)] text-[length:var(--lp-pagination-font)] leading-none transition-colors",
-              activePage === page
-                ? "bg-[#33373A] font-semibold text-white"
-                : "bg-[#222426] font-medium text-white hover:bg-[#33373A]",
+              btnBase,
+              "min-w-[var(--lp-pagination-w)] px-[var(--lp-pagination-px)]",
+              activePage === page ? btnActive : btnIdle,
             )}
             aria-current={activePage === page ? "page" : undefined}
           >
@@ -86,7 +101,11 @@ export function WallpaperPagination({
         type="button"
         onClick={() => onPageChange(Math.min(activePage + 1, pagesTotal))}
         disabled={activePage >= pagesTotal}
-        className="h-[var(--lp-pagination-h)] min-w-[var(--lp-pagination-next-w)] rounded-[var(--lp-pagination-radius)] bg-[#222426] px-4 text-[length:var(--lp-pagination-font)] font-medium leading-none text-white transition-colors hover:bg-[#33373A] disabled:cursor-not-allowed disabled:opacity-50"
+        className={cn(
+          btnBase,
+          btnIdle,
+          "min-w-[var(--lp-pagination-next-w)] px-4",
+        )}
       >
         Next »
       </button>

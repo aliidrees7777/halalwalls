@@ -132,16 +132,19 @@ function DesktopSiteHeader({
   onSearchChange,
   onSearchSubmit,
   showSearch,
+  transparentChrome = false,
 }: {
   search: string;
   onSearchChange: (value: string) => void;
   onSearchSubmit: (q: string) => void;
   showSearch: boolean;
+  /** Let page content (e.g. home search gradient) show through rounded header corners. */
+  transparentChrome?: boolean;
 }) {
   return (
-    <div className="hidden bg-hw-bg lg:block">
+    <div className={transparentChrome ? "hidden lg:block" : "hidden bg-hw-bg lg:block"}>
       <div className="pt-[var(--lp-header-inset-top)]">
-        <div className="overflow-hidden rounded-[var(--lp-header-radius)] border-b-[length:var(--lp-header-accent)] border-hw-green bg-hw-header">
+        <div className="overflow-hidden rounded-b-[var(--lp-header-radius)] border-b-[length:var(--lp-header-accent)] border-hw-green bg-hw-header">
           <div className="mx-auto flex h-[var(--lp-header-h)] w-full max-w-[calc(var(--lp-content-max)+2*var(--lp-gutter))] items-center gap-4 pl-[max(1rem,calc(var(--lp-gutter)-7.5px))] pr-[var(--lp-gutter)]">
             <HalalWallsLogo className="shrink-0" />
 
@@ -192,6 +195,7 @@ export function SiteHeader() {
         onSearchChange={setSearch}
         onSearchSubmit={handleSearch}
         showSearch={pathname !== "/"}
+        transparentChrome={pathname === "/"}
       />
     </header>
   );

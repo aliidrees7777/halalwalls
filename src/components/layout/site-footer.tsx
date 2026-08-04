@@ -16,7 +16,7 @@ const footerLinks = [
 ];
 
 const socialButtonClass =
-  "flex h-9 items-center gap-1.5 rounded-[5px] bg-[#323639] px-[18px] text-[15px] font-medium text-[#A8A299] transition-colors hover:bg-hw-pill2-hover hover:text-white";
+  "flex h-9 items-center gap-1.5 rounded-[5px] bg-[#323639] px-[18px] text-[15px] font-medium text-white transition-colors hover:bg-[#3a3c3e] hover:text-white";
 
 function PlayStoreIcon({ className }: { className?: string }) {
   return (
