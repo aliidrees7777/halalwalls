@@ -132,11 +132,11 @@ export function HomePage() {
 
       <section
         style={{ background: "var(--hw-search-header)" }}
-        className="relative z-0 min-h-[var(--lp-search-band-h)] px-0 pt-[var(--lp-search-pt)] pb-[var(--lp-search-band-pb)] lg:-mt-[calc(var(--lp-header-h)+var(--lp-header-accent))] lg:pt-[calc(var(--lp-header-h)+var(--lp-header-accent)+var(--lp-search-pt))]"
+        className="relative z-0 h-fit px-0 pt-[var(--lp-search-pt)] pb-0 lg:-mt-[calc(var(--lp-header-h)+var(--lp-header-accent))] lg:pt-[calc(var(--lp-header-h)+var(--lp-header-accent)+var(--lp-search-pt))]"
       >
         <div className="lp-container">
           <WallpaperSearch value={search} onChange={setSearch} />
-          <div className="mt-[var(--lp-search-gap)]">
+          <div className="mt-[var(--lp-search-gap)] pb-10">
             <FilterPills />
           </div>
         </div>

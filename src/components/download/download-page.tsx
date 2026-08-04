@@ -29,7 +29,7 @@ export function DownloadPageClient({ wallpaper, related }: DownloadPageProps) {
         className="lp-container pt-10 pb-14"
       >
         <header className="text-center">
-          <h1 className="text-[22px] font-bold leading-tight text-hw-foreground sm:text-[28px] lg:text-[34.87px]">
+          <h1 className="text-[22px] font-bold leading-tight text-black dark:text-hw-foreground sm:text-[28px] lg:text-[34.87px]">
             {wallpaper.title}
           </h1>
           <div className="mt-[6px] flex w-full justify-center">

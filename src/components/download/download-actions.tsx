@@ -10,10 +10,20 @@ import { findAvailableResolution } from "@/lib/download-resolution";
 import type { WallpaperDetail } from "@/types/wallpaper";
 import Image from "next/image";
 import downloadrotate from "../../../public/detail-page/downloadrotate.svg";
+import downloadLight from "../../../public/Download-icon-light.svg";
 
-/** Textured fill stays fixed — hover only brightens (lighting). */
+function DownloadIcon({ className }: { className?: string }) {
+  return (
+    <span className={cn("mr-2 inline-flex", className)} aria-hidden>
+      <Image src={downloadLight} alt="" className="dark:hidden" />
+      <Image src={downloadrotate} alt="" className="hidden dark:block" />
+    </span>
+  );
+}
+
+/** Textured fill stays fixed — hover only brightens (lighting). White label on dark btn in both themes. */
 const downloadBtnClass =
-  "h-[42.67px] rounded-[8px] border-2 border-hw-line bg-hw-deep bg-[url('/detail-page/download-btn-bg.jpg')] bg-cover bg-center px-[17.78px] text-[17px] font-medium text-hw-down-text shadow-none transition-[filter] hover:brightness-[1.75] disabled:opacity-70 sm:w-auto";
+  "h-[42.67px] rounded-[8px] border-2 border-[#33373A] bg-black bg-[url('/detail-page/download-btn-bg.jpg')] bg-cover bg-center px-[17.78px] text-[17px] font-medium text-white shadow-none transition-[filter] hover:brightness-[1.75] hover:text-white disabled:opacity-70 sm:w-auto dark:border-hw-line dark:text-hw-down-text dark:hover:text-hw-down-text";
 
 interface DownloadActionsProps {
   wallpaper: WallpaperDetail;
@@ -97,12 +107,7 @@ export function DownloadActions({
         ) : locked ? (
           <Lock className="mr-2 size-4 text-hw-yellow" />
         ) : (
-          <Image
-            src={downloadrotate}
-            alt=""
-            className="mr-2"
-            aria-hidden
-          />
+          <DownloadIcon />
         )}
         {busy === "primary"
           ? "Downloading…"
@@ -125,12 +130,7 @@ export function DownloadActions({
         ) : locked ? (
           <Lock className="mr-2 size-4 text-hw-yellow" />
         ) : (
-          <Image
-            src={downloadrotate}
-            alt=""
-            className="mr-2"
-            aria-hidden
-          />
+          <DownloadIcon />
         )}
         {busy === "original"
           ? "Downloading…"
@@ -157,7 +157,7 @@ export function DownloadActions({
         />
         {favorited ? "Favorited" : "Favorite"}
         {favCount > 0 && (
-          <span className="ml-1.5 text-hw-muted">· {favCount}</span>
+          <span className="ml-1.5 text-white/70 dark:text-hw-muted">· {favCount}</span>
         )}
       </Button>
     </div>

@@ -147,10 +147,10 @@ html:has(.admin-panel) body {
   --hw-depw: #000000;
   --hw-play: #ffffff;
   --hw-border: #05df8b;
-  --hw-footer: #ffffff;
+  --hw-footer: #eeeeee;
   --hw-fcolor: #ffffff;
   --hw-down: #5a6165;
-  --hw-down-text: #000000;
+  --hw-down-text: #ffffff;
   --hw-account: #000000;
   --hw-content: #c8c3b2;
   color-scheme: light;
@@ -175,10 +175,10 @@ html:has(.admin-panel) body {
   --lp-search-h: 42.67px;
   --lp-search-radius: 7.11px;
   /* Search band — landing-page.css upper section / Rectangle 2 @ 1920px */
-  --lp-search-band-h: 300px;
-  --lp-search-pt: 26px; /* was 37.85 — tightened top space under header */
+  --lp-search-band-h: 247.11px;
+  --lp-search-pt: 26px; /* tightened top space under header */
   --lp-search-gap: 23.11px; /* pills top (167.63) − search bottom (144.52) */
-  --lp-search-band-pb: 56px; /* green tail below pills */
+  --lp-search-band-pb: 39.11px; /* green tail below pills inside full 247px band */
   /* Sidebar panels — 1:1 from Figma 1920px */
   --lp-panel-border: 1.78px;
   --lp-panel-radius: 3.56px;

@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Home } from "lucide-react";
 import type { WallpaperDetail } from "@/types/wallpaper";
 import Image from "next/image";
-import home from "../../../public/home.svg"
+import homeDark from "../../../public/home.svg";
+import homeLight from "../../../public/Home-light-mode.svg";
+
 interface DownloadBreadcrumbsProps {
   wallpaper: WallpaperDetail;
 }
@@ -11,25 +12,29 @@ export function DownloadBreadcrumbs({ wallpaper }: DownloadBreadcrumbsProps) {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="flex h-[46px] w-full items-center justify-center gap-1.5 bg-hw-pill px-3 py-1.5 text-[12px] text-hw-muted"
+      className="flex h-[46px] w-full items-center justify-center gap-1.5 bg-[#f2f2f2] px-3 py-1.5 text-[12px] dark:bg-hw-pill dark:text-hw-muted"
     >
       <Link
         href="/"
-        className="flex items-center  gap-1 transition-colors text-hw-foreground"
+        className="flex items-center gap-1 font-bold text-black transition-colors hover:opacity-80 dark:font-medium dark:text-hw-foreground"
       >
-        {/* <Home className="size-3.5" /> */}
-        <Image src={home} alt="home" className="mb-1"/>
+        <Image src={homeLight} alt="" className="mb-1 dark:hidden" />
+        <Image src={homeDark} alt="" className="mb-1 hidden dark:block" />
         <span className="text-[19px]">Home</span>
       </Link>
-      <span className="text-hw-line text-[19px] font-bold">/</span>
+      <span className="text-[19px] font-bold text-black dark:text-hw-line">
+        /
+      </span>
       <Link
         href={`/?category=${wallpaper.category}`}
-        className="transition-colors text-hw-foreground text-[19px]"
+        className="text-[19px] font-bold text-black transition-colors hover:opacity-80 dark:font-medium dark:text-hw-foreground"
       >
         {wallpaper.categoryLabel}
       </Link>
-      <span className="text-hw-line text-[19px] font-bold">/</span>
-      <span className="max-w-[200px] truncate text-hw-foreground sm:max-w-none text-[19px]">
+      <span className="text-[19px] font-bold text-black dark:text-hw-line">
+        /
+      </span>
+      <span className="max-w-[200px] truncate text-[19px] font-normal text-black sm:max-w-none dark:text-hw-foreground">
         {wallpaper.title}
       </span>
     </nav>

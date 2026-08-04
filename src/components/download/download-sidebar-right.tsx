@@ -67,7 +67,7 @@ function OurAppContent() {
       <img
         src="/detail-page/our-app-phone.svg"
         alt="HalalWalls mobile app preview"
-        width={156}
+        width={165}
         height={322}
         className="h-[240px] w-auto shrink-0 object-contain sm:h-[282px]"
       />
