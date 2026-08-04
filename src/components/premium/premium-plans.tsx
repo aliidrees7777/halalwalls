@@ -15,9 +15,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Three plans: monthly + yearly recur, lifetime is a one-time payment.
 const PLANS = [
-  { key: "monthly", badge: "Flexible", badgeBg: "#323639", badgeText: "#FFFFFF", price: "$2.99", period: "/month" },
-  { key: "yearly", badge: "Popular", badgeBg: "#D2B100", badgeText: "#1D2021", price: "$9.99", period: "/year" },
-  { key: "lifetime", badge: "Best Value", badgeBg: "#5D00C0", badgeText: "#FFFFFF", price: "$29.99", period: "/lifetime" },
+  { key: "monthly", badge: "Flexible", badgeBg: "#323639", badgeText: "#FFFFFF", badgeWeight: 300, price: "$2.99", period: "/month" },
+  { key: "yearly", badge: "Popular", badgeBg: "#D2B100", badgeText: "#1D2021", badgeWeight: 500, price: "$9.99", period: "/year" },
+  { key: "lifetime", badge: "Best Value", badgeBg: "#5D00C0", badgeText: "#FFFFFF", badgeWeight: 300, price: "$29.99", period: "/lifetime" },
 ];
 
 const FEATURES = [
@@ -154,8 +154,12 @@ export function PremiumPlans() {
                     Premium
                   </h3>
                   <span
-                    className="mt-2 inline-block rounded-full px-2 py-0.5 text-[14px] font-medium tracking-wider"
-                    style={{ background: plan.badgeBg, color: plan.badgeText }}
+                    className="mt-2 inline-block rounded-full px-2 py-0.5 text-[14px] tracking-wider"
+                    style={{
+                      background: plan.badgeBg,
+                      color: plan.badgeText,
+                      fontWeight: plan.badgeWeight,
+                    }}
                   >
                     {plan.badge}
                   </span>
