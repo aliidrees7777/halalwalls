@@ -50,7 +50,7 @@ function ResolutionLinkList({
                 className={cn(
                   "rounded-md px-2 py-0.5 text-[16px] transition-colors",
                   isSelected
-                    ? "bg-hw-pill2 font-semibold text-hw-foreground no-underline"
+                    ? "bg-[#555555] font-semibold text-white no-underline dark:bg-hw-pill2 dark:text-hw-foreground"
                     : "text-hw-muted underline underline-offset-2 decoration-hw-muted/70 hover:text-hw-foreground hover:decoration-hw-foreground",
                 )}
               >
@@ -99,7 +99,8 @@ export function DownloadResolutionPanel({
     >
       <SidebarPanel
         title="Download Different Resolutions"
-        iconSrc="/Download%20icon.svg"
+        iconSrc="/Download-icon-dark.svg"
+        iconSrcLight="/Download-icon-light.svg"
         iconPosition="before"
         iconClassName="h-4 w-[21px] shrink-0"
         className="bg-hw-deep"

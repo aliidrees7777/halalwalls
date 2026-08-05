@@ -42,22 +42,26 @@ export function SidebarCollapsible({
         )}
       >
         <span className="pl-4">{label}</span>
-        <svg
-          width="12.45"
-          height="7.11"
-          viewBox="0 0 11 7"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+        {/* Light: dedicated up/down assets. Dark: existing chevron + rotate. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={open ? "/arrow-up-lightmode.svg" : "/arrow-down-lightmode.svg"}
+          alt=""
+          width={12}
+          height={7}
+          className="mr-[10px] dark:hidden"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/arow.svg"
+          alt=""
+          width={12}
+          height={7}
           className={cn(
-            "mr-[10px] transition-transform duration-200",
+            "mr-[10px] hidden transition-transform duration-200 dark:block",
             open && "rotate-180",
           )}
-        >
-          <path
-            d="M9.4199 0H0.890855C0.126943 0 -0.281331 0.89974 0.221709 1.47464L4.48623 6.34838C4.84047 6.75323 5.47028 6.75323 5.82452 6.34838L10.089 1.47464C10.5921 0.89974 10.1838 0 9.4199 0Z"
-            fill="#A8A299"
-          />
-        </svg>
+        />
       </button>
 
       <AnimatePresence initial={false}>

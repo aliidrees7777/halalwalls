@@ -4,7 +4,10 @@ import { cn } from "@/lib/utils";
 interface SidebarPanelProps {
   title: string;
   icon?: LucideIcon;
+  /** Icon for dark mode (or both themes if `iconSrcLight` is omitted). */
   iconSrc?: string;
+  /** Optional light-mode icon; shown instead of `iconSrc` when theme is light. */
+  iconSrcLight?: string;
   iconClassName?: string;
   /** Where the icon sits relative to the title. Default: after. */
   iconPosition?: "before" | "after";
@@ -17,6 +20,7 @@ export function SidebarPanel({
   title,
   icon: Icon,
   iconSrc,
+  iconSrcLight,
   iconClassName = "h-[12.57px] w-[21.34px] shrink-0",
   iconPosition = "after",
   children,
@@ -26,8 +30,25 @@ export function SidebarPanel({
   const iconEl = iconSrc ? (
     // Decorative SVG/PNG icons — plain <img> avoids next/image aspect warnings
     // on tiny assets where CSS size differs from intrinsic dims.
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={iconSrc} alt="" className={iconClassName} />
+    iconSrcLight ? (
+      <>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={iconSrcLight}
+          alt=""
+          className={cn(iconClassName, "dark:hidden")}
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={iconSrc}
+          alt=""
+          className={cn(iconClassName, "hidden dark:block")}
+        />
+      </>
+    ) : (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={iconSrc} alt="" className={iconClassName} />
+    )
   ) : Icon ? (
     <Icon
       className="size-[17.78px] shrink-0 text-hw-foreground"

@@ -18,10 +18,18 @@ export function QrCodePanel() {
         className="mt-4 flex w-full items-center justify-center gap-1 text-[12px] text-hw-muted transition-colors hover:text-hw-foreground"
       >
         Scan QR Code
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={open ? "/arrow-up-lightmode.svg" : "/arrow-down-lightmode.svg"}
+          alt=""
+          width={11}
+          height={7}
+          className="dark:hidden"
+        />
         <ChevronUp
           className={cn(
-            "size-3.5 transition-transform duration-300",
-            !open && "rotate-180"
+            "hidden size-3.5 transition-transform duration-300 dark:block",
+            !open && "rotate-180",
           )}
         />
       </button>

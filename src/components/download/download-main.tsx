@@ -109,7 +109,17 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
           {(wallpaper.downloadCount ?? 0).toLocaleString()}
         </Badge>
         <div className="flex min-w-0 flex-1 flex-wrap items-center">
-          <Image src={link} alt="link" className="mr-2 shrink-0" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/Purchase-lightmode.svg"
+            alt=""
+            className="mr-2 shrink-0 dark:hidden"
+          />
+          <Image
+            src={link}
+            alt=""
+            className="mr-2 hidden shrink-0 dark:inline"
+          />
           {wallpaper.tags.map((tag, index) => (
             <span key={`${tag}-${index}`} className="inline-flex items-center">
               <Link

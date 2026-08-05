@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTheme } from "next-themes";
 import { useCategories } from "@/hooks/use-catalog";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -9,6 +10,10 @@ import play from "../../../public/play.svg";
 import shuffle from "../../../public/shuffle.svg";
 import flame from "../../../public/flame.svg";
 import lightrocket from "../../../public/cate-icon/lightrocket.svg";
+import playDark from "../../../public/cate-icon/playdark.svg";
+import randomDark from "../../../public/cate-icon/randomdark.svg";
+import popularDark from "../../../public/cate-icon/populardark.svg";
+import latestDark from "../../../public/cate-icon/latestdark.svg";
 
 /**
  * Homepage filter row below the search box:
@@ -22,7 +27,7 @@ const pillClass = (active: boolean, premium = false) =>
   cn(
     "flex h-[var(--lp-pill-h)] shrink-0 items-center gap-[var(--lp-pill-icon-gap)] rounded-[var(--lp-pill-radius)] px-[var(--lp-pill-px)] text-[length:var(--lp-pill-font)] leading-none",
     active
-      ? "bg-hw-green font-semibold text-white"
+      ? "bg-hw-green font-semibold text-white dark:text-black"
       : cn(
           "bg-hw-pill font-medium hover:bg-hw-pill2-hover",
           premium ? "text-hw-yellow" : "text-black dark:text-white",
@@ -30,18 +35,25 @@ const pillClass = (active: boolean, premium = false) =>
   );
 
 const SORT_MODES = [
-  { id: "latest", label: "Latest", icon: lightrocket },
-  { id: "live", label: "Live Walls", icon: play },
-  { id: "random", label: "Random", icon: shuffle },
-  { id: "popular", label: "Popular", icon: flame },
+  { id: "latest", label: "Latest", icon: lightrocket, iconDarkSelected: latestDark },
+  { id: "live", label: "Live Walls", icon: play, iconDarkSelected: playDark },
+  { id: "random", label: "Random", icon: shuffle, iconDarkSelected: randomDark },
+  { id: "popular", label: "Popular", icon: flame, iconDarkSelected: popularDark },
 ] as const;
 
 export function FilterPills() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { categories } = useCategories();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const scrollerRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === "dark";
   const activeSort = searchParams.get("sort") || "latest";
   const activeCategory = searchParams.get("category") || "";
 
@@ -86,6 +98,10 @@ export function FilterPills() {
       {SORT_MODES.map((mode) => {
         // Category selection owns the highlight when both params are present.
         const isActive = !activeCategory && activeSort === mode.id;
+        // Dark+selected uses black SVG assets — CSS filters on next/image were unreliable.
+        const iconSrc =
+          isActive && isDark ? mode.iconDarkSelected : mode.icon;
+
         return (
           <button
             key={mode.id}
@@ -97,14 +113,14 @@ export function FilterPills() {
           >
             {mode.label}
             <Image
-              src={mode.icon}
+              src={iconSrc}
               alt=""
               width={22}
               height={22}
               className={cn(
                 "h-[var(--lp-pill-icon)] w-[var(--lp-pill-icon)]",
-                // SVGs are white: selected → white; idle → black in light, white in dark
-                isActive ? undefined : "brightness-0 dark:invert",
+                // Idle light: blacken white SVG. Idle dark / active light: keep white SVG.
+                !isActive && !isDark && "brightness-0",
               )}
             />
           </button>

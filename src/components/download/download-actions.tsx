@@ -10,16 +10,6 @@ import { findAvailableResolution } from "@/lib/download-resolution";
 import type { WallpaperDetail } from "@/types/wallpaper";
 import Image from "next/image";
 import downloadrotate from "../../../public/detail-page/downloadrotate.svg";
-import downloadLight from "../../../public/Download-icon-light.svg";
-
-function DownloadIcon({ className }: { className?: string }) {
-  return (
-    <span className={cn("mr-2 inline-flex", className)} aria-hidden>
-      <Image src={downloadLight} alt="" className="dark:hidden" />
-      <Image src={downloadrotate} alt="" className="hidden dark:block" />
-    </span>
-  );
-}
 
 /** Textured fill stays fixed — hover only brightens (lighting). White label on dark btn in both themes. */
 const downloadBtnClass =
@@ -107,7 +97,12 @@ export function DownloadActions({
         ) : locked ? (
           <Lock className="mr-2 size-4 text-hw-yellow" />
         ) : (
-          <DownloadIcon />
+          <Image
+            src={downloadrotate}
+            alt=""
+            className="mr-2"
+            aria-hidden
+          />
         )}
         {busy === "primary"
           ? "Downloading…"
@@ -130,7 +125,12 @@ export function DownloadActions({
         ) : locked ? (
           <Lock className="mr-2 size-4 text-hw-yellow" />
         ) : (
-          <DownloadIcon />
+          <Image
+            src={downloadrotate}
+            alt=""
+            className="mr-2"
+            aria-hidden
+          />
         )}
         {busy === "original"
           ? "Downloading…"

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutGrid } from "lucide-react";
 import { sidebarCategories } from "@/data/sidebar";
 import { downloadSidebarTags } from "@/data/download-tags";
 import { SidebarPanel } from "@/components/home/sidebar-panel";
@@ -67,7 +66,12 @@ export function DownloadSidebarLeft({
         </ul>
       </SidebarPanel>
 
-      <SidebarPanel title="Categories" icon={LayoutGrid}>
+      <SidebarPanel
+        title="Categories"
+        iconSrc="/categories.svg"
+        iconSrcLight="/category-icon-lightmode.svg"
+        iconClassName="size-[17.78px] shrink-0"
+      >
         <SidebarCollapsible label="Browse Categories" defaultOpen>
           <CategorySidebarList
             categories={sidebarCategories}

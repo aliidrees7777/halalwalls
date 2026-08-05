@@ -54,7 +54,7 @@ function OurAppContent() {
           className="size-[88px] rounded-[14px] object-cover sm:size-[100px] sm:rounded-2xl"
         />
         <p className="text-center text-[20px] font-bold leading-none tracking-tight sm:text-[22px]">
-          <span className="text-white">Halal</span>
+          <span className="text-black dark:text-white">Halal</span>
           <span className="text-hw-green">Walls</span>
         </p>
         <GooglePlayButton />

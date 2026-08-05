@@ -188,22 +188,25 @@ export function HomeSidebar({
             className="mt-[14.23px] flex w-full items-center justify-center gap-[14.23px] text-[length:var(--lp-panel-label)] font-bold text-hw-foreground transition-colors hover:text-hw-green"
           >
             Scan QR Code
-            <svg
-              width="12"
-              height="7"
-              viewBox="0 0 11 7"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={qrOpen ? "/arrow-up-lightmode.svg" : "/arrow-down-lightmode.svg"}
+              alt=""
+              width={12}
+              height={7}
+              className="dark:hidden"
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/arow.svg"
+              alt=""
+              width={12}
+              height={7}
               className={cn(
-                "transition-transform duration-200",
+                "hidden transition-transform duration-200 dark:block",
                 qrOpen && "rotate-180",
               )}
-            >
-              <path
-                d="M9.4199 0H0.890855C0.126943 0 -0.281331 0.89974 0.221709 1.47464L4.48623 6.34838C4.84047 6.75323 5.47028 6.75323 5.82452 6.34838L10.089 1.47464C10.5921 0.89974 10.1838 0 9.4199 0Z"
-                fill="#A8A299"
-              />
-            </svg>
+            />
           </button>
 
           <AnimatePresence initial={false}>
@@ -296,6 +299,7 @@ export function HomeSidebar({
       <SidebarPanel
         title="Categories"
         iconSrc="/categories.svg"
+        iconSrcLight="/category-icon-lightmode.svg"
         iconClassName="size-[17.78px] shrink-0"
       >
 

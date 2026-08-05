@@ -121,7 +121,7 @@ html:has(.admin-panel) body {
     to bottom,
     #05df8b 0%,
     rgba(5, 223, 139, 0.6) 0%,
-    rgba(5, 223, 139, 0) 50%
+    rgba(5, 223, 139, 0) 65%
   );
   --hw-search-input: #ffffff;
   --hw-pill: #eeeeee;
@@ -168,7 +168,7 @@ html:has(.admin-panel) body {
   --lp-main-w: 1356.44px;
   --lp-main-gap: 17.33px;
   --lp-sidebar-gap: 17.78px;
-  --lp-mid-pt: 67px;
+  --lp-mid-pt: 26px;
   --lp-grid-gap: 5.56px;
   --lp-grid-to-pagination: 39.11px;
   --lp-search-max: 791px;
@@ -176,9 +176,9 @@ html:has(.admin-panel) body {
   --lp-search-radius: 7.11px;
   /* Search band — landing-page.css upper section / Rectangle 2 @ 1920px */
   --lp-search-band-h: 247.11px;
-  --lp-search-pt: 26px; /* tightened top space under header */
+  --lp-search-pt: 10px; /* space below header green line → search */
   --lp-search-gap: 23.11px; /* pills top (167.63) − search bottom (144.52) */
-  --lp-search-band-pb: 39.11px; /* green tail below pills inside full 247px band */
+  --lp-search-band-pb: 48px; /* green wash below pills */
   /* Sidebar panels — 1:1 from Figma 1920px */
   --lp-panel-border: 1.78px;
   --lp-panel-radius: 3.56px;
