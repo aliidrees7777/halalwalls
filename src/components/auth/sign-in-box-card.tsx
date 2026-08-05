@@ -7,9 +7,9 @@ import { CornerDownRight } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/components/ui/toast";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { ModalCloseIcon } from "@/components/auth/modal-close-icon";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import close from "../../../public/authicon/close.svg";
 import badgecheck from "../../../public/authicon/badgecheck.svg";
 
 const FEATURES = [
@@ -47,7 +47,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
             duration: 0.4,
             ease: "easeInOut",
           }}
-          className="relative z-10 my-auto flex h-auto w-full max-w-[825px] flex-col items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] sm:p-7"
+          className="relative z-10 my-auto flex h-auto w-full max-w-[825px] flex-col items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-[#EEEEEE] p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] dark:bg-hw-card/80 sm:p-7"
         >
           <button
             onClick={() => {
@@ -56,7 +56,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
             }}
             className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
           >
-            <Image src={close} alt="Close" width={20} height={20} />
+            <ModalCloseIcon />
           </button>
           <div className="flex w-full max-w-xl flex-col gap-8">
             <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw">
@@ -104,7 +104,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
                 }}
                 onError={showLoginError}
               >
-                <span className="flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[22px] font-bold text-hw-input transition-[filter,transform] group-hover:brightness-95">
+                <span className="flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[22px] font-bold text-black transition-[filter,transform] group-hover:brightness-95 dark:text-hw-input">
                   <span className="grid size-7 place-items-center rounded-full bg-white">
                     <svg viewBox="0 0 24 24" className="size-3.5">
                       <path
@@ -131,18 +131,18 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
               <button
                 type="button"
                 onClick={() => openAuthModal("full-signin")}
-                className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-hw-input ..."
+                className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#212121] text-sm font-semibold text-white transition-colors hover:bg-[#2a2a2a] active:translate-y-px dark:bg-hw-input dark:text-hw-faint dark:hover:bg-hw-pill2-hover"
               >
                 <CornerDownRight className="size-[15px]" />
                 Continue with Email
               </button>
-              <span className="text-center text-[15px] font-semibold text-hw-foreground opacity-70">
+              <span className="text-center text-[15px] font-semibold text-[#555555] dark:text-hw-foreground dark:opacity-70">
                 or
               </span>
               <button
                 type="button"
                 onClick={() => openAuthModal("signup")}
-                className="flex h-11 w-full items-center justify-center rounded-full bg-hw-pill2 text-sm font-semibold text-hw-foreground transition-colors hover:bg-hw-pill2-hover active:translate-y-px"
+                className="flex h-11 w-full items-center justify-center rounded-full bg-[#455A64] text-sm font-semibold text-white transition-colors hover:bg-[#3e5159] active:translate-y-px dark:bg-hw-pill2 dark:text-hw-foreground dark:hover:bg-hw-pill2-hover"
               >
                 Create an account
               </button>

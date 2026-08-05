@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import dimond from "../../../public/authicon/dimond.svg";
 import start from "../../../public/authicon/start.svg";
 import whitedimond from "../../../public/authicon/whitedimond.svg";
-import close from "../../../public/authicon/close.svg";
+import { ModalCloseIcon } from "@/components/auth/modal-close-icon";
 import { useAuth } from "@/context/auth-context";
 import { api, ApiError } from "@/lib/api";
 import { hasPremiumAccess } from "@/lib/premium-access";
@@ -108,7 +108,7 @@ export function PremiumPlans() {
           }}
           className="absolute top-3 right-4 sm:top-4 sm:right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
         >
-          <Image src={close} alt="Close" width={20} height={20} />
+          <ModalCloseIcon />
         </button>
 
         {/* Heading */}

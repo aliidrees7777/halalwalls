@@ -6,9 +6,9 @@ import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/components/ui/toast";
 import { ApiError } from "@/lib/api";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { ModalCloseIcon } from "@/components/auth/modal-close-icon";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import close from "../../../public/authicon/close.svg";
 
 export function SignInCard({ standalone = false }: { standalone?: boolean }) {
   const router = useRouter();
@@ -71,7 +71,7 @@ export function SignInCard({ standalone = false }: { standalone?: boolean }) {
             }} 
             className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
           >
-            <Image src={close} alt="Close" width={20} height={20} />
+            <ModalCloseIcon />
           </button>
           <form className="flex w-xl flex-col gap-8 sm:gap-10" onSubmit={handleSubmit}>
             {/* Title + error */}

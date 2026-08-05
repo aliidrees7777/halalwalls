@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { api, ApiError } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import close from "../../../public/authicon/close.svg";
 import sendIcon from "../../../public/Send icon black.svg";
+import { ModalCloseIcon } from "@/components/auth/modal-close-icon";
 import { useAuth } from "@/context/auth-context";
 export function ForgotPasswordCard() {
   const { signup,closeAuthModal,openAuthModal } = useAuth();
@@ -48,7 +48,7 @@ export function ForgotPasswordCard() {
         onClick={closeAuthModal}
         className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
       >
-        <Image src={close} alt="Close" width={20} height={20} />
+        <ModalCloseIcon />
       </button>
       <form
         className="flex w-full max-w-xl flex-col gap-8"

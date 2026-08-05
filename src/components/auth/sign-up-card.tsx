@@ -8,7 +8,7 @@ import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/components/ui/toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { ApiError } from "@/lib/api";
-import close from "../../../public/authicon/close.svg";
+import { ModalCloseIcon } from "@/components/auth/modal-close-icon";
 import rocket from "../../../public/rocket.svg";
 import Image from "next/image";
 
@@ -88,7 +88,7 @@ export function SignUpCard() {
         }}
         className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
       >
-        <Image src={close} alt="Close" width={20} height={20} />
+        <ModalCloseIcon />
       </button>
       <form
         className="flex w-full max-w-xl flex-col gap-8"
