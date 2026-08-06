@@ -80,7 +80,7 @@ export function ProfileHeaderNav() {
                 {item.items.map((sub) => (
                   <DropdownMenuItem
                     key={sub}
-                    className="text-sm text-hw-muted focus:bg-hw-surface focus:text-hw-foreground"
+                    className="text-sm text-hw-muted focus:bg-[#eeeeee] focus:text-black dark:focus:bg-hw-surface dark:focus:text-hw-foreground"
                   >
                     {sub}
                   </DropdownMenuItem>

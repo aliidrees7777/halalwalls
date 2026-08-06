@@ -29,7 +29,7 @@ const pillClass = (active: boolean, premium = false) =>
     active
       ? "bg-hw-green font-semibold text-white dark:text-black"
       : cn(
-          "bg-hw-pill font-medium hover:bg-hw-pill2-hover",
+          "bg-hw-pill font-medium transition-colors hover:bg-[#e0e0e0] dark:hover:bg-hw-pill2-hover",
           premium ? "text-hw-yellow" : "text-black dark:text-white",
         ),
   );

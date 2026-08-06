@@ -98,7 +98,7 @@ export function SiteFooter({ className }: { className?: string }) {
               )}
               <Link
                 href={link.href}
-                className="text-[18px] font-medium text-hw-foreground transition-colors hover:text-white"
+                className="text-[18px] font-medium text-hw-foreground transition-colors hover:text-[#323639] dark:hover:text-white"
               >
                 {link.label}
               </Link>

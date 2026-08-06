@@ -254,7 +254,7 @@ export function UploadForm() {
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="group mx-auto relative w-full lg:w-[733px] h-[412px] flex flex-col items-center justify-center gap-4 overflow-hidden rounded-4xl bg-hw-input p-6 text-center"
+        className="group mx-auto relative w-full lg:w-[733px] h-[412px] flex flex-col items-center justify-center gap-4 overflow-hidden rounded-[1.5rem] bg-hw-input p-6 text-center"
       >
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full text-black dark:text-[#909098]"
@@ -306,11 +306,11 @@ export function UploadForm() {
 
       {/* Don't publish notice */}
       <div className="flex flex-col justify-center lg:items-center">
-        <div className="rounded-[9px] border border-[#555555] bg-[#555555] px-6 py-5 text-white lg:w-[1191px] dark:border-[#2F2805] dark:bg-[#2F2805] dark:text-[#C1A36F]">
+        <div className="box-border flex w-full flex-col items-start gap-[17.78px] rounded-[7.1111px] border-2 border-black bg-[#555555] px-[24.8889px] py-[35.5555px] text-white lg:h-[412.11px] lg:w-[1191.11px] dark:border dark:border-[#2F2805] dark:bg-[#2F2805] dark:text-[#C1A36F]">
           <h2 className="text-[28px] font-semibold text-white dark:text-[#C1A36F]">
             Don&rsquo;t publish:
           </h2>
-          <ol className="mt-4 space-y-2 text-[21px] font-medium text-white dark:text-[#C1A36F]">
+          <ol className="space-y-2 text-[21px] font-medium text-white dark:text-[#C1A36F]">
             {DONT_PUBLISH.map((item, i) => (
               <li key={item}>
                 {i + 1}. {item}
@@ -319,7 +319,7 @@ export function UploadForm() {
           </ol>
           <Link
             href="/content-policy"
-            className="mt-4 inline-block text-[21px] text-white underline dark:text-[#C1A36F]"
+            className="inline-block text-[21px] text-white underline dark:text-[#C1A36F]"
           >
             Read full Content Policy
           </Link>

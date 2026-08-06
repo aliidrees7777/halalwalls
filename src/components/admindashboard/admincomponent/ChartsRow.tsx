@@ -273,11 +273,15 @@ const ChartsRow = ({
                     className="leg-dot"
                     style={{ background: PLAN_COLORS[b.plan] ?? "#576468" }}
                   ></div>
-                  <span style={{ textTransform: "capitalize" }}>{b.plan}</span>
+                  <span style={{ textTransform: "capitalize", marginRight: 6 }}>
+                    {b.plan}
+                  </span>
                 </div>
                 <div className="leg-r">
-                  {fmt(b.count)} &nbsp;
-                  <span style={{ color: "var(--text3)" }}>{b.percent}%</span>
+                  {fmt(b.count)}
+                  <span style={{ color: "var(--text3)", marginLeft: 10 }}>
+                    {b.percent}%
+                  </span>
                 </div>
               </div>
             ))}

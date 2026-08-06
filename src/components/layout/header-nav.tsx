@@ -43,7 +43,7 @@ const CATEGORIES_PER_PAGE = 10;
 const triggerClass =
   "flex items-center gap-0.5 rounded-md px-3 py-2 text-[18px] transition-colors text-hw-foreground font-medium";
 const itemClass =
-  "text-[18px] text-hw-muted focus:bg-hw-surface focus:text-hw-foreground font-medium";
+  "text-[18px] text-hw-muted font-medium focus:bg-[#eeeeee] focus:text-black dark:focus:bg-hw-surface dark:focus:text-hw-foreground";
 const itemActiveClass =
   "bg-hw-green/10 font-bold text-hw-green focus:bg-hw-green/15 focus:text-hw-green";
 
