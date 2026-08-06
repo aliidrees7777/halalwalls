@@ -29,7 +29,7 @@ export function ProfileUploadCarouselCard({
       type="button"
       onClick={handleClick}
       className={cn(
-        "relative flex h-[277px] w-[123.316px] shrink-0 flex-col items-center justify-center overflow-hidden rounded-[8.212px] border-[1.909px] border-dashed border-[#6e6f74] bg-[#181a1b]",
+        "relative flex h-[277px] w-[123.316px] shrink-0 flex-col items-center justify-center overflow-hidden rounded-[8.212px] border-[1.909px] border-dashed border-[#6E6F74] bg-[#EEEEEE] dark:bg-[#181a1b]",
         className,
       )}
     >
@@ -42,7 +42,7 @@ export function ProfileUploadCarouselCard({
           className="size-[26.634px]"
           aria-hidden
         />
-        <span className="w-full text-center text-[9.929px] font-medium text-white">
+        <span className="w-full text-center text-[9.929px] font-medium text-black dark:text-white">
           Add Wallpaper
         </span>
       </div>

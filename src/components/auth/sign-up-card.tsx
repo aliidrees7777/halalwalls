@@ -79,7 +79,7 @@ export function SignUpCard() {
             duration: 0.4,
             ease: "easeInOut",
           }}
-      className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-hw-card/80 p-6 sm:p-7"
+      className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-[#EEEEEE] p-6 sm:p-7 dark:bg-hw-card/80"
     >
         <button
         onClick={() => {

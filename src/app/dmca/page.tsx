@@ -4,7 +4,7 @@ import { LegalPage, type LegalContent } from "@/components/legal/legal-page";
 
 export const metadata: Metadata = { title: "DMCA | HalalWalls" };
 
-const lk = "underline underline-offset-2 hover:text-white";
+const lk = "underline underline-offset-2 hover:opacity-70 dark:hover:opacity-100 dark:hover:text-white";
 
 const content: LegalContent = {
   title: "DMCA",

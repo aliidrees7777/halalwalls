@@ -5,7 +5,6 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import dimond from "../../../public/authicon/dimond.svg";
 import start from "../../../public/authicon/start.svg";
-import whitedimond from "../../../public/authicon/whitedimond.svg";
 import { ModalCloseIcon } from "@/components/auth/modal-close-icon";
 import { useAuth } from "@/context/auth-context";
 import { api, ApiError } from "@/lib/api";
@@ -98,7 +97,7 @@ export function PremiumPlans() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: "100%" }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="relative z-10 my-auto flex h-auto w-full max-w-[1275px] max-h-[95dvh] overflow-y-auto flex-col items-center gap-6 sm:gap-10 rounded-2xl border-3 border-[#05DF8B] p-4 sm:p-10 bg-hw-card/80"
+        className="relative z-10 my-auto flex h-auto max-h-[95dvh] w-full max-w-[1275px] flex-col items-center gap-6 overflow-y-auto rounded-2xl border-3 border-[#05DF8B] bg-[#EEEEEE] p-4 sm:gap-10 sm:p-10 dark:bg-hw-card/80"
       >
         {/* Close */}
         <button
@@ -106,18 +105,29 @@ export function PremiumPlans() {
             if (isStandalonePage) router.push("/");
             else closeAuthModal();
           }}
-          className="absolute top-3 right-4 sm:top-4 sm:right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
+          className="absolute top-3 right-4 cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 sm:top-4 sm:right-6 dark:hover:text-white"
         >
           <ModalCloseIcon />
         </button>
 
         {/* Heading */}
-        <div className="flex flex-col items-center gap-2 sm:gap-3 text-center px-6 primary-font">
-          <Image src={whitedimond} alt="" className="size-12 sm:size-16 text-hw-foreground" />
-          <h1 className="text-[26px] sm:text-[41px] font-semibold text-hw-depw primary-font">
+        <div className="primary-font flex flex-col items-center gap-2 px-6 text-center sm:gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/premium-icon-modal-lightmode.svg"
+            alt=""
+            className="size-12 sm:size-16 dark:hidden"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/premium-icon-modal-darkmode.svg"
+            alt=""
+            className="hidden size-12 sm:size-16 dark:block"
+          />
+          <h1 className="primary-font text-[26px] font-semibold text-black sm:text-[41px] dark:text-hw-depw">
             Go Premium
           </h1>
-          <p className="text-[15px] sm:text-[22px] font-light tracking-wide text-hw-depw primary-font">
+          <p className="primary-font text-[15px] font-light tracking-wide text-black sm:text-[22px] dark:text-hw-depw">
             Unlock the full potential of HalalWalls
           </p>
         </div>
@@ -138,19 +148,32 @@ export function PremiumPlans() {
         )}
 
         {/* Plans */}
-        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-3 primary-font">
+        <div className="primary-font grid w-full grid-cols-1 gap-4 sm:grid-cols-3">
           {PLANS.map((plan) => (
             <div
               key={plan.key}
               className="flex flex-col overflow-hidden rounded-xl border border-[#05DF8B]"
             >
-              {/* Card header — extends under gray panel so rounded corners sit on black */}
-              <div className="relative z-0 h-[158px] overflow-hidden bg-hw-deep px-4 pb-5 pt-4">
-                <Image src={dimond} alt="" className="absolute right-6 top-9 rotate-12 text-[#05DF8B]/80" width={170} />
-                <Image src={start} alt="" className="absolute right-7 top-7 size-7 text-[#05DF8B]/80" />
-                <Image src={start} alt="" className="absolute right-28 top-2 size-4 text-[#05DF8B]/80" />
+              {/* Card header — white in light, existing deep token in dark */}
+              <div className="relative z-0 h-[158px] overflow-hidden bg-white px-4 pt-4 pb-5 dark:bg-hw-deep">
+                <Image
+                  src={dimond}
+                  alt=""
+                  className="absolute top-9 right-6 rotate-12 text-[#05DF8B]/80"
+                  width={170}
+                />
+                <Image
+                  src={start}
+                  alt=""
+                  className="absolute top-7 right-7 size-7 text-[#05DF8B]/80"
+                />
+                <Image
+                  src={start}
+                  alt=""
+                  className="absolute top-2 right-28 size-4 text-[#05DF8B]/80"
+                />
                 <div className="relative z-10">
-                  <h3 className="text-[20px] sm:text-[28px] font-semibold text-hw-depw primary-font">
+                  <h3 className="primary-font text-[20px] font-semibold text-black sm:text-[28px] dark:text-hw-depw">
                     Premium
                   </h3>
                   <span
@@ -166,18 +189,21 @@ export function PremiumPlans() {
                 </div>
               </div>
 
-              {/* Features panel — overlaps header; black stays behind */}
+              {/* Features panel — white copy on dark body in light mode */}
               <div className="relative z-10 -mt-5 flex w-full flex-1 flex-col gap-4 rounded-t-[20px] bg-[#323639] px-4 py-6 sm:gap-6">
-                <p className="text-[28px] sm:text-[41px] leading-none text-hw-depw primary-font">
+                <p className="primary-font text-[28px] leading-none text-white sm:text-[41px] dark:text-hw-depw">
                   {plan.price}
-                  <span className="text-[18px] sm:text-[28px] text-hw-depw primary-font">
+                  <span className="primary-font text-[18px] text-white sm:text-[28px] dark:text-hw-depw">
                     {plan.period}
                   </span>
                 </p>
 
                 <ul className="flex flex-col gap-2.5">
                   {FEATURES.map((f) => (
-                    <li key={f} className="primary-font flex items-center gap-2 text-[15px] sm:text-[19px] font-light text-hw-depw">
+                    <li
+                      key={f}
+                      className="primary-font flex items-center gap-2 text-[15px] font-light text-white sm:text-[19px] dark:text-hw-depw"
+                    >
                       <span className="grid size-[23px] shrink-0 place-items-center rounded-full bg-[#05DF8B]">
                         <Check className="size-3 text-black" strokeWidth={3.5} />
                       </span>
@@ -191,13 +217,21 @@ export function PremiumPlans() {
                   onClick={() => handleSubscribe(plan.key)}
                   disabled={
                     loadingPlan !== null ||
-                    getPlanButton(plan.key, hasPremiumAccess(user), user?.subscriptionPlan).disabled
+                    getPlanButton(
+                      plan.key,
+                      hasPremiumAccess(user),
+                      user?.subscriptionPlan,
+                    ).disabled
                   }
-                  className="primary-font mt-auto rounded-full bg-hw-bg py-2.5 text-center text-[16px] sm:text-[22px] font-medium text-hw-depw transition-colors hover:bg-hw-pill2-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+                  className="primary-font mt-auto rounded-full bg-white py-2.5 text-center text-[16px] font-medium text-black transition-colors hover:bg-neutral-100 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60 sm:text-[22px] dark:bg-hw-bg dark:text-hw-depw dark:hover:bg-hw-pill2-hover"
                 >
                   {loadingPlan === plan.key
                     ? "Redirecting…"
-                    : getPlanButton(plan.key, hasPremiumAccess(user), user?.subscriptionPlan).label}
+                    : getPlanButton(
+                        plan.key,
+                        hasPremiumAccess(user),
+                        user?.subscriptionPlan,
+                      ).label}
                 </button>
               </div>
             </div>

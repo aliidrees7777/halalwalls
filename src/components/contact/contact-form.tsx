@@ -109,8 +109,8 @@ export function ContactForm() {
       </div>
 
       {/* Copyright notice */}
-      <div className="rounded-[7px] border border-[#6C4C0B] bg-[#2F2805] px-5 py-4">
-        <p className="text-sm leading-relaxed text-[#C1A36F]">
+      <div className="rounded-[7px] border border-[#555555] bg-[#555555] px-5 py-4 dark:border-[#6C4C0B] dark:bg-[#2F2805]">
+        <p className="text-sm leading-relaxed text-white dark:text-[#C1A36F]">
           All images remain property of their original owners. If you found any
           image copyrighted to you, please &lsquo;Contact Us&rsquo; so we can mention
           its author&rsquo;s name or remove it upon your decision. Feel free to

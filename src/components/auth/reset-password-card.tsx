@@ -61,7 +61,7 @@ export function ResetPasswordCard() {
   }
 
   return (
-    <div className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] bg-hw-card/[0.77] p-6 backdrop-blur-md sm:p-7">
+    <div className="relative z-10 my-auto w-full max-w-[400px] rounded-2xl border-2 border-[#05DF8B] bg-[#EEEEEE] p-6 backdrop-blur-md sm:p-7 dark:bg-hw-card/[0.77]">
       <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         {success && (
           <p

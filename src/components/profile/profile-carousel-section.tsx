@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ProfileCarouselSectionProps {
@@ -29,17 +29,10 @@ export function ProfileCarouselSection({
         {seeAllHref ? (
           <Link
             href={seeAllHref}
-            className="flex items-center gap-[9.53px] text-[13.342px] font-semibold text-[#69a6d5] transition-opacity hover:opacity-80"
+            className="flex items-center gap-[9.53px] text-[13.342px] font-semibold text-[#0090FF] transition-opacity hover:opacity-80 dark:text-[#69a6d5]"
           >
             See All
-            <Image
-              src="/profile/see-all-chevron.svg"
-              alt=""
-              width={5}
-              height={10}
-              className="h-[9.53px] w-[4.765px]"
-              aria-hidden
-            />
+            <ChevronRight className="size-[10px] shrink-0" aria-hidden />
           </Link>
         ) : null}
       </div>

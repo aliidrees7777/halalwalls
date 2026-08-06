@@ -257,7 +257,7 @@ export function UploadForm() {
         className="group mx-auto relative w-full lg:w-[733px] h-[412px] flex flex-col items-center justify-center gap-4 overflow-hidden rounded-4xl bg-hw-input p-6 text-center"
       >
         <svg
-          className="absolute inset-0 h-full w-full pointer-events-none"
+          className="pointer-events-none absolute inset-0 h-full w-full text-black dark:text-[#909098]"
           preserveAspectRatio="none"
         >
           <rect
@@ -267,7 +267,7 @@ export function UploadForm() {
             height="calc(100% - 4px)"
             rx="24"
             fill="none"
-            stroke="#909098"
+            stroke="currentColor"
             strokeWidth="3"
             strokeDasharray="18 10"
           />
@@ -306,11 +306,11 @@ export function UploadForm() {
 
       {/* Don't publish notice */}
       <div className="flex flex-col justify-center lg:items-center">
-        <div className="rounded-[9px]  lg:w-[1191px] border border-[#2F2805] bg-[#2F2805] px-6 py-5 text-[#C1A36F]">
-          <h2 className="text-[28px] font-semibold text-[#C1A36F]">
+        <div className="rounded-[9px] border border-[#555555] bg-[#555555] px-6 py-5 text-white lg:w-[1191px] dark:border-[#2F2805] dark:bg-[#2F2805] dark:text-[#C1A36F]">
+          <h2 className="text-[28px] font-semibold text-white dark:text-[#C1A36F]">
             Don&rsquo;t publish:
           </h2>
-          <ol className="mt-4 space-y-2 text-[21px] text-[#C1A36F] font-medium">
+          <ol className="mt-4 space-y-2 text-[21px] font-medium text-white dark:text-[#C1A36F]">
             {DONT_PUBLISH.map((item, i) => (
               <li key={item}>
                 {i + 1}. {item}
@@ -319,7 +319,7 @@ export function UploadForm() {
           </ol>
           <Link
             href="/content-policy"
-            className="mt-4 inline-block text-[21px] underline"
+            className="mt-4 inline-block text-[21px] text-white underline dark:text-[#C1A36F]"
           >
             Read full Content Policy
           </Link>

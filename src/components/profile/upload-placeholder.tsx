@@ -32,7 +32,7 @@ export function UploadPlaceholder({ className, onClick }: UploadPlaceholderProps
       onClick={handleClick}
       className={cn(
         "flex aspect-[16/10] w-full flex-col items-center justify-center gap-3 rounded-md",
-        "border-2 border-dashed border-hw-border bg-hw-card/50",
+        "border-2 border-dashed border-[#6E6F74] bg-[#EEEEEE] dark:border-hw-border dark:bg-hw-card/50",
         "transition-[border-color] duration-200 hover:border-blue-500/50",
         className,
       )}

@@ -36,7 +36,7 @@ export function ProfileSectionHeader({
         <Link
           href={seeAllHref}
           className={cn(
-            "flex shrink-0 items-center gap-2 text-[13.342px] font-semibold leading-none text-[#69a6d5] transition-opacity hover:opacity-80 md:gap-[9.53px] md:text-2xl",
+            "flex shrink-0 items-center gap-2 text-[13.342px] font-semibold leading-none text-[#0090FF] transition-opacity hover:opacity-80 md:gap-[9.53px] md:text-2xl dark:text-[#69a6d5]",
             seeAllClassName,
           )}
         >
