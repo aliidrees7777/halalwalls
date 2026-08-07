@@ -85,7 +85,10 @@ export function AccountFormField({
               alt=""
               width={16}
               height={16}
-              className="mb-1.5 size-3.5 object-contain"
+              className={cn(
+                "size-3.5 object-contain",
+                multiline && "mb-1.5",
+              )}
               aria-hidden
             />
           </span>
