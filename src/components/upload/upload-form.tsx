@@ -11,7 +11,7 @@ import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/components/ui/toast";
 import { hasPremiumAccess } from "@/lib/premium-access";
-import uploadButtonIcon from "../../../public/upload-button-icon.png";
+import uploadButtonIcon from "../../../public/Upload-Button-icon-new.svg";
 
 const RECAPTCHA_TEST_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 const RECAPTCHA_SITE_KEY =
@@ -394,7 +394,7 @@ export function UploadForm() {
             <button
               type="button"
               onClick={() => openAuthModal("premium")}
-              className="text-[#FFD700] underline"
+              className="text-[#b5943c] underline"
             >
               Premium members
             </button>{" "}

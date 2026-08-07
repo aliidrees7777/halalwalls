@@ -45,7 +45,7 @@ const triggerClass =
 const itemClass =
   "text-[18px] text-hw-muted font-medium focus:bg-[#eeeeee] focus:text-black dark:focus:bg-hw-surface dark:focus:text-hw-foreground";
 const itemActiveClass =
-  "bg-hw-green/10 font-bold text-hw-green focus:bg-hw-green/15 focus:text-hw-green";
+  "bg-hw-green/10 font-medium text-hw-green focus:bg-hw-green/15 focus:text-hw-green";
 
 function LinkDropdown({
   label,

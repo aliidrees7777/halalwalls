@@ -131,9 +131,10 @@ export function DesktopProfileBanner({
       className="primary-font relative w-full overflow-hidden border-solid"
       style={{
         height: D.bannerH,
-        borderRadius: 28,
-        borderWidth: 3,
+        borderRadius: 28.4483,
+        borderWidth: 2.66703,
         borderColor: accent,
+        boxSizing: "border-box",
         fontFamily: "var(--font-primary)",
       }}
     >

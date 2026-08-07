@@ -136,7 +136,7 @@ export function HomePage() {
       >
         <div className="lp-container">
           <WallpaperSearch value={search} onChange={setSearch} />
-          <div className="mt-[var(--lp-search-gap)] pb-[var(--lp-search-band-pb)]">
+          <div className="mt-[var(--lp-search-gap)] mx-5 pb-[var(--lp-search-band-pb)]">
             <FilterPills />
           </div>
         </div>

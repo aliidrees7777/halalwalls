@@ -85,7 +85,7 @@ export function AccountFormField({
               alt=""
               width={16}
               height={16}
-              className="size-3.5 object-contain"
+              className="mb-1.5 size-3.5 object-contain"
               aria-hidden
             />
           </span>

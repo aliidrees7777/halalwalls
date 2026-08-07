@@ -102,7 +102,7 @@ export function ForgotPasswordCard() {
         <button
           type="submit"
           disabled={submitting}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[21px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#05DF8B] text-[21px] font-bold text-black transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60 dark:text-hw-input"
         >
           {submitting ? "Please wait…" : "Send Recovery Link"}
           {!submitting && (

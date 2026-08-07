@@ -6,7 +6,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { ChevronDown } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import sendIcon from "../../../public/send-icon.png";
+import sendIcon from "../../../public/Send-icon.svg";
 
 /**
  * reCAPTCHA v2 site key. Uses NEXT_PUBLIC_RECAPTCHA_SITE_KEY in production;

@@ -11,9 +11,9 @@ import type { WallpaperDetail } from "@/types/wallpaper";
 import Image from "next/image";
 import downloadrotate from "../../../public/detail-page/downloadrotate.svg";
 
-/** Textured fill stays fixed — hover only brightens (lighting). White label on dark btn in both themes. */
+/** Textured fill stays fixed — white label/icon always; hover adds a light wash only. */
 const downloadBtnClass =
-  "h-[42.67px] rounded-[8px] border-2 border-[#33373A] bg-black bg-[url('/detail-page/download-btn-bg.jpg')] bg-cover bg-center px-[17.78px] text-[17px] font-medium text-white shadow-none transition-[filter] hover:brightness-[1.75] hover:text-white disabled:opacity-70 sm:w-auto dark:border-hw-line dark:text-hw-down-text dark:hover:text-hw-down-text";
+  "relative h-[42.67px] overflow-hidden rounded-[8px] border-2 border-[#33373A] bg-black bg-[url('/detail-page/download-btn-bg.jpg')] bg-cover bg-center px-[17.78px] text-[17px] font-medium text-white shadow-none transition-colors hover:bg-black hover:text-white hover:brightness-100 disabled:opacity-70 sm:w-auto dark:border-hw-line dark:bg-black dark:text-white dark:hover:bg-black dark:hover:text-white before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-transparent before:transition-colors hover:before:bg-white/15 [&_img]:relative [&_img]:z-[1] [&_svg]:relative [&_svg]:z-[1] [&_span]:relative [&_span]:z-[1]";
 
 interface DownloadActionsProps {
   wallpaper: WallpaperDetail;
@@ -91,74 +91,82 @@ export function DownloadActions({
         className={downloadBtnClass}
       >
         {busy === "primary" ? (
-          <Loader2 className="mr-2 size-4 animate-spin" aria-hidden />
+          <Loader2 className="relative z-[1] mr-2 size-4 animate-spin" aria-hidden />
         ) : primaryDone ? (
-          <Check className="mr-2 size-4 text-hw-green" />
+          <Check className="relative z-[1] mr-2 size-4 text-hw-green" />
         ) : locked ? (
-          <Lock className="mr-2 size-4 text-hw-yellow" />
+          <Lock className="relative z-[1] mr-2 size-4 text-hw-yellow" />
         ) : (
           <Image
             src={downloadrotate}
             alt=""
-            className="mr-2"
+            width={17}
+            height={16}
+            className="relative z-[1] mr-2 size-[17px] shrink-0"
             aria-hidden
           />
         )}
-        {busy === "primary"
-          ? "Downloading…"
-          : locked
-            ? "Premium — Go Premium to Download"
-            : `Download Wallpaper (${primaryLabel})`}
+        <span className="relative z-[1]">
+          {busy === "primary"
+            ? "Downloading…"
+            : locked
+              ? "Premium — Go Premium to Download"
+              : `Download Wallpaper (${primaryLabel})`}
+        </span>
       </Button>
 
       <Button
         type="button"
-        variant="outline"
         disabled={busy !== null}
         onClick={() => handleDownload("original", "original")}
         className={downloadBtnClass}
       >
         {busy === "original" ? (
-          <Loader2 className="mr-2 size-4 animate-spin" aria-hidden />
+          <Loader2 className="relative z-[1] mr-2 size-4 animate-spin" aria-hidden />
         ) : originalDone ? (
-          <Check className="mr-2 size-4 text-hw-green" />
+          <Check className="relative z-[1] mr-2 size-4 text-hw-green" />
         ) : locked ? (
-          <Lock className="mr-2 size-4 text-hw-yellow" />
+          <Lock className="relative z-[1] mr-2 size-4 text-hw-yellow" />
         ) : (
           <Image
             src={downloadrotate}
             alt=""
-            className="mr-2"
+            width={17}
+            height={16}
+            className="relative z-[1] mr-2 size-[17px] shrink-0"
             aria-hidden
           />
         )}
-        {busy === "original"
-          ? "Downloading…"
-          : locked
-            ? "Premium Only"
-            : `Download Original (${wallpaper.originalSizeMB.toFixed(2)}MB)`}
+        <span className="relative z-[1]">
+          {busy === "original"
+            ? "Downloading…"
+            : locked
+              ? "Premium Only"
+              : `Download Original (${wallpaper.originalSizeMB.toFixed(2)}MB)`}
+        </span>
       </Button>
 
       <Button
         type="button"
-        variant="outline"
         onClick={toggleFav}
         className={cn(
           downloadBtnClass,
           "w-full sm:w-auto",
-          favorited && "border-red-500/40 text-red-400",
+          favorited && "border-red-500/40 text-red-400 hover:text-red-400",
         )}
       >
         <Heart
           className={cn(
-            "mr-2 size-4",
+            "relative z-[1] mr-2 size-4",
             favorited && "fill-red-500 text-red-500",
           )}
         />
-        {favorited ? "Favorited" : "Favorite"}
-        {favCount > 0 && (
-          <span className="ml-1.5 text-white/70 dark:text-hw-muted">· {favCount}</span>
-        )}
+        <span className="relative z-[1]">
+          {favorited ? "Favorited" : "Favorite"}
+          {favCount > 0 && (
+            <span className="ml-1.5 text-white/70">· {favCount}</span>
+          )}
+        </span>
       </Button>
     </div>
   );
