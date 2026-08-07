@@ -430,20 +430,24 @@ export function AccountSettingsModal({
                   className={cn(
                     "flex items-center justify-between gap-3 rounded-[6px] border bg-hw-input px-3.5 py-2.5 transition-colors duration-200",
                     subscriptionActive
-                      ? "border-[#FFD700]"
+                      ? "border-[#B5943C]"
                       : "border-hw-faint/40 opacity-70"
                   )}
                 >
                   <span
                     className={cn(
                       "text-[13px] font-medium sm:text-sm",
-                      subscriptionActive ? "text-[#FFD700]" : "text-hw-muted"
+                      subscriptionActive ? "text-[#B5943C]" : "text-hw-muted"
                     )}
                   >
                     {subscriptionActive ? planLabel : "No active subscription"}
                   </span>
                   {subscriptionActive ? (
-                    <PremiumIcon size={18} className="shrink-0 opacity-90" />
+                    <PremiumIcon
+                      size={18}
+                      color="#B5943C"
+                      className="shrink-0 opacity-90"
+                    />
                   ) : null}
                 </div>
 

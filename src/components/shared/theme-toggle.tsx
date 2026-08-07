@@ -23,7 +23,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     >
       {isLight ? (
         <Image
-          src="/light-mode.png"
+          src="/Light-mode-icon.svg"
           alt=""
           width={36}
           height={36}
@@ -32,7 +32,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         />
       ) : (
         <Image
-          src="/night-mode.png"
+          src="/Night-mode-icon.svg"
           alt=""
           width={36}
           height={36}

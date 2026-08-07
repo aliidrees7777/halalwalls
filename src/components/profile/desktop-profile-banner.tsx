@@ -128,12 +128,12 @@ export function DesktopProfileBanner({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="primary-font relative w-full overflow-hidden border-solid"
+      className="primary-font relative w-full overflow-hidden border-solid border-[#B5943C] dark:[border-color:var(--profile-banner-border)]"
       style={{
         height: D.bannerH,
         borderRadius: 28.4483,
         borderWidth: 2.66703,
-        borderColor: accent,
+        ["--profile-banner-border" as string]: accent,
         boxSizing: "border-box",
         fontFamily: "var(--font-primary)",
       }}

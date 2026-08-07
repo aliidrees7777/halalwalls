@@ -76,9 +76,9 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="primary-font relative w-full overflow-hidden rounded-[28.4483px] border-[2.66703px] border-solid"
+      className="primary-font relative w-full overflow-hidden rounded-[28.4483px] border-[2.66703px] border-solid border-[#B5943C] dark:[border-color:var(--profile-banner-border)]"
       style={{
-        borderColor: accent,
+        ["--profile-banner-border" as string]: accent,
         fontFamily: "var(--font-primary)",
         boxSizing: "border-box",
       }}
