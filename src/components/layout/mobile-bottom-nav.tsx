@@ -9,7 +9,7 @@ import { useAuth } from "@/context/auth-context";
 /**
  * Mobile fixed bottom navigation: black bar, green top border, rounded top
  * corners, 5 custom icon items with a prominent circular "+" (Upload) center.
- * Mobile only (md:hidden). Each item has active + inactive PNG states.
+ * Mobile only (md:hidden). Each item has active (#05DF8B) + inactive (#5B6268) SVG states.
  */
 const MotionLink = motion.create(Link);
 
@@ -26,15 +26,17 @@ const sideItems: NavItem[] = [
   {
     label: "Home",
     href: "/",
-    icon: "/mobile-nav/home.png",
-    iconActive: "/mobile-nav/home-active.png",
+    icon: "/Home-notactive.svg",
+    iconActive: "/Home-selected.svg",
+    size: 35,
     match: (p, hasCategory) => p === "/" && !hasCategory,
   },
   {
     label: "Categories",
     href: "/?category=islamic",
-    icon: "/mobile-nav/categories.png",
-    iconActive: "/mobile-nav/categories-active.png",
+    icon: "/Category-notacive.svg",
+    iconActive: "/Category-activee.svg",
+    size: 35,
     match: (p, hasCategory) => p === "/" && hasCategory,
   },
 ];
@@ -43,8 +45,9 @@ const rightItems: NavItem[] = [
   {
     label: "Favorites",
     href: "/profile/favorites",
-    icon: "/mobile-nav/favorites.png",
-    iconActive: "/mobile-nav/favorites-active.png",
+    icon: "/Favorites-notacive.svg",
+    iconActive: "/Favorites-active.svg",
+    size: 41,
     match: (p) => p.startsWith("/profile/favorites"),
   },
 ];
@@ -52,8 +55,9 @@ const rightItems: NavItem[] = [
 const profileItem: NavItem = {
   label: "Profile",
   href: "/profile",
-  icon: "/mobile-nav/profile.png",
-  iconActive: "/mobile-nav/profile-active.png",
+  icon: "/Profile-notacive.svg",
+  iconActive: "/Profile-active.svg",
+  size: 26,
   match: (p) => p.startsWith("/profile") && !p.startsWith("/profile/favorites"),
 };
 
@@ -67,7 +71,7 @@ function NavIcon({
   item: NavItem;
   active: boolean;
 }) {
-  const size = item.size ?? 40;
+  const size = item.size ?? 35;
 
   return (
     <Image
@@ -75,8 +79,9 @@ function NavIcon({
       alt=""
       width={size}
       height={size}
+      unoptimized
       aria-hidden
-      className="pointer-events-none select-none"
+      className="pointer-events-none select-none object-contain"
     />
   );
 }
@@ -123,9 +128,9 @@ export function MobileBottomNav() {
             item={{
               label: "Add",
               href: "/upload",
-              icon: "/mobile-nav/add.png",
-              iconActive: "/mobile-nav/add-active.png",
-              size: 56,
+              icon: "/add-image-notactive.svg",
+              iconActive: "/add-image-active.svg",
+              size: 55,
               match: (p) => p === "/upload",
             }}
             active={pathname === "/upload"}

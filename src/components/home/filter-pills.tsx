@@ -25,7 +25,7 @@ import latestDark from "../../../public/cate-icon/latestdark.svg";
 
 const pillClass = (active: boolean, premium = false) =>
   cn(
-    "flex h-[var(--lp-pill-h)] shrink-0 items-center gap-[var(--lp-pill-icon-gap)] rounded-[var(--lp-pill-radius)] px-[var(--lp-pill-px)] text-[length:var(--lp-pill-font)] leading-none",
+    "flex h-[var(--lp-pill-h)] shrink-0 items-center gap-[var(--lp-pill-icon-gap)] rounded-[var(--lp-pill-radius)] px-3 text-[length:var(--lp-pill-font)] leading-none lg:px-[var(--lp-pill-px)]",
     active
       ? "bg-hw-green font-semibold text-white dark:text-black"
       : cn(

@@ -80,13 +80,53 @@ export function SiteFooter({ className }: { className?: string }) {
   return (
     <footer
       className={cn(
-        "mt-60 border-t-[3px] border-hw-line bg-hw-footer px-4 py-8 lg:px-0",
+        "mt-0 border-t-[3px] border-hw-line bg-hw-footer px-0 py-8 lg:mt-60 lg:px-0",
         className,
       )}
     >
-      <div className="lp-container flex flex-col items-center gap-4">
+      <div className="lp-container flex flex-col items-center gap-4 max-lg:!px-1">
+        {/* Mobile: fixed 2-line wrap to match design */}
         <nav
-          className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2 text-center text-hw-muted"
+          className="flex w-full flex-col items-center gap-y-1 text-center text-[14px] font-medium leading-snug text-hw-muted lg:hidden"
+          aria-label="Footer"
+        >
+          <p className="m-0">
+            {footerLinks.slice(0, 3).map((link) => (
+              <span key={link.label} className="whitespace-nowrap">
+                <Link
+                  href={link.href}
+                  className="text-hw-foreground transition-colors hover:text-white"
+                >
+                  {link.label}
+                </Link>
+                <span className="mx-1 text-hw-line" aria-hidden>
+                  |
+                </span>
+              </span>
+            ))}
+          </p>
+          <p className="m-0">
+            {footerLinks.slice(3).map((link, i, arr) => (
+              <span key={link.label} className="whitespace-nowrap">
+                <Link
+                  href={link.href}
+                  className="text-hw-foreground transition-colors hover:text-white"
+                >
+                  {link.label}
+                </Link>
+                {i < arr.length - 1 ? (
+                  <span className="mx-1 text-hw-line" aria-hidden>
+                    |
+                  </span>
+                ) : null}
+              </span>
+            ))}
+          </p>
+        </nav>
+
+        {/* Desktop */}
+        <nav
+          className="hidden flex-wrap items-center justify-center gap-x-2 gap-y-2 text-hw-muted lg:flex"
           aria-label="Footer"
         >
           {footerLinks.map((link, i) => (
@@ -144,38 +184,42 @@ export function SiteFooter({ className }: { className?: string }) {
             <NcnIcon className="h-3.5 w-auto" />
           </a>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-5 md:hidden">
+        <div className="flex w-full items-center justify-center gap-4 md:hidden">
           <a
             href="https://play.google.com/store/apps/dev?id=7741165919079882693"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Google Play"
+            className="shrink-0"
           >
-            <Image src={playstore} alt="" />
+            <Image src={playstore} alt="" width={35} height={35} />
           </a>
           <a
             href="https://www.tiktok.com/@kidoshistudios"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="TikTok"
+            className="shrink-0"
           >
-            <Image src={tiktok} alt="" />
+            <Image src={tiktok} alt="" width={35} height={35} />
           </a>
           <a
             href="https://www.instagram.com/kidoshistudios/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
+            className="shrink-0"
           >
-            <Image src={insta} alt="" />
+            <Image src={insta} alt="" width={35} height={35} />
           </a>
           <a
             href="https://nocopyrightnasheeds.com/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="NCN"
+            className="shrink-0"
           >
-            <Image src={ncn} alt="" />
+            <Image src={ncn} alt="" width={35} height={35} />
           </a>
         </div>
         <p className="text-center text-[15px] font-medium text-hw-foreground">

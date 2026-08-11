@@ -38,7 +38,7 @@ function ResolutionLinkList({
   return (
     <div>
       <p className="mb-2 text-[15px] font-medium text-hw-muted">{title}</p>
-      <ul className="flex flex-wrap gap-x-8 gap-y-1.5">
+      <ul className="flex flex-wrap gap-x-3 gap-y-1.5 lg:gap-x-8">
         {items.map((item) => {
           const isSelected = active === normalizeResKey(item.label);
           return (

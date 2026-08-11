@@ -6,7 +6,7 @@ export function WallpaperGridSkeleton({ count = 18 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <Skeleton
           key={i}
-          className="mx-auto aspect-[198/440] w-full max-w-[198px] rounded-[var(--lp-card-radius)] bg-hw-surface lg:mx-0 lg:max-w-none lg:aspect-[449/254]"
+          className="mx-auto aspect-[198/440] w-full max-w-[198px] rounded-[6.06061px] bg-hw-surface lg:mx-0 lg:max-w-none lg:aspect-[449/254] lg:rounded-[var(--lp-card-radius)]"
         />
       ))}
     </div>

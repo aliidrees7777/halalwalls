@@ -76,12 +76,12 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        className="overflow-hidden rounded-[7px] border border-hw-line bg-hw-deep"
+        className="mx-auto h-[829.78px] w-[373.5px] max-w-full overflow-hidden rounded-[12px] border border-hw-line bg-hw-deep lg:mx-0 lg:h-auto lg:w-full lg:rounded-[7px]"
       >
         <motion.div
           whileHover={{ scale: 1.005 }}
           transition={{ duration: 0.35 }}
-          className="relative aspect-[16/9] w-full"
+          className="relative h-full w-full lg:aspect-[16/9] lg:h-auto"
         >
           <Image
             src={imageSrc}
@@ -137,7 +137,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
           ))}
         </div>
       </div>
-      <p className="ml-21 mt-3 text-[17px] leading-relaxed text-hw-muted">
+      <p className="mt-3 text-[17px] leading-relaxed text-hw-muted lg:ml-21">
         — Published on {wallpaper.publishedAt} | Original Resolution:{" "}
         <span className="underline decoration-hw-foreground/50 underline-offset-2">
           {wallpaper.originalResolution}

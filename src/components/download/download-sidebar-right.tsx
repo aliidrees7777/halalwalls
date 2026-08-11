@@ -82,6 +82,7 @@ export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, delay: 0.1 }}
+        className="hidden lg:block"
       >
         <SidebarPanel title="Our App">
           <OurAppContent />

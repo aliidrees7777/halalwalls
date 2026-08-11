@@ -7,7 +7,7 @@ export function MobileAppBanner({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "flex h-[120px] items-center justify-center gap-[22px] rounded-xl border border-hw-green/40 bg-[#CBFFEB] p-3 lg:hidden",
+        "mb-4 flex h-[120px] items-center justify-center gap-[22px] rounded-xl border border-hw-green/40 bg-[#CBFFEB] p-3 lg:hidden",
         className,
       )}
     >

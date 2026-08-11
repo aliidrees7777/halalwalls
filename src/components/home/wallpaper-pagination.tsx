@@ -45,7 +45,7 @@ export function WallpaperPagination({
   const pages = buildPages(activePage, pagesTotal);
 
   const btnBase =
-    "flex h-[var(--lp-pagination-h)] items-center justify-center rounded-[var(--lp-pagination-radius)] text-[length:var(--lp-pagination-font)] leading-none transition-colors disabled:cursor-not-allowed disabled:opacity-50";
+    "flex h-[var(--lp-pagination-h)] items-center justify-center rounded-[var(--lp-pagination-radius)] text-[16px] leading-none transition-colors disabled:cursor-not-allowed disabled:opacity-50 lg:text-[length:var(--lp-pagination-font)]";
 
   // Light: idle light-gray / selected charcoal. Dark: keep existing charcoal buttons.
   const btnIdle =
@@ -55,7 +55,7 @@ export function WallpaperPagination({
 
   return (
     <nav
-      className="flex flex-wrap items-center justify-center gap-[var(--lp-pagination-gap)] pt-[var(--lp-grid-to-pagination)]"
+      className="flex flex-wrap items-center justify-start gap-[var(--lp-pagination-gap)] pt-[var(--lp-grid-to-pagination)] lg:justify-center"
       aria-label="Pagination"
     >
       <button

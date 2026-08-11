@@ -97,7 +97,7 @@ function MobileSiteHeader({
           open ? "border-b" : "border-b-0"
         }`}
       >
-        <div className="flex h-[54px] items-center gap-4 px-5">
+        <div className="flex h-[54px] items-center gap-4 px-3">
           <HalalWallsLogo className="shrink-0 [&_img]:w-[140px]" />
           <div className="ml-auto">
             <MobileHeaderActions open={open} onToggle={onToggle} />
