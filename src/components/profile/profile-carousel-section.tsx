@@ -47,10 +47,6 @@ export function ProfileCarouselSection({
           {children}
         </div>
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 w-[21.268px] bg-gradient-to-r from-[#1d2021] to-transparent"
-          aria-hidden
-        />
-        <div
           className="pointer-events-none absolute inset-y-0 right-0 w-[21.268px] bg-gradient-to-l from-[#1d2021] to-transparent"
           aria-hidden
         />

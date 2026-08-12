@@ -76,7 +76,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="primary-font relative w-full overflow-hidden rounded-[28.4483px] border-[2.66703px] border-solid border-[#B5943C] dark:[border-color:var(--profile-banner-border)]"
+      className="primary-font relative w-full overflow-hidden rounded-none border-x-0 border-y-[2.66703px] border-solid border-[#B5943C] dark:[border-color:var(--profile-banner-border)]"
       style={{
         ["--profile-banner-border" as string]: accent,
         fontFamily: "var(--font-primary)",
@@ -99,7 +99,7 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
             <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2">
               <span
                 className={cn(
-                  "inline-flex items-center gap-[3.833px] whitespace-nowrap rounded-[15.622px] border-[0.958px] bg-black/50 px-[9.581px] py-[5.749px] text-[9.581px] font-medium md:gap-1.5 md:rounded-2xl md:px-3.5 md:py-1.5 md:text-xs",
+                  "inline-flex w-max max-w-none items-center gap-[3.833px] whitespace-nowrap rounded-[15.622px] border-[0.958px] bg-black/50 py-[5.749px] pl-[12px] pr-[14px] text-[9.581px] font-medium box-border md:gap-1.5 md:rounded-2xl md:px-3.5 md:py-1.5 md:text-xs",
                 )}
                 style={{ borderColor: accent, color: isPremium ? accent : "#ffffff" }}
               >
@@ -179,23 +179,21 @@ export function ProfileBanner({ user: initialUser }: ProfileBannerProps) {
                 </p>
               </div>
 
-              <div className="flex h-[63.237px] w-[197.377px] flex-col items-center justify-center rounded-[9.581px] bg-black/50 p-[9.581px] md:h-auto md:w-full md:max-w-[240px] md:rounded-2xl md:p-4">
-                <p className="text-center text-[14.372px] font-semibold leading-normal text-white md:text-lg">
-                  {user.name}
-                </p>
-                {bio ? (
-                  <p className="mt-[10.54px] text-center text-[9.581px] leading-normal text-white/72 md:mt-2 md:text-sm">
-                    {bio}
+              <div className="flex h-[63.24px] w-[197.38px] flex-col items-center justify-center gap-[9.58px] overflow-hidden rounded-[9.5814px] bg-black/50 p-[9.5814px] md:h-auto md:w-full md:max-w-[240px] md:gap-2 md:overflow-visible md:rounded-2xl md:p-4">
+                {/* Frame 67 — name / bio / email stack */}
+                <div className="flex h-[44.07px] w-[178.21px] max-w-full flex-col items-center justify-center gap-1 self-stretch md:h-auto md:w-full md:gap-2">
+                  <p className="text-center text-[14.3721px] font-semibold leading-[18px] text-white md:text-lg md:leading-normal">
+                    {user.name}
                   </p>
-                ) : null}
-                <p
-                  className={cn(
-                    "text-center text-[9.581px] leading-normal text-white/60 md:text-xs",
-                    bio ? "mt-[10.54px] md:mt-1.5" : "mt-[10.54px] md:mt-2",
-                  )}
-                >
-                  {user.email}
-                </p>
+                  {bio ? (
+                    <p className="text-center text-[9.5814px] font-normal leading-[12px] text-white/[0.72] md:text-sm md:leading-normal">
+                      {bio}
+                    </p>
+                  ) : null}
+                  <p className="text-center text-[9.5814px] font-normal leading-[12px] text-white/[0.6] md:text-xs md:leading-normal">
+                    {user.email}
+                  </p>
+                </div>
               </div>
 
               <div className="rounded-[5.749px] bg-black/50 px-[7.665px] py-[5.749px] md:rounded-lg md:px-3 md:py-2">
