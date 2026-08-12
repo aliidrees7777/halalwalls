@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ComponentType, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/context/auth-context";
+import { useAuth, type AuthModalView } from "@/context/auth-context";
 import { SignInBoxCard } from "./sign-in-box-card";
 import { SignInCard } from "./sign-in-card";
 import { SignUpCard } from "./sign-up-card";
@@ -31,13 +31,14 @@ function MobilePageShell({ children }: { children: ReactNode }) {
   );
 }
 
-const VIEW_MAP = {
+const VIEW_MAP: Record<AuthModalView, ComponentType> = {
+  login: SignInBoxCard,
   signin: SignInBoxCard,
   "full-signin": SignInCard,
   signup: SignUpCard,
   forgot: ForgotPasswordCard,
   premium: PremiumPlans,
-} as const;
+};
 
 export function AuthModal() {
   const { authModal, closeAuthModal } = useAuth();
@@ -57,7 +58,6 @@ export function AuthModal() {
   if (!authModal.open) return null;
 
   const View = VIEW_MAP[authModal.view];
-  if (!View) return null;
 
   return (
     <MobilePageShell>
