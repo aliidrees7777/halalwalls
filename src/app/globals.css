@@ -116,6 +116,7 @@ html:has(.admin-panel) body {
 
 /* LIGHT theme (default) — soft-gray HDQwalls-like palette */
 :root {
+  --hw-bg: #ffffff;
   --hw-header: #ffffff;
   --hw-search-header: linear-gradient(
     to bottom,

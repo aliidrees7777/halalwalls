@@ -9,7 +9,6 @@ import { ProfileSectionHeader } from "@/components/profile/profile-section-heade
 import { ProfileCarouselSection } from "@/components/profile/profile-carousel-section";
 import { ProfileCarouselThumb } from "@/components/profile/profile-carousel-thumb";
 import { ProfileUploadCarouselCard } from "@/components/profile/profile-upload-carousel-card";
-import { MobileAppBanner } from "@/components/shared/mobile-app-banner";
 import {
   FAVORITES_PREVIEW_COUNT,
   getRecentFavorites,
@@ -106,11 +105,11 @@ export function ProfilePage() {
   return (
     <>
       {/* Mobile — Figma Menu and Profile & Body @ 412px */}
-      <div className="min-h-screen bg-[#1d2021] md:hidden">
+      <div className="min-h-screen bg-hw-bg md:hidden">
         <SiteHeader />
         <ProfileBanner user={profileUser} />
 
-        <div className="flex flex-col items-center pt-[30px]">
+        <div className="flex flex-col items-center gap-[60px] pt-[30px]">
           <div className="flex w-full max-w-[412px] flex-col gap-[30px] px-[6px]">
             <ProfileCarouselSection title="Discover Just Uploaded" seeAllHref="/">
               {justUploadedLoading
@@ -125,7 +124,7 @@ export function ProfilePage() {
               seeAllHref={
                 uploads.length > UPLOADS_PREVIEW_COUNT ? "/profile/uploads" : "/profile/uploads"
               }
-              carouselHeightClass="h-[279px]"
+              carouselHeightClass="h-[272px]"
               itemGapClass="gap-1.5 pl-px"
             >
               {uploadsLoading ? null : (
@@ -151,15 +150,14 @@ export function ProfilePage() {
                   <ProfileCarouselThumb key={wallpaper.id} wallpaper={wallpaper} />
                 ))
               ) : (
-                <div className="flex h-full w-[124.2px] shrink-0 items-center justify-center rounded-[3.802px] border-[0.634px] border-[#5b6268] bg-[#181a1b] px-2 text-center text-[10px] text-[#a8a299]">
+                <div className="flex h-full w-[124.2px] shrink-0 items-center justify-center rounded-[3.802px] border-[0.634px] border-[#5B6268] bg-[#F0F0F0] px-2 text-center text-[10px] text-[#666666] dark:bg-[#181a1b] dark:text-[#a8a299]">
                   No favorites yet
                 </div>
               )}
             </ProfileCarouselSection>
           </div>
 
-          <div className="mt-[60px] flex w-full flex-col items-center px-4">
-            <MobileAppBanner />
+          <div className="flex w-full flex-col items-center">
             <SiteFooter className="w-full" />
           </div>
         </div>

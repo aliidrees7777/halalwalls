@@ -87,7 +87,7 @@ export function ProfileCarouselThumb({
   );
 
   const shellClass = cn(
-    "group relative h-full w-[124.2px] shrink-0 overflow-hidden rounded-[3.802px] border-[0.634px] border-[#5b6268] bg-hw-card",
+    "group relative h-full w-[124.2px] shrink-0 overflow-hidden rounded-[3.802px] border-[0.634px] border-[#5B6268] bg-hw-card",
     className,
   );
 

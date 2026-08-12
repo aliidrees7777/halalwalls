@@ -95,7 +95,7 @@ export function SiteFooter({ className }: { className?: string }) {
               <span key={link.label} className="whitespace-nowrap">
                 <Link
                   href={link.href}
-                  className="text-hw-foreground transition-colors hover:text-white"
+                  className="text-hw-foreground transition-colors hover:text-[#323639] dark:hover:text-white"
                 >
                   {link.label}
                 </Link>
@@ -110,7 +110,7 @@ export function SiteFooter({ className }: { className?: string }) {
               <span key={link.label} className="whitespace-nowrap">
                 <Link
                   href={link.href}
-                  className="text-hw-foreground transition-colors hover:text-white"
+                  className="text-hw-foreground transition-colors hover:text-[#323639] dark:hover:text-white"
                 >
                   {link.label}
                 </Link>
