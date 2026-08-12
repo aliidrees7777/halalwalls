@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/auth-context";
+import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 
 /**
  * Mobile fixed bottom navigation: black bar, green top border, rounded top
@@ -57,7 +58,7 @@ const profileItem: NavItem = {
   href: "/profile",
   icon: "/Profile-notacive.svg",
   iconActive: "/Profile-active.svg",
-  size: 26,
+  size: 35,
   match: (p) => p.startsWith("/profile") && !p.startsWith("/profile/favorites"),
 };
 
@@ -86,12 +87,52 @@ function NavIcon({
   );
 }
 
+/** Match Home / Categories icon footprint in the bottom nav. */
+const PROFILE_AVATAR_SIZE = 35;
+
+function ProfileNavAvatar({
+  avatar,
+  initial,
+  active,
+}: {
+  avatar?: string | null;
+  initial: string;
+  active: boolean;
+}) {
+  return (
+    <span
+      className={`relative grid place-items-center overflow-hidden rounded-full ${
+        active ? "ring-2 ring-hw-green ring-offset-1 ring-offset-black" : ""
+      }`}
+      style={{ width: PROFILE_AVATAR_SIZE, height: PROFILE_AVATAR_SIZE }}
+    >
+      {avatar ? (
+        <Image
+          src={upgradeAvatarUrl(avatar, 96)}
+          alt=""
+          width={PROFILE_AVATAR_SIZE}
+          height={PROFILE_AVATAR_SIZE}
+          unoptimized={shouldUnoptimizeMedia(upgradeAvatarUrl(avatar, 96))}
+          className="size-full object-cover"
+        />
+      ) : (
+        <span className="grid size-full place-items-center bg-[#303133] text-[13px] font-semibold text-[#ccc]">
+          {initial}
+        </span>
+      )}
+    </span>
+  );
+}
+
 export function MobileBottomNav() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const hasCategory = Boolean(searchParams.get("category"));
-  const { isAuthenticated, openAuthModal } = useAuth();
+  const { isAuthenticated, user, openAuthModal } = useAuth();
   const profileActive = profileItem.match(pathname, hasCategory);
+  const initial = (user?.firstName || user?.name || user?.email || "?")
+    .charAt(0)
+    .toUpperCase();
 
   return (
     <nav
@@ -170,7 +211,15 @@ export function MobileBottomNav() {
             }
           }}
         >
-          <NavIcon item={profileItem} active={profileActive} />
+          {isAuthenticated && user ? (
+            <ProfileNavAvatar
+              avatar={user.avatar}
+              initial={initial}
+              active={profileActive}
+            />
+          ) : (
+            <NavIcon item={profileItem} active={profileActive} />
+          )}
         </MotionLink>
       </div>
     </nav>

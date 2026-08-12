@@ -15,6 +15,8 @@ type UploadStatus = "active" | "pending" | "hidden";
 interface ProfileWallpaperThumbProps {
   wallpaper: Wallpaper & { status?: UploadStatus };
   index?: number;
+  /** Extra classes for the media frame (e.g. mobile portrait favorites cards). */
+  mediaClassName?: string;
 }
 
 function StatusPill({ status }: { status?: UploadStatus }) {
@@ -37,6 +39,7 @@ function StatusPill({ status }: { status?: UploadStatus }) {
 export function ProfileWallpaperThumb({
   wallpaper,
   index = 0,
+  mediaClassName,
 }: ProfileWallpaperThumbProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -49,7 +52,12 @@ export function ProfileWallpaperThumb({
   );
 
   const media = (
-    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[var(--lp-card-radius)] border-[length:var(--lp-card-border)] border-hw-line bg-hw-card">
+    <div
+      className={cn(
+        "relative aspect-[16/10] w-full overflow-hidden rounded-[var(--lp-card-radius)] border-[length:var(--lp-card-border)] border-hw-line bg-hw-card",
+        mediaClassName,
+      )}
+    >
       <StatusPill status={status} />
       {!failed ? (
         <Image
@@ -62,7 +70,7 @@ export function ProfileWallpaperThumb({
             loaded ? "opacity-100" : "opacity-0",
             !isPublished && "opacity-80",
           )}
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          sizes="(max-width: 768px) 33vw, (max-width: 1024px) 33vw, 25vw"
           onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
         />

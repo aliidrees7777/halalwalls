@@ -5,32 +5,35 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Contrast } from "lucide-react";
 import { filterPills } from "@/data/filters";
 import { useCategories, useResolutions } from "@/hooks/use-catalog";
 import { buildFilterHref, normalizeResolution } from "@/lib/filter-url";
 import { cn } from "@/lib/utils";
 
 const browse = filterPills.filter((p) =>
-  ["latest", "live", "random", "popular"].includes(p.id),
+  ["latest", "random", "popular"].includes(p.id),
 );
 
 /** Figma Halal-Stock-Mobile-App — Opening menu 2 @ 412px */
 const MM = {
-  premium: "#ffd700",
+  premiumLight: "#B5943C",
+  premiumDark: "#ffd700",
 } as const;
 
 const sectionLabel =
-  "text-[12px] font-bold uppercase tracking-[0.06em] text-[#ccc]";
+  "text-[12px] font-bold uppercase tracking-[0.05em] text-[#999999] dark:tracking-[0.06em] dark:text-[#ccc]";
 
 const explorePill =
-  "inline-flex h-[35px] w-[74px] items-center justify-center rounded-full bg-[#303133] p-[10px] text-[12px] font-medium tracking-[0.24px] text-[#ccc] transition-colors";
+  "inline-flex h-[35px] w-[74px] items-center justify-center rounded-full bg-[#F0F0F0] p-[10px] text-[12px] font-medium tracking-[0.02em] text-[#666666] transition-colors dark:bg-[#303133] dark:tracking-[0.24px] dark:text-[#ccc]";
 
 const filterPill =
-  "inline-flex items-center justify-center rounded-full border-[0.8px] border-[#5b6268] bg-[#303133] p-[10px] text-[12px] font-medium tracking-[0.24px] text-[#ccc] transition-colors";
+  "inline-flex items-center justify-center rounded-full border-[0.8px] border-[#999999] bg-[#F0F0F0] p-[10px] text-[12px] font-medium tracking-[0.02em] text-[#666666] transition-colors dark:border-[#5b6268] dark:bg-[#303133] dark:tracking-[0.24px] dark:text-[#ccc]";
+
+/** ~3 rows of category pills; last pill is "All N+". */
+const CATEGORIES_PREVIEW_LIMIT = 11;
 
 const appPill =
-  "inline-flex h-[35px] items-center justify-center rounded-full bg-[#303133] text-[#ccc] transition-colors";
+  "inline-flex h-[35px] items-center justify-center rounded-full bg-[#F0F0F0] text-[#666666] transition-colors dark:bg-[#303133] dark:text-[#ccc]";
 
 const themeOptions = [
   { value: "system", label: "Auto", icon: "auto" },
@@ -38,7 +41,8 @@ const themeOptions = [
   { value: "light", label: "Light", icon: "light" },
 ] as const;
 
-function PremiumGem() {
+function PremiumGem({ isDark }: { isDark: boolean }) {
+  const fill = isDark ? MM.premiumDark : MM.premiumLight;
   return (
     <svg
       width="12"
@@ -48,52 +52,69 @@ function PremiumGem() {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
     >
-      <path d="M5.30357 0H2.00893L3.21429 1.8871L5.30357 0Z" fill={MM.premium} />
+      <path d="M5.30357 0H2.00893L3.21429 1.8871L5.30357 0Z" fill={fill} />
       <path
         d="M2.89375 1.95968L1.6875 0.0725806L0 1.95968H2.89375Z"
-        fill={MM.premium}
+        fill={fill}
       />
       <path
         d="M7.875 1.95968H3.69643L5.78571 0.0725806L7.875 1.95968Z"
-        fill={MM.premium}
+        fill={fill}
       />
-      <path d="M9.5625 0H6.26786L8.27679 1.81452L9.5625 0Z" fill={MM.premium} />
+      <path d="M9.5625 0H6.26786L8.27679 1.81452L9.5625 0Z" fill={fill} />
       <path
         d="M9.88393 0.145161L8.59821 1.95968H11.5714L9.88393 0.145161Z"
-        fill={MM.premium}
+        fill={fill}
       />
       <path
         d="M3.05357 2.32258H0L5.22321 8.56452L3.05357 2.32258Z"
-        fill={MM.premium}
+        fill={fill}
       />
       <path
         d="M11.5714 2.32258H8.51786L6.34821 8.56452L11.5714 2.32258Z"
-        fill={MM.premium}
+        fill={fill}
       />
       <path
         d="M8.11607 2.32258H3.45536L5.78571 9L8.11607 2.32258Z"
-        fill={MM.premium}
+        fill={fill}
       />
     </svg>
   );
 }
 
-function ThemeIcon({ type }: { type: "auto" | "dark" | "light" }) {
-  if (type === "dark") {
-    return (
-      <Image src="/mon.svg" alt="" width={15} height={15} className="size-[14.833px]" />
-    );
-  }
-  if (type === "light") {
-    return (
-      <Image src="/sun.svg" alt="" width={15} height={15} className="size-[14.824px]" />
-    );
-  }
-  return <Contrast className="size-[14px] text-[#ccc]" strokeWidth={2} />;
+function ThemeIcon({
+  type,
+  isDark,
+}: {
+  type: "auto" | "dark" | "light";
+  isDark: boolean;
+}) {
+  const src =
+    type === "dark"
+      ? isDark
+        ? "/Half-moon-icon-darkmode.svg"
+        : "/Half-moon-icon-lightmode.svg"
+      : type === "light"
+        ? isDark
+          ? "/Light-icon-darkmode.svg"
+          : "/Light-icon-lightmode.svg"
+        : isDark
+          ? "/Auto-mode-icon-darkmode.svg"
+          : "/Auto-mode-icon-lightmode.svg";
+
+  return (
+    <Image
+      src={src}
+      alt=""
+      width={15}
+      height={15}
+      className="size-[15px]"
+    />
+  );
 }
 
 export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const { categories } = useCategories();
   const res = useResolutions();
   const resolutions = [...res.desktop, ...res.mobile];
@@ -103,6 +124,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
   const activeSort = searchParams.get("sort") || "latest";
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
     <div className="flex flex-col gap-[26px]">
@@ -118,7 +140,8 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
                 onClick={onNavigate}
                 className={cn(
                   explorePill,
-                  isActive && "bg-hw-green/20 font-bold text-hw-green",
+                  isActive &&
+                    "bg-hw-green/20 font-bold text-hw-green dark:bg-hw-green/20 dark:text-hw-green",
                 )}
               >
                 {p.label}
@@ -131,7 +154,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
       <section className="flex flex-col gap-3">
         <p className={sectionLabel}>Categories</p>
         <div className="flex flex-wrap gap-2">
-          {categories.map((c) => {
+          {categories.slice(0, CATEGORIES_PREVIEW_LIMIT).map((c) => {
             const isPremium = c.isPremium || c.slug === "premium";
             const isActive = activeCategory === c.slug;
             return (
@@ -142,30 +165,32 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
                 className={cn(
                   filterPill,
                   isPremium &&
-                    "gap-[3px] border-[#ffd700] text-[#ffd700]",
+                    "gap-[3px] border-[#B5943C] text-[#B5943C] dark:border-[#ffd700] dark:text-[#ffd700]",
                   isActive &&
                     !isPremium &&
                     "border-hw-green bg-hw-green/10 font-bold text-hw-green",
                   isActive &&
                     isPremium &&
-                    "border-[#ffd700] bg-[#ffd700]/10 font-bold",
+                    "border-[#B5943C] bg-[#B5943C]/10 font-bold dark:border-[#ffd700] dark:bg-[#ffd700]/10",
                 )}
               >
                 {c.name}
-                {isPremium && <PremiumGem />}
+                {isPremium && <PremiumGem isDark={isDark} />}
               </Link>
             );
           })}
-          <Link
-            href="/"
-            onClick={onNavigate}
-            className={cn(
-              filterPill,
-              "border-[#819ce4] text-[#819ce4]",
-            )}
-          >
-            All {categories.length}+
-          </Link>
+          {categories.length > 0 && (
+            <Link
+              href="/"
+              onClick={onNavigate}
+              className={cn(
+                filterPill,
+                "border-[#647CDC] text-[#647CDC] dark:border-[#819ce4] dark:text-[#819ce4]",
+              )}
+            >
+              All {categories.length}+
+            </Link>
+          )}
         </div>
       </section>
 
@@ -202,7 +227,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
             href="https://play.google.com/store/apps"
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(appPill, "gap-[4.412px] px-[11.029px] text-[13.235px] tracking-[0.2647px]")}
+            className={cn(appPill, "gap-[4.412px] px-[11.029px] text-[13.235px] tracking-[0.02em]")}
           >
             <svg
               width="18"
@@ -225,7 +250,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
             rel="noopener noreferrer"
             className={cn(
               appPill,
-              "w-[100px] gap-1 px-2.5 text-[12px] tracking-[0.24px]",
+              "w-[100px] gap-1 px-2.5 text-[12px] tracking-[0.02em]",
             )}
           >
             <svg
@@ -253,10 +278,10 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
             const active = mounted && theme === value;
             const padding =
               icon === "auto"
-                ? "px-[11.029px] py-[11.029px] text-[13.235px] tracking-[0.2647px]"
+                ? "px-[11.029px] py-[11.029px] text-[13.235px] tracking-[0.02em]"
                 : icon === "dark"
-                  ? "px-[10.595px] py-[10.595px] text-[12.714px] tracking-[0.2543px]"
-                  : "px-[10.588px] py-[10.588px] text-[12.706px] tracking-[0.2541px]";
+                  ? "px-[10.595px] py-[10.595px] text-[12.714px] tracking-[0.02em]"
+                  : "px-[10.588px] py-[10.588px] text-[12.706px] tracking-[0.02em]";
             return (
               <button
                 key={value}
@@ -264,14 +289,14 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
                 onClick={() => setTheme(value)}
                 aria-pressed={active}
                 className={cn(
-                  "inline-flex items-center justify-center gap-1 rounded-full text-[#ccc] transition-colors",
+                  "inline-flex items-center justify-center gap-1 rounded-full text-[#555555] transition-colors dark:text-[#ccc]",
                   padding,
                   active
-                    ? "border border-[#ccc] bg-[#3f4042]"
-                    : "bg-[#303133]",
+                    ? "border-[1.6px] border-[#555555] bg-[#E0E0E0] dark:border-[#ccc] dark:bg-[#3f4042]"
+                    : "bg-[#F0F0F0] dark:bg-[#303133]",
                 )}
               >
-                <ThemeIcon type={icon} />
+                <ThemeIcon type={icon} isDark={isDark} />
                 {label}
               </button>
             );

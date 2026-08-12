@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { HalalWallsLogo } from "@/components/home/halalwalls-logo";
 import { MobileFilterMenu } from "@/components/home/mobile-filter-menu";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -15,7 +14,6 @@ import { useAuth } from "@/context/auth-context";
 import { SearchBox } from "@/components/shared/search-box";
 import { usePathname } from "next/navigation";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
-import { shouldUnoptimizeMedia, upgradeAvatarUrl } from "@/lib/media-url";
 
 function MobileHeaderActions({
   open,
@@ -24,33 +22,20 @@ function MobileHeaderActions({
   open: boolean;
   onToggle: () => void;
 }) {
-  const { isAuthenticated, user, openAuthModal } = useAuth();
+  const { isAuthenticated, user, openAuthModal, logout } = useAuth();
 
   return (
     <div className="flex items-center gap-3">
       {isAuthenticated && user ? (
-        <Link
-          href="/profile"
-          aria-label="Your profile"
-          className="flex h-7 w-[35px] items-center justify-center"
+        <button
+          type="button"
+          onClick={logout}
+          aria-label="Log out"
+          title="Log out"
+          className="grid size-8 place-items-center rounded-full border border-[#999999] text-[#555555] transition-colors hover:border-[#555555] hover:text-[#333333] dark:border-[#5b6268] dark:text-[#ccc] dark:hover:border-hw-muted dark:hover:text-white"
         >
-          {user.avatar ? (
-            <Image
-              src={upgradeAvatarUrl(user.avatar, 96)}
-              alt=""
-              width={28}
-              height={28}
-              unoptimized={shouldUnoptimizeMedia(upgradeAvatarUrl(user.avatar, 96))}
-              className="size-7 rounded-full object-cover"
-            />
-          ) : (
-            <span className="grid size-7 place-items-center rounded-full bg-[#303133] text-[11px] font-semibold text-[#ccc]">
-              {(user.firstName || user.name || user.email || "?")
-                .charAt(0)
-                .toUpperCase()}
-            </span>
-          )}
-        </Link>
+          <LogOut className="size-4" />
+        </button>
       ) : (
         <button
           type="button"
@@ -73,7 +58,7 @@ function MobileHeaderActions({
         onClick={onToggle}
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
-        className="flex h-9 w-[46px] items-center justify-center text-[#ccc]"
+        className="flex h-9 w-[46px] items-center justify-center text-[#555555] dark:text-[#ccc]"
       >
         {open ? <X className="size-[26px]" /> : <Menu className="size-[26px]" />}
       </button>
@@ -93,7 +78,7 @@ function MobileSiteHeader({
   return (
     <div className="lg:hidden">
       <div
-        className={`border-t border-[#5b6268] bg-[#191a1c] ${
+        className={`border-t border-[#E0E0E0] bg-white dark:border-[#5b6268] dark:bg-[#191a1c] ${
           open ? "border-b" : "border-b-0"
         }`}
       >
@@ -113,7 +98,7 @@ function MobileSiteHeader({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden bg-[#191a1c]"
+            className="overflow-hidden bg-white dark:bg-[#191a1c]"
           >
             <div className="max-h-[calc(100dvh-54px)] overflow-y-auto px-4 py-10 pb-28">
               <Suspense fallback={null}>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/context/auth-context";
@@ -15,6 +15,12 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["600"],
+});
+
 export const metadata: Metadata = {
   title: "HalalWalls — Free HD & 4K Halal Wallpapers",
   description:
@@ -27,7 +33,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${poppins.variable} h-full`}
+      suppressHydrationWarning
+    >
       <body className="min-h-full pb-[72px] font-sans antialiased md:pb-0">
         <ThemeProvider>
           <ToastProvider>

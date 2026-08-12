@@ -41,14 +41,14 @@ export function FavoritesPage() {
   return (
     <div className="min-h-screen bg-hw-bg">
       <SiteHeader />
-      <main className="mx-auto max-w-[1650px] px-4 py-8 lg:px-6 lg:py-10">
+      <main className="mx-auto max-w-[1650px] px-2 pb-[60px] pt-8 md:px-4 md:py-8 lg:px-6 lg:py-10">
         <motion.h1
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-10 text-2xl font-semibold text-hw-account lg:text-4xl"
+          className="mb-10 text-center font-[family-name:var(--font-poppins)] text-[28px] font-semibold text-hw-account md:font-sans lg:text-4xl"
         >
-          Your Favorites
+          Favourites
         </motion.h1>
 
         {loading ? (
@@ -58,12 +58,13 @@ export function FavoritesPage() {
             No favorites yet.
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-2 sm:gap-2 lg:grid-cols-4">
+          <div className="grid grid-cols-3 gap-2 md:grid-cols-2 lg:grid-cols-4">
             {favorites.map((wallpaper, index) => (
               <ProfileWallpaperThumb
                 key={wallpaper.id}
                 wallpaper={wallpaper}
                 index={index}
+                mediaClassName="aspect-[124.2/276] rounded-[4px] md:aspect-[16/10] md:rounded-[var(--lp-card-radius)]"
               />
             ))}
           </div>

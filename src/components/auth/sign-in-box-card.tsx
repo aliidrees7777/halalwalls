@@ -67,7 +67,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
               Sign in
             </h1>
             <div className="rounded-2xl border border-[#05DF8B] bg-hw-header p-10 ">
-              <h2 className="text-[20px] font-semibold text-hw-depw">
+              <h2 className="text-[16px] font-semibold text-hw-depw md:text-[20px]">
                 Start Your Journey With HalalWalls
               </h2>
               <ul className="mt-4 flex flex-col gap-3">
