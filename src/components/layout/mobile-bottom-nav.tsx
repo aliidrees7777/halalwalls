@@ -95,7 +95,7 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-50 h-[92px] rounded-t-[28px] border-t border-hw-green bg-black md:hidden"
+      className="fixed inset-x-0 bottom-0 z-[60] h-[92px] rounded-t-[28px] border-t border-hw-green bg-black md:hidden"
       aria-label="Mobile navigation"
     >
       <div className="mx-auto flex h-full max-w-[360px] items-center justify-around">

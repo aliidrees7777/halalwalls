@@ -63,13 +63,17 @@ export function SignInCard({ standalone = false }: { standalone?: boolean }) {
             duration: 0.4,
             ease: "easeInOut",
           }}
-        className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-[#EEEEEE] p-6 sm:p-7 dark:bg-hw-card/80">
+        className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center rounded-none border-0 bg-transparent p-0 dark:bg-transparent md:rounded-2xl md:border-2 md:border-[#05DF8B] md:bg-[#EEEEEE] md:p-6 dark:md:bg-hw-card/80 sm:md:p-7">
           <button
             onClick={() => {
               closeAuthModal();
               if (standalone) router.push("/");
             }} 
-            className="absolute top-4 right-6 text-2xl font-bold text-hw-depw hover:text-white transition-colors cursor-pointer"
+            className={
+              standalone
+                ? "absolute top-4 right-6 cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:text-white"
+                : "absolute top-4 right-6 hidden cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:text-white md:block"
+            }
           >
             <ModalCloseIcon />
           </button>

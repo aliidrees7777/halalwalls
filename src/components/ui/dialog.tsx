@@ -31,7 +31,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-black/50 transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0 ",
+        "fixed inset-0 z-50 bg-transparent transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0 md:bg-black/50",
         className
       )}
       {...props}
@@ -53,7 +53,9 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "fixed -bottom-97 left-1/2 z-50 flex w-[calc(100%-2rem)] max-h-[min(90vh,900px)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl border-2 border-hw-green bg-[#EEEEEE] text-hw-foreground shadow-[0_0_60px_rgba(0,255,163,0.12)] outline-none transition duration-200 ease-out data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0 sm:w-full sm:max-w-[825px] sm:max-h-[920px] dark:bg-hw-card",
+          // Mobile: full-screen page. Desktop: centered modal card.
+          "fixed inset-0 z-50 flex h-dvh w-full max-h-none translate-x-0 translate-y-0 flex-col overflow-y-auto rounded-none border-0 bg-white text-hw-foreground outline-none transition duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 dark:bg-hw-bg",
+          "md:inset-auto md:left-1/2 md:top-1/2 md:h-auto md:max-h-[min(90vh,900px)] md:w-[calc(100%-2rem)] md:-translate-x-1/2 md:-translate-y-1/2 md:overflow-hidden md:rounded-3xl md:border-2 md:border-hw-green md:bg-[#EEEEEE] md:shadow-[0_0_60px_rgba(0,255,163,0.12)] md:data-ending-style:scale-95 md:data-starting-style:scale-95 sm:md:w-full sm:md:max-w-[825px] sm:md:max-h-[920px] dark:md:bg-hw-card",
           className
         )}
         {...props}
@@ -66,7 +68,7 @@ function DialogContent({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="absolute top-4 right-4 z-10 text-hw-foreground/80 hover:bg-hw-pill hover:text-hw-foreground"
+                className="absolute top-4 right-4 z-10 hidden text-hw-foreground/80 hover:bg-hw-pill hover:text-hw-foreground md:inline-flex"
               />
             }
           >

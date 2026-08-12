@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { CreditCard, Trash2 } from "lucide-react";
 import {
@@ -12,6 +12,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { SiteHeader } from "@/components/home/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
 import { PremiumIcon } from "@/components/profile/premium-icon";
 import { AccountFormField } from "@/components/profile/account-settings/account-form-field";
 import { AccountImageUpload } from "@/components/profile/account-settings/account-image-upload";
@@ -78,6 +80,8 @@ export function AccountSettingsModal({
   onSave,
 }: AccountSettingsModalProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const prevPathname = useRef(pathname);
   const { user, changePassword, resendVerification, deleteAccount } = useAuth();
   const [values, setValues] = useState<AccountSettingsData>(initialData);
   const [errors, setErrors] = useState<AccountFormErrors>({});
@@ -105,6 +109,14 @@ export function AccountSettingsModal({
   const [passwordSubmitting, setPasswordSubmitting] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState(false);
+
+  // Close when user navigates via header/footer on the mobile page shell.
+  useEffect(() => {
+    if (open && prevPathname.current !== pathname) {
+      onOpenChange(false);
+    }
+    prevPathname.current = pathname;
+  }, [pathname, open, onOpenChange]);
 
   const resetForm = useCallback(() => {
     setValues(initialData);
@@ -300,6 +312,10 @@ export function AccountSettingsModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange} >
       <DialogContent showCloseButton className="max-w-[640px] border-[#05DF8B]">
+        <div className="shrink-0 md:hidden">
+          <SiteHeader />
+        </div>
+
         <DialogHeader className="shrink-0 border-b border-hw-border ">
           <DialogTitle className="text-xl sm:text-2xl text-hw-depw">Account Information</DialogTitle>
         </DialogHeader>
@@ -549,6 +565,10 @@ export function AccountSettingsModal({
             {saving ? "Saving…" : "Save Changes"}
           </Button>
         </DialogFooter>
+
+        <div className="shrink-0 pb-[72px] md:hidden md:pb-0">
+          <SiteFooter className="!mt-0" />
+        </div>
       </DialogContent>
     </Dialog>
   );

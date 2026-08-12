@@ -97,15 +97,23 @@ export function PremiumPlans() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: "100%" }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="relative z-10 my-auto flex h-auto max-h-[95dvh] w-full max-w-[1275px] flex-col items-center gap-6 overflow-y-auto rounded-2xl border-3 border-[#05DF8B] bg-[#EEEEEE] p-4 sm:gap-10 sm:p-10 dark:bg-hw-card/80"
+        className={
+          isStandalonePage
+            ? "relative z-10 my-auto flex h-auto max-h-[95dvh] w-full max-w-[1275px] flex-col items-center gap-6 overflow-y-auto rounded-2xl border-3 border-[#05DF8B] bg-[#EEEEEE] p-4 sm:gap-10 sm:p-10 dark:bg-hw-card/80"
+            : "relative z-10 my-auto flex h-auto max-h-none w-full max-w-[1275px] flex-col items-center gap-6 overflow-y-visible rounded-none border-0 bg-transparent p-0 dark:bg-transparent md:max-h-[95dvh] md:overflow-y-auto md:rounded-2xl md:border-3 md:border-[#05DF8B] md:bg-[#EEEEEE] md:p-4 dark:md:bg-hw-card/80 sm:md:gap-10 sm:md:p-10"
+        }
       >
-        {/* Close */}
+        {/* Close — desktop modal / standalone page only; mobile uses header nav */}
         <button
           onClick={() => {
             if (isStandalonePage) router.push("/");
             else closeAuthModal();
           }}
-          className="absolute top-3 right-4 cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 sm:top-4 sm:right-6 dark:hover:text-white"
+          className={
+            isStandalonePage
+              ? "absolute top-3 right-4 cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 sm:top-4 sm:right-6 dark:hover:text-white"
+              : "absolute top-3 right-4 hidden cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 sm:top-4 sm:right-6 md:block dark:hover:text-white"
+          }
         >
           <ModalCloseIcon />
         </button>

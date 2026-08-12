@@ -1,23 +1,67 @@
 "use client";
+
+import { useEffect, useRef, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { SignInBoxCard } from "./sign-in-box-card";
-import {SignInCard} from "./sign-in-card"
-import {SignUpCard} from "./sign-up-card"
-import {ForgotPasswordCard} from "./forgot-password-card"
-import {PremiumPlans} from "../premium/premium-plans"
+import { SignInCard } from "./sign-in-card";
+import { SignUpCard } from "./sign-up-card";
+import { ForgotPasswordCard } from "./forgot-password-card";
+import { PremiumPlans } from "../premium/premium-plans";
+import { SiteHeader } from "@/components/home/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
+
+/** Mobile: full-screen page with header/footer. Desktop: centered modal overlay. */
+function MobilePageShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-white dark:bg-hw-bg md:items-center md:justify-center md:bg-transparent md:p-4">
+      <div className="shrink-0 md:hidden">
+        <SiteHeader />
+      </div>
+
+      <div className="flex flex-1 flex-col px-4 py-6 md:flex-none md:items-center md:justify-center md:p-0">
+        {children}
+      </div>
+
+      <div className="shrink-0 pb-[72px] md:hidden md:pb-0">
+        <SiteFooter className="!mt-0" />
+      </div>
+    </div>
+  );
+}
+
+const VIEW_MAP = {
+  signin: SignInBoxCard,
+  "full-signin": SignInCard,
+  signup: SignUpCard,
+  forgot: ForgotPasswordCard,
+  premium: PremiumPlans,
+} as const;
+
 export function AuthModal() {
-  const { authModal,} = useAuth();
+  const { authModal, closeAuthModal } = useAuth();
+  const pathname = usePathname();
+  const prevPathname = useRef(pathname);
+
+  useBodyScrollLock(authModal.open);
+
+  // Close when the user navigates via header/footer links (mobile page shell).
+  useEffect(() => {
+    if (authModal.open && prevPathname.current !== pathname) {
+      closeAuthModal();
+    }
+    prevPathname.current = pathname;
+  }, [pathname, authModal.open, closeAuthModal]);
 
   if (!authModal.open) return null;
 
+  const View = VIEW_MAP[authModal.view];
+  if (!View) return null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center   p-4">
-      
-        {authModal.view === "signin" && <SignInBoxCard />}
-        {authModal.view === "full-signin" && <SignInCard />}
-        {authModal.view === "signup" && <SignUpCard />}
-        {authModal.view === "forgot" && <ForgotPasswordCard />}
-        {authModal.view === "premium" && <PremiumPlans />}
-    </div>
+    <MobilePageShell>
+      <View />
+    </MobilePageShell>
   );
 }
