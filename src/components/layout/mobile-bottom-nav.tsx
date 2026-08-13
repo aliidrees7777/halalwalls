@@ -58,7 +58,8 @@ const profileItem: NavItem = {
   href: "/profile",
   icon: "/Profile-notacive.svg",
   iconActive: "/Profile-active.svg",
-  size: 35,
+  // Native SVG is 26×35; slight bump for optical balance vs Home/Category.
+  size: 29,
   match: (p) => p.startsWith("/profile") && !p.startsWith("/profile/favorites"),
 };
 
@@ -87,8 +88,8 @@ function NavIcon({
   );
 }
 
-/** Match Home / Categories icon footprint in the bottom nav. */
-const PROFILE_AVATAR_SIZE = 35;
+/** Slightly wider than native 26 so it balances next to Home/Category. */
+const PROFILE_AVATAR_SIZE = 29;
 
 function ProfileNavAvatar({
   avatar,
@@ -116,7 +117,7 @@ function ProfileNavAvatar({
           className="size-full object-cover"
         />
       ) : (
-        <span className="grid size-full place-items-center bg-[#303133] text-[13px] font-semibold text-[#ccc]">
+        <span className="grid size-full place-items-center bg-[#303133] text-[10px] font-semibold text-[#ccc]">
           {initial}
         </span>
       )}
