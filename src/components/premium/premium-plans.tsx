@@ -123,11 +123,11 @@ export function PremiumPlans() {
         <div className="primary-font flex flex-col items-center gap-2 px-6 text-center sm:gap-3">
           {/* Desktop glass modal always uses dark diamond; mobile follows theme. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          {/* <img
             src="/premium-icon-modal-darkmode.svg"
             alt=""
             className="hidden size-12 sm:size-16 md:block"
-          />
+          /> */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/premium-icon-modal-lightmode.svg"

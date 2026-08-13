@@ -311,16 +311,24 @@ export function AccountSettingsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange} >
-      <DialogContent showCloseButton className="max-w-[640px] border-[#05DF8B]">
+      <DialogContent
+        showCloseButton
+        className={cn(
+          // Desktop — Figma Account Edit section @ 826×948.53
+          "md:box-border md:flex md:h-[948.53px] md:w-[826px] md:max-h-[948.53px] md:max-w-[826px] md:flex-col md:items-center md:justify-center md:gap-[11.97px] md:isolate md:overflow-hidden md:rounded-[23.942px] md:border-[2.394px] md:border-solid md:border-[#05DF8B] md:bg-[rgba(24,26,27,0.77)] md:px-[35.913px] md:pb-[47.884px] md:pt-[35.913px] md:shadow-[0px_4.788px_4.788px_rgba(0,0,0,0.25)] md:backdrop-blur-md",
+        )}
+      >
         <div className="shrink-0 md:hidden">
           <SiteHeader />
         </div>
 
-        <DialogHeader className="shrink-0 border-b border-hw-border ">
-          <DialogTitle className="text-xl sm:text-2xl text-hw-depw">Account Information</DialogTitle>
+        <DialogHeader className="w-full shrink-0 border-b border-hw-border md:border-white/10">
+          <DialogTitle className="text-xl text-hw-depw sm:text-2xl md:text-white">
+            Account Information
+          </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-7 sm:py-6">
+        <div className="w-full flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-7 sm:py-6 md:px-0 md:py-0">
           <AnimatePresence mode="wait">
             {statusMessage ? (
               <motion.p
@@ -410,7 +418,7 @@ export function AccountSettingsModal({
 
           {/* Payment Method */}
           <div className="mt-7 space-y-3 sm:mt-8">
-            <AccountSectionTitle className="text-xl sm:text-2xl text-hw-depw">Payment Method</AccountSectionTitle>
+            <AccountSectionTitle className="text-xl text-hw-depw sm:text-2xl md:text-white">Payment Method</AccountSectionTitle>
             {subscriptionActive ? (
               <button
                 type="button"
@@ -434,7 +442,7 @@ export function AccountSettingsModal({
 
           {/* Subscription Plan */}
           <div className="mt-7 space-y-3 sm:mt-8">
-            <AccountSectionTitle className="text-xl sm:text-2xl text-hw-depw">Subscription Plan</AccountSectionTitle>
+            <AccountSectionTitle className="text-xl text-hw-depw sm:text-2xl md:text-white">Subscription Plan</AccountSectionTitle>
 
             {subLoading ? (
               <div className="flex items-center justify-center rounded-[6px] border border-hw-faint/40 bg-hw-input px-3.5 py-4">
@@ -538,7 +546,7 @@ export function AccountSettingsModal({
           </div>
         </div>
 
-        <DialogFooter className="shrink-0 flex-col gap-2 border-t border-hw-border px-5 py-4 sm:flex-row sm:items-center sm:px-7">
+        <DialogFooter className="w-full shrink-0 flex-col gap-2 border-t border-hw-border px-5 py-4 sm:flex-row sm:items-center sm:px-7 md:border-white/10 md:px-0">
           {saveError ? (
             <p
               role="alert"

@@ -63,7 +63,8 @@ export function SignInCard({ standalone = false }: { standalone?: boolean }) {
             duration: 0.4,
             ease: "easeInOut",
           }}
-        className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-[#EEEEEE] p-6 sm:p-7 dark:bg-hw-card/80 dark:backdrop-blur-md max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:dark:bg-transparent max-md:dark:backdrop-blur-none">
+        className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:dark:bg-transparent md:box-border md:h-[598.32px] md:w-[825px] md:isolate md:flex-row md:items-center md:gap-[15.87px] md:rounded-[31.731px] md:border-[3.173px] md:border-solid md:border-[#05DF8B] md:bg-[rgba(24,26,27,0.77)] md:px-[126.923px] md:py-[79.327px] md:backdrop-blur-md"
+        >
           <button
             onClick={() => {
               closeAuthModal();
@@ -77,10 +78,10 @@ export function SignInCard({ standalone = false }: { standalone?: boolean }) {
           >
             <ModalCloseIcon />
           </button>
-          <form className="flex w-xl flex-col gap-8 sm:gap-10" onSubmit={handleSubmit}>
+          <form className="flex w-full max-w-xl flex-col gap-8 sm:gap-10 md:w-full md:max-w-none md:gap-[15.87px]" onSubmit={handleSubmit}>
             {/* Title + error */}
             <div className="flex flex-col items-center gap-3">
-              <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw">
+              <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw md:text-white">
                 Sign In
               </h1>
               {error ? (
@@ -99,7 +100,7 @@ export function SignInCard({ standalone = false }: { standalone?: boolean }) {
               <div className="space-y-1.5">
                 <label
                   htmlFor="signin-email"
-                  className="block text-[19px] font-semibold text-hw-depw"
+                  className="block text-[19px] font-semibold text-hw-depw md:text-white"
                 >
                   Email Address
                 </label>
@@ -119,7 +120,7 @@ export function SignInCard({ standalone = false }: { standalone?: boolean }) {
               <div className="space-y-1.5">
                 <label
                   htmlFor="signin-password"
-                  className="block text-[19px] font-semibold text-hw-depw"
+                  className="block text-[19px] font-semibold text-hw-depw md:text-white"
                 >
                   Password
                 </label>
