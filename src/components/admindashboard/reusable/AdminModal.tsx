@@ -8,7 +8,9 @@ const border = "1px solid var(--border)";
 const overlayStyle: CSSProperties = {
   position: "fixed",
   inset: 0,
-  background: "rgba(0,0,0,0.6)",
+  background: "rgba(0,0,0,0.2)",
+  backdropFilter: "blur(1px)",
+  WebkitBackdropFilter: "blur(1px)",
   display: "grid",
   placeItems: "center",
   padding: 20,

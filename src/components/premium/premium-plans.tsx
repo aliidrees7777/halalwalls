@@ -99,8 +99,9 @@ export function PremiumPlans() {
         transition={{ duration: 0.4, ease: "easeInOut" }}
         className={
           isStandalonePage
-            ? "relative z-10 my-auto flex h-auto max-h-[95dvh] w-full max-w-[1275px] flex-col items-center gap-6 overflow-y-auto rounded-2xl border-3 border-[#05DF8B] bg-[#EEEEEE] p-4 sm:gap-10 sm:p-10 dark:bg-hw-card/80"
-            : "relative z-10 my-auto flex h-auto max-h-none w-full max-w-[1275px] flex-col items-center gap-6 overflow-y-visible rounded-none border-0 bg-transparent p-0 dark:bg-transparent md:max-h-[95dvh] md:overflow-y-auto md:rounded-2xl md:border-3 md:border-[#05DF8B] md:bg-[#EEEEEE] md:p-4 dark:md:bg-hw-card/80 sm:md:gap-10 sm:md:p-10"
+            ? "relative z-10 my-auto flex h-auto max-h-[95dvh] w-full max-w-[1275px] flex-col items-center gap-6 overflow-y-auto rounded-2xl border-3 border-[#05DF8B] bg-[rgba(24,26,27,0.72)] p-4 shadow-[0_0_60px_rgba(0,255,163,0.12)] backdrop-blur-xl sm:gap-10 sm:p-10"
+            : // Desktop = original frosted glass modal. Mobile = page shell (no chrome).
+              "relative z-10 my-auto flex h-auto max-h-[95dvh] w-full max-w-[1275px] flex-col items-center gap-6 overflow-y-auto rounded-2xl border-3 border-[#05DF8B] bg-[rgba(24,26,27,0.72)] p-4 shadow-[0_0_60px_rgba(0,255,163,0.12)] backdrop-blur-xl sm:gap-10 sm:p-10 max-md:max-h-none max-md:overflow-y-visible max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none max-md:backdrop-blur-none"
         }
       >
         {/* Close — desktop modal / standalone page only; mobile uses header nav */}
@@ -111,8 +112,8 @@ export function PremiumPlans() {
           }}
           className={
             isStandalonePage
-              ? "absolute top-3 right-4 cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 sm:top-4 sm:right-6 dark:hover:text-white"
-              : "absolute top-3 right-4 hidden cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 sm:top-4 sm:right-6 md:block dark:hover:text-white"
+              ? "absolute top-3 right-4 cursor-pointer text-2xl font-bold text-white transition-colors hover:opacity-70 sm:top-4 sm:right-6"
+              : "absolute top-3 right-4 hidden cursor-pointer text-2xl font-bold text-white transition-colors hover:opacity-70 sm:top-4 sm:right-6 md:block"
           }
         >
           <ModalCloseIcon />
@@ -120,22 +121,29 @@ export function PremiumPlans() {
 
         {/* Heading */}
         <div className="primary-font flex flex-col items-center gap-2 px-6 text-center sm:gap-3">
+          {/* Desktop glass modal always uses dark diamond; mobile follows theme. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/premium-icon-modal-darkmode.svg"
+            alt=""
+            className="hidden size-12 sm:size-16 md:block"
+          />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/premium-icon-modal-lightmode.svg"
             alt=""
-            className="size-12 sm:size-16 dark:hidden"
+            className="size-12 sm:size-16 dark:hidden md:hidden"
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/premium-icon-modal-darkmode.svg"
             alt=""
-            className="hidden size-12 sm:size-16 dark:block"
+            className="hidden size-12 sm:size-16 dark:block md:hidden"
           />
-          <h1 className="primary-font text-[26px] font-semibold text-black sm:text-[41px] dark:text-hw-depw">
+          <h1 className="primary-font text-[26px] font-semibold text-white sm:text-[41px] max-md:text-black max-md:dark:text-hw-depw">
             Go Premium
           </h1>
-          <p className="primary-font text-[15px] font-light tracking-wide text-black sm:text-[22px] dark:text-hw-depw">
+          <p className="primary-font text-[15px] font-light tracking-wide text-white/90 sm:text-[22px] max-md:text-black max-md:dark:text-hw-depw">
             Unlock the full potential of HalalWalls
           </p>
         </div>
@@ -162,8 +170,8 @@ export function PremiumPlans() {
               key={plan.key}
               className="flex flex-col overflow-hidden rounded-xl border border-[#05DF8B]"
             >
-              {/* Card header — white in light, existing deep token in dark */}
-              <div className="relative z-0 h-[158px] overflow-hidden bg-white px-4 pt-4 pb-5 dark:bg-hw-deep">
+              {/* Desktop always dark header (original glass modal). Mobile light gets white. */}
+              <div className="relative z-0 h-[158px] overflow-hidden bg-[#181c1d] px-4 pt-4 pb-5 max-md:bg-white max-md:dark:bg-hw-deep">
                 <Image
                   src={dimond}
                   alt=""
@@ -181,7 +189,7 @@ export function PremiumPlans() {
                   className="absolute top-2 right-28 size-4 text-[#05DF8B]/80"
                 />
                 <div className="relative z-10">
-                  <h3 className="primary-font text-[20px] font-semibold text-black sm:text-[28px] dark:text-hw-depw">
+                  <h3 className="primary-font text-[20px] font-semibold text-white sm:text-[28px] max-md:text-black max-md:dark:text-hw-depw">
                     Premium
                   </h3>
                   <span
@@ -197,11 +205,10 @@ export function PremiumPlans() {
                 </div>
               </div>
 
-              {/* Features panel — white copy on dark body in light mode */}
               <div className="relative z-10 -mt-5 flex w-full flex-1 flex-col gap-4 rounded-t-[20px] bg-[#323639] px-4 py-6 sm:gap-6">
-                <p className="primary-font text-[28px] leading-none text-white sm:text-[41px] dark:text-hw-depw">
+                <p className="primary-font text-[28px] leading-none text-white sm:text-[41px]">
                   {plan.price}
-                  <span className="primary-font text-[18px] text-white sm:text-[28px] dark:text-hw-depw">
+                  <span className="primary-font text-[18px] text-white sm:text-[28px]">
                     {plan.period}
                   </span>
                 </p>
@@ -210,7 +217,7 @@ export function PremiumPlans() {
                   {FEATURES.map((f) => (
                     <li
                       key={f}
-                      className="primary-font flex items-center gap-2 text-[15px] font-light text-white sm:text-[19px] dark:text-hw-depw"
+                      className="primary-font flex items-center gap-2 text-[15px] font-light text-white sm:text-[19px]"
                     >
                       <span className="grid size-[23px] shrink-0 place-items-center rounded-full bg-[#05DF8B]">
                         <Check className="size-3 text-black" strokeWidth={3.5} />
@@ -231,7 +238,7 @@ export function PremiumPlans() {
                       user?.subscriptionPlan,
                     ).disabled
                   }
-                  className="primary-font mt-auto rounded-full bg-white py-2.5 text-center text-[16px] font-medium text-black transition-colors hover:bg-neutral-100 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60 sm:text-[22px] dark:bg-hw-bg dark:text-hw-depw dark:hover:bg-hw-pill2-hover"
+                  className="primary-font mt-auto rounded-full bg-[#1d2021] py-2.5 text-center text-[16px] font-medium text-white transition-colors hover:bg-[#2a2e2f] active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60 sm:text-[22px] max-md:bg-white max-md:text-black max-md:hover:bg-neutral-100 max-md:dark:bg-hw-bg max-md:dark:text-hw-depw max-md:dark:hover:bg-hw-pill2-hover"
                 >
                   {loadingPlan === plan.key
                     ? "Redirecting…"

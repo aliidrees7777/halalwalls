@@ -47,7 +47,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
             duration: 0.4,
             ease: "easeInOut",
           }}
-          className="relative z-10 my-auto flex h-auto w-full max-w-[825px] flex-col items-center justify-center rounded-none border-0 bg-transparent p-0 shadow-none dark:bg-transparent md:rounded-2xl md:border-2 md:border-[#05DF8B] md:bg-[#EEEEEE] md:p-6 md:shadow-[0_8px_24px_rgba(0,0,0,0.25)] dark:md:bg-hw-card/80 sm:md:p-7"
+          className="relative z-10 my-auto flex h-auto w-full max-w-[825px] flex-col items-center justify-center rounded-2xl border-2 border-[#05DF8B] bg-[#EEEEEE] p-6 shadow-[0_8px_24px_rgba(0,0,0,0.25)] sm:p-7 dark:bg-hw-card/80 dark:backdrop-blur-md max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none max-md:dark:bg-transparent max-md:dark:backdrop-blur-none"
         >
           <button
             onClick={() => {

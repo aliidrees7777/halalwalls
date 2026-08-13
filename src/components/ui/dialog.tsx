@@ -31,7 +31,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-transparent transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0 md:bg-black/50",
+        "fixed inset-0 z-50 bg-transparent transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0 md:bg-black/20 md:backdrop-blur-[1px] dark:md:bg-black/25",
         className
       )}
       {...props}
@@ -54,8 +54,10 @@ function DialogContent({
         data-slot="dialog-content"
         className={cn(
           // Mobile: full-screen page. Desktop: centered modal card.
-          "fixed inset-0 z-50 flex h-dvh w-full max-h-none translate-x-0 translate-y-0 flex-col overflow-y-auto rounded-none border-0 bg-white text-hw-foreground outline-none transition duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 dark:bg-hw-bg",
-          "md:inset-auto md:left-1/2 md:top-1/2 md:h-auto md:max-h-[min(90vh,900px)] md:w-[calc(100%-2rem)] md:-translate-x-1/2 md:-translate-y-1/2 md:overflow-hidden md:rounded-3xl md:border-2 md:border-hw-green md:bg-[#EEEEEE] md:shadow-[0_0_60px_rgba(0,255,163,0.12)] md:data-ending-style:scale-95 md:data-starting-style:scale-95 sm:md:w-full sm:md:max-w-[825px] sm:md:max-h-[920px] dark:md:bg-hw-card",
+          // Desktop chrome is the base; max-md strips it for the mobile page shell
+          // so mobile full-bleed styles cannot override desktop glass.
+          "fixed inset-0 z-50 flex h-auto max-h-[min(90vh,900px)] w-[calc(100%-2rem)] max-w-[825px] translate-x-[-50%] translate-y-[-50%] flex-col overflow-hidden rounded-3xl border-2 border-hw-green bg-[#EEEEEE] text-hw-foreground shadow-[0_0_60px_rgba(0,255,163,0.12)] outline-none transition duration-200 ease-out left-1/2 top-1/2 data-ending-style:opacity-0 data-ending-style:scale-95 data-starting-style:opacity-0 data-starting-style:scale-95 dark:bg-hw-card dark:backdrop-blur-md sm:max-h-[920px]",
+          "max-md:inset-0 max-md:left-0 max-md:top-0 max-md:h-dvh max-md:max-h-none max-md:w-full max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0 max-md:overflow-y-auto max-md:rounded-none max-md:border-0 max-md:bg-white max-md:shadow-none max-md:dark:bg-hw-bg max-md:dark:backdrop-blur-none",
           className
         )}
         {...props}

@@ -12,10 +12,10 @@ import { SiteHeader } from "@/components/home/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 
-/** Mobile: full-screen page with header/footer. Desktop: centered modal overlay. */
+/** Mobile: full-screen page with header/footer. Desktop: dimmed glass overlay. */
 function MobilePageShell({ children }: { children: ReactNode }) {
   return (
-    <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-white dark:bg-hw-bg md:items-center md:justify-center md:bg-transparent md:p-4">
+    <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-white dark:bg-hw-bg md:items-center md:justify-center md:bg-black/20 md:p-4 md:backdrop-blur-[1px] dark:md:bg-black/25">
       <div className="shrink-0 md:hidden">
         <SiteHeader />
       </div>
