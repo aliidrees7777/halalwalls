@@ -315,15 +315,15 @@ export function AccountSettingsModal({
         showCloseButton
         className={cn(
           // Desktop — Figma Account Edit section @ 826×948.53
-          "md:box-border md:flex md:h-[948.53px] md:w-[826px] md:max-h-[948.53px] md:max-w-[826px] md:flex-col md:items-center md:justify-center md:gap-[11.97px] md:isolate md:overflow-hidden md:rounded-[23.942px] md:border-[2.394px] md:border-solid md:border-[#05DF8B] md:bg-[rgba(24,26,27,0.77)] md:px-[35.913px] md:pb-[47.884px] md:pt-[35.913px] md:shadow-[0px_4.788px_4.788px_rgba(0,0,0,0.25)] md:backdrop-blur-md",
+          "md:box-border md:flex md:h-[948.53px] md:w-[826px] md:max-h-[948.53px] md:max-w-[826px] md:shrink-0 md:flex-col md:items-center md:justify-center md:gap-[11.97px] md:isolate md:overflow-hidden md:rounded-[23.942px] md:border-[2.3942px] md:border-solid md:border-[#05DF8B] md:bg-[#EEEEEE] md:px-[35.913px] md:pb-[47.8841px] md:pt-[35.913px] md:shadow-[0px_4.78841px_4.78841px_rgba(0,0,0,0.25)] dark:md:bg-[rgba(24,26,27,0.77)] dark:md:backdrop-blur-md",
         )}
       >
         <div className="shrink-0 md:hidden">
           <SiteHeader />
         </div>
 
-        <DialogHeader className="w-full shrink-0 border-b border-hw-border md:border-white/10">
-          <DialogTitle className="text-xl text-hw-depw sm:text-2xl md:text-white">
+        <DialogHeader className="w-full shrink-0 border-b border-hw-border dark:md:border-white/10">
+          <DialogTitle className="text-xl text-hw-depw sm:text-2xl dark:md:text-white">
             Account Information
           </DialogTitle>
         </DialogHeader>
@@ -418,7 +418,7 @@ export function AccountSettingsModal({
 
           {/* Payment Method */}
           <div className="mt-7 space-y-3 sm:mt-8">
-            <AccountSectionTitle className="text-xl text-hw-depw sm:text-2xl md:text-white">Payment Method</AccountSectionTitle>
+            <AccountSectionTitle className="text-xl text-hw-depw sm:text-2xl dark:md:text-white">Payment Method</AccountSectionTitle>
             {subscriptionActive ? (
               <button
                 type="button"
@@ -442,7 +442,7 @@ export function AccountSettingsModal({
 
           {/* Subscription Plan */}
           <div className="mt-7 space-y-3 sm:mt-8">
-            <AccountSectionTitle className="text-xl text-hw-depw sm:text-2xl md:text-white">Subscription Plan</AccountSectionTitle>
+            <AccountSectionTitle className="text-xl text-hw-depw sm:text-2xl dark:md:text-white">Subscription Plan</AccountSectionTitle>
 
             {subLoading ? (
               <div className="flex items-center justify-center rounded-[6px] border border-hw-faint/40 bg-hw-input px-3.5 py-4">
@@ -546,7 +546,7 @@ export function AccountSettingsModal({
           </div>
         </div>
 
-        <DialogFooter className="w-full shrink-0 flex-col gap-2 border-t border-hw-border px-5 py-4 sm:flex-row sm:items-center sm:px-7 md:border-white/10 md:px-0">
+        <DialogFooter className="w-full shrink-0 flex-col gap-2 border-t border-hw-border px-5 py-4 sm:flex-row sm:items-center sm:px-7 dark:md:border-white/10 md:px-0">
           {saveError ? (
             <p
               role="alert"

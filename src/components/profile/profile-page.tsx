@@ -171,7 +171,7 @@ export function ProfilePage() {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-8 text-center text-[39px] font-bold text-hw-account"
+            className="mb-8 text-center text-[39px] font-bold text-black dark:text-[#c8c3bc]"
           >
             My Account
           </motion.h1>
@@ -182,12 +182,12 @@ export function ProfilePage() {
             <ProfileSectionHeader
               title="Discover Just Uploaded"
               seeAllHref="/"
-              titleClassName="font-semibold text-hw-account"
+              titleClassName="font-semibold text-black dark:text-[#c8c3bc]"
             />
             {justUploadedLoading ? (
               <LoadingBlock />
             ) : justUploaded.length === 0 ? (
-              <p className="py-12 text-center text-sm text-hw-muted">
+              <p className="py-12 text-center text-sm text-[#666666] dark:text-[#a8a299]">
                 No new wallpapers yet.
               </p>
             ) : (
@@ -207,7 +207,7 @@ export function ProfilePage() {
             <ProfileSectionHeader
               title="Your Uploads"
               seeAllHref="/profile/uploads"
-              titleClassName="font-semibold text-hw-account"
+              titleClassName="font-semibold text-black dark:text-[#c8c3bc]"
             />
             {uploadsLoading ? (
               <LoadingBlock />
@@ -229,12 +229,12 @@ export function ProfilePage() {
             <ProfileSectionHeader
               title="Your Favorites"
               seeAllHref="/profile/favorites"
-              titleClassName="font-semibold text-hw-account"
+              titleClassName="font-semibold text-black dark:text-[#c8c3bc]"
             />
             {favoritesLoading ? (
               <LoadingBlock />
             ) : favorites.length === 0 ? (
-              <p className="py-12 text-center text-sm text-hw-muted">
+              <p className="py-12 text-center text-sm text-[#666666] dark:text-[#a8a299]">
                 No favorites yet.
               </p>
             ) : (

@@ -47,7 +47,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
             duration: 0.4,
             ease: "easeInOut",
           }}
-          className="relative z-10 my-auto flex h-auto w-full max-w-[825px] flex-col items-center justify-center max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none md:box-border md:h-[805.21px] md:w-[825px] md:flex-row md:items-center md:gap-[16.77px] md:rounded-[33.537px] md:border-[3.354px] md:border-solid md:border-[#05DF8B] md:bg-[rgba(24,26,27,0.77)] md:px-[191.159px] md:pb-[67.073px] md:pt-[50.305px] md:shadow-[0px_6.707px_6.707px_rgba(0,0,0,0.25)] md:backdrop-blur-md"
+          className="relative z-10 my-auto flex h-auto w-full max-w-[825px] flex-col items-center justify-center max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none md:box-border md:h-[805.21px] md:w-[825px] md:max-w-[825px] md:shrink-0 md:flex-row md:items-center md:justify-start md:gap-[16.77px] md:rounded-[33.5366px] md:border-[3.35366px] md:border-solid md:border-[#05DF8B] md:bg-[#EEEEEE] md:px-[191.159px] md:pb-[67.0732px] md:pt-[50.3049px] md:shadow-[0px_6.70732px_6.70732px_rgba(0,0,0,0.25)] dark:md:bg-[rgba(24,26,27,0.77)] dark:md:backdrop-blur-md"
         >
           <button
             onClick={() => {
@@ -56,18 +56,18 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
             }}
             className={
               standalone
-                ? "absolute top-4 right-6 cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:text-white"
-                : "absolute top-4 right-6 hidden cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:text-white md:block"
+                ? "absolute top-4 right-6 cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 dark:hover:text-white"
+                : "absolute top-4 right-6 hidden cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 md:block dark:hover:text-white"
             }
           >
             <ModalCloseIcon />
           </button>
           <div className="flex w-full max-w-xl flex-col gap-8 md:max-w-none md:gap-[16.77px]">
-            <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw md:text-white">
+            <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw dark:md:text-white">
               Sign in
             </h1>
             <div className="rounded-2xl border border-[#05DF8B] bg-hw-header p-10 ">
-              <h2 className="text-[16px] font-semibold text-hw-depw md:text-[20px] md:text-white">
+              <h2 className="text-[16px] font-semibold text-hw-depw md:text-[20px] dark:md:text-white">
                 Start Your Journey With HalalWalls
               </h2>
               <ul className="mt-4 flex flex-col gap-3">
@@ -79,7 +79,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
                       width={25}
                       height={25}
                     />
-                    <span className="font-light text-hw-depw lg:text-[20px] md:text-white">
+                    <span className="font-light text-hw-depw lg:text-[20px] dark:md:text-white">
                       {label}
                     </span>
                   </li>
@@ -140,7 +140,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
                 <CornerDownRight className="size-[15px]" />
                 Continue with Email
               </button>
-              <span className="text-center text-[15px] font-semibold text-[#555555] dark:text-hw-foreground dark:opacity-70 md:text-[#A8A299]">
+              <span className="text-center text-[15px] font-semibold text-[#555555] dark:text-hw-foreground dark:opacity-70 dark:md:text-[#A8A299]">
                 or
               </span>
               <button

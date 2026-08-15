@@ -79,14 +79,14 @@ export function SignUpCard() {
             duration: 0.4,
             ease: "easeInOut",
           }}
-      className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:dark:bg-transparent md:box-border md:h-[761.21px] md:w-[825px] md:isolate md:flex-row md:items-center md:gap-[15.87px] md:rounded-[31.731px] md:border-[3.173px] md:border-solid md:border-[#05DF8B] md:bg-[rgba(24,26,27,0.77)] md:px-[126.923px] md:py-[79.327px] md:backdrop-blur-md"
+      className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:dark:bg-transparent md:box-border md:h-[761.21px] md:w-[825px] md:isolate md:flex-row md:items-center md:gap-[15.87px] md:rounded-[31.731px] md:border-[3.173px] md:border-solid md:border-[#05DF8B] md:bg-[#EEEEEE] md:px-[126.923px] md:py-[79.327px] dark:md:bg-[rgba(24,26,27,0.77)] dark:md:backdrop-blur-md"
     >
         <button
         onClick={() => {
           closeAuthModal();
           if (!authModal.open) router.push("/");
         }}
-        className="absolute top-4 right-6 hidden cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:text-white md:block"
+        className="absolute top-4 right-6 hidden cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 md:block dark:hover:text-white"
       >
         <ModalCloseIcon />
       </button>
@@ -95,7 +95,7 @@ export function SignUpCard() {
         onSubmit={handleSubmit}
       >
         {/* Title */}
-        <h1 className="text-center text-[28px] font-bold leading-tight text-hw-depw md:text-[31px] md:text-white">
+        <h1 className="text-center text-[28px] font-bold leading-tight text-hw-depw md:text-[31px] dark:md:text-white">
           Join Us in a Snap
         </h1>
 
@@ -112,7 +112,7 @@ export function SignUpCard() {
         <div className="flex flex-col gap-3.5">
           {/* Full Name */}
           <div className="space-y-1.5">
-            <label htmlFor="signup-name" className="block text-[16px] font-semibold text-hw-depw md:text-[19px] md:text-white">
+            <label htmlFor="signup-name" className="block text-[16px] font-semibold text-hw-depw md:text-[19px] dark:md:text-white">
               Full Name
             </label>
             <div className="flex h-11 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
@@ -129,7 +129,7 @@ export function SignUpCard() {
 
           {/* Email Address */}
           <div className="space-y-1.5">
-            <label htmlFor="signup-email" className="block text-[16px] font-semibold text-hw-depw md:text-[19px] md:text-white">
+            <label htmlFor="signup-email" className="block text-[16px] font-semibold text-hw-depw md:text-[19px] dark:md:text-white">
               Email Address
             </label>
             <div className="flex h-11 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
@@ -146,7 +146,7 @@ export function SignUpCard() {
 
           {/* Password */}
           <div className="space-y-1.5">
-            <label htmlFor="signup-password" className="block text-[16px] font-semibold text-hw-depw md:text-[19px] md:text-white">
+            <label htmlFor="signup-password" className="block text-[16px] font-semibold text-hw-depw md:text-[19px] dark:md:text-white">
               Password
             </label>
             <div className="flex h-11 items-center gap-2 rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
@@ -171,7 +171,7 @@ export function SignUpCard() {
 
           {/* Confirm Password */}
           <div className="space-y-1.5">
-            <label htmlFor="signup-confirm" className="block text-[16px] font-semibold text-hw-depw md:text-[19px] md:text-white">
+            <label htmlFor="signup-confirm" className="block text-[16px] font-semibold text-hw-depw md:text-[19px] dark:md:text-white">
               Confirm Password
             </label>
             <div className="flex h-11 items-center gap-2 rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
@@ -209,7 +209,7 @@ export function SignUpCard() {
             >
               {agree ? <Check className="size-2 text-hw-input" strokeWidth={5} /> : null}
             </button>
-            <p className="text-[14px] leading-snug font-[450px] text-hw-depw md:text-[15px] md:text-white">
+            <p className="text-[14px] leading-snug font-[450px] text-hw-depw md:text-[15px] dark:md:text-white">
               I agree to the{" "}
               <a href="/terms" className="text-[#69A6D5] underline">Terms of Service</a> and{" "}
               <a href="/privacy" className="text-[#69A6D5] underline">Privacy Policy</a>

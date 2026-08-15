@@ -42,11 +42,11 @@ export function ForgotPasswordCard() {
             duration: 0.4,
             ease: "easeInOut",
           }}
-      className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:dark:bg-transparent md:box-border md:h-[482.4px] md:w-[825px] md:isolate md:flex-row md:items-center md:gap-[15.87px] md:rounded-[31.731px] md:border-[3.173px] md:border-solid md:border-[#05DF8B] md:bg-[rgba(24,26,27,0.77)] md:px-[126.923px] md:py-[79.327px] md:backdrop-blur-md"
+      className="relative z-10 my-auto flex h-auto w-full max-w-[825px] items-center justify-center max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:dark:bg-transparent md:box-border md:h-[482.4px] md:w-[825px] md:isolate md:flex-row md:items-center md:gap-[15.87px] md:rounded-[31.731px] md:border-[3.173px] md:border-solid md:border-[#05DF8B] md:bg-[#EEEEEE] md:px-[126.923px] md:py-[79.327px] dark:md:bg-[rgba(24,26,27,0.77)] dark:md:backdrop-blur-md"
     >
      <button
         onClick={closeAuthModal}
-        className="absolute top-4 right-6 hidden cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:text-white md:block"
+        className="absolute top-4 right-6 hidden cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 md:block dark:hover:text-white"
       >
         <ModalCloseIcon />
       </button>
@@ -72,10 +72,10 @@ export function ForgotPasswordCard() {
         )}
         {/* Title + description */}
         <div className="flex flex-col items-center gap-2">
-          <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw md:text-white">
+          <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw dark:md:text-white">
             Forgot Password?
           </h1>
-          <p className="mx-auto max-w-[350px] text-center text-[15px] leading-relaxed text-hw-faint md:text-[#A8A299]">
+          <p className="mx-auto max-w-[350px] text-center text-[15px] leading-relaxed text-hw-faint dark:md:text-[#A8A299]">
             If you forgot your password, please enter your email below and we will
             send you a recovery link.
           </p>
@@ -83,7 +83,7 @@ export function ForgotPasswordCard() {
 
         {/* Email field */}
         <div className="space-y-1.5">
-          <label htmlFor="forgot-email" className="block text-[31px] font-semibold text-hw-depw md:text-white">
+          <label htmlFor="forgot-email" className="block text-[31px] font-semibold text-hw-depw dark:md:text-white">
             Email Address
           </label>
           <div className="flex h-12 items-center rounded-lg border border-hw-input-border bg-hw-input px-3 transition-colors focus-within:border-[#05DF8B]">
@@ -118,7 +118,7 @@ export function ForgotPasswordCard() {
         </button>
 
         {/* Footer */}
-        <p className="text-center text-[13px] font-[450px] text-hw-faint md:text-[#A8A299]">
+        <p className="text-center text-[13px] font-[450px] text-hw-faint dark:md:text-[#A8A299]">
           Remember your password?{" "}
           <button 
           type="button"
