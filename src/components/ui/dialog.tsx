@@ -5,7 +5,7 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { XIcon } from "lucide-react"
+import { ModalCloseIcon } from "@/components/auth/modal-close-icon"
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
@@ -74,7 +74,7 @@ function DialogContent({
               />
             }
           >
-            <XIcon className="size-4" />
+            <ModalCloseIcon size={23} />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}

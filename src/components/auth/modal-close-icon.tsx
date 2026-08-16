@@ -1,30 +1,42 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import closeDark from "../../../public/authicon/close.svg";
-import closeLight from "../../../public/Cancel-icon-lightmode.svg";
+import closeDarkDesktop from "../../../public/cross-icon-darkmode.svg";
+import closeLightDesktop from "../../../public/cross-icon-lightmode.svg";
+import closeLightMobile from "../../../public/Cancel-icon-lightmode.svg";
 
 interface ModalCloseIconProps {
   className?: string;
   size?: number;
 }
 
-/** Light: Cancel-icon-lightmode.svg · Dark: authicon/close.svg */
+/**
+ * Light mobile: Cancel-icon-lightmode.svg
+ * Light desktop: cross-icon-lightmode.svg
+ * Dark desktop: cross-icon-darkmode.svg
+ */
 export function ModalCloseIcon({ className, size = 26 }: ModalCloseIconProps) {
   return (
     <span className={cn("inline-flex", className)}>
       <Image
-        src={closeLight}
+        src={closeLightMobile}
         alt=""
         width={size}
         height={size}
-        className="dark:hidden"
+        className="dark:hidden md:hidden"
       />
       <Image
-        src={closeDark}
+        src={closeLightDesktop}
         alt=""
         width={size}
         height={size}
-        className="hidden dark:block"
+        className="hidden md:block dark:hidden"
+      />
+      <Image
+        src={closeDarkDesktop}
+        alt=""
+        width={size}
+        height={size}
+        className="hidden dark:md:block"
       />
     </span>
   );

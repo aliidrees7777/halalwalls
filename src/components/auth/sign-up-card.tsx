@@ -195,7 +195,7 @@ export function SignUpCard() {
           </div>
 
           {/* Terms checkbox */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 pt-2.5 pb-10">
             <button
               type="button"
               role="checkbox"
@@ -221,7 +221,7 @@ export function SignUpCard() {
         <button
           type="submit"
           disabled={submitting}
-          className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[22px] font-bold text-hw-input transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex h-11 w-full items-center justify-center gap-2.5 rounded-full bg-[#05DF8B] text-[22px] font-bold text-black transition-[filter,transform] hover:brightness-95 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60 dark:text-hw-input"
         >
           <Image
             src={rocket}
