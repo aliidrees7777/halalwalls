@@ -48,7 +48,7 @@ export function FavoritesPage() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="mb-10 text-center font-[family-name:var(--font-poppins)] text-[28px] font-semibold text-hw-account md:font-sans lg:text-4xl"
         >
-          Favourites
+          Favorites
         </motion.h1>
 
         {loading ? (

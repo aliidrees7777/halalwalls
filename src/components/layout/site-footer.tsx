@@ -80,31 +80,48 @@ export function SiteFooter({ className }: { className?: string }) {
   return (
     <footer
       className={cn(
-        "mt-0 border-t-[3px] border-hw-line bg-hw-footer px-0 pt-8 pb-[4.5rem] md:py-8 lg:mt-60 lg:px-0",
+        "mt-0 border-t-[3px] border-hw-line bg-hw-footer px-0 py-8 lg:mt-60 lg:px-0",
         className,
       )}
     >
-      <div className="lp-container flex flex-col items-center gap-4 max-lg:!px-3">
-        {/* Mobile: wrap whole links so they don't clip on narrow screens */}
+      <div className="lp-container flex flex-col items-center gap-4 max-lg:!px-1">
+        {/* Mobile: fixed 2-line wrap to match design */}
         <nav
-          className="flex w-full flex-wrap items-center justify-center gap-y-1 text-center text-[14px] font-medium leading-snug text-hw-muted lg:hidden"
+          className="flex w-full flex-col items-center gap-y-1 text-center text-[14px] font-medium leading-snug text-hw-muted lg:hidden"
           aria-label="Footer"
         >
-          {footerLinks.map((link, i) => (
-            <span key={link.label} className="inline-flex items-center whitespace-nowrap">
-              <Link
-                href={link.href}
-                className="text-hw-foreground transition-colors hover:text-[#323639] dark:hover:text-white"
-              >
-                {link.label}
-              </Link>
-              {i < footerLinks.length - 1 ? (
+          <p className="m-0">
+            {footerLinks.slice(0, 3).map((link) => (
+              <span key={link.label} className="whitespace-nowrap">
+                <Link
+                  href={link.href}
+                  className="text-hw-foreground transition-colors hover:text-[#323639] dark:hover:text-white"
+                >
+                  {link.label}
+                </Link>
                 <span className="mx-1 text-hw-line" aria-hidden>
                   |
                 </span>
-              ) : null}
-            </span>
-          ))}
+              </span>
+            ))}
+          </p>
+          <p className="m-0">
+            {footerLinks.slice(3).map((link, i, arr) => (
+              <span key={link.label} className="whitespace-nowrap">
+                <Link
+                  href={link.href}
+                  className="text-hw-foreground transition-colors hover:text-[#323639] dark:hover:text-white"
+                >
+                  {link.label}
+                </Link>
+                {i < arr.length - 1 ? (
+                  <span className="mx-1 text-hw-line" aria-hidden>
+                    |
+                  </span>
+                ) : null}
+              </span>
+            ))}
+          </p>
         </nav>
 
         {/* Desktop */}
