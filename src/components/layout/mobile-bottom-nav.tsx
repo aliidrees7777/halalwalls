@@ -20,6 +20,8 @@ type NavItem = {
   icon: string;
   iconActive: string;
   size?: number;
+  width?: number;
+  height?: number;
   match: (pathname: string, hasCategory: boolean) => boolean;
 };
 
@@ -58,8 +60,9 @@ const profileItem: NavItem = {
   href: "/profile",
   icon: "/Profile-notacive.svg",
   iconActive: "/Profile-active.svg",
-  // Native SVG is 26×35; slight bump for optical balance vs Home/Category.
-  size: 29,
+  // Native SVG is 26×35 — match that height so it lines up with Home/Category.
+  width: 26,
+  height: 35,
   match: (p) => p.startsWith("/profile") && !p.startsWith("/profile/favorites"),
 };
 
@@ -73,23 +76,25 @@ function NavIcon({
   item: NavItem;
   active: boolean;
 }) {
-  const size = item.size ?? 35;
+  const width = item.width ?? item.size ?? 35;
+  const height = item.height ?? item.size ?? 35;
 
   return (
     <Image
       src={active ? item.iconActive : item.icon}
       alt=""
-      width={size}
-      height={size}
+      width={width}
+      height={height}
       unoptimized
       aria-hidden
       className="pointer-events-none select-none object-contain"
+      style={{ width, height }}
     />
   );
 }
 
-/** Slightly wider than native 26 so it balances next to Home/Category. */
-const PROFILE_AVATAR_SIZE = 29;
+/** Slightly larger than Home/Category (35) so the face reads clearly. */
+const PROFILE_AVATAR_SIZE = 36;
 
 function ProfileNavAvatar({
   avatar,
@@ -102,9 +107,7 @@ function ProfileNavAvatar({
 }) {
   return (
     <span
-      className={`relative grid place-items-center overflow-hidden rounded-full ${
-        active ? "ring-2 ring-hw-green ring-offset-1 ring-offset-black" : ""
-      }`}
+      className="relative grid place-items-center overflow-hidden rounded-full"
       style={{ width: PROFILE_AVATAR_SIZE, height: PROFILE_AVATAR_SIZE }}
     >
       {avatar ? (
@@ -117,10 +120,16 @@ function ProfileNavAvatar({
           className="size-full object-cover"
         />
       ) : (
-        <span className="grid size-full place-items-center bg-[#303133] text-[10px] font-semibold text-[#ccc]">
+        <span className="grid size-full place-items-center bg-[#303133] text-[11px] font-semibold text-[#ccc]">
           {initial}
         </span>
       )}
+      {active ? (
+        <span
+          className="pointer-events-none absolute inset-0 rounded-full border-2 border-hw-green"
+          aria-hidden
+        />
+      ) : null}
     </span>
   );
 }

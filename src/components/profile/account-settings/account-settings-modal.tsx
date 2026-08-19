@@ -328,7 +328,7 @@ export function AccountSettingsModal({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="w-full flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-7 sm:py-6 md:px-0 md:py-0">
+        <div className="w-full overflow-visible px-5 py-5 sm:px-7 sm:py-6 md:flex-1 md:overflow-y-auto md:overscroll-contain md:px-0 md:py-0">
           <AnimatePresence mode="wait">
             {statusMessage ? (
               <motion.p
@@ -345,7 +345,7 @@ export function AccountSettingsModal({
           </AnimatePresence>
 
           {/* Profile images */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-5">
+          <div className="flex flex-row items-center justify-center gap-[26.7px] sm:items-start sm:justify-start sm:gap-5">
             <AccountImageUpload
               label="profile photo"
               src={values.avatar}
@@ -546,7 +546,7 @@ export function AccountSettingsModal({
           </div>
         </div>
 
-        <DialogFooter className="w-full shrink-0 flex-col gap-2 border-t border-hw-border px-5 py-4 sm:flex-row sm:items-center sm:px-7 dark:md:border-white/10 md:px-0">
+        <DialogFooter className="w-full flex-col gap-2 border-t border-hw-border px-5 py-4 sm:flex-row sm:items-center sm:px-7 md:shrink-0 dark:md:border-white/10 md:px-0">
           {saveError ? (
             <p
               role="alert"
@@ -574,7 +574,7 @@ export function AccountSettingsModal({
           </Button>
         </DialogFooter>
 
-        <div className="shrink-0 pb-[72px] md:hidden md:pb-0">
+        <div className="pb-[72px] md:hidden md:pb-0">
           <SiteFooter className="!mt-0" />
         </div>
       </DialogContent>

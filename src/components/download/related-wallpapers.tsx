@@ -15,7 +15,7 @@ const titleClass =
   "flex h-[49.7px] items-center justify-center text-[length:var(--lp-panel-title)] font-bold leading-[22px] text-hw-foreground bg-hw-sidebar";
 
 const mobileThumbClass =
-  "h-[416.4px] w-[181px] max-w-full rounded-[5.81988px] border-[0.969979px] border-solid border-[#5B6268]";
+  "aspect-[181/416] w-full rounded-[5.81988px] border-[0.969979px] border-solid border-[#5B6268]";
 
 function WallpaperThumb({
   wallpaper,
@@ -82,18 +82,19 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
         <h2 className={cn(titleClass, "w-full rounded-t-[4px] border-b-2 border-hw-line dark:border-[#3A3E41]")}>
           Related Content
         </h2>
-        <div className="grid w-full grid-cols-2 justify-items-center gap-x-[6px] gap-y-[6px] bg-hw-sidebar px-[6px] dark:bg-[#222426]">
+        <div className="grid w-full grid-cols-2 gap-x-[6px] gap-y-[6px] bg-hw-sidebar px-[6px] dark:bg-[#222426]">
           {mobileItems.map((wallpaper, index) => (
             <motion.div
               key={wallpaper.id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.04 * index, duration: 0.35 }}
+              className="min-w-0 w-full"
             >
               <WallpaperThumb
                 wallpaper={wallpaper}
                 className={mobileThumbClass}
-                sizes="181px"
+                sizes="(max-width: 1023px) 45vw, 181px"
               />
             </motion.div>
           ))}

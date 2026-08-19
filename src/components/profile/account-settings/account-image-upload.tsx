@@ -43,7 +43,7 @@ export function AccountImageUpload({
   }
 
   return (
-    <div className={cn(variant === "avatar" ? "shrink-0" : "min-w-0 flex-1")}>
+    <div className={cn(variant === "avatar" ? "shrink-0" : "shrink-0 sm:min-w-0 sm:flex-1")}>
       <span className="sr-only">{label}</span>
       <input
         ref={inputRef}
@@ -63,8 +63,8 @@ export function AccountImageUpload({
           "hover:border-hw-green/40 hover:shadow-[0_0_20px_rgba(0,255,163,0.08)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50",
           variant === "avatar"
-            ? "h-[163px] w-[163px] rounded-full"
-            : "h-[88px] w-full rounded-md sm:h-[163px]",
+            ? "h-[100px] w-[100px] rounded-full sm:h-[163px] sm:w-[163px]"
+            : "h-[60.7px] w-[182px] shrink-0 rounded-[3.64px] sm:h-[163px] sm:w-full sm:rounded-md",
         )}
         aria-label={`Change ${label}`}
       >
@@ -86,7 +86,7 @@ export function AccountImageUpload({
             alt=""
             width={36}
             height={36}
-            className="size-9 object-contain drop-shadow-sm sm:size-10"
+            className="size-[22px] object-contain drop-shadow-sm sm:size-10"
           />
         </span>
       </button>
