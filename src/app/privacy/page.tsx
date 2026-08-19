@@ -10,7 +10,7 @@ const content: LegalContent = {
   title: "Privacy Policy",
   sections: [
     {
-      heading: "Privacy policy",
+      heading: "Privacy Policy",
       blocks: [
         {
           type: "p",

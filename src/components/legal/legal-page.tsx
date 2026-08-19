@@ -132,7 +132,7 @@ export function LegalPage({
                 {section.heading ? (
                   <h2
                     className={cn(
-                      "text-[21px] font-bold text-[#30A6E0] dark:text-[#75B2D0]",
+                      "text-[21px] font-bold text-[#30A6E0] dark:text-[#75B2D0] max-md:-mb-1.5",
                       headingClassName,
                     )}
                   >
