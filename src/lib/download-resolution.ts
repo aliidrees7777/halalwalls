@@ -42,6 +42,20 @@ export function availableDownloadResolutions(
   return [...desktop, ...mobile];
 }
 
+/** First mobile catalog size this wallpaper can serve without upscaling, if any. */
+export function firstAvailableMobileResolution(
+  wallpaper: WallpaperDetail,
+): DownloadResolution | null {
+  const mobile =
+    wallpaper.downloadResolutions?.mobile ??
+    filterResolutionsForSource(
+      mobileDownloadResolutions,
+      wallpaper.width,
+      wallpaper.height,
+    );
+  return mobile[0] ?? null;
+}
+
 /** Find a catalog size matching a browse/filter key, if this wallpaper can serve it. */
 export function findAvailableResolution(
   wallpaper: WallpaperDetail,

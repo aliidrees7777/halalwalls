@@ -78,11 +78,11 @@ export function RelatedWallpapers({ items }: RelatedWallpapersProps) {
   return (
     <>
       {/* Mobile — 2-up portrait grid (Figma carousel) */}
-      <section className="mx-auto flex w-[384px] max-w-full flex-col items-center gap-[6px] rounded-[6px] border-2 border-[#3A3E41] bg-[#222426] pb-[6px] lg:hidden">
-        <h2 className={cn(titleClass, "w-full rounded-t-[4px] border-b-2 border-[#3A3E41]")}>
+      <section className="mx-auto flex w-[384px] max-w-full flex-col items-center gap-[6px] rounded-[6px] border-2 border-hw-line bg-hw-sidebar pb-[6px] lg:hidden dark:border-[#3A3E41] dark:bg-[#222426]">
+        <h2 className={cn(titleClass, "w-full rounded-t-[4px] border-b-2 border-hw-line dark:border-[#3A3E41]")}>
           Related Content
         </h2>
-        <div className="grid w-full grid-cols-2 justify-items-center gap-x-[6px] gap-y-[6px] px-[6px]">
+        <div className="grid w-full grid-cols-2 justify-items-center gap-x-[6px] gap-y-[6px] bg-hw-sidebar px-[6px] dark:bg-[#222426]">
           {mobileItems.map((wallpaper, index) => (
             <motion.div
               key={wallpaper.id}

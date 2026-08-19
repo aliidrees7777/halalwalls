@@ -55,7 +55,7 @@ export function WallpaperPagination({
 
   return (
     <nav
-      className="flex flex-wrap items-center justify-start gap-[var(--lp-pagination-gap)] pt-[var(--lp-grid-to-pagination)] lg:justify-center"
+      className="flex flex-wrap items-center justify-center gap-[var(--lp-pagination-gap)] pt-[var(--lp-grid-to-pagination)] pb-[4.5rem] lg:justify-center lg:pb-0"
       aria-label="Pagination"
     >
       <button

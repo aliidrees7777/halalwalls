@@ -10,6 +10,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import type { Wallpaper, WallpaperDetail } from "@/types/wallpaper";
 import { SiteHeader } from "../home/site-header";
 import { HomeSidebar } from "../home/home-sidebar";
+import { DownloadOurAppMobile } from "@/components/download/download-sidebar-right";
 
 interface DownloadPageProps {
   wallpaper: WallpaperDetail;
@@ -42,6 +43,10 @@ export function DownloadPageClient({ wallpaper, related }: DownloadPageProps) {
           <DownloadMain wallpaper={wallpaper} />
 
           <DownloadSidebarRight related={related} />
+        </div>
+
+        <div className="mt-[var(--lp-sidebar-gap)] lg:hidden">
+          <DownloadOurAppMobile />
         </div>
       </motion.div>
 

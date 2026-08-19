@@ -90,7 +90,7 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
           className={cn(
             "absolute right-2 top-2 z-10 flex size-7 items-center justify-center",
             !favorited &&
-              "rounded-full bg-black/55 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100",
+              "rounded-full bg-black/55 opacity-100 backdrop-blur-sm transition-opacity lg:opacity-0 lg:group-hover:opacity-100",
           )}
           aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
         >

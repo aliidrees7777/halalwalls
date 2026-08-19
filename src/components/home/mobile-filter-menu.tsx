@@ -26,6 +26,9 @@ const sectionLabel =
 const explorePill =
   "inline-flex h-[35px] w-[74px] items-center justify-center rounded-full bg-[#F0F0F0] p-[10px] text-[12px] font-medium tracking-[0.02em] text-[#666666] transition-colors dark:bg-[#303133] dark:tracking-[0.24px] dark:text-[#ccc]";
 
+const selectedStroke =
+  "border-[2px] border-[#05DF8B] bg-hw-green/20 font-bold text-hw-green dark:border-[#05DF8B] dark:bg-hw-green/20 dark:text-hw-green";
+
 const filterPill =
   "inline-flex items-center justify-center rounded-full border-[0.8px] border-[#999999] bg-[#F0F0F0] p-[10px] text-[12px] font-medium tracking-[0.02em] text-[#666666] transition-colors dark:border-[#5b6268] dark:bg-[#303133] dark:tracking-[0.24px] dark:text-[#ccc]";
 
@@ -122,9 +125,16 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
   const activeCategory = searchParams.get("category") || "";
   const activeResolution = searchParams.get("resolution") || "";
   const activeSort = searchParams.get("sort") || "latest";
+  const hasCategory = Boolean(activeCategory);
+  const hasResolution = Boolean(activeResolution);
   const [mounted, setMounted] = useState(false);
+  const [showAllCategories, setShowAllCategories] = useState(false);
   useEffect(() => setMounted(true), []);
   const isDark = mounted && resolvedTheme === "dark";
+  const visibleCategories = showAllCategories
+    ? categories
+    : categories.slice(0, CATEGORIES_PREVIEW_LIMIT);
+  const hasMoreCategories = categories.length > CATEGORIES_PREVIEW_LIMIT;
 
   return (
     <div className="flex flex-col gap-[26px]">
@@ -132,11 +142,15 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
         <p className={sectionLabel}>Explore</p>
         <div className="flex flex-wrap gap-[10px]">
           {browse.map((p) => {
-            const isActive = activeSort === p.id;
+            const isActive = !hasCategory && !hasResolution && activeSort === p.id;
             return (
               <Link
                 key={p.id}
-                href={buildFilterHref(searchParams, { sort: p.id })}
+                href={buildFilterHref(searchParams, {
+                  sort: p.id,
+                  category: null,
+                  resolution: null,
+                })}
                 onClick={onNavigate}
                 className={cn(
                   explorePill,
@@ -154,21 +168,23 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
       <section className="flex flex-col gap-3">
         <p className={sectionLabel}>Categories</p>
         <div className="flex flex-wrap gap-2">
-          {categories.slice(0, CATEGORIES_PREVIEW_LIMIT).map((c) => {
+          {visibleCategories.map((c) => {
             const isPremium = c.isPremium || c.slug === "premium";
-            const isActive = activeCategory === c.slug;
+            const isActive = !hasResolution && activeCategory === c.slug;
             return (
               <Link
                 key={c.id}
-                href={buildFilterHref(searchParams, { category: c.slug })}
+                href={buildFilterHref(searchParams, {
+                  category: c.slug,
+                  sort: null,
+                  resolution: null,
+                })}
                 onClick={onNavigate}
                 className={cn(
                   filterPill,
                   isPremium &&
                     "gap-[3px] border-[#B5943C] text-[#B5943C] dark:border-[#ffd700] dark:text-[#ffd700]",
-                  isActive &&
-                    !isPremium &&
-                    "border-hw-green bg-hw-green/10 font-bold text-hw-green",
+                  isActive && !isPremium && selectedStroke,
                   isActive &&
                     isPremium &&
                     "border-[#B5943C] bg-[#B5943C]/10 font-bold dark:border-[#ffd700] dark:bg-[#ffd700]/10",
@@ -179,17 +195,17 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
               </Link>
             );
           })}
-          {categories.length > 0 && (
-            <Link
-              href="/"
-              onClick={onNavigate}
+          {hasMoreCategories && (
+            <button
+              type="button"
+              onClick={() => setShowAllCategories((open) => !open)}
               className={cn(
                 filterPill,
                 "border-[#647CDC] text-[#647CDC] dark:border-[#819ce4] dark:text-[#819ce4]",
               )}
             >
-              All {categories.length}+
-            </Link>
+              {showAllCategories ? "Less" : `All ${categories.length}+`}
+            </button>
           )}
         </div>
       </section>
@@ -205,6 +221,8 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
                 key={r}
                 href={buildFilterHref(searchParams, {
                   resolution: key,
+                  category: null,
+                  sort: null,
                 })}
                 onClick={onNavigate}
                 className={cn(
@@ -243,30 +261,6 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
               />
             </svg>
             Android
-          </a>
-          <a
-            href="https://telegram.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              appPill,
-              "w-[100px] gap-1 px-2.5 text-[12px] tracking-[0.02em]",
-            )}
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden
-            >
-              <path
-                d="M9.86182 4.19024C9.86461 4.19024 9.86833 4.19024 9.87204 4.19024C9.96919 4.19024 10.0594 4.22045 10.1333 4.27251L10.1319 4.27158C10.1858 4.31853 10.222 4.38453 10.2309 4.4589V4.46029C10.2402 4.517 10.2453 4.58207 10.2453 4.64854C10.2453 4.67875 10.2444 4.7085 10.242 4.73825V4.73406C10.1375 5.83519 9.6838 8.50551 9.45325 9.73818C9.35564 10.2602 9.16368 10.4349 8.97776 10.4517C8.57384 10.4893 8.26707 10.1849 7.8757 9.92829C7.26308 9.52623 6.9168 9.27616 6.32231 8.88433C5.63486 8.43207 6.08061 8.18247 6.47198 7.77623C6.5747 7.66932 8.35538 6.04947 8.39024 5.90259C8.3921 5.89376 8.39303 5.884 8.39303 5.87377C8.39303 5.83752 8.37955 5.80451 8.3577 5.77942C8.33353 5.76361 8.30332 5.75478 8.27171 5.75478C8.2508 5.75478 8.23081 5.75896 8.21222 5.76594L8.21315 5.76547C8.15179 5.77942 7.17322 6.42612 5.27742 7.70558C5.07058 7.86873 4.80936 7.97191 4.5249 7.984H4.52211C4.11912 7.93519 3.75332 7.84548 3.40611 7.71766L3.44051 7.72882C3.00452 7.58659 2.65823 7.51175 2.68798 7.27098C2.70378 7.14579 2.87638 7.01766 3.20578 6.88659C5.23482 6.00252 6.58787 5.41981 7.26494 5.13845C8.01189 4.74197 8.87782 4.41567 9.78838 4.20418L9.86135 4.18977L9.86182 4.19024ZM6.98373 0C3.1249 0.00929615 0 3.13977 0 7C0 10.8658 3.13373 14 7 14C10.8663 14 14 10.8663 14 7C14 3.13977 10.8751 0.00929615 7.0172 0H7.01627C7.00542 0 6.99458 0 6.98373 0Z"
-                fill="#25A1DF"
-              />
-            </svg>
-            Telegram
           </a>
         </div>
       </section>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import { DownloadActions } from "@/components/download/download-actions";
 import { DownloadResolutionPanel } from "@/components/download/download-resolution-panel";
 import {
   findAvailableResolution,
+  firstAvailableMobileResolution,
   normalizeResKey,
 } from "@/lib/download-resolution";
 import type { DownloadResolution, WallpaperDetail } from "@/types/wallpaper";
@@ -33,13 +34,29 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
     () => findAvailableResolution(wallpaper, urlResolution),
     [wallpaper, urlResolution],
   );
+  const mobileDefault = useMemo(
+    () => firstAvailableMobileResolution(wallpaper),
+    [wallpaper],
+  );
 
-  // Highlight browse choice when valid; otherwise the wallpaper's preferred size.
+  // Mobile viewport only: prefer a mobile size when the source can serve one.
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const apply = () => setIsMobileViewport(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  // Highlight browse choice when valid; otherwise mobile size on phones, else preferred.
   const selectedResolution =
     browseMatch?.label.replace(/×/g, "x") ??
-    (wallpaper.preferredResolution
-      ? normalizeResKey(wallpaper.preferredResolution)
-      : null);
+    (isMobileViewport && mobileDefault
+      ? normalizeResKey(mobileDefault.label)
+      : wallpaper.preferredResolution
+        ? normalizeResKey(wallpaper.preferredResolution)
+        : null);
 
   const sourceParsed = parseSourceUrl(wallpaper.description);
   const sourceUrl =

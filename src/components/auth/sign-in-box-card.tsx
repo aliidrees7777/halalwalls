@@ -60,7 +60,7 @@ export function SignInBoxCard({ standalone = false }: { standalone?: boolean }) 
                 : "absolute top-4 right-6 hidden cursor-pointer text-2xl font-bold text-hw-depw transition-colors hover:opacity-70 md:block dark:hover:text-white"
             }
           >
-            <ModalCloseIcon />
+            <ModalCloseIcon size={20} />
           </button>
           <div className="flex w-full max-w-xl flex-col gap-8 md:max-w-none md:gap-[16.77px]">
             <h1 className="text-center text-[31px] font-bold leading-tight text-hw-depw dark:md:text-white">

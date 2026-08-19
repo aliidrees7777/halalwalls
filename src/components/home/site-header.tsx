@@ -44,7 +44,7 @@ function MobileHeaderActions({
           className="flex h-7 w-[35px] items-center justify-center"
         >
           <Image
-            src="/mobile-nav/premium-diamond.png"
+            src="/premium-diamond-icon.svg"
             alt=""
             width={35}
             height={28}
