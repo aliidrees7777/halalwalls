@@ -37,21 +37,14 @@ interface LegalPageProps {
   stackClassName?: string;
 }
 
-/** Mobile Figma legal layout. Desktop restored at sm/md.
- *  Title 28/700 white · headings 16/700 #75B2D0 · body 16/400 #C8C3B2 (not the heading color). */
+/** Mobile type matching Terms of Use. Desktop restored at md. */
 export const legalMobileFigmaProps = {
-  pageClassName: "dark:max-md:bg-[#222426]",
-  mainClassName:
-    "flex w-full max-w-[372px] flex-col items-center px-5 py-10 pb-[60px] md:max-w-none md:px-4 md:py-10 lg:w-[1650px] lg:py-14",
   titleClassName:
-    "mb-10 text-[28px] font-bold leading-[34px] dark:text-white md:mb-6 md:text-[40px] md:leading-none md:dark:text-[#C8C3B2]",
+    "text-[28px] font-bold leading-[34px] dark:text-white md:text-[40px] md:leading-none md:dark:text-[#C8C3B2]",
   headingClassName:
     "text-[16px] font-bold leading-[26px] md:text-[21px] md:leading-none",
   bodyClassName:
-    "text-[16px] font-normal leading-[26px] dark:text-[#C8C3B2] md:text-[21px] md:font-medium md:leading-relaxed",
-  cardClassName:
-    "w-full rounded-[10.67px] border-[1.42px] p-[30px_28px] dark:border-[#3A3E41] dark:bg-[#181A1B] sm:rounded-md sm:border sm:p-8",
-  stackClassName: "space-y-[17.78px] md:space-y-7",
+    "text-[16px] font-normal leading-[26px] md:text-[21px] md:font-medium md:leading-relaxed",
 } as const;
 
 const bodyText =

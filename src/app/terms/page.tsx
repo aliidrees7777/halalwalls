@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LegalPage, type LegalContent } from "@/components/legal/legal-page";
+import { LegalPage, legalMobileFigmaProps, type LegalContent } from "@/components/legal/legal-page";
 
 export const metadata: Metadata = { title: "Terms of Service | HalalWalls" };
 
@@ -154,12 +154,6 @@ const content: LegalContent = {
 
 export default function TermsPage() {
   return (
-    <LegalPage
-      content={content}
-      // Mobile: same as Privacy — title 28px/700 · headings 16px/700 · body 16px/400.
-      titleClassName="text-[28px] font-bold leading-[34px] md:text-[40px] md:leading-none"
-      headingClassName="text-[16px] font-bold leading-[26px] md:text-[21px] md:leading-none"
-      bodyClassName="text-[16px] font-normal leading-[26px] md:text-[21px] md:font-medium md:leading-relaxed"
-    />
+    <LegalPage content={content} {...legalMobileFigmaProps} />
   );
 }
