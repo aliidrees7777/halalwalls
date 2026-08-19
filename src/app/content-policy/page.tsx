@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LegalPage, type LegalContent } from "@/components/legal/legal-page";
+import { LegalPage, legalMobileFigmaProps, type LegalContent } from "@/components/legal/legal-page";
 
 export const metadata: Metadata = { title: "Content Policy | HalalWalls" };
 
@@ -158,5 +158,5 @@ const content: LegalContent = {
 };
 
 export default function ContentPolicyPage() {
-  return <LegalPage content={content} />;
+  return <LegalPage content={content} {...legalMobileFigmaProps} />;
 }

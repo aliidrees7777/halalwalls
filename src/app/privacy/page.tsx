@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LegalPage, type LegalContent } from "@/components/legal/legal-page";
+import { LegalPage, legalMobileFigmaProps, type LegalContent } from "@/components/legal/legal-page";
 
 export const metadata: Metadata = { title: "Privacy Policy | HalalWalls" };
 
 const lk = "underline underline-offset-2 hover:text-white";
 
 const content: LegalContent = {
-  title: "Privacy Policyyy",
+  title: "Privacy Policy",
   sections: [
     {
       heading: "Privacy policy",
@@ -168,12 +168,6 @@ const content: LegalContent = {
 
 export default function PrivacyPage() {
   return (
-    <LegalPage
-      content={content}
-      // Mobile Figma: title 28px/700 · headings 16px/700 · body 16px/400. Desktop unchanged.
-      titleClassName="text-[28px] font-bold leading-[34px] md:text-[40px] md:leading-none"
-      headingClassName="text-[16px] font-bold leading-[26px] md:text-[21px] md:leading-none"
-      bodyClassName="text-[16px] font-normal leading-[26px] md:text-[21px] md:font-medium md:leading-relaxed"
-    />
+    <LegalPage content={content} {...legalMobileFigmaProps} />
   );
 }

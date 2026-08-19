@@ -31,7 +31,27 @@ interface LegalPageProps {
   titleClassName?: string;
   headingClassName?: string;
   bodyClassName?: string;
+  pageClassName?: string;
+  mainClassName?: string;
+  cardClassName?: string;
+  stackClassName?: string;
 }
+
+/** Mobile Figma legal layout (Privacy Policy node). Desktop restored at sm/md. */
+export const legalMobileFigmaProps = {
+  pageClassName: "dark:max-md:bg-[#222426]",
+  mainClassName:
+    "flex w-full max-w-[372px] flex-col items-center px-5 py-10 pb-[60px] md:max-w-none md:px-4 md:py-10 lg:w-[1650px] lg:py-14",
+  titleClassName:
+    "mb-10 text-[28px] font-bold leading-[34px] dark:text-white md:mb-6 md:text-[40px] md:leading-none md:dark:text-[#C8C3B2]",
+  headingClassName:
+    "text-[16px] font-bold leading-[26px] md:text-[21px] md:leading-none",
+  bodyClassName:
+    "text-[16px] font-bold leading-[26px] dark:text-[#75B2D0] md:text-[21px] md:font-medium md:leading-relaxed md:dark:text-[#C8C3B2]",
+  cardClassName:
+    "w-full rounded-[10.67px] border-[1.42px] p-[30px_28px] dark:border-[#3A3E41] dark:bg-[#181A1B] sm:rounded-md sm:border sm:p-8",
+  stackClassName: "space-y-[17.78px] md:space-y-7",
+} as const;
 
 const bodyText =
   "text-[21px] leading-relaxed text-black fony-medium dark:text-[#C8C3B2]";
@@ -77,12 +97,26 @@ export function LegalPage({
   titleClassName,
   headingClassName,
   bodyClassName,
+  pageClassName,
+  mainClassName,
+  cardClassName,
+  stackClassName,
 }: LegalPageProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-white dark:bg-hw-bg">
+    <div
+      className={cn(
+        "flex min-h-screen flex-col bg-white dark:bg-hw-bg",
+        pageClassName,
+      )}
+    >
       <SiteHeader />
 
-      <main className="mx-auto  lg:w-[1650px] flex-1 px-4 py-10 lg:py-14">
+      <main
+        className={cn(
+          "mx-auto flex-1 px-4 py-10 lg:w-[1650px] lg:py-14",
+          mainClassName,
+        )}
+      >
         <h1
           className={cn(
             "mb-6 text-center text-[40px] font-bold text-black dark:text-[#C8C3B2]",
@@ -92,8 +126,13 @@ export function LegalPage({
           {content.title}
         </h1>
 
-        <div className="rounded-md border border-hw-line bg-[#EEEEEE] p-5 sm:p-8 dark:bg-[#181A1B]">
-          <div className="space-y-7">
+        <div
+          className={cn(
+            "rounded-md border border-hw-line bg-[#EEEEEE] p-5 sm:p-8 dark:bg-[#181A1B]",
+            cardClassName,
+          )}
+        >
+          <div className={cn("space-y-7", stackClassName)}>
             {content.sections.map((section, i) => (
               <section key={i} className="space-y-3">
                 {section.heading ? (

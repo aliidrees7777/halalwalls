@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LegalPage, type LegalContent } from "@/components/legal/legal-page";
+import { LegalPage, legalMobileFigmaProps, type LegalContent } from "@/components/legal/legal-page";
 
 export const metadata: Metadata = { title: "DMCA | HalalWalls" };
 
@@ -168,5 +168,5 @@ const content: LegalContent = {
 };
 
 export default function DmcaPage() {
-  return <LegalPage content={content} />;
+  return <LegalPage content={content} {...legalMobileFigmaProps} />;
 }

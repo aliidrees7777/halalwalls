@@ -93,8 +93,8 @@ function NavIcon({
   );
 }
 
-/** Slightly larger than Home/Category (35) so the face reads clearly. */
-const PROFILE_AVATAR_SIZE = 36;
+/** Larger than Home/Category (35) so the face + outer ring read clearly. */
+const PROFILE_AVATAR_SIZE = 40;
 
 function ProfileNavAvatar({
   avatar,
@@ -107,29 +107,27 @@ function ProfileNavAvatar({
 }) {
   return (
     <span
-      className="relative grid place-items-center overflow-hidden rounded-full"
+      className={`relative grid place-items-center rounded-full ${
+        active ? "ring-2 ring-hw-green" : ""
+      }`}
       style={{ width: PROFILE_AVATAR_SIZE, height: PROFILE_AVATAR_SIZE }}
     >
-      {avatar ? (
-        <Image
-          src={upgradeAvatarUrl(avatar, 96)}
-          alt=""
-          width={PROFILE_AVATAR_SIZE}
-          height={PROFILE_AVATAR_SIZE}
-          unoptimized={shouldUnoptimizeMedia(upgradeAvatarUrl(avatar, 96))}
-          className="size-full object-cover"
-        />
-      ) : (
-        <span className="grid size-full place-items-center bg-[#303133] text-[11px] font-semibold text-[#ccc]">
-          {initial}
-        </span>
-      )}
-      {active ? (
-        <span
-          className="pointer-events-none absolute inset-0 rounded-full border-2 border-hw-green"
-          aria-hidden
-        />
-      ) : null}
+      <span className="size-full overflow-hidden rounded-full">
+        {avatar ? (
+          <Image
+            src={upgradeAvatarUrl(avatar, 96)}
+            alt=""
+            width={PROFILE_AVATAR_SIZE}
+            height={PROFILE_AVATAR_SIZE}
+            unoptimized={shouldUnoptimizeMedia(upgradeAvatarUrl(avatar, 96))}
+            className="size-full object-cover"
+          />
+        ) : (
+          <span className="grid size-full place-items-center bg-[#303133] text-[11px] font-semibold text-[#ccc]">
+            {initial}
+          </span>
+        )}
+      </span>
     </span>
   );
 }
