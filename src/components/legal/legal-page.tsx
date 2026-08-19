@@ -37,7 +37,8 @@ interface LegalPageProps {
   stackClassName?: string;
 }
 
-/** Mobile Figma legal layout (Privacy Policy node). Desktop restored at sm/md. */
+/** Mobile Figma legal layout. Desktop restored at sm/md.
+ *  Title 28/700 white · headings 16/700 #75B2D0 · body 16/400 #C8C3B2 (not the heading color). */
 export const legalMobileFigmaProps = {
   pageClassName: "dark:max-md:bg-[#222426]",
   mainClassName:
@@ -47,7 +48,7 @@ export const legalMobileFigmaProps = {
   headingClassName:
     "text-[16px] font-bold leading-[26px] md:text-[21px] md:leading-none",
   bodyClassName:
-    "text-[16px] font-bold leading-[26px] dark:text-[#75B2D0] md:text-[21px] md:font-medium md:leading-relaxed md:dark:text-[#C8C3B2]",
+    "text-[16px] font-normal leading-[26px] dark:text-[#C8C3B2] md:text-[21px] md:font-medium md:leading-relaxed",
   cardClassName:
     "w-full rounded-[10.67px] border-[1.42px] p-[30px_28px] dark:border-[#3A3E41] dark:bg-[#181A1B] sm:rounded-md sm:border sm:p-8",
   stackClassName: "space-y-[17.78px] md:space-y-7",
