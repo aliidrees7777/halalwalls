@@ -136,11 +136,21 @@ export function MobileBottomNav() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const hasCategory = Boolean(searchParams.get("category"));
-  const { isAuthenticated, user, openAuthModal } = useAuth();
+  const { isAuthenticated, user, openAuthModal, authModal, closeAuthModal } =
+    useAuth();
   const profileActive = profileItem.match(pathname, hasCategory);
   const initial = (user?.firstName || user?.name || user?.email || "?")
     .charAt(0)
     .toUpperCase();
+
+  // Subscription popup test: same-route taps (e.g. Home on "/") never change
+  // pathname, so dismiss premium explicitly. Nav is already z-[60] above the
+  // modal shell (z-50) — kept visible and clickable.
+  const dismissPremiumPopup = () => {
+    if (authModal.open && authModal.view === "premium") {
+      closeAuthModal();
+    }
+  };
 
   return (
     <nav
@@ -159,6 +169,7 @@ export function MobileBottomNav() {
               whileTap={tap}
               transition={tapTransition}
               className="flex items-center justify-center"
+              onClick={dismissPremiumPopup}
             >
               <NavIcon item={item} active={active} />
             </MotionLink>
@@ -172,6 +183,7 @@ export function MobileBottomNav() {
           whileTap={{ scale: 0.9 }}
           transition={tapTransition}
           className="flex items-center justify-center"
+          onClick={dismissPremiumPopup}
         >
           <NavIcon
             item={{
@@ -197,6 +209,7 @@ export function MobileBottomNav() {
               whileTap={tap}
               transition={tapTransition}
               className="flex items-center justify-center"
+              onClick={dismissPremiumPopup}
             >
               <NavIcon item={item} active={active} />
             </MotionLink>
@@ -213,6 +226,7 @@ export function MobileBottomNav() {
           transition={tapTransition}
           className="flex items-center justify-center"
           onClick={(e) => {
+            dismissPremiumPopup();
             if (!isAuthenticated) {
               e.preventDefault();
               openAuthModal("signin");

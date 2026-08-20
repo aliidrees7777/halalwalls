@@ -177,7 +177,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
         )}
       </p>
 
-      <div className="mt-5">
+      <div className="mt-10">
         <DownloadActions
           wallpaper={wallpaper}
           selectedResolution={selectedResolution}
@@ -185,7 +185,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
         />
       </div>
 
-      <div className="mt-5">
+      <div className="mt-10">
         <DownloadResolutionPanel
           wallpaper={wallpaper}
           selectedResolution={selectedResolution}

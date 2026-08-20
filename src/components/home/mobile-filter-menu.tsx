@@ -184,10 +184,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
                   filterPill,
                   isPremium &&
                     "gap-[3px] border-[#B5943C] text-[#B5943C] dark:border-[#ffd700] dark:text-[#ffd700]",
-                  isActive && !isPremium && selectedStroke,
-                  isActive &&
-                    isPremium &&
-                    "border-[#B5943C] bg-[#B5943C]/10 font-bold dark:border-[#ffd700] dark:bg-[#ffd700]/10",
+                  isActive && selectedStroke,
                 )}
               >
                 {c.name}

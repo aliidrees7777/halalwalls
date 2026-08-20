@@ -45,7 +45,7 @@ export function DownloadPageClient({ wallpaper, related }: DownloadPageProps) {
           <DownloadSidebarRight related={related} />
         </div>
 
-        <div className="mt-[var(--lp-sidebar-gap)] lg:hidden">
+        <div className="mt-10 lg:hidden">
           <DownloadOurAppMobile />
         </div>
       </motion.div>

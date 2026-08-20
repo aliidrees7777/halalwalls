@@ -41,14 +41,21 @@ function MobileHeaderActions({
           type="button"
           onClick={() => openAuthModal("premium")}
           aria-label="Premium"
-          className="flex h-7 w-[35px] items-center justify-center"
+          className="flex h-[22px] w-[35px] items-center justify-center"
         >
           <Image
             src="/premium-diamond-icon.svg"
             alt=""
             width={35}
-            height={28}
-            className="h-7 w-[35px] object-contain"
+            height={22}
+            className="h-[22px] w-[35px] object-contain dark:hidden"
+          />
+          <Image
+            src="/premium-diamond-icon-darkmode.svg"
+            alt=""
+            width={35}
+            height={22}
+            className="hidden h-[22px] w-[35px] object-contain dark:block"
           />
         </button>
       )}
@@ -83,7 +90,7 @@ function MobileSiteHeader({
         }`}
       >
         <div className="flex h-[54px] items-center gap-4 px-3">
-          <HalalWallsLogo className="shrink-0 [&_img]:w-[140px]" />
+          <HalalWallsLogo className="shrink-0 [&_img]:w-[160px]" />
           <div className="ml-auto">
             <MobileHeaderActions open={open} onToggle={onToggle} />
           </div>

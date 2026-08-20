@@ -128,11 +128,11 @@ export function LegalPage({
         >
           <div className={cn("space-y-7", stackClassName)}>
             {content.sections.map((section, i) => (
-              <section key={i} className="space-y-2 md:space-y-3">
+              <section key={i} className="space-y-2 md:mb-12 md:space-y-3">
                 {section.heading ? (
                   <h2
                     className={cn(
-                      "mb-0 text-[21px] font-bold text-[#30A6E0] dark:text-[#75B2D0] md:mb-0",
+                      "mb-0 text-[21px] font-bold text-[#30A6E0] dark:text-[#75B2D0] md:mb-4",
                       headingClassName,
                     )}
                   >

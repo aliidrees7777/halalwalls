@@ -15,7 +15,7 @@ export default function ContactPage() {
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10 lg:py-14">
-        <h1 className="mb-8 text-center text-2xl font-bold text-black sm:text-3xl dark:text-hw-faint">
+        <h1 className="mb-8 text-center text-2xl font-bold text-black sm:text-3xl dark:text-white md:dark:text-hw-faint">
           Contact Us
         </h1>
         <ContactForm />

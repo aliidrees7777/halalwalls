@@ -135,7 +135,7 @@ export function DownloadOurAppMobile() {
 
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/detail-page/our-app-phone.png"
+          src="/our-app-mobile.svg"
           alt="HalalWalls mobile app preview"
           width={138}
           height={290}
@@ -148,7 +148,7 @@ export function DownloadOurAppMobile() {
 
 export function DownloadSidebarRight({ related }: DownloadSidebarRightProps) {
   return (
-    <aside className="flex w-full flex-col gap-[var(--lp-sidebar-gap)] lg:w-[418px] lg:shrink-0">
+    <aside className="mt-10 flex w-full flex-col gap-[var(--lp-sidebar-gap)] lg:mt-0 lg:w-[418px] lg:shrink-0">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
