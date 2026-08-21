@@ -240,7 +240,8 @@ export function UploadForm() {
         </p>
       )}
 
-      {/* Dropzone */}
+      {/* Dropzone + don't-publish — horizontal padding (mobile); desktop unchanged */}
+      <div className="flex flex-col gap-7 max-lg:px-4">
       <input
         ref={inputRef}
         type="file"
@@ -294,10 +295,10 @@ export function UploadForm() {
             <span className="grid size-[72px] place-items-center rounded-full bg-[#2F4577] transition-transform group-hover:scale-105">
               <Plus className="size-9 text-white" strokeWidth={2.5} />
             </span>
-            <span className="text-2xl font-medium text-hw-depw">
+            <span className="text-[17px] font-medium text-white lg:text-2xl lg:text-hw-depw">
               Choose Wallpaper
             </span>
-            <span className="text-[21px] text-hw-depw">
+            <span className="text-[15px] font-normal text-white lg:text-[21px] lg:text-hw-depw">
               JPG or PNG, up to 25MB
             </span>
           </>
@@ -306,24 +307,25 @@ export function UploadForm() {
 
       {/* Don't publish notice */}
       <div className="flex flex-col justify-center lg:items-center">
-        <div className="box-border flex w-full flex-col items-start gap-[17.78px] rounded-[7.1111px] border-2 border-black bg-[#555555] px-[24.8889px] py-[35.5555px] text-white lg:h-[412.11px] lg:w-[1191.11px] dark:border dark:border-[#2F2805] dark:bg-[#2F2805] dark:text-[#C1A36F]">
-          <h2 className="text-[28px] font-semibold text-white dark:text-[#C1A36F]">
+        <div className="box-border flex w-full flex-col items-start gap-[17.78px] rounded-[7.1111px] border-[1.42222px] border-solid border-[#6C4C0B] bg-[#555555] px-[24.8889px] py-[35.5555px] text-white lg:h-[412.11px] lg:w-[1191.11px] lg:border-2 lg:border-black lg:dark:border lg:dark:border-[#2F2805] dark:bg-[#2F2805] dark:text-[#C1A36F]">
+          <h2 className="text-[21px] font-semibold text-[#C1A36F] lg:text-[28px] lg:text-white lg:dark:text-[#C1A36F]">
             Don&rsquo;t publish:
           </h2>
-          <ol className="space-y-2 text-[21px] font-medium text-white dark:text-[#C1A36F]">
-            {DONT_PUBLISH.map((item, i) => (
-              <li key={item}>
-                {i + 1}. {item}
-              </li>
-            ))}
-          </ol>
+            <ol className="space-y-2 text-[16px] font-medium text-white dark:text-[#C1A36F] lg:text-[21px]">
+              {DONT_PUBLISH.map((item, i) => (
+                <li key={item}>
+                  {i + 1}. {item}
+                </li>
+              ))}
+            </ol>
           <Link
             href="/content-policy"
-            className="inline-block text-[21px] text-white underline dark:text-[#C1A36F]"
+            className="inline-block text-[14px] font-medium text-white underline dark:text-[#C1A36F] lg:text-[21px]"
           >
             Read full Content Policy
           </Link>
         </div>
+      </div>
       </div>
 
       {/* Title */}
