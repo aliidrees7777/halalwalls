@@ -10,17 +10,26 @@ import { ForgotPasswordCard } from "./forgot-password-card";
 import { PremiumPlans } from "../premium/premium-plans";
 import { SiteHeader } from "@/components/home/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { MobileModalBackButton } from "@/components/shared/mobile-modal-back-button";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 
 /** Mobile: full-screen page with header/footer. Desktop: dimmed glass overlay. */
-function MobilePageShell({ children }: { children: ReactNode }) {
+function MobilePageShell({
+  children,
+  onBack,
+}: {
+  children: ReactNode;
+  onBack: () => void;
+}) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-white dark:bg-hw-bg md:items-center md:justify-center md:bg-black/20 md:p-4 md:backdrop-blur-[1px] dark:md:bg-black/25">
       <div className="shrink-0 md:hidden">
         <SiteHeader />
       </div>
 
-      <div className="flex flex-1 flex-col px-4 py-6 md:flex-none md:items-center md:justify-center md:p-0">
+      <div className="relative flex flex-1 flex-col px-4 py-6 md:flex-none md:items-center md:justify-center md:p-0">
+        {/* Same visual spot as before: content area top-left (shell uses px-4 py-6). */}
+        <MobileModalBackButton onClick={onBack} className="left-4 top-6" />
         {children}
       </div>
 
@@ -60,7 +69,7 @@ export function AuthModal() {
   const View = VIEW_MAP[authModal.view];
 
   return (
-    <MobilePageShell>
+    <MobilePageShell onBack={closeAuthModal}>
       <View />
     </MobilePageShell>
   );

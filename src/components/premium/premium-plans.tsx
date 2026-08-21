@@ -103,8 +103,9 @@ export function PremiumPlans() {
             : "relative z-10 my-auto flex h-auto max-h-[95dvh] w-full max-w-[1275px] flex-col items-center gap-6 overflow-y-auto rounded-2xl border-3 border-[#05DF8B] bg-[#EEEEEE] p-4 shadow-[0_0_60px_rgba(0,255,163,0.12)] dark:bg-[rgba(24,26,27,0.72)] dark:backdrop-blur-xl md:box-border md:h-[897.86px] md:w-[1275px] md:max-h-[897.86px] md:justify-center md:gap-[79.29px] md:overflow-hidden md:rounded-[31.716px] md:border-[3.172px] md:p-[95.149px] md:shadow-[0px_6.343px_6.343px_rgba(0,0,0,0.25)] max-md:max-h-none max-md:overflow-y-visible max-md:rounded-none max-md:border-0 max-md:bg-transparent max-md:p-0 max-md:shadow-none max-md:backdrop-blur-none max-md:dark:bg-transparent"
         }
       >
-        {/* Close — desktop modal / standalone page only; mobile uses header nav */}
+        {/* Close — desktop modal / standalone page only */}
         <button
+          type="button"
           onClick={() => {
             if (isStandalonePage) router.push("/");
             else closeAuthModal();

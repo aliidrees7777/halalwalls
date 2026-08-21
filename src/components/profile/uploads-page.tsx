@@ -50,7 +50,7 @@ export function UploadsPage() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-10 text-2xl font-semibold text-hw-account lg:text-4xl"
+          className="mb-10 text-center text-2xl font-semibold text-hw-account lg:text-4xl"
         >
           Your Uploads
         </motion.h1>

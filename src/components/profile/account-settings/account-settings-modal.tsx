@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/home/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { MobileModalBackButton } from "@/components/shared/mobile-modal-back-button";
 import { PremiumIcon } from "@/components/profile/premium-icon";
 import { AccountFormField } from "@/components/profile/account-settings/account-form-field";
 import { AccountImageUpload } from "@/components/profile/account-settings/account-image-upload";
@@ -322,6 +323,12 @@ export function AccountSettingsModal({
           <SiteHeader />
         </div>
 
+        <div className="relative min-h-0 w-full flex-1 md:contents">
+          <MobileModalBackButton
+            onClick={() => onOpenChange(false)}
+            className="left-4 top-6"
+          />
+
         <DialogHeader className="w-full shrink-0 border-b border-hw-border dark:md:border-white/10">
           <DialogTitle className="text-xl text-hw-depw sm:text-2xl dark:md:text-white">
             Account Information
@@ -573,6 +580,7 @@ export function AccountSettingsModal({
             {saving ? "Saving…" : "Save Changes"}
           </Button>
         </DialogFooter>
+        </div>
 
         <div className="pb-[72px] md:hidden md:pb-0">
           <SiteFooter className="!mt-0" />
