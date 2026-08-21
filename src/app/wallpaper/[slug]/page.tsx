@@ -36,20 +36,23 @@ export default async function WallpaperDownloadPage({
 
   // Live data from the backend so the wallpaper carries its real id (UUID),
   // favoritesCount, etc. — required for favorite/download actions to work.
-  // Detail + related run in parallel; detail is shared with generateMetadata
-  // via React cache() so a click isn't 3 sequential ~1s API waits.
+  // Detail is required; related is best-effort so a pooler blip doesn't crash
+  // the whole download page. Detail is shared with generateMetadata via cache().
   let wallpaper: WallpaperDetail;
-  let related: Wallpaper[];
   try {
-    const [detail, relatedRes] = await Promise.all([
-      getWallpaperBySlug(slug),
-      getRelatedWallpapers(slug),
-    ]);
+    const detail = await getWallpaperBySlug(slug);
     wallpaper = detail.wallpaper;
-    related = relatedRes.wallpapers;
   } catch (e) {
     if (e instanceof ApiError && e.statusCode === 404) notFound();
     throw e;
+  }
+
+  let related: Wallpaper[] = [];
+  try {
+    const relatedRes = await getRelatedWallpapers(slug);
+    related = relatedRes.wallpapers;
+  } catch {
+    related = [];
   }
 
   return <DownloadPageClient wallpaper={wallpaper} related={related} />;

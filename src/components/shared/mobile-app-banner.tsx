@@ -30,7 +30,7 @@ export function MobileAppBanner({ className }: { className?: string }) {
           href="https://play.google.com/store/apps"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 flex w-[150px] shrink-0 items-center gap-2 rounded-lg bg-hw-pill px-3 py-2"
+          className="mt-2 flex w-[150px] shrink-0 items-center gap-2 rounded-lg bg-[#1C2129] px-3 py-2 dark:bg-[#1C2129]"
         >
           <Image
             src="/google-play-logo.png"
@@ -40,8 +40,8 @@ export function MobileAppBanner({ className }: { className?: string }) {
             className="size-6 object-contain"
           />
           <div>
-            <p className="text-[10px] font-semibold">Get it on</p>
-            <p className="text-[13px] font-semibold">Google Play</p>
+            <p className="text-[10px] font-semibold text-[#FFFFFF]">Get it on</p>
+            <p className="text-[13px] font-semibold text-[#FFFFFF]">Google Play</p>
           </div>
         </a>
       </div>

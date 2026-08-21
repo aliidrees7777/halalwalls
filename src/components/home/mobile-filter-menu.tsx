@@ -24,7 +24,7 @@ const sectionLabel =
   "text-[12px] font-bold uppercase tracking-[0.05em] text-[#999999] dark:tracking-[0.06em] dark:text-[#ccc]";
 
 const explorePill =
-  "inline-flex h-[35px] w-[74px] items-center justify-center rounded-full bg-[#F0F0F0] p-[10px] text-[12px] font-medium tracking-[0.02em] text-[#666666] transition-colors dark:bg-[#303133] dark:tracking-[0.24px] dark:text-[#ccc]";
+  "inline-flex h-[35px] w-[74px] items-center justify-center rounded-full border-[0.8px] border-transparent bg-[#F0F0F0] p-[10px] text-[12px] font-medium tracking-[0.02em] text-[#666666] transition-colors dark:bg-[#303133] dark:tracking-[0.24px] dark:text-[#ccc]";
 
 const selectedStroke =
   "border-[2px] border-[#05DF8B] bg-hw-green/20 font-bold text-hw-green dark:border-[#05DF8B] dark:bg-hw-green/20 dark:text-hw-green";
@@ -154,8 +154,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
                 onClick={onNavigate}
                 className={cn(
                   explorePill,
-                  isActive &&
-                    "bg-hw-green/20 font-bold text-hw-green dark:bg-hw-green/20 dark:text-hw-green",
+                  isActive && selectedStroke,
                 )}
               >
                 {p.label}

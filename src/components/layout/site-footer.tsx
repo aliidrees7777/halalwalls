@@ -192,7 +192,20 @@ export function SiteFooter({ className }: { className?: string }) {
             aria-label="Google Play"
             className="shrink-0"
           >
-            <Image src={playstore} alt="" width={35} height={35} />
+            <Image
+              src="/Google-Play-lightmode.svg"
+              alt=""
+              width={35}
+              height={35}
+              className="dark:hidden"
+            />
+            <Image
+              src={playstore}
+              alt=""
+              width={35}
+              height={35}
+              className="hidden dark:block"
+            />
           </a>
           <a
             href="https://www.tiktok.com/@kidoshistudios"
@@ -201,7 +214,20 @@ export function SiteFooter({ className }: { className?: string }) {
             aria-label="TikTok"
             className="shrink-0"
           >
-            <Image src={tiktok} alt="" width={35} height={35} />
+            <Image
+              src="/Tik-Tok-lightmode.svg"
+              alt=""
+              width={35}
+              height={35}
+              className="dark:hidden"
+            />
+            <Image
+              src={tiktok}
+              alt=""
+              width={35}
+              height={35}
+              className="hidden dark:block"
+            />
           </a>
           <a
             href="https://www.instagram.com/kidoshistudios/"
@@ -210,7 +236,20 @@ export function SiteFooter({ className }: { className?: string }) {
             aria-label="Instagram"
             className="shrink-0"
           >
-            <Image src={insta} alt="" width={35} height={35} />
+            <Image
+              src="/Instagram-lightmode.svg"
+              alt=""
+              width={35}
+              height={35}
+              className="dark:hidden"
+            />
+            <Image
+              src={insta}
+              alt=""
+              width={35}
+              height={35}
+              className="hidden dark:block"
+            />
           </a>
           <a
             href="https://nocopyrightnasheeds.com/"
@@ -219,7 +258,20 @@ export function SiteFooter({ className }: { className?: string }) {
             aria-label="NCN"
             className="shrink-0"
           >
-            <Image src={ncn} alt="" width={35} height={35} />
+            <Image
+              src="/NCN-lightmode.svg"
+              alt=""
+              width={35}
+              height={35}
+              className="dark:hidden"
+            />
+            <Image
+              src={ncn}
+              alt=""
+              width={35}
+              height={35}
+              className="hidden dark:block"
+            />
           </a>
         </div>
         <p className="text-center text-[15px] font-medium text-hw-foreground">
