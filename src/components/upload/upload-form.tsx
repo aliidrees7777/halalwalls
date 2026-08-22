@@ -295,10 +295,10 @@ export function UploadForm() {
             <span className="grid size-[72px] place-items-center rounded-full bg-[#2F4577] transition-transform group-hover:scale-105">
               <Plus className="size-9 text-white" strokeWidth={2.5} />
             </span>
-            <span className="text-[17px] font-medium text-white lg:text-2xl lg:text-hw-depw">
+            <span className="text-[17px] font-medium text-hw-depw lg:text-2xl">
               Choose Wallpaper
             </span>
-            <span className="text-[15px] font-normal text-white lg:text-[21px] lg:text-hw-depw">
+            <span className="text-[15px] font-normal text-hw-depw lg:text-[21px]">
               JPG or PNG, up to 25MB
             </span>
           </>
@@ -308,7 +308,7 @@ export function UploadForm() {
       {/* Don't publish notice */}
       <div className="flex flex-col justify-center lg:items-center">
         <div className="box-border flex w-full flex-col items-start gap-[17.78px] rounded-[7.1111px] border-[1.42222px] border-solid border-[#6C4C0B] bg-[#555555] px-[24.8889px] py-[35.5555px] text-white lg:h-[412.11px] lg:w-[1191.11px] lg:border-2 lg:border-black lg:dark:border lg:dark:border-[#2F2805] dark:bg-[#2F2805] dark:text-[#C1A36F]">
-          <h2 className="text-[21px] font-semibold text-[#C1A36F] lg:text-[28px] lg:text-white lg:dark:text-[#C1A36F]">
+          <h2 className="text-[21px] font-semibold text-white dark:text-[#C1A36F] lg:text-[28px]">
             Don&rsquo;t publish:
           </h2>
             <ol className="space-y-2 text-[16px] font-medium text-white dark:text-[#C1A36F] lg:text-[21px]">

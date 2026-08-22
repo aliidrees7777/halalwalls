@@ -15,11 +15,6 @@ const browse = filterPills.filter((p) =>
 );
 
 /** Figma Halal-Stock-Mobile-App — Opening menu 2 @ 412px */
-const MM = {
-  premiumLight: "#B5943C",
-  premiumDark: "#ffd700",
-} as const;
-
 const sectionLabel =
   "text-[12px] font-bold uppercase tracking-[0.05em] text-[#999999] dark:tracking-[0.06em] dark:text-[#ccc]";
 
@@ -43,47 +38,6 @@ const themeOptions = [
   { value: "dark", label: "Dark", icon: "dark" },
   { value: "light", label: "Light", icon: "light" },
 ] as const;
-
-function PremiumGem({ isDark }: { isDark: boolean }) {
-  const fill = isDark ? MM.premiumDark : MM.premiumLight;
-  return (
-    <svg
-      width="12"
-      height="9"
-      viewBox="0 0 12 9"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-    >
-      <path d="M5.30357 0H2.00893L3.21429 1.8871L5.30357 0Z" fill={fill} />
-      <path
-        d="M2.89375 1.95968L1.6875 0.0725806L0 1.95968H2.89375Z"
-        fill={fill}
-      />
-      <path
-        d="M7.875 1.95968H3.69643L5.78571 0.0725806L7.875 1.95968Z"
-        fill={fill}
-      />
-      <path d="M9.5625 0H6.26786L8.27679 1.81452L9.5625 0Z" fill={fill} />
-      <path
-        d="M9.88393 0.145161L8.59821 1.95968H11.5714L9.88393 0.145161Z"
-        fill={fill}
-      />
-      <path
-        d="M3.05357 2.32258H0L5.22321 8.56452L3.05357 2.32258Z"
-        fill={fill}
-      />
-      <path
-        d="M11.5714 2.32258H8.51786L6.34821 8.56452L11.5714 2.32258Z"
-        fill={fill}
-      />
-      <path
-        d="M8.11607 2.32258H3.45536L5.78571 9L8.11607 2.32258Z"
-        fill={fill}
-      />
-    </svg>
-  );
-}
 
 function ThemeIcon({
   type,
@@ -182,12 +136,11 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
                 className={cn(
                   filterPill,
                   isPremium &&
-                    "gap-[3px] border-[#B5943C] text-[#B5943C] dark:border-[#ffd700] dark:text-[#ffd700]",
+                    "border-[#B5943C] text-[#B5943C] dark:border-[#ffd700] dark:text-[#ffd700]",
                   isActive && selectedStroke,
                 )}
               >
                 {c.name}
-                {isPremium && <PremiumGem isDark={isDark} />}
               </Link>
             );
           })}
