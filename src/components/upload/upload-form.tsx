@@ -307,7 +307,7 @@ export function UploadForm() {
 
       {/* Don't publish notice */}
       <div className="flex flex-col justify-center lg:items-center">
-        <div className="box-border flex w-full flex-col items-start gap-[17.78px] rounded-[7.1111px] border-[1.42222px] border-solid border-[#6C4C0B] bg-[#555555] px-[24.8889px] py-[35.5555px] text-white lg:h-[412.11px] lg:w-[1191.11px] lg:border-2 lg:border-black lg:dark:border lg:dark:border-[#2F2805] dark:bg-[#2F2805] dark:text-[#C1A36F]">
+        <div className="box-border flex w-full flex-col items-start gap-[17.78px] rounded-[7.1111px] border-[1.42222px] border-solid border-black bg-[#555555] px-[24.8889px] py-[35.5555px] text-white dark:border-[#6C4C0B] dark:bg-[#2F2805] dark:text-[#C1A36F] lg:h-[412.11px] lg:w-[1191.11px] lg:border-2 lg:border-black lg:dark:border lg:dark:border-[#2F2805]">
           <h2 className="text-[21px] font-semibold text-white dark:text-[#C1A36F] lg:text-[28px]">
             Don&rsquo;t publish:
           </h2>
