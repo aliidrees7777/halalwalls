@@ -14,7 +14,7 @@ export default function UploadPage() {
       <SiteHeader />
 
       <main className="lg:mx-auto lg:w-[1650px] flex-1 px-4 py-10 lg:py-14">
-        <h1 className="mb-8 text-center text-[26px] font-semibold text-white lg:text-3xl lg:font-bold lg:text-black lg:dark:text-hw-faint">
+        <h1 className="mb-8 text-center text-[26px] font-semibold text-hw-depw lg:text-3xl lg:font-bold lg:text-black lg:dark:text-hw-faint">
           Upload Wallpaper
         </h1>
         <UploadForm />

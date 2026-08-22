@@ -176,8 +176,7 @@ export function MobileFilterMenu({ onNavigate }: { onNavigate?: () => void }) {
                 onClick={onNavigate}
                 className={cn(
                   filterPill,
-                  isActive &&
-                    "border-hw-green bg-hw-green/10 font-bold text-hw-green",
+                  isActive && selectedStroke,
                 )}
               >
                 {r}
