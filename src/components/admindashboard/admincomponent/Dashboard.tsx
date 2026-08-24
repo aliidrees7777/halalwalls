@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SideBar from "../adminlayout/SideBar";
 import Header from "../adminlayout/Header";
 import StatsList from "./StatsList";
@@ -19,17 +19,32 @@ import { AdminListPage } from "../reusable/AdminListPage";
 import { ADMIN_PAGES } from "../reusable/adminPages";
 import { RolesPermissions } from "../reusable/RolesPermissions";
 import { useAuth } from "@/context/auth-context";
+import { canAccessNav, effectivePermissions } from "@/lib/admin-permissions";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const [active, setActive] = useState("Dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const config = ADMIN_PAGES[active];
+  const permissions = effectivePermissions(user);
   const welcomeName =
     user?.name?.trim() ||
     [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() ||
     user?.email?.split("@")[0] ||
     "Admin";
+
+  const selectNav = (item: string) => {
+    if (!canAccessNav(permissions, item)) return;
+    setActive(item);
+    setSidebarOpen(false);
+  };
+
+  // If permissions load/change and the current page is no longer allowed, land on Dashboard.
+  useEffect(() => {
+    if (!canAccessNav(permissions, active) && canAccessNav(permissions, "Dashboard")) {
+      setActive("Dashboard");
+    }
+  }, [permissions, active]);
 
   return (
     <div>
@@ -122,10 +137,7 @@ const Dashboard = () => {
       </div>
       <SideBar
         active={active}
-        onSelect={(item) => {
-          setActive(item);
-          setSidebarOpen(false);
-        }}
+        onSelect={selectNav}
         open={sidebarOpen}
       />
     </div>

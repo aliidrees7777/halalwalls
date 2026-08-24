@@ -18,6 +18,10 @@ export interface AuthUser {
   name: string;
   email: string;
   role: "user" | "admin";
+  /** Staff role key for admin-panel RBAC: super-admin | admin | editor */
+  adminRoleKey?: "super-admin" | "admin" | "editor" | null;
+  /** Permission keys granted by the staff role (from /admin/roles catalog). */
+  permissions?: string[];
   emailVerified: boolean;
   avatar: string | null;
   banner: string | null;

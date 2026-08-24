@@ -20,6 +20,8 @@ import {
   // FileText,
   // LifeBuoy,
 } from "lucide-react";
+import { useAuth } from "@/context/auth-context";
+import { canAccessNav, effectivePermissions } from "@/lib/admin-permissions";
 
 interface SideBarProps {
   active: string;
@@ -31,6 +33,9 @@ interface SideBarProps {
 const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
   const activeItem = active;
   const setActiveItem = onSelect;
+  const { user } = useAuth();
+  const permissions = effectivePermissions(user);
+  const show = (item: string) => canAccessNav(permissions, item);
 
   // Off-canvas drawer below lg; always visible at lg+.
   const drawer = open ? "translate-x-0" : "-translate-x-full lg:translate-x-0";
@@ -57,123 +62,84 @@ const SideBar = ({ active, onSelect, open = false }: SideBarProps) => {
       </button>
 
       <div className="sb-body">
-        {/* Dashboard */}
-        <div className="sb-sec">
-          <div
-            className={`sb-item ${activeItem === "Dashboard" ? "on" : ""}`}
-            onClick={() => setActiveItem("Dashboard")}
-          >
-            <LayoutDashboard size={20} /> Dashboard
-          </div>
-        </div>
-
-        {/* Manage Content */}
-        <div className="sb-sec">
-          <span className="sb-lbl">Manage Content</span>
-          {[
-            { name: "Wallpapers", icon: <ImageIcon size={20} /> },
-            { name: "Categories", icon: <LayoutGrid size={20} /> },
-            { name: "Tags", icon: <Tag size={20} /> },
-            { name: "Resolutions", icon: <Maximize size={20} /> },
-            // { name: "Ads", icon: <Megaphone size={20} /> },
-          ].map((item) => (
+        {show("Dashboard") ? (
+          <div className="sb-sec">
             <div
-              key={item.name}
-              className={`sb-item ${activeItem === item.name ? "on" : ""}`}
-              onClick={() => setActiveItem(item.name)}
+              className={`sb-item ${activeItem === "Dashboard" ? "on" : ""}`}
+              onClick={() => setActiveItem("Dashboard")}
             >
-              {item.icon} {item.name}
+              <LayoutDashboard size={20} /> Dashboard
             </div>
-          ))}
-        </div>
+          </div>
+        ) : null}
 
-        {/* User & Access */}
-        <div className="sb-sec">
-          <span className="sb-lbl">User & Access</span>
-          <div
-            className={`sb-item ${activeItem === "Users" ? "on" : ""}`}
-            onClick={() => setActiveItem("Users")}
-          >
-            <Users size={20} /> Users
+        {(show("Wallpapers") || show("Categories") || show("Tags") || show("Resolutions")) ? (
+          <div className="sb-sec">
+            <span className="sb-lbl">Manage Content</span>
+            {[
+              { name: "Wallpapers", icon: <ImageIcon size={20} /> },
+              { name: "Categories", icon: <LayoutGrid size={20} /> },
+              { name: "Tags", icon: <Tag size={20} /> },
+              { name: "Resolutions", icon: <Maximize size={20} /> },
+            ]
+              .filter((item) => show(item.name))
+              .map((item) => (
+                <div
+                  key={item.name}
+                  className={`sb-item ${activeItem === item.name ? "on" : ""}`}
+                  onClick={() => setActiveItem(item.name)}
+                >
+                  {item.icon} {item.name}
+                </div>
+              ))}
           </div>
-          {/* <div
-            className={`sb-item ${activeItem === "Roles" ? "on" : ""}`}
-            onClick={() => setActiveItem("Roles")}
-          >
-            <ShieldCheck size={20} /> Roles & Permissions
-          </div> */}
-        </div>
+        ) : null}
 
-        {/* Subscriptions */}
-        <div className="sb-sec">
-          <span className="sb-lbl">Subscriptions & Payments</span>
-          {/* <div
-            className={`sb-item ${activeItem === "Plans" ? "on" : ""}`}
-            onClick={() => setActiveItem("Plans")}
-          >
-            <CreditCard size={20} /> Plans
-          </div> */}
-          <div
-            className={`sb-item ${activeItem === "Subscribers" ? "on" : ""}`}
-            onClick={() => setActiveItem("Subscribers")}
-          >
-            <UserCheck size={20} /> Subscribers
+        {(show("Users") || show("Roles")) ? (
+          <div className="sb-sec">
+            <span className="sb-lbl">User & Access</span>
+            {show("Users") ? (
+              <div
+                className={`sb-item ${activeItem === "Users" ? "on" : ""}`}
+                onClick={() => setActiveItem("Users")}
+              >
+                <Users size={20} /> Users
+              </div>
+            ) : null}
+            {show("Roles") ? (
+              <div
+                className={`sb-item ${activeItem === "Roles" ? "on" : ""}`}
+                onClick={() => setActiveItem("Roles")}
+              >
+                <ShieldCheck size={20} /> Roles & Permissions
+              </div>
+            ) : null}
           </div>
-          {/* <div
-            className={`sb-item ${activeItem === "Payments" ? "on" : ""}`}
-            onClick={() => setActiveItem("Payments")}
-          >
-            <Receipt size={20} /> Payments
-          </div>
-          <div
-            className={`sb-item ${activeItem === "Transactions" ? "on" : ""}`}
-            onClick={() => setActiveItem("Transactions")}
-          >
-            <ArrowLeftRight size={20} /> Transactions
-          </div> */}
-        </div>
+        ) : null}
 
-        {/* Uploads & Reviews */}
-        {/* <div className="sb-sec">
-          <span className="sb-lbl">Uploads & Reviews</span>
-          <div
-            className={`sb-item ${activeItem === "Pending" ? "on" : ""}`}
-            onClick={() => setActiveItem("Pending")}
-          >
-            <UploadCloud size={20} /> Pending Uploads{" "}
-            <span className="sb-badge">12</span>
+        {show("Subscribers") ? (
+          <div className="sb-sec">
+            <span className="sb-lbl">Subscriptions & Payments</span>
+            <div
+              className={`sb-item ${activeItem === "Subscribers" ? "on" : ""}`}
+              onClick={() => setActiveItem("Subscribers")}
+            >
+              <UserCheck size={20} /> Subscribers
+            </div>
           </div>
-          <div
-            className={`sb-item ${activeItem === "Reported" ? "on" : ""}`}
-            onClick={() => setActiveItem("Reported")}
-          >
-            <AlertTriangle size={20} /> Reported Items{" "}
-            <span className="sb-badge warn">5</span>
-          </div>
-        </div> */}
+        ) : null}
 
-        {/* System */}
-        <div className="sb-sec">
-          <span className="sb-lbl">System</span>
-          <div
-            className={`sb-item ${activeItem === "Settings" ? "on" : ""}`}
-            onClick={() => setActiveItem("Settings")}
-          >
-            <Settings size={20} /> Settings
+        {show("Settings") ? (
+          <div className="sb-sec">
+            <span className="sb-lbl">System</span>
+            <div
+              className={`sb-item ${activeItem === "Settings" ? "on" : ""}`}
+              onClick={() => setActiveItem("Settings")}
+            >
+              <Settings size={20} /> Settings
+            </div>
           </div>
-          {/* <div
-            className={`sb-item ${activeItem === "Maintenance" ? "on" : ""}`}
-            onClick={() => setActiveItem("Maintenance")}
-          >
-            <Wrench size={20} /> Maintenance
-          </div>
-          <div
-            className={`sb-item ${activeItem === "Logs" ? "on" : ""}`}
-            onClick={() => setActiveItem("Logs")}
-          >
-            <FileText size={20} /> Logs
-          </div> */}
-        </div>
+        ) : null}
       </div>
 
       {/* <div className="sb-footer">

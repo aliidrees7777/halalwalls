@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LayoutGrid, CheckCircle, Image as ImageIcon, Download, Star } from "lucide-react";
 import { api, API_BASE_URL, ApiError } from "@/lib/api";
+import { useAuth } from "@/context/auth-context";
+import { effectivePermissions, hasPermission } from "@/lib/admin-permissions";
 import { invalidateCategoriesCache } from "@/hooks/use-catalog";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { AdminThumb } from "../reusable/AdminThumb";
@@ -45,6 +47,11 @@ const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
 const CategoriesManagementPage = () => {
+  const { user } = useAuth();
+  const permissions = effectivePermissions(user);
+  const canEdit = hasPermission(permissions, "cattags.edit");
+  const canDelete = hasPermission(permissions, "cattags.delete");
+
   const [reloadTick, setReloadTick] = useState(0);
   const [stats, setStats] = useState<CatStats | null>(null);
   const [showAdd, setShowAdd] = useState(false);
@@ -80,6 +87,10 @@ const CategoriesManagementPage = () => {
   );
 
   const del = useCallback(async (row: Record<string, unknown>) => {
+    if (!canDelete) {
+      alert("Your role cannot delete categories.");
+      return;
+    }
     const c = row as unknown as AdminCategory;
     if (!window.confirm(`Delete the "${c.name}" category? Wallpapers keep their category label.`)) return;
     try {
@@ -88,10 +99,14 @@ const CategoriesManagementPage = () => {
     } catch (e) {
       alert(e instanceof ApiError ? e.message : "Delete failed");
     }
-  }, [reload]);
+  }, [reload, canDelete]);
 
   // Activate / deactivate — deactivated categories disappear from the nav + upload form.
   const toggleActive = useCallback(async (row: Record<string, unknown>) => {
+    if (!canEdit) {
+      alert("Your role cannot change category status.");
+      return;
+    }
     const c = row as unknown as AdminCategory;
     try {
       await api.patch(`/categories/${c.slug}`, { isActive: c.status !== "active" });
@@ -99,7 +114,7 @@ const CategoriesManagementPage = () => {
     } catch (e) {
       alert(e instanceof ApiError ? e.message : "Action failed");
     }
-  }, [reload]);
+  }, [reload, canEdit]);
 
   const cards: StatCardDef[] = useMemo(() => {
     const s = stats;
@@ -116,7 +131,9 @@ const CategoriesManagementPage = () => {
   const config: ListPageConfig = useMemo(() => ({
     title: "Categories",
     breadcrumb: ["Dashboard", "Categories"],
-    primaryAction: { label: "Add Category", onClick: () => setShowAdd(true) },
+    primaryAction: canEdit
+      ? { label: "Add Category", onClick: () => setShowAdd(true) }
+      : undefined,
     stats: cards,
     showIndex: true,
     searchPlaceholder: "Search categories…",
@@ -172,16 +189,28 @@ const CategoriesManagementPage = () => {
       { key: "created", header: "Created", cell: (r) => <span className="ddate">{fmtDate((r as unknown as AdminCategory).createdAt)}</span> },
     ],
     actions: [
-      {
-        type: "toggle",
-        title: "Activate / deactivate",
-        isActive: (r) => (r as unknown as AdminCategory).status === "active",
-        onClick: (r) => toggleActive(r),
-      },
-      { type: "edit", title: "Edit", onClick: (r) => setEditRow(r as unknown as AdminCategory) },
-      { type: "delete", title: "Delete", onClick: del },
+      ...(canEdit
+        ? [
+            {
+              type: "toggle" as const,
+              title: "Activate / deactivate",
+              isActive: (r: Record<string, unknown>) =>
+                (r as unknown as AdminCategory).status === "active",
+              onClick: (r: Record<string, unknown>) => toggleActive(r),
+            },
+            {
+              type: "edit" as const,
+              title: "Edit",
+              onClick: (r: Record<string, unknown>) =>
+                setEditRow(r as unknown as AdminCategory),
+            },
+          ]
+        : []),
+      ...(canDelete
+        ? [{ type: "delete" as const, title: "Delete", onClick: del }]
+        : []),
     ],
-  }), [cards, fetcher, del, toggleActive]);
+  }), [cards, fetcher, del, toggleActive, canEdit, canDelete]);
 
   return (
     <>

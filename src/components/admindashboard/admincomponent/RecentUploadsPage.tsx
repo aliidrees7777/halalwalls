@@ -14,6 +14,12 @@ import {
   Search,
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
+import { useAuth } from "@/context/auth-context";
+import {
+  effectivePermissions,
+  hasPermission,
+} from "@/lib/admin-permissions";
+import { bustWallpaperPageCache } from "@/lib/bust-wallpaper-cache";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { AdminThumb } from "../reusable/AdminThumb";
 import {
@@ -139,6 +145,10 @@ interface Props {
 
 const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => {
   const isFull = variant === "full";
+  const { user } = useAuth();
+  const permissions = effectivePermissions(user);
+  const canModerate = hasPermission(permissions, "wallpapers.moderate");
+  const canDelete = hasPermission(permissions, "wallpapers.delete");
 
   const [tab, setTab] = useState<TabKey>("pending");
   const [rows, setRows] = useState<AdminWallpaper[]>([]);
@@ -211,11 +221,19 @@ const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => 
   };
 
   const moderate = async (id: string, action: "approve" | "reject") => {
+    if (!canModerate) {
+      setError("Your role cannot approve or reject wallpapers.");
+      return;
+    }
     if (busyId) return;
     setBusyId(id);
     setMenu(null);
     try {
       await api.patch(`/admin/wallpapers/${id}/${action}`);
+      const slug =
+        rows.find((w) => w.id === id)?.slug ||
+        (detail?.wallpaper.id === id ? detail.wallpaper.slug : null);
+      void bustWallpaperPageCache(slug);
       reload();
       if (detail?.wallpaper.id === id) setDetailOpen(false);
     } catch (e) {
@@ -226,12 +244,20 @@ const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => 
   };
 
   const remove = async (id: string) => {
+    if (!canDelete) {
+      setError("Your role cannot delete wallpapers.");
+      return;
+    }
     if (busyId) return;
     setMenu(null);
     if (!window.confirm("Permanently delete this wallpaper? This cannot be undone.")) return;
     setBusyId(id);
     try {
+      const slug =
+        rows.find((w) => w.id === id)?.slug ||
+        (detail?.wallpaper.id === id ? detail.wallpaper.slug : null);
       await api.delete(`/admin/wallpapers/${id}`);
+      void bustWallpaperPageCache(slug);
       reload();
       if (detail?.wallpaper.id === id) setDetailOpen(false);
     } catch (e) {
@@ -444,7 +470,7 @@ const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => 
                   </td>
                   <td>
                     <div className="acts">
-                      {tab !== "active" && (
+                      {canModerate && tab !== "active" && (
                         <button
                           className="aapprove"
                           title={tab === "hidden" ? "Restore & approve" : "Approve"}
@@ -454,7 +480,7 @@ const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => 
                           {tab === "hidden" ? <RotateCcw /> : <Check />}
                         </button>
                       )}
-                      {tab !== "hidden" && (
+                      {canModerate && tab !== "hidden" && (
                         <button
                           className="areject"
                           title={tab === "active" ? "Unpublish (hide)" : "Reject"}
@@ -546,7 +572,7 @@ const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => 
             }}
           >
             <MenuItem icon={<Eye size={15} />} label="View details" onClick={() => openDetail(menu.row.id)} />
-            {menu.row.status !== "active" && (
+            {canModerate && menu.row.status !== "active" && (
               <MenuItem
                 icon={menu.row.status === "hidden" ? <RotateCcw size={15} /> : <Check size={15} />}
                 label={menu.row.status === "hidden" ? "Restore & approve" : "Approve"}
@@ -554,7 +580,7 @@ const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => 
                 onClick={() => moderate(menu.row.id, "approve")}
               />
             )}
-            {menu.row.status !== "hidden" && (
+            {canModerate && menu.row.status !== "hidden" && (
               <MenuItem
                 icon={<X size={15} />}
                 label={menu.row.status === "active" ? "Unpublish (hide)" : "Reject"}
@@ -571,13 +597,17 @@ const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => 
                 }}
               />
             )}
-            <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "5px 4px" }} />
-            <MenuItem
-              icon={<Trash2 size={15} />}
-              label="Delete permanently"
-              color="#f0a0a0"
-              onClick={() => remove(menu.row.id)}
-            />
+            {canDelete ? (
+              <>
+                <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "5px 4px" }} />
+                <MenuItem
+                  icon={<Trash2 size={15} />}
+                  label="Delete permanently"
+                  color="#f0a0a0"
+                  onClick={() => remove(menu.row.id)}
+                />
+              </>
+            ) : null}
           </div>
         </>
       )}
@@ -588,6 +618,8 @@ const RecentUploadsPage = ({ variant = "widget", onViewAll, onBack }: Props) => 
           loading={detailLoading}
           detail={detail}
           busy={!!busyId}
+          canModerate={canModerate}
+          canDelete={canDelete}
           onClose={() => setDetailOpen(false)}
           onApprove={(id) => moderate(id, "approve")}
           onReject={(id) => moderate(id, "reject")}
@@ -648,6 +680,8 @@ function DetailModal({
   loading,
   detail,
   busy,
+  canModerate,
+  canDelete,
   onClose,
   onApprove,
   onReject,
@@ -656,6 +690,8 @@ function DetailModal({
   loading: boolean;
   detail: { wallpaper: AdminWallpaper; uploader: Uploader | null } | null;
   busy: boolean;
+  canModerate: boolean;
+  canDelete: boolean;
   onClose: () => void;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
@@ -819,19 +855,21 @@ function DetailModal({
               <button onClick={onClose} style={btn("ghost")}>
                 Close
               </button>
-              {w.status !== "hidden" && (
+              {canModerate && w.status !== "hidden" && (
                 <button disabled={busy} onClick={() => onReject(w.id)} style={btn("danger")}>
                   {w.status === "active" ? "Unpublish" : "Reject"}
                 </button>
               )}
-              {w.status !== "active" && (
+              {canModerate && w.status !== "active" && (
                 <button disabled={busy} onClick={() => onApprove(w.id)} style={btn("primary")}>
                   {w.status === "hidden" ? "Restore & approve" : "Approve"}
                 </button>
               )}
-              <button disabled={busy} onClick={() => onDelete(w.id)} style={btn("danger-solid")}>
-                Delete
-              </button>
+              {canDelete ? (
+                <button disabled={busy} onClick={() => onDelete(w.id)} style={btn("danger-solid")}>
+                  Delete
+                </button>
+              ) : null}
             </div>
           </>
         )}

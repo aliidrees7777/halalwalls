@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Tag as TagIcon, CheckCircle, Image as ImageIcon, Download, TrendingUp } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
+import { useAuth } from "@/context/auth-context";
+import { effectivePermissions, hasPermission } from "@/lib/admin-permissions";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { StatusBadge } from "../reusable/cells";
 import {
@@ -40,6 +42,11 @@ const CAT_CLASSES = ["cat-n", "cat-g", "cat-m", "cat-i", "cat-c"];
 const tagClass = (name: string) => CAT_CLASSES[(name.charCodeAt(0) || 0) % CAT_CLASSES.length];
 
 const TagsPage = () => {
+  const { user } = useAuth();
+  const permissions = effectivePermissions(user);
+  const canEdit = hasPermission(permissions, "cattags.edit");
+  const canDelete = hasPermission(permissions, "cattags.delete");
+
   const [reloadTick, setReloadTick] = useState(0);
   const [stats, setStats] = useState<TagStats | null>(null);
   const [showAdd, setShowAdd] = useState(false);
@@ -68,17 +75,25 @@ const TagsPage = () => {
   );
 
   const del = useCallback(async (row: Record<string, unknown>) => {
+    if (!canDelete) {
+      alert("Your role cannot delete tags.");
+      return;
+    }
     const t = row as unknown as AdminTag;
     if (!window.confirm(`Delete the "#${t.name}" tag? It will be removed from all wallpapers.`)) return;
     try { await api.delete(`/admin/tags/${t.slug}`); reload(); }
     catch (e) { alert(e instanceof ApiError ? e.message : "Delete failed"); }
-  }, [reload]);
+  }, [reload, canDelete]);
 
   const toggleActive = useCallback(async (row: Record<string, unknown>) => {
+    if (!canEdit) {
+      alert("Your role cannot change tag status.");
+      return;
+    }
     const t = row as unknown as AdminTag;
     try { await api.patch(`/admin/tags/${t.slug}`, { name: t.name, isActive: t.status !== "active" }); reload(); }
     catch (e) { alert(e instanceof ApiError ? e.message : "Action failed"); }
-  }, [reload]);
+  }, [reload, canEdit]);
 
   const cards: StatCardDef[] = useMemo(() => {
     const s = stats;
@@ -95,7 +110,9 @@ const TagsPage = () => {
   const config: ListPageConfig = useMemo(() => ({
     title: "Tags",
     breadcrumb: ["Dashboard", "Tags"],
-    primaryAction: { label: "Add Tag", onClick: () => setShowAdd(true) },
+    primaryAction: canEdit
+      ? { label: "Add Tag", onClick: () => setShowAdd(true) }
+      : undefined,
     stats: cards,
     showIndex: true,
     searchPlaceholder: "Search tags…",
@@ -120,11 +137,27 @@ const TagsPage = () => {
       { key: "created", header: "Created", cell: (r) => <span className="ddate">{fmtDate((r as unknown as AdminTag).createdAt)}</span> },
     ],
     actions: [
-      { type: "toggle", title: "Activate / deactivate", isActive: (r) => (r as unknown as AdminTag).status === "active", onClick: (r) => toggleActive(r) },
-      { type: "edit", title: "Edit", onClick: (r) => setEditRow(r as unknown as AdminTag) },
-      { type: "delete", title: "Delete", onClick: del },
+      ...(canEdit
+        ? [
+            {
+              type: "toggle" as const,
+              title: "Activate / deactivate",
+              isActive: (r: Record<string, unknown>) =>
+                (r as unknown as AdminTag).status === "active",
+              onClick: (r: Record<string, unknown>) => toggleActive(r),
+            },
+            {
+              type: "edit" as const,
+              title: "Edit",
+              onClick: (r: Record<string, unknown>) => setEditRow(r as unknown as AdminTag),
+            },
+          ]
+        : []),
+      ...(canDelete
+        ? [{ type: "delete" as const, title: "Delete", onClick: del }]
+        : []),
     ],
-  }), [cards, fetcher, del, toggleActive]);
+  }), [cards, fetcher, del, toggleActive, canEdit, canDelete]);
 
   return (
     <>

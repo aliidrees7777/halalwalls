@@ -1,8 +1,8 @@
 "use client";
 import { Fragment, useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
-  Shield, Lock, SlidersHorizontal, UserCog, ShieldCheck, Users, SquarePen, Eye,
-  Check, X, ChevronUp, ChevronDown, Plus, Pencil, Trash2,
+  Shield, Lock, UserCog, ShieldCheck, SquarePen,
+  Check, X, ChevronUp, ChevronDown, Pencil, Trash2,
 } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import {
@@ -11,6 +11,9 @@ import {
   adminModalPanelStyle,
 } from "./AdminModal";
 import { LoadingBlock } from "@/components/shared/loading-spinner";
+
+/** Staff roles shown in the admin panel (Moderator / Viewer / custom are hidden). */
+const VISIBLE_ROLE_KEYS = new Set(["super-admin", "admin", "editor"]);
 
 interface Role {
   id: string;
@@ -24,34 +27,39 @@ interface CatalogModule { module: string; permissions: { key: string; label: str
 interface Stats { totalRoles: number; newThisMonth: number; systemPermissions: number; customRoles: number; admins: number }
 
 const ROLE_COLORS: Record<string, string> = {
-  "super-admin": "#05df8b", admin: "#60a5fa", moderator: "#2dd4bf", editor: "#a78bfa", viewer: "#9aa3ac",
+  "super-admin": "#05df8b", admin: "#60a5fa", editor: "#a78bfa",
 };
-const PALETTE = ["#05df8b", "#60a5fa", "#2dd4bf", "#a78bfa", "#f59e0b", "#ef4444", "#ec4899"];
+const PALETTE = ["#05df8b", "#60a5fa", "#a78bfa", "#f59e0b"];
 const roleColor = (r: Role, i: number) => ROLE_COLORS[r.key] || PALETTE[i % PALETTE.length];
 const roleIcon = (r: Role): ReactNode => {
   const m: Record<string, ReactNode> = {
-    "super-admin": <ShieldCheck size={15} />, admin: <Shield size={15} />, moderator: <Users size={15} />,
-    editor: <SquarePen size={15} />, viewer: <Eye size={15} />,
+    "super-admin": <ShieldCheck size={15} />,
+    admin: <Shield size={15} />,
+    editor: <SquarePen size={15} />,
   };
   return m[r.key] || <Shield size={15} />;
 };
 
-const TABS = ["Permissions Matrix", "Role Management", "Permission Groups"];
+const TABS = ["Permissions Matrix", "Role Management"] as const;
 
 export function RolesPermissions() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [catalog, setCatalog] = useState<CatalogModule[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState(TABS[0]);
+  const [tab, setTab] = useState<(typeof TABS)[number]>(TABS[0]);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
-  const [showCreate, setShowCreate] = useState(false);
   const [editRole, setEditRole] = useState<Role | null>(null);
 
   const load = useCallback(() => {
     setLoading(true);
     api.get<{ roles: Role[]; catalog: CatalogModule[]; stats: Stats }>("/admin/roles")
-      .then((d) => { setRoles(d.roles); setCatalog(d.catalog); setStats(d.stats); })
+      .then((d) => {
+        const visible = (d.roles || []).filter((r) => VISIBLE_ROLE_KEYS.has(r.key));
+        setRoles(visible);
+        setCatalog(d.catalog);
+        setStats(d.stats);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -60,19 +68,6 @@ export function RolesPermissions() {
   const toggleModule = (m: string) =>
     setCollapsed((prev) => { const n = new Set(prev); n.has(m) ? n.delete(m) : n.add(m); return n; });
 
-  // Toggle one permission for one role (optimistic → PATCH).
-  const togglePerm = async (role: Role, key: string) => {
-    const nextPerms = role.permissions.includes(key)
-      ? role.permissions.filter((k) => k !== key)
-      : [...role.permissions, key];
-    setRoles((rs) => rs.map((r) => (r.id === role.id ? { ...r, permissions: nextPerms } : r)));
-    try {
-      await api.patch(`/admin/roles/${role.id}`, { permissions: nextPerms });
-    } catch {
-      setRoles((rs) => rs.map((r) => (r.id === role.id ? role : r))); // revert
-    }
-  };
-
   const del = async (role: Role) => {
     if (!window.confirm(`Delete the "${role.name}" role?`)) return;
     try { await api.delete(`/admin/roles/${role.id}`); load(); }
@@ -80,10 +75,9 @@ export function RolesPermissions() {
   };
 
   const STAT_CARDS = useMemo(() => [
-    { label: "Total Roles", value: stats ? String(stats.totalRoles) : "—", sub: stats ? `+${stats.newThisMonth} this month` : "", icon: <Shield size={18} /> },
+    { label: "Total Roles", value: stats ? String(Math.min(stats.totalRoles, VISIBLE_ROLE_KEYS.size)) : "—", sub: "Super Admin, Admin, Editor", icon: <Shield size={18} /> },
     { label: "System Permissions", value: stats ? String(stats.systemPermissions) : "—", sub: "Across all modules", icon: <Lock size={18} /> },
-    { label: "Custom Roles", value: stats ? String(stats.customRoles) : "—", sub: "Created by you", icon: <SlidersHorizontal size={18} /> },
-    { label: "Admins", value: stats ? String(stats.admins) : "—", sub: "With the admin role", icon: <UserCog size={18} /> },
+    { label: "Admins", value: stats ? String(stats.admins) : "—", sub: "With admin panel access", icon: <UserCog size={18} /> },
   ], [stats]);
 
   return (
@@ -93,20 +87,16 @@ export function RolesPermissions() {
           <h1 className="text-2xl font-bold text-[var(--text)]">Roles &amp; Permissions</h1>
           <p className="mt-1 text-sm text-[var(--text2)]">Manage user roles and control system permissions.</p>
         </div>
-        <button type="button" onClick={() => setShowCreate(true)}
-          className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand)] px-4 py-2.5 text-sm font-semibold text-black transition-[filter] hover:brightness-95">
-          <Plus size={16} /> Create Role
-        </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
         {STAT_CARDS.map((s, i) => (
           <div className="sc" key={i}>
             <div className="sc-icon">{s.icon}</div>
             <div className="sc-body">
               <div className="sc-lbl">{s.label}</div>
               <div className="sc-val" style={{ color: "var(--text)" }}>{s.value}</div>
-              <div className="sc-mo" style={s.sub.startsWith("+") ? { color: "var(--brand)" } : undefined}>{s.sub}</div>
+              <div className="sc-mo">{s.sub}</div>
             </div>
           </div>
         ))}
@@ -136,7 +126,7 @@ export function RolesPermissions() {
                       <div className="flex flex-col items-center gap-1">
                         <span className="grid size-7 place-items-center rounded-full" style={{ background: `${roleColor(r, i)}1f`, color: roleColor(r, i) }}>{roleIcon(r)}</span>
                         <span className="text-xs font-semibold normal-case text-[var(--text)]">{r.name}</span>
-                        <span className="text-[10px] normal-case text-[var(--text2)]">{r.isSystem ? "System" : "Custom"}</span>
+                        <span className="text-[10px] normal-case text-[var(--text2)]">System</span>
                       </div>
                     </th>
                   ))}
@@ -163,9 +153,13 @@ export function RolesPermissions() {
                             const on = r.permissions.includes(p.key);
                             return (
                               <td key={r.id} className="px-3 py-2.5 text-center">
-                                <button type="button" onClick={() => togglePerm(r, p.key)} title={on ? "Granted — click to revoke" : "Denied — click to grant"} className="mx-auto grid place-items-center">
+                                <span
+                                  className="mx-auto grid place-items-center"
+                                  title={on ? "Granted" : "Denied"}
+                                  aria-label={on ? "Granted" : "Denied"}
+                                >
                                   {on ? <Check size={16} className="text-[var(--brand)]" strokeWidth={2.5} /> : <X size={16} className="text-[var(--danger)]" strokeWidth={2.5} />}
-                                </button>
+                                </span>
                               </td>
                             );
                           })}
@@ -177,7 +171,7 @@ export function RolesPermissions() {
               </tbody>
             </table>
           </div>
-        ) : tab === "Role Management" ? (
+        ) : (
           <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 xl:grid-cols-3">
             {roles.map((r, i) => (
               <div key={r.id} className="rounded-[10px] border border-[var(--border)] bg-[var(--bg3)] p-4">
@@ -186,38 +180,19 @@ export function RolesPermissions() {
                     <span className="grid size-8 place-items-center rounded-full" style={{ background: `${roleColor(r, i)}1f`, color: roleColor(r, i) }}>{roleIcon(r)}</span>
                     <span className="font-semibold text-[var(--text)]">{r.name}</span>
                   </span>
-                  <span className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: r.isSystem ? "rgba(142,155,160,0.12)" : "var(--brand-dim)", color: r.isSystem ? "var(--text2)" : "var(--brand)" }}>
-                    {r.isSystem ? "System" : "Custom"}
+                  <span className="rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: "rgba(142,155,160,0.12)", color: "var(--text2)" }}>
+                    System
                   </span>
                 </div>
                 <p className="mb-3 min-h-[32px] text-xs text-[var(--text2)]">{r.description || "—"}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-[var(--text3)]">{r.permissions.length} / {stats?.systemPermissions ?? 0} permissions</span>
                   <span className="flex gap-1.5">
-                    <button type="button" onClick={() => setEditRole(r)} className="grid size-7 place-items-center rounded-md border border-[var(--border2)] bg-[var(--bg4)] text-[var(--text2)] hover:text-[var(--text)]"><Pencil size={13} /></button>
+                    <button type="button" onClick={() => setEditRole(r)} className="grid size-7 place-items-center rounded-md border border-[var(--border2)] bg-[var(--bg4)] text-[var(--text2)] hover:text-[var(--text)]" title="Edit role"><Pencil size={13} /></button>
                     {!r.isSystem ? (
-                      <button type="button" onClick={() => del(r)} className="grid size-7 place-items-center rounded-md border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.08)] text-[var(--danger)] hover:bg-[var(--danger)] hover:text-white"><Trash2 size={13} /></button>
+                      <button type="button" onClick={() => del(r)} className="grid size-7 place-items-center rounded-md border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.08)] text-[var(--danger)] hover:bg-[var(--danger)] hover:text-white" title="Delete role"><Trash2 size={13} /></button>
                     ) : null}
                   </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="p-4">
-            {catalog.map((m) => (
-              <div key={m.module} className="mb-4">
-                <div className="mb-2 text-sm font-semibold text-[var(--text)]">{m.module}</div>
-                <div className="overflow-hidden rounded-[10px] border border-[var(--border)]">
-                  {m.permissions.map((p, idx) => {
-                    const count = roles.filter((r) => r.permissions.includes(p.key)).length;
-                    return (
-                      <div key={p.key} className={"flex items-center justify-between px-4 py-2.5 " + (idx ? "border-t border-[var(--border)]" : "")}>
-                        <span className="text-sm text-[var(--text2)]">{p.label}</span>
-                        <span className="text-xs text-[var(--text3)]">{count} / {roles.length} roles</span>
-                      </div>
-                    );
-                  })}
                 </div>
               </div>
             ))}
@@ -225,7 +200,6 @@ export function RolesPermissions() {
         )}
       </div>
 
-      {showCreate ? <RoleFormModal catalog={catalog} onClose={() => setShowCreate(false)} onSaved={() => { setShowCreate(false); load(); }} /> : null}
       {editRole ? <RoleFormModal initial={editRole} catalog={catalog} onClose={() => setEditRole(null)} onSaved={() => { setEditRole(null); load(); }} /> : null}
     </div>
   );
@@ -235,11 +209,10 @@ const border = "1px solid rgba(255,255,255,0.08)";
 const inputStyle: React.CSSProperties = { width: "100%", background: "var(--bg3)", border: "1px solid var(--border2)", borderRadius: 8, color: "var(--text)", fontSize: 13, padding: "9px 12px", outline: "none" };
 const label: React.CSSProperties = { display: "block", fontSize: 12, color: "var(--text2)", margin: "12px 0 6px" };
 
-function RoleFormModal({ initial, catalog, onClose, onSaved }: { initial?: Role; catalog: CatalogModule[]; onClose: () => void; onSaved: () => void }) {
-  const isEdit = !!initial;
-  const [name, setName] = useState(initial?.name ?? "");
-  const [description, setDescription] = useState(initial?.description ?? "");
-  const [perms, setPerms] = useState<Set<string>>(new Set(initial?.permissions ?? catalog.flatMap((m) => m.permissions).filter((p) => p.key.endsWith(".view")).map((p) => p.key)));
+function RoleFormModal({ initial, catalog, onClose, onSaved }: { initial: Role; catalog: CatalogModule[]; onClose: () => void; onSaved: () => void }) {
+  const [name, setName] = useState(initial.name);
+  const [description, setDescription] = useState(initial.description);
+  const [perms, setPerms] = useState<Set<string>>(new Set(initial.permissions));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const toggle = (k: string) => setPerms((s) => { const n = new Set(s); n.has(k) ? n.delete(k) : n.add(k); return n; });
@@ -251,9 +224,11 @@ function RoleFormModal({ initial, catalog, onClose, onSaved }: { initial?: Role;
     if (!name.trim()) { setError("Role name is required."); return; }
     setBusy(true);
     try {
-      const body = { name: name.trim(), description: description.trim(), permissions: [...perms] };
-      if (isEdit) await api.patch(`/admin/roles/${initial!.id}`, body);
-      else await api.post("/admin/roles", body);
+      await api.patch(`/admin/roles/${initial.id}`, {
+        name: name.trim(),
+        description: description.trim(),
+        permissions: [...perms],
+      });
       onSaved();
     } catch (err) { setError(err instanceof ApiError ? err.message : "Could not save role."); }
     finally { setBusy(false); }
@@ -263,8 +238,8 @@ function RoleFormModal({ initial, catalog, onClose, onSaved }: { initial?: Role;
     <AdminModalOverlay>
       <form onSubmit={submit} style={adminModalPanelStyle(520, { maxHeight: "90vh", overflowY: "auto" })}>
         <AdminModalCloseButton onClose={onClose} />
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>{isEdit ? "Edit Role" : "Create Role"}</h2>
-        <p style={{ fontSize: 12.5, color: "var(--text2)" }}>{isEdit ? "Update this role and its permissions." : "Define a new role and its permissions."}</p>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>Edit Role</h2>
+        <p style={{ fontSize: 12.5, color: "var(--text2)" }}>Update this role and its permissions.</p>
         {error ? <div style={{ marginTop: 12, background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.3)", color: "#f7a7a7", fontSize: 12.5, padding: "9px 12px", borderRadius: 9 }}>{error}</div> : null}
         <label style={label}>Role name</label>
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Support Agent" style={inputStyle} />
@@ -285,7 +260,7 @@ function RoleFormModal({ initial, catalog, onClose, onSaved }: { initial?: Role;
         </div>
         <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 18 }}>
           <button type="button" onClick={onClose} style={{ padding: "9px 16px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: "pointer", border, background: "var(--bg3)", color: "var(--text2)" }}>Cancel</button>
-          <button type="submit" disabled={busy} style={{ padding: "9px 18px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: busy ? "default" : "pointer", border: "none", background: "var(--brand)", color: "#04120c", opacity: busy ? 0.7 : 1 }}>{busy ? "Saving…" : isEdit ? "Save changes" : "Create role"}</button>
+          <button type="submit" disabled={busy} style={{ padding: "9px 18px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: busy ? "default" : "pointer", border: "none", background: "var(--brand)", color: "#04120c", opacity: busy ? 0.7 : 1 }}>{busy ? "Saving…" : "Save changes"}</button>
         </div>
       </form>
     </AdminModalOverlay>

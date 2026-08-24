@@ -9,6 +9,12 @@ import {
   Upload,
 } from "lucide-react";
 import { api, API_BASE_URL, ApiError, getToken } from "@/lib/api";
+import { useAuth } from "@/context/auth-context";
+import {
+  effectivePermissions,
+  hasPermission,
+} from "@/lib/admin-permissions";
+import { bustWallpaperPageCache } from "@/lib/bust-wallpaper-cache";
 import { resolveMediaUrl } from "@/lib/media-url";
 import { parseSourceUrl } from "@/lib/source-url";
 import { AdminListPage } from "../reusable/AdminListPage";
@@ -68,6 +74,14 @@ const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
 const WallpapersPage = () => {
+  const { user } = useAuth();
+  const permissions = effectivePermissions(user);
+  const canModerate = hasPermission(permissions, "wallpapers.moderate");
+  const canDelete = hasPermission(permissions, "wallpapers.delete");
+  const canEdit = hasPermission(permissions, "wallpapers.edit");
+  const canUpload = hasPermission(permissions, "wallpapers.upload");
+  const canExport = hasPermission(permissions, "dashboard.export");
+
   const [reloadTick, setReloadTick] = useState(0);
   const [stats, setStats] = useState<WpStats | null>(null);
   const [showAdd, setShowAdd] = useState(false);
@@ -109,28 +123,42 @@ const WallpapersPage = () => {
   );
 
   const del = useCallback(async (row: Record<string, unknown>) => {
+    if (!canDelete) {
+      alert("Your role cannot delete wallpapers.");
+      return;
+    }
     const w = row as unknown as AdminWallpaper;
     if (!window.confirm(`Delete "${w.title}"? This cannot be undone.`)) return;
     try {
       await api.delete(`/admin/wallpapers/${w.id}`);
+      void bustWallpaperPageCache(w.slug);
       reload();
     } catch (e) {
       alert(e instanceof ApiError ? e.message : "Delete failed");
     }
-  }, [reload]);
+  }, [reload, canDelete]);
 
   // Approve (→ live on the site) or reject (→ hidden) straight from the table.
   const moderate = useCallback(async (row: Record<string, unknown>, action: "approve" | "reject") => {
+    if (!canModerate) {
+      alert("Your role cannot approve or reject wallpapers.");
+      return;
+    }
     const w = row as unknown as AdminWallpaper;
     try {
       await api.patch(`/admin/wallpapers/${w.id}/${action}`);
+      void bustWallpaperPageCache(w.slug);
       reload();
     } catch (e) {
       alert(e instanceof ApiError ? e.message : "Action failed");
     }
-  }, [reload]);
+  }, [reload, canModerate]);
 
   const exportCsv = useCallback(async () => {
+    if (!canExport) {
+      alert("Your role cannot export data.");
+      return;
+    }
     try {
       const res = await fetch(`${API_BASE_URL}/admin/wallpapers/export`, {
         headers: { Authorization: `Bearer ${getToken() ?? ""}` },
@@ -146,7 +174,7 @@ const WallpapersPage = () => {
     } catch {
       alert("Export failed. Please try again.");
     }
-  }, []);
+  }, [canExport]);
 
   const cards: StatCardDef[] = useMemo(() => {
     const s = stats;
@@ -163,8 +191,12 @@ const WallpapersPage = () => {
   const config: ListPageConfig = useMemo(() => ({
     title: "Wallpapers",
     breadcrumb: ["Dashboard", "Wallpapers"],
-    primaryAction: { label: "Add Wallpaper", onClick: () => setShowAdd(true) },
-    secondaryAction: { label: "Export", icon: <Download size={15} />, onClick: exportCsv },
+    primaryAction: canUpload
+      ? { label: "Add Wallpaper", onClick: () => setShowAdd(true) }
+      : undefined,
+    secondaryAction: canExport
+      ? { label: "Export", icon: <Download size={15} />, onClick: exportCsv }
+      : undefined,
     stats: cards,
     searchPlaceholder: "Search wallpapers by title, uploader, tag…",
     fetcher,
@@ -267,23 +299,33 @@ const WallpapersPage = () => {
       },
     ],
     actions: [
-      {
-        type: "approve",
-        title: "Approve (publish)",
-        visible: (r) => (r as unknown as AdminWallpaper).status !== "active",
-        onClick: (r) => moderate(r, "approve"),
-      },
-      {
-        type: "reject",
-        title: "Reject / hide",
-        visible: (r) => (r as unknown as AdminWallpaper).status !== "hidden",
-        onClick: (r) => moderate(r, "reject"),
-      },
+      ...(canModerate
+        ? [
+            {
+              type: "approve" as const,
+              title: "Approve (publish)",
+              visible: (r: Record<string, unknown>) =>
+                (r as unknown as AdminWallpaper).status !== "active",
+              onClick: (r: Record<string, unknown>) => moderate(r, "approve"),
+            },
+            {
+              type: "reject" as const,
+              title: "Reject / hide",
+              visible: (r: Record<string, unknown>) =>
+                (r as unknown as AdminWallpaper).status !== "hidden",
+              onClick: (r: Record<string, unknown>) => moderate(r, "reject"),
+            },
+          ]
+        : []),
       { type: "view", title: "Open on site", onClick: (r) => window.open(`/wallpaper/${(r as unknown as AdminWallpaper).slug}`, "_blank") },
-      { type: "edit", title: "Edit", onClick: (r) => setEditRow(r as unknown as AdminWallpaper) },
-      { type: "delete", title: "Delete", onClick: del },
+      ...(canEdit
+        ? [{ type: "edit" as const, title: "Edit", onClick: (r: Record<string, unknown>) => setEditRow(r as unknown as AdminWallpaper) }]
+        : []),
+      ...(canDelete
+        ? [{ type: "delete" as const, title: "Delete", onClick: del }]
+        : []),
     ],
-  }), [cards, fetcher, del, moderate, exportCsv, stats]);
+  }), [cards, fetcher, del, moderate, exportCsv, stats, canModerate, canDelete, canEdit, canUpload, canExport]);
 
   return (
     <>
@@ -401,6 +443,7 @@ function WallpaperFormModal({
           author: parseSourceUrl(sourceValue).username || initial!.author || "HalalWalls",
           isPremium,
         });
+        void bustWallpaperPageCache(initial!.slug);
         onSaved();
       } catch (err) {
         setError(err instanceof ApiError ? err.message : "Could not save wallpaper.");
@@ -437,6 +480,8 @@ function WallpaperFormModal({
       if (username) fd.append("author", username);
       fd.append("isPremium", String(isPremium));
       await api.post("/uploads", fd);
+      // New publish — bust catalog tag (slug may not be known client-side yet).
+      void bustWallpaperPageCache();
       onSaved();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Could not upload wallpaper.");

@@ -1,11 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { DownloadHeader } from "@/components/download/download-header";
 import { DownloadBreadcrumbs } from "@/components/download/download-breadcrumbs";
-import { DownloadSidebarLeft } from "@/components/download/download-sidebar-left";
 import { DownloadMain } from "@/components/download/download-main";
 import { DownloadSidebarRight } from "@/components/download/download-sidebar-right";
+import { RecordWallpaperView } from "@/components/download/record-wallpaper-view";
 import { SiteFooter } from "@/components/layout/site-footer";
 import type { Wallpaper, WallpaperDetail } from "@/types/wallpaper";
 import { SiteHeader } from "../home/site-header";
@@ -20,8 +19,8 @@ interface DownloadPageProps {
 export function DownloadPageClient({ wallpaper, related }: DownloadPageProps) {
   return (
     <div className="min-h-screen bg-hw-bg">
-      <SiteHeader/>
-      {/* <DownloadHeader /> */}
+      <RecordWallpaperView slug={wallpaper.slug} />
+      <SiteHeader />
 
       <motion.div
         initial={{ opacity: 0 }}

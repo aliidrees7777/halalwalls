@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Monitor, CheckCircle, Download, FolderOpen, TrendingUp } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
+import { useAuth } from "@/context/auth-context";
+import { effectivePermissions, hasPermission } from "@/lib/admin-permissions";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { StatusBadge } from "../reusable/cells";
 import {
@@ -41,6 +43,11 @@ const fmtDate = (iso: string | null) =>
   iso ? new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
 
 const ResolutionsPage = () => {
+  const { user } = useAuth();
+  const permissions = effectivePermissions(user);
+  const canEdit = hasPermission(permissions, "resolutions.edit");
+  const canDelete = hasPermission(permissions, "resolutions.delete");
+
   const [reloadTick, setReloadTick] = useState(0);
   const [stats, setStats] = useState<ResStats | null>(null);
   const [showAdd, setShowAdd] = useState(false);
@@ -69,17 +76,25 @@ const ResolutionsPage = () => {
   );
 
   const del = useCallback(async (row: Record<string, unknown>) => {
+    if (!canDelete) {
+      alert("Your role cannot delete resolutions.");
+      return;
+    }
     const r = row as unknown as AdminResolution;
     if (!window.confirm(`Delete the "${r.label}" resolution from the catalog?`)) return;
     try { await api.delete(`/admin/resolutions/${r.key}`); reload(); }
     catch (e) { alert(e instanceof ApiError ? e.message : "Delete failed"); }
-  }, [reload]);
+  }, [reload, canDelete]);
 
   const toggleActive = useCallback(async (row: Record<string, unknown>) => {
+    if (!canEdit) {
+      alert("Your role cannot change resolution status.");
+      return;
+    }
     const r = row as unknown as AdminResolution;
     try { await api.patch(`/admin/resolutions/${r.key}`, { isActive: r.status !== "active" }); reload(); }
     catch (e) { alert(e instanceof ApiError ? e.message : "Action failed"); }
-  }, [reload]);
+  }, [reload, canEdit]);
 
   const cards: StatCardDef[] = useMemo(() => {
     const s = stats;
@@ -96,7 +111,9 @@ const ResolutionsPage = () => {
   const config: ListPageConfig = useMemo(() => ({
     title: "Resolutions",
     breadcrumb: ["Dashboard", "Resolutions"],
-    primaryAction: { label: "Add Resolution", onClick: () => setShowAdd(true) },
+    primaryAction: canEdit
+      ? { label: "Add Resolution", onClick: () => setShowAdd(true) }
+      : undefined,
     stats: cards,
     showIndex: true,
     searchPlaceholder: "Search resolutions…",
@@ -122,11 +139,28 @@ const ResolutionsPage = () => {
       { key: "created", header: "Created", cell: (r) => <span className="ddate">{fmtDate((r as unknown as AdminResolution).createdAt)}</span> },
     ],
     actions: [
-      { type: "toggle", title: "Activate / deactivate", isActive: (r) => (r as unknown as AdminResolution).status === "active", onClick: (r) => toggleActive(r) },
-      { type: "edit", title: "Edit", onClick: (r) => setEditRow(r as unknown as AdminResolution) },
-      { type: "delete", title: "Delete", onClick: del },
+      ...(canEdit
+        ? [
+            {
+              type: "toggle" as const,
+              title: "Activate / deactivate",
+              isActive: (r: Record<string, unknown>) =>
+                (r as unknown as AdminResolution).status === "active",
+              onClick: (r: Record<string, unknown>) => toggleActive(r),
+            },
+            {
+              type: "edit" as const,
+              title: "Edit",
+              onClick: (r: Record<string, unknown>) =>
+                setEditRow(r as unknown as AdminResolution),
+            },
+          ]
+        : []),
+      ...(canDelete
+        ? [{ type: "delete" as const, title: "Delete", onClick: del }]
+        : []),
     ],
-  }), [cards, fetcher, del, toggleActive]);
+  }), [cards, fetcher, del, toggleActive, canEdit, canDelete]);
 
   return (
     <>

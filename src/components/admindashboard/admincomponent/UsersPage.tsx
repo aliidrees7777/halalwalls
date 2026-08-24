@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Users, Star, ShieldCheck, Shield, UserPlus } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
+import { useAuth } from "@/context/auth-context";
+import { effectivePermissions, hasPermission } from "@/lib/admin-permissions";
 import { AdminListPage } from "../reusable/AdminListPage";
 import { StatusBadge } from "../reusable/cells";
 import {
@@ -48,6 +50,11 @@ function Pill({ text, color }: { text: string; color: string }) {
 }
 
 const UsersPage = () => {
+  const { user } = useAuth();
+  const permissions = effectivePermissions(user);
+  const canEdit = hasPermission(permissions, "users.edit");
+  const canDelete = hasPermission(permissions, "users.delete");
+
   const [reloadTick, setReloadTick] = useState(0);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [showAdd, setShowAdd] = useState(false);
@@ -78,17 +85,25 @@ const UsersPage = () => {
   );
 
   const del = useCallback(async (row: Record<string, unknown>) => {
+    if (!canDelete) {
+      alert("Your role cannot delete users.");
+      return;
+    }
     const u = row as unknown as AdminUser;
     if (!window.confirm(`Permanently delete "${u.name || u.email}"? This cannot be undone.`)) return;
     try { await api.delete(`/admin/users/${u.id}`); reload(); }
     catch (e) { alert(e instanceof ApiError ? e.message : "Delete failed"); }
-  }, [reload]);
+  }, [reload, canDelete]);
 
   const toggleStatus = useCallback(async (row: Record<string, unknown>) => {
+    if (!canEdit) {
+      alert("Your role cannot change user status.");
+      return;
+    }
     const u = row as unknown as AdminUser;
     try { await api.patch(`/admin/users/${u.id}`, { isDeleted: u.status === "active" }); reload(); }
     catch (e) { alert(e instanceof ApiError ? e.message : "Action failed"); }
-  }, [reload]);
+  }, [reload, canEdit]);
 
   const cards: StatCardDef[] = useMemo(() => {
     const s = stats;
@@ -106,7 +121,9 @@ const UsersPage = () => {
   const config: ListPageConfig = useMemo(() => ({
     title: "Users",
     breadcrumb: ["Dashboard", "Users"],
-    primaryAction: { label: "Add User", onClick: () => setShowAdd(true) },
+    primaryAction: canEdit
+      ? { label: "Add User", onClick: () => setShowAdd(true) }
+      : undefined,
     stats: cards,
     showIndex: true,
     searchPlaceholder: "Search users by name or email…",
@@ -145,12 +162,32 @@ const UsersPage = () => {
       { key: "uploads", header: "Uploads", cell: (r) => <span className="restext">{fmt((r as unknown as AdminUser).uploadsCount)}</span> },
       { key: "joined", header: "Joined", cell: (r) => <span className="ddate">{fmtDate((r as unknown as AdminUser).createdAt)}</span> },
     ],
-    actions: [
-      { type: "toggle", title: "Activate / deactivate", isActive: (r) => (r as unknown as AdminUser).status === "active", onClick: (r) => toggleStatus(r) },
-      { type: "edit", title: "Edit", onClick: (r) => setEditRow(r as unknown as AdminUser) },
-      { type: "delete", title: "Delete", onClick: del },
-    ],
-  }), [cards, fetcher, del, toggleStatus]);
+    actions:
+      canEdit || canDelete
+        ? [
+            ...(canEdit
+              ? [
+                  {
+                    type: "toggle" as const,
+                    title: "Activate / deactivate",
+                    isActive: (r: Record<string, unknown>) =>
+                      (r as unknown as AdminUser).status === "active",
+                    onClick: (r: Record<string, unknown>) => toggleStatus(r),
+                  },
+                  {
+                    type: "edit" as const,
+                    title: "Edit",
+                    onClick: (r: Record<string, unknown>) =>
+                      setEditRow(r as unknown as AdminUser),
+                  },
+                ]
+              : []),
+            ...(canDelete
+              ? [{ type: "delete" as const, title: "Delete", onClick: del }]
+              : []),
+          ]
+        : undefined,
+  }), [cards, fetcher, del, toggleStatus, canEdit, canDelete]);
 
   return (
     <>

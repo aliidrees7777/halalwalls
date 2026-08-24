@@ -2,13 +2,14 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { DownloadPageClient } from "@/components/download/download-page";
 import { ApiError } from "@/lib/api";
-import {
-  getRelatedWallpapers,
-  getWallpaperBySlug,
-} from "@/lib/wallpaper-data";
+import { getWallpaperBySlug } from "@/lib/wallpaper-data";
 import type { Wallpaper, WallpaperDetail } from "@/types/wallpaper";
 
-export const dynamic = "force-dynamic";
+/**
+ * Route-level ISR window (seconds). Must be a numeric literal for Next’s
+ * static analysis — keep in sync with WALLPAPER_REVALIDATE_SECONDS.
+ */
+export const revalidate = 60;
 
 interface WallpaperPageProps {
   params: Promise<{ slug: string }>;
@@ -34,25 +35,17 @@ export default async function WallpaperDownloadPage({
 }: WallpaperPageProps) {
   const { slug } = await params;
 
-  // Live data from the backend so the wallpaper carries its real id (UUID),
-  // favoritesCount, etc. — required for favorite/download actions to work.
-  // Detail is required; related is best-effort so a pooler blip doesn't crash
-  // the whole download page. Detail is shared with generateMetadata via cache().
+  // One backend round trip: detail + related cards (shared with generateMetadata
+  // via React.cache). Related is optional so a thin response still renders.
   let wallpaper: WallpaperDetail;
+  let related: Wallpaper[] = [];
   try {
     const detail = await getWallpaperBySlug(slug);
     wallpaper = detail.wallpaper;
+    related = detail.related ?? [];
   } catch (e) {
     if (e instanceof ApiError && e.statusCode === 404) notFound();
     throw e;
-  }
-
-  let related: Wallpaper[] = [];
-  try {
-    const relatedRes = await getRelatedWallpapers(slug);
-    related = relatedRes.wallpapers;
-  } catch {
-    related = [];
   }
 
   return <DownloadPageClient wallpaper={wallpaper} related={related} />;
