@@ -203,7 +203,18 @@ const inputStyle: React.CSSProperties = { width: "100%", background: "var(--bg3)
 const label: React.CSSProperties = { display: "block", fontSize: 12, color: "var(--text2)", margin: "12px 0 6px" };
 const check: React.CSSProperties = { display: "flex", alignItems: "center", gap: 8, marginTop: 14, fontSize: 13, color: "var(--text)", cursor: "pointer" };
 
+function canResetPassword(
+  target: AdminUser,
+  actor: { adminRoleKey?: string | null } | null,
+): boolean {
+  const key = actor?.adminRoleKey || "super-admin";
+  if (key === "super-admin") return true;
+  if (key === "admin") return target.role === "user";
+  return false;
+}
+
 function UserFormModal({ initial, onClose, onSaved }: { initial?: AdminUser; onClose: () => void; onSaved: () => void }) {
+  const { user: actor } = useAuth();
   const isEdit = !!initial;
   const [firstName, setFirstName] = useState(initial?.firstName ?? "");
   const [lastName, setLastName] = useState(initial?.lastName ?? "");
@@ -214,6 +225,7 @@ function UserFormModal({ initial, onClose, onSaved }: { initial?: AdminUser; onC
   const [emailVerified, setEmailVerified] = useState(initial?.emailVerified ?? true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const showPasswordReset = isEdit && initial && canResetPassword(initial, actor);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -221,10 +233,13 @@ function UserFormModal({ initial, onClose, onSaved }: { initial?: AdminUser; onC
     setError(null);
     if (!firstName.trim() || (!isEdit && !email.trim())) { setError("Name and email are required."); return; }
     if (!isEdit && password.length < 8) { setError("Password must be at least 8 characters."); return; }
+    if (isEdit && password && password.length < 8) { setError("Password must be at least 8 characters."); return; }
     setBusy(true);
     try {
       if (isEdit) {
-        await api.patch(`/admin/users/${initial!.id}`, { firstName: firstName.trim(), lastName: lastName.trim(), role, isPremium, emailVerified });
+        const payload: Record<string, unknown> = { firstName: firstName.trim(), lastName: lastName.trim(), role, isPremium, emailVerified };
+        if (password.trim()) payload.password = password;
+        await api.patch(`/admin/users/${initial!.id}`, payload);
       } else {
         await api.post("/admin/users", { firstName: firstName.trim(), lastName: lastName.trim(), email: email.trim(), password, role, isPremium, emailVerified });
       }
@@ -248,6 +263,13 @@ function UserFormModal({ initial, onClose, onSaved }: { initial?: AdminUser; onC
         <label style={label}>Email</label>
         <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="jane@email.com" disabled={isEdit} style={{ ...inputStyle, opacity: isEdit ? 0.6 : 1 }} />
         {!isEdit ? (<><label style={label}>Password</label><input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min. 8 characters" style={inputStyle} /></>) : null}
+        {showPasswordReset ? (
+          <>
+            <label style={label}>Set new password</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Leave blank to keep current password" style={inputStyle} />
+            <p style={{ marginTop: 6, fontSize: 11.5, color: "var(--text3)" }}>You will need to share the new password with the user manually.</p>
+          </>
+        ) : null}
         <label style={label}>Role</label>
         <select value={role} onChange={(e) => setRole(e.target.value as "user" | "admin")} style={{ ...inputStyle, appearance: "auto" }}>
           <option value="user">User</option>

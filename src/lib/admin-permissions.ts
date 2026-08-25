@@ -22,6 +22,7 @@ export type AdminPermission =
   | "users.view"
   | "users.edit"
   | "users.delete"
+  | "roles.view"
   | "roles.manage"
   | "subscriptions.view"
   | "payments.view"
@@ -40,9 +41,9 @@ export const NAV_PERMISSION: Record<string, AdminPermission> = {
   Tags: "cattags.view",
   Resolutions: "resolutions.view",
   Users: "users.view",
-  Roles: "roles.manage",
+  Roles: "roles.view",
   Subscribers: "subscriptions.view",
-  Settings: "settings.view",
+  Settings: "settings.manage",
 };
 
 export function hasPermission(
@@ -73,6 +74,7 @@ const FULL_ACCESS_FALLBACK = [
   "users.view",
   "users.edit",
   "users.delete",
+  "roles.view",
   "roles.manage",
   "subscriptions.view",
   "payments.view",

@@ -11,6 +11,8 @@ import {
   adminModalPanelStyle,
 } from "./AdminModal";
 import { LoadingBlock } from "@/components/shared/loading-spinner";
+import { useAuth } from "@/context/auth-context";
+import { effectivePermissions, hasPermission } from "@/lib/admin-permissions";
 
 /** Staff roles shown in the admin panel (Moderator / Viewer / custom are hidden). */
 const VISIBLE_ROLE_KEYS = new Set(["super-admin", "admin", "editor"]);
@@ -43,6 +45,14 @@ const roleIcon = (r: Role): ReactNode => {
 const TABS = ["Permissions Matrix", "Role Management"] as const;
 
 export function RolesPermissions() {
+  const { user } = useAuth();
+  const permissions = effectivePermissions(user);
+  const canManageRoles = hasPermission(permissions, "roles.manage");
+  const visibleTabs = useMemo(
+    () => (canManageRoles ? TABS : TABS.filter((t) => t !== "Role Management")),
+    [canManageRoles],
+  );
+
   const [roles, setRoles] = useState<Role[]>([]);
   const [catalog, setCatalog] = useState<CatalogModule[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
@@ -50,6 +60,12 @@ export function RolesPermissions() {
   const [tab, setTab] = useState<(typeof TABS)[number]>(TABS[0]);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [editRole, setEditRole] = useState<Role | null>(null);
+
+  useEffect(() => {
+    if (!canManageRoles && tab === "Role Management") {
+      setTab("Permissions Matrix");
+    }
+  }, [canManageRoles, tab]);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -104,7 +120,7 @@ export function RolesPermissions() {
 
       <div className="mt-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg2)]">
         <div className="flex flex-wrap items-center gap-2 border-b border-[var(--border)] px-4">
-          {TABS.map((t) => (
+          {visibleTabs.map((t) => (
             <button key={t} type="button" onClick={() => setTab(t)}
               className={"border-b-2 px-4 py-3 text-sm font-medium transition-colors " +
                 (tab === t ? "border-[var(--brand)] text-[var(--brand)]" : "border-transparent text-[var(--text2)] hover:text-[var(--text)]")}>
