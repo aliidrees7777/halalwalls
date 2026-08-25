@@ -22,6 +22,8 @@ interface AdminCategory {
   description: string;
   image: string | null;
   isPremium: boolean;
+  /** 1-based display position in the public category list. */
+  order: number;
   wallpaperCount: number;
   downloads: number;
   status: "active" | "inactive";
@@ -135,7 +137,7 @@ const CategoriesManagementPage = () => {
       ? { label: "Add Category", onClick: () => setShowAdd(true) }
       : undefined,
     stats: cards,
-    showIndex: true,
+    showIndex: false,
     searchPlaceholder: "Search categories…",
     fetcher,
     rowId: (r) => String((r as unknown as AdminCategory).id),
@@ -152,6 +154,7 @@ const CategoriesManagementPage = () => {
       },
     ],
     sortOptions: [
+      { label: "Position", value: "position" },
       { label: "Newest", value: "latest" },
       { label: "Oldest", value: "oldest" },
       { label: "Most wallpapers", value: "wallpapers" },
@@ -159,6 +162,12 @@ const CategoriesManagementPage = () => {
       { label: "Name A–Z", value: "name" },
     ],
     columns: [
+      {
+        key: "position", header: "Pos",
+        cell: (r) => (
+          <span className="restext">{(r as unknown as AdminCategory).order || "—"}</span>
+        ),
+      },
       {
         key: "category", header: "Category",
         cell: (r) => {
@@ -216,10 +225,19 @@ const CategoriesManagementPage = () => {
     <>
       <AdminListPage config={config} refreshKey={reloadTick} />
       {showAdd ? (
-        <CategoryFormModal onClose={() => setShowAdd(false)} onSaved={() => { setShowAdd(false); reload(); }} />
+        <CategoryFormModal
+          totalCategories={stats?.total ?? 0}
+          onClose={() => setShowAdd(false)}
+          onSaved={() => { setShowAdd(false); reload(); }}
+        />
       ) : null}
       {editRow ? (
-        <CategoryFormModal initial={editRow} onClose={() => setEditRow(null)} onSaved={() => { setEditRow(null); reload(); }} />
+        <CategoryFormModal
+          initial={editRow}
+          totalCategories={stats?.total ?? 0}
+          onClose={() => setEditRow(null)}
+          onSaved={() => { setEditRow(null); reload(); }}
+        />
       ) : null}
     </>
   );
@@ -233,17 +251,22 @@ const inputStyle: React.CSSProperties = {
 const label: React.CSSProperties = { display: "block", fontSize: 12, color: "var(--text2)", margin: "12px 0 6px" };
 
 function CategoryFormModal({
-  initial, onClose, onSaved,
+  initial, totalCategories, onClose, onSaved,
 }: {
   initial?: AdminCategory;
+  totalCategories: number;
   onClose: () => void;
   onSaved: () => void;
 }) {
   const isEdit = !!initial;
+  const maxPos = isEdit ? Math.max(1, totalCategories) : Math.max(1, totalCategories + 1);
   const [name, setName] = useState(initial?.name ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [image, setImage] = useState(initial?.image ?? "");
   const [isPremium, setIsPremium] = useState(initial?.isPremium ?? false);
+  const [position, setPosition] = useState(
+    initial?.order ? String(initial.order) : isEdit ? "1" : ""
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -252,9 +275,36 @@ function CategoryFormModal({
     if (busy) return;
     setError(null);
     if (!name.trim()) { setError("Category name is required."); return; }
+
+    const posRaw = position.trim();
+    let order: number | undefined;
+    if (posRaw !== "") {
+      const n = Number(posRaw);
+      if (!Number.isFinite(n) || !Number.isInteger(n) || n < 1) {
+        setError(`Position must be a whole number from 1 to ${maxPos}.`);
+        return;
+      }
+      order = Math.min(n, maxPos);
+    } else if (isEdit) {
+      setError("Position is required.");
+      return;
+    }
+
     setBusy(true);
     try {
-      const body = { name: name.trim(), description: description.trim(), image: image.trim() || undefined, isPremium };
+      const body: {
+        name: string;
+        description: string;
+        image?: string;
+        isPremium: boolean;
+        order?: number;
+      } = {
+        name: name.trim(),
+        description: description.trim(),
+        image: image.trim() || undefined,
+        isPremium,
+      };
+      if (order !== undefined) body.order = order;
       if (isEdit) await api.patch(`/categories/${initial!.slug}`, body);
       else await api.post("/categories", body);
       onSaved();
@@ -270,7 +320,7 @@ function CategoryFormModal({
       <form onSubmit={submit} style={adminModalPanelStyle(440)}>
         <AdminModalCloseButton onClose={onClose} />
         <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>{isEdit ? "Edit Category" : "Add Category"}</h2>
-        <p style={{ fontSize: 12.5, color: "var(--text2)" }}>{isEdit ? "Update this category." : "Create a new wallpaper category."}</p>
+        <p style={{ fontSize: 12.5, color: "var(--text2)" }}>{isEdit ? "Update this category. Changing position shifts the others." : "Create a new wallpaper category."}</p>
 
         {error ? (
           <div style={{ marginTop: 12, background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.3)", color: "#f7a7a7", fontSize: 12.5, padding: "9px 12px", borderRadius: 9 }}>{error}</div>
@@ -284,6 +334,25 @@ function CategoryFormModal({
 
         <label style={label}>Cover image URL (optional)</label>
         <input value={image} onChange={(e) => setImage(e.target.value)} placeholder="https://…" style={inputStyle} />
+
+        <label style={label}>
+          Position {isEdit ? `(1–${maxPos})` : `(optional, 1–${maxPos})`}
+        </label>
+        <input
+          type="number"
+          min={1}
+          max={maxPos}
+          step={1}
+          value={position}
+          onChange={(e) => setPosition(e.target.value)}
+          placeholder={isEdit ? "e.g. 2" : "Leave empty to add at the end"}
+          style={inputStyle}
+        />
+        <p style={{ margin: "6px 0 0", fontSize: 11.5, color: "var(--text2)", lineHeight: 1.4 }}>
+          {isEdit
+            ? "Set where this category appears in the public list. Other categories between the old and new spot shift automatically."
+            : "Leave blank to place it at the end. Enter a number to insert it at that spot."}
+        </p>
 
         <label style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 14, fontSize: 13, color: "var(--text)", cursor: "pointer" }}>
           <input type="checkbox" checked={isPremium} onChange={(e) => setIsPremium(e.target.checked)} />
