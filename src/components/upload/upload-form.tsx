@@ -53,15 +53,142 @@ const DONT_PUBLISH = [
 const fieldBox =
   "w-full rounded-[5px] border h-[16px] border-hw-input-border bg-hw-input px-4 text-[21px] text-hw-foreground outline-none transition-colors focus:border-[#05DF8B] placeholder:text-hw-faint/50";
 
+const DESKTOP_MIN = { width: 1920, height: 1080 };
+const MOBILE_MIN = { width: 1080, height: 2400 };
+
+type UploadTarget = "desktop" | "mobile";
+
+function readImageDimensions(
+  file: File,
+): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new window.Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Could not read image dimensions."));
+    };
+    img.src = url;
+  });
+}
+
+function UploadDropzone({
+  target,
+  preview,
+  fileName,
+  onPick,
+}: {
+  target: UploadTarget;
+  preview: string | null;
+  fileName: string | null;
+  onPick: () => void;
+}) {
+  const isDesktop = target === "desktop";
+
+  return (
+    <button
+      type="button"
+      onClick={onPick}
+      className={cn(
+        "group relative flex shrink-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-[1.5rem] bg-hw-input p-6 text-center",
+        isDesktop
+          ? "h-[412px] w-full lg:w-[733px]"
+          : "h-[412px] w-full max-w-[263px]",
+      )}
+    >
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full text-black dark:text-[#909098]"
+        preserveAspectRatio="none"
+      >
+        <rect
+          x="2"
+          y="2"
+          width="calc(100% - 4px)"
+          height="calc(100% - 4px)"
+          rx="24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeDasharray="18 10"
+        />
+      </svg>
+      {preview ? (
+        <>
+          <NextImage
+            src={preview}
+            alt={
+              isDesktop
+                ? "Selected desktop wallpaper preview"
+                : "Selected mobile wallpaper preview"
+            }
+            width={isDesktop ? 320 : 120}
+            height={isDesktop ? 200 : 240}
+            unoptimized
+            className={cn(
+              "w-auto rounded-lg object-contain",
+              isDesktop ? "max-h-[60%]" : "max-h-[55%] max-w-[85%]",
+            )}
+          />
+          <p className="max-w-full truncate px-2 text-sm text-hw-foreground">
+            {fileName}
+          </p>
+          <p className="text-xs text-hw-muted">Click to choose a different image</p>
+        </>
+      ) : (
+        <>
+          <span
+            className={cn(
+              "grid place-items-center rounded-full bg-[#2F4577] transition-transform group-hover:scale-105",
+              isDesktop ? "size-[72px]" : "size-[56px]",
+            )}
+          >
+            <Plus
+              className={cn("text-white", isDesktop ? "size-9" : "size-7")}
+              strokeWidth={2.5}
+            />
+          </span>
+          <span
+            className={cn(
+              "font-medium text-hw-depw",
+              isDesktop ? "text-[17px] lg:text-2xl" : "text-[15px] lg:text-[18px]",
+            )}
+          >
+            Choose Wallpaper{" "}
+            <span className="font-normal">
+              ({isDesktop ? "for Desktop" : "for Mobile"})
+            </span>
+          </span>
+          <span
+            className={cn(
+              "font-normal text-hw-depw",
+              isDesktop ? "text-[15px] lg:text-[21px]" : "text-[13px] lg:text-base",
+            )}
+          >
+            JPG or PNG, up to 25MB
+          </span>
+        </>
+      )}
+    </button>
+  );
+}
+
 export function UploadForm() {
   const { isAuthenticated, user, openAuthModal } = useAuth();
   const { toast } = useToast();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const desktopInputRef = useRef<HTMLInputElement>(null);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const pendingSubmitRef = useRef(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [desktopFile, setDesktopFile] = useState<File | null>(null);
+  const [desktopPreview, setDesktopPreview] = useState<string | null>(null);
+  const [desktopFileName, setDesktopFileName] = useState<string | null>(null);
+  const [mobileFile, setMobileFile] = useState<File | null>(null);
+  const [mobilePreview, setMobilePreview] = useState<string | null>(null);
+  const [mobileFileName, setMobileFileName] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [categoryOptions, setCategoryOptions] =
@@ -107,7 +234,7 @@ export function UploadForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: fire once after auth
   }, [isAuthenticated]);
 
-  function handleFile(picked: File | undefined) {
+  async function handleFile(target: UploadTarget, picked: File | undefined) {
     if (!picked) return;
     if (!ALLOWED_IMAGE_TYPES.has(picked.type)) {
       setError("Please upload a JPG or PNG image.");
@@ -117,18 +244,48 @@ export function UploadForm() {
       setError("Max file size is 25MB.");
       return;
     }
+
+    let dimensions: { width: number; height: number };
+    try {
+      dimensions = await readImageDimensions(picked);
+    } catch {
+      setError("Could not read image dimensions. Try another file.");
+      return;
+    }
+
+    const min = target === "desktop" ? DESKTOP_MIN : MOBILE_MIN;
+    if (
+      dimensions.width < min.width ||
+      dimensions.height < min.height
+    ) {
+      setError(
+        target === "desktop"
+          ? `Desktop image must be at least ${DESKTOP_MIN.width}×${DESKTOP_MIN.height}.`
+          : `Mobile image must be at least ${MOBILE_MIN.width}×${MOBILE_MIN.height}.`,
+      );
+      return;
+    }
+
     setError(null);
-    setFile(picked);
-    setFileName(picked.name);
     const reader = new FileReader();
     reader.onload = () => {
-      if (typeof reader.result === "string") setPreview(reader.result);
+      if (typeof reader.result !== "string") return;
+      if (target === "desktop") {
+        setDesktopFile(picked);
+        setDesktopFileName(picked.name);
+        setDesktopPreview(reader.result);
+      } else {
+        setMobileFile(picked);
+        setMobileFileName(picked.name);
+        setMobilePreview(reader.result);
+      }
     };
     reader.readAsDataURL(picked);
   }
 
   function validateForm(): string | null {
-    if (!file) return "Please choose a wallpaper image.";
+    if (!desktopFile) return "Please choose a desktop wallpaper image.";
+    if (!mobileFile) return "Please choose a mobile wallpaper image.";
     if (!title.trim()) return "Please enter a title.";
     if (!category) return "Please select a category.";
     const selected = categoryOptions.find((c) => c.name === category);
@@ -143,9 +300,12 @@ export function UploadForm() {
   }
 
   function resetForm() {
-    setFile(null);
-    setPreview(null);
-    setFileName(null);
+    setDesktopFile(null);
+    setDesktopPreview(null);
+    setDesktopFileName(null);
+    setMobileFile(null);
+    setMobilePreview(null);
+    setMobileFileName(null);
     setTitle("");
     setCategory("");
     setTags("");
@@ -161,14 +321,15 @@ export function UploadForm() {
       setError(validationError);
       return;
     }
-    if (!file) return;
+    if (!desktopFile || !mobileFile) return;
 
     setSubmitting(true);
     setError(null);
     setSuccess(null);
     try {
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append("image", desktopFile);
+      formData.append("mobileImage", mobileFile);
       formData.append("title", title.trim());
       formData.append("category", category);
       if (tags.trim()) formData.append("tags", tags.trim());
@@ -242,68 +403,46 @@ export function UploadForm() {
 
       {/* Dropzone + don't-publish — horizontal padding (mobile); desktop unchanged */}
       <div className="flex flex-col gap-7 max-lg:px-4">
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/jpeg,image/png,.jpg,.jpeg,.png"
-        className="sr-only"
-        onChange={(e) => {
-          handleFile(e.target.files?.[0]);
-          e.target.value = "";
-        }}
-      />
-      <button
-        type="button"
-        onClick={() => inputRef.current?.click()}
-        className="group mx-auto relative w-full lg:w-[733px] h-[412px] flex flex-col items-center justify-center gap-4 overflow-hidden rounded-[1.5rem] bg-hw-input p-6 text-center"
-      >
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full text-black dark:text-[#909098]"
-          preserveAspectRatio="none"
-        >
-          <rect
-            x="2"
-            y="2"
-            width="calc(100% - 4px)"
-            height="calc(100% - 4px)"
-            rx="24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeDasharray="18 10"
-          />
-        </svg>
-        {preview ? (
-          <>
-            <NextImage
-              src={preview}
-              alt="Selected wallpaper preview"
-              width={320}
-              height={200}
-              unoptimized
-              className="max-h-[60%] w-auto rounded-lg object-contain"
+        <div className="flex flex-col items-center gap-[34px]">
+          <div className="flex w-full flex-col items-center justify-center gap-8 lg:flex-row lg:items-start lg:gap-[50px]">
+            <input
+              ref={desktopInputRef}
+              type="file"
+              accept="image/jpeg,image/png,.jpg,.jpeg,.png"
+              className="sr-only"
+              onChange={(e) => {
+                void handleFile("desktop", e.target.files?.[0]);
+                e.target.value = "";
+              }}
             />
-            <p className="max-w-full truncate text-sm text-hw-foreground">
-              {fileName}
-            </p>
-            <p className="text-xs text-hw-muted">
-              Click to choose a different image
-            </p>
-          </>
-        ) : (
-          <>
-            <span className="grid size-[72px] place-items-center rounded-full bg-[#2F4577] transition-transform group-hover:scale-105">
-              <Plus className="size-9 text-white" strokeWidth={2.5} />
-            </span>
-            <span className="text-[17px] font-medium text-hw-depw lg:text-2xl">
-              Choose Wallpaper
-            </span>
-            <span className="text-[15px] font-normal text-hw-depw lg:text-[21px]">
-              JPG or PNG, up to 25MB
-            </span>
-          </>
-        )}
-      </button>
+            <input
+              ref={mobileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,.jpg,.jpeg,.png"
+              className="sr-only"
+              onChange={(e) => {
+                void handleFile("mobile", e.target.files?.[0]);
+                e.target.value = "";
+              }}
+            />
+            <UploadDropzone
+              target="desktop"
+              preview={desktopPreview}
+              fileName={desktopFileName}
+              onPick={() => desktopInputRef.current?.click()}
+            />
+            <UploadDropzone
+              target="mobile"
+              preview={mobilePreview}
+              fileName={mobileFileName}
+              onPick={() => mobileInputRef.current?.click()}
+            />
+          </div>
+          <p className="text-center text-[18px] leading-[35px] text-[#b2aca2] opacity-70">
+            &ldquo;Required resolutions: Desktop minimum 1920&times;1080; Mobile
+            minimum 1080&times;2400.&rdquo;
+          </p>
+        </div>
 
       {/* Don't publish notice */}
       <div className="flex flex-col justify-center lg:items-center">

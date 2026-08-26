@@ -47,6 +47,12 @@ export interface WallpaperDetail extends Wallpaper {
   /** Source pixel size (used to filter download options). */
   width?: number | null;
   height?: number | null;
+  /** Dedicated mobile source dimensions when uploaded separately. */
+  mobileWidth?: number | null;
+  mobileHeight?: number | null;
+  mobileOriginalResolution?: string;
+  mobileOriginalSizeMB?: number;
+  mobileOriginalUrl?: string | null;
   /** Keys of sizes offered for this wallpaper (same + below only). */
   resolutions?: string[];
   /** Pre-filtered 3 desktop + 3 mobile catalog for this wallpaper. */

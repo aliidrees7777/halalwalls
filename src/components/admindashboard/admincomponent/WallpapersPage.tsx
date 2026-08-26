@@ -35,6 +35,10 @@ interface AdminWallpaper {
   tags: string[];
   image: string | null;
   thumbnailUrl: string | null;
+  mobileImage?: string | null;
+  mobileResolution?: string;
+  mobileWidth?: number | null;
+  mobileHeight?: number | null;
   resolution: string;
   category: string | null;
   categorySlug: string | null;
@@ -350,12 +354,32 @@ const WallpapersPage = () => {
 };
 
 const DEFAULT_SOURCE = "https://halalwalls.com";
+const DESKTOP_MIN = { width: 1920, height: 1080 };
+const MOBILE_MIN = { width: 1080, height: 2400 };
 const border = "1px solid rgba(255,255,255,0.08)";
 const inputStyle: React.CSSProperties = {
   width: "100%", background: "var(--bg3)", border: "1px solid var(--border2)",
   borderRadius: 8, color: "var(--text)", fontSize: 13, padding: "9px 12px", outline: "none",
 };
 const label: React.CSSProperties = { display: "block", fontSize: 12, color: "var(--text2)", margin: "12px 0 6px" };
+
+function readImageDimensions(
+  file: File,
+): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new window.Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Could not read image dimensions."));
+    };
+    img.src = url;
+  });
+}
 
 function WallpaperFormModal({
   initial, categories, onClose, onSaved,
@@ -368,14 +392,23 @@ function WallpaperFormModal({
   const isEdit = !!initial;
   const [title, setTitle] = useState(initial?.title ?? "");
   const [image, setImage] = useState(initial?.image ?? "");
-  const [file, setFile] = useState<File | null>(null);
+  const [mobileImage, setMobileImage] = useState(initial?.mobileImage ?? "");
+  const [desktopFile, setDesktopFile] = useState<File | null>(null);
+  const [mobileFile, setMobileFile] = useState<File | null>(null);
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
     if (initial?.categorySlugs?.length) return [...initial.categorySlugs];
     if (initial?.categorySlug) return [initial.categorySlug];
     return categories[0]?.value ? [categories[0].value] : [];
   });
-  const [detectedRes, setDetectedRes] = useState<string | null>(
+  const [detectedDesktopRes, setDetectedDesktopRes] = useState<string | null>(
     initial?.resolution ? String(initial.resolution).replace("x", "×") : null,
+  );
+  const [detectedMobileRes, setDetectedMobileRes] = useState<string | null>(
+    initial?.mobileResolution
+      ? String(initial.mobileResolution).replace("x", "×")
+      : initial?.mobileWidth && initial?.mobileHeight
+        ? `${initial.mobileWidth}×${initial.mobileHeight}`
+        : null,
   );
   const [tags, setTags] = useState((initial?.tags ?? []).join(", "));
   const [source, setSource] = useState(initial?.description?.trim() || DEFAULT_SOURCE);
@@ -389,21 +422,46 @@ function WallpaperFormModal({
     );
   };
 
-  const onFileChange = (f: File | null) => {
-    setFile(f);
-    setDetectedRes(null);
+  const onDesktopFileChange = async (f: File | null) => {
+    setDesktopFile(f);
+    setDetectedDesktopRes(null);
     if (!f) return;
-    const url = URL.createObjectURL(f);
-    const img = new window.Image();
-    img.onload = () => {
-      setDetectedRes(`${img.naturalWidth}×${img.naturalHeight}`);
-      URL.revokeObjectURL(url);
-    };
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      setDetectedRes(null);
-    };
-    img.src = url;
+    try {
+      const dims = await readImageDimensions(f);
+      if (dims.width < DESKTOP_MIN.width || dims.height < DESKTOP_MIN.height) {
+        setError(
+          `Desktop image must be at least ${DESKTOP_MIN.width}×${DESKTOP_MIN.height}.`,
+        );
+        setDesktopFile(null);
+        return;
+      }
+      setError(null);
+      setDetectedDesktopRes(`${dims.width}×${dims.height}`);
+    } catch {
+      setError("Could not read desktop image dimensions.");
+      setDesktopFile(null);
+    }
+  };
+
+  const onMobileFileChange = async (f: File | null) => {
+    setMobileFile(f);
+    setDetectedMobileRes(null);
+    if (!f) return;
+    try {
+      const dims = await readImageDimensions(f);
+      if (dims.width < MOBILE_MIN.width || dims.height < MOBILE_MIN.height) {
+        setError(
+          `Mobile image must be at least ${MOBILE_MIN.width}×${MOBILE_MIN.height}.`,
+        );
+        setMobileFile(null);
+        return;
+      }
+      setError(null);
+      setDetectedMobileRes(`${dims.width}×${dims.height}`);
+    } catch {
+      setError("Could not read mobile image dimensions.");
+      setMobileFile(null);
+    }
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -427,10 +485,15 @@ function WallpaperFormModal({
       }
       setBusy(true);
       try {
-        if (file) {
+        if (desktopFile) {
           const fd = new FormData();
-          fd.append("image", file);
+          fd.append("image", desktopFile);
           await api.post(`/admin/wallpapers/${initial!.id}/image`, fd);
+        }
+        if (mobileFile) {
+          const fd = new FormData();
+          fd.append("image", mobileFile);
+          await api.post(`/admin/wallpapers/${initial!.id}/image?target=mobile`, fd);
         }
         await api.patch(`/admin/wallpapers/${initial!.id}`, {
           title: title.trim(),
@@ -456,8 +519,8 @@ function WallpaperFormModal({
     // Add → upload the actual image file through the Sharp pipeline. Because the
     // uploader is an admin, it publishes immediately (active, no approval).
     // Resolution + download options come from the image itself (no manual field).
-    if (!file) {
-      setError("Please choose an image file to upload.");
+    if (!desktopFile) {
+      setError("Please choose a desktop image file to upload.");
       return;
     }
     if (!title.trim()) {
@@ -467,7 +530,8 @@ function WallpaperFormModal({
     setBusy(true);
     try {
       const fd = new FormData();
-      fd.append("image", file);
+      fd.append("image", desktopFile);
+      if (mobileFile) fd.append("mobileImage", mobileFile);
       fd.append("title", title.trim());
       if (categoryLabels[0]) fd.append("category", categoryLabels[0]);
       if (categorySlugs[0]) fd.append("categorySlug", categorySlugs[0]);
@@ -503,7 +567,7 @@ function WallpaperFormModal({
         <p style={{ fontSize: 12.5, color: "var(--text2)" }}>
           {isEdit
             ? "Update this wallpaper's details."
-            : "Upload an image — resolution is detected automatically. Download sizes will only include same or smaller options (no upscaling)."}
+            : "Upload desktop (required) and mobile (optional) images. Download sizes are detected automatically — no upscaling."}
         </p>
 
         {error ? (
@@ -573,7 +637,7 @@ function WallpaperFormModal({
           <div style={{ flex: 1, minWidth: 0 }}>
             {isEdit ? (
               <>
-                <label style={label}>Replace image (optional)</label>
+                <label style={label}>Replace desktop image (optional)</label>
                 {image ? (
                   <div
                     style={{
@@ -589,7 +653,7 @@ function WallpaperFormModal({
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imgSrc(image) || image}
-                      alt="Current wallpaper"
+                      alt="Current desktop wallpaper"
                       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                     />
                   </div>
@@ -597,42 +661,106 @@ function WallpaperFormModal({
                 <input
                   type="file"
                   accept="image/jpeg,image/png"
-                  onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
+                  onChange={(e) => void onDesktopFileChange(e.target.files?.[0] ?? null)}
                   style={inputStyle}
                 />
                 <p style={{ fontSize: 11, color: "var(--text3)", marginTop: 4 }}>
-                  {file
-                    ? `New file: ${file.name} — previous image files will be deleted on save.`
-                    : "Leave empty to keep the current image. Choosing a file replaces it and deletes the old one."}
+                  {desktopFile
+                    ? `New desktop file: ${desktopFile.name}`
+                    : "Leave empty to keep the current desktop image."}
+                </p>
+
+                <label style={{ ...label, marginTop: 16 }}>Replace mobile image (optional)</label>
+                {mobileImage ? (
+                  <div
+                    style={{
+                      marginBottom: 8,
+                      borderRadius: 8,
+                      overflow: "hidden",
+                      border,
+                      background: "var(--bg3)",
+                      aspectRatio: "9 / 16",
+                      maxHeight: 120,
+                      maxWidth: 68,
+                    }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imgSrc(mobileImage) || mobileImage}
+                      alt="Current mobile wallpaper"
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    />
+                  </div>
+                ) : null}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png"
+                  onChange={(e) => void onMobileFileChange(e.target.files?.[0] ?? null)}
+                  style={inputStyle}
+                />
+                <p style={{ fontSize: 11, color: "var(--text3)", marginTop: 4 }}>
+                  {mobileFile
+                    ? `New mobile file: ${mobileFile.name}`
+                    : "Leave empty to keep the current mobile image."}
                 </p>
               </>
             ) : (
               <>
-                <label style={label}>Image file</label>
+                <label style={label}>
+                  Desktop image <span style={{ color: "#ef4444" }}>*</span>
+                </label>
                 <input
                   type="file"
                   accept="image/jpeg,image/png"
-                  onChange={(e) => onFileChange(e.target.files?.[0] ?? null)}
+                  onChange={(e) => void onDesktopFileChange(e.target.files?.[0] ?? null)}
                   style={inputStyle}
                 />
-                {file ? (
-                  <p style={{ fontSize: 12, color: "var(--text2)", marginTop: 4 }}>{file.name}</p>
+                {desktopFile ? (
+                  <p style={{ fontSize: 12, color: "var(--text2)", marginTop: 4 }}>{desktopFile.name}</p>
                 ) : null}
+
+                <label style={{ ...label, marginTop: 16 }}>Mobile image (optional)</label>
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png"
+                  onChange={(e) => void onMobileFileChange(e.target.files?.[0] ?? null)}
+                  style={inputStyle}
+                />
+                {mobileFile ? (
+                  <p style={{ fontSize: 12, color: "var(--text2)", marginTop: 4 }}>{mobileFile.name}</p>
+                ) : null}
+                <p style={{ fontSize: 11, color: "var(--text3)", marginTop: 4 }}>
+                  Min desktop 1920×1080; min mobile 1080×2400 when provided.
+                </p>
               </>
             )}
 
-            <label style={label}>Resolution</label>
+            <label style={label}>Desktop resolution</label>
             <div
               style={{
                 ...inputStyle,
                 display: "flex",
                 alignItems: "center",
                 minHeight: 40,
-                color: detectedRes ? "var(--text)" : "var(--text3)",
+                color: detectedDesktopRes ? "var(--text)" : "var(--text3)",
                 cursor: "default",
               }}
             >
-              {detectedRes || (isEdit ? "—" : "Detected from image")}
+              {detectedDesktopRes || (isEdit ? "—" : "Detected from desktop image")}
+            </div>
+
+            <label style={label}>Mobile resolution</label>
+            <div
+              style={{
+                ...inputStyle,
+                display: "flex",
+                alignItems: "center",
+                minHeight: 40,
+                color: detectedMobileRes ? "var(--text)" : "var(--text3)",
+                cursor: "default",
+              }}
+            >
+              {detectedMobileRes || (isEdit ? "—" : "Detected from mobile image")}
             </div>
           </div>
         </div>

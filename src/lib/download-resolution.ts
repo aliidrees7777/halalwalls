@@ -25,6 +25,7 @@ export function qualityLabelForResolution(key: string): string | null {
 export function availableDownloadResolutions(
   wallpaper: WallpaperDetail,
 ): DownloadResolution[] {
+  const hasDedicatedMobile = Boolean(wallpaper.mobileOriginalUrl);
   const desktop =
     wallpaper.downloadResolutions?.desktop ??
     filterResolutionsForSource(
@@ -36,8 +37,8 @@ export function availableDownloadResolutions(
     wallpaper.downloadResolutions?.mobile ??
     filterResolutionsForSource(
       mobileDownloadResolutions,
-      wallpaper.width,
-      wallpaper.height,
+      hasDedicatedMobile ? wallpaper.mobileWidth : wallpaper.width,
+      hasDedicatedMobile ? wallpaper.mobileHeight : wallpaper.height,
     );
   return [...desktop, ...mobile];
 }
@@ -46,12 +47,13 @@ export function availableDownloadResolutions(
 export function firstAvailableMobileResolution(
   wallpaper: WallpaperDetail,
 ): DownloadResolution | null {
+  const hasDedicatedMobile = Boolean(wallpaper.mobileOriginalUrl);
   const mobile =
     wallpaper.downloadResolutions?.mobile ??
     filterResolutionsForSource(
       mobileDownloadResolutions,
-      wallpaper.width,
-      wallpaper.height,
+      hasDedicatedMobile ? wallpaper.mobileWidth : wallpaper.width,
+      hasDedicatedMobile ? wallpaper.mobileHeight : wallpaper.height,
     );
   return mobile[0] ?? null;
 }

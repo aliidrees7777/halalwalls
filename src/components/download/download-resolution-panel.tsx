@@ -76,6 +76,7 @@ export function DownloadResolutionPanel({
   onSelect,
 }: DownloadResolutionPanelProps) {
   // Prefer server-filtered catalog; fall back to client filter on source dims.
+  const hasDedicatedMobile = Boolean(wallpaper.mobileOriginalUrl);
   const desktop =
     wallpaper.downloadResolutions?.desktop ??
     filterResolutionsForSource(
@@ -87,8 +88,8 @@ export function DownloadResolutionPanel({
     wallpaper.downloadResolutions?.mobile ??
     filterResolutionsForSource(
       mobileDownloadResolutions,
-      wallpaper.width,
-      wallpaper.height,
+      hasDedicatedMobile ? wallpaper.mobileWidth : wallpaper.width,
+      hasDedicatedMobile ? wallpaper.mobileHeight : wallpaper.height,
     );
 
   return (
