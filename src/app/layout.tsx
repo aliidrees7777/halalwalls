@@ -8,6 +8,10 @@ import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { ToastProvider } from "@/components/ui/toast";
 import { Suspense } from "react";
 import { StripeCheckoutReturn } from "@/components/premium/stripe-checkout-return";
+import {
+  ADSENSE_CLIENT,
+  GoogleAdSense,
+} from "@/components/ads/google-adsense";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -25,6 +29,9 @@ export const metadata: Metadata = {
   title: "HalalWalls — Free HD & 4K Halal Wallpapers",
   description:
     "Download free Islamic, anime, gaming, and superhero wallpapers in HD and 4K resolutions.",
+  other: {
+    "google-adsense-account": ADSENSE_CLIENT,
+  },
 };
 
 export default function RootLayout({
@@ -39,6 +46,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full pb-[72px] font-sans antialiased md:pb-0">
+        <GoogleAdSense />
         <ThemeProvider>
           <ToastProvider>
             <AuthProvider>
