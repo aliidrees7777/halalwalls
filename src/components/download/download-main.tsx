@@ -27,7 +27,6 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loaded, setLoaded] = useState(false);
-  const imageSrc = resolveMediaUrl(wallpaper.image);
 
   const urlResolution = searchParams.get("resolution");
   const browseMatch = useMemo(
@@ -48,6 +47,17 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
   }, []);
+
+  // Preview: mobile image on phones when uploaded; otherwise desktop image.
+  const previewRaw =
+    isMobileViewport && wallpaper.mobileImage
+      ? wallpaper.mobileImage
+      : wallpaper.image;
+  const imageSrc = resolveMediaUrl(previewRaw);
+
+  useEffect(() => {
+    setLoaded(false);
+  }, [imageSrc]);
 
   // Highlight browse choice when valid; otherwise mobile size on phones, else preferred.
   const selectedResolution =

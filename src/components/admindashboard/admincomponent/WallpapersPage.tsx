@@ -7,6 +7,8 @@ import {
   XCircle,
   Download,
   Upload,
+  Monitor,
+  Smartphone,
 } from "lucide-react";
 import { api, API_BASE_URL, ApiError, getToken } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
@@ -358,10 +360,22 @@ const DESKTOP_MIN = { width: 1920, height: 1080 };
 const MOBILE_MIN = { width: 1080, height: 2400 };
 const border = "1px solid rgba(255,255,255,0.08)";
 const inputStyle: React.CSSProperties = {
-  width: "100%", background: "var(--bg3)", border: "1px solid var(--border2)",
-  borderRadius: 8, color: "var(--text)", fontSize: 13, padding: "9px 12px", outline: "none",
+  width: "100%",
+  background: "var(--bg3)",
+  border: "1px solid var(--border2)",
+  borderRadius: 7,
+  color: "var(--text)",
+  fontSize: 14,
+  padding: "10px 12px",
+  outline: "none",
 };
-const label: React.CSSProperties = { display: "block", fontSize: 12, color: "var(--text2)", margin: "12px 0 6px" };
+const fieldLabel: React.CSSProperties = {
+  display: "block",
+  fontSize: 12.5,
+  fontWeight: 600,
+  color: "var(--text2)",
+  marginBottom: 6,
+};
 
 function readImageDimensions(
   file: File,
@@ -381,6 +395,110 @@ function readImageDimensions(
   });
 }
 
+function ImageDropzone({
+  label: zoneLabel,
+  hint,
+  thumbSrc,
+  placeholder,
+  accept,
+  onPick,
+}: {
+  label: string;
+  hint: string;
+  thumbSrc?: string | null;
+  placeholder: "desktop" | "mobile";
+  accept: string;
+  onPick: (file: File | null) => void;
+}) {
+  return (
+    <label
+      style={{
+        border: "1.5px dashed var(--border2)",
+        borderRadius: 10,
+        background: "var(--bg3)",
+        padding: 10,
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        cursor: "pointer",
+        position: "relative",
+        minHeight: 64,
+      }}
+    >
+      <input
+        type="file"
+        accept={accept}
+        onChange={(e) => onPick(e.target.files?.[0] ?? null)}
+        style={{
+          position: "absolute",
+          inset: 0,
+          opacity: 0,
+          cursor: "pointer",
+        }}
+      />
+      {thumbSrc ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={thumbSrc}
+          alt=""
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 7,
+            objectFit: "cover",
+            flexShrink: 0,
+            background: "var(--bg)",
+          }}
+        />
+      ) : (
+        <span
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 7,
+            background: "var(--bg)",
+            display: "grid",
+            placeItems: "center",
+            flexShrink: 0,
+            color: "var(--text3)",
+          }}
+        >
+          {placeholder === "desktop" ? (
+            <Monitor size={18} />
+          ) : (
+            <Smartphone size={18} />
+          )}
+        </span>
+      )}
+      <span style={{ minWidth: 0 }}>
+        <span
+          style={{
+            display: "block",
+            fontSize: 12.5,
+            fontWeight: 600,
+            color: "var(--text)",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {zoneLabel}
+        </span>
+        <span
+          style={{
+            display: "block",
+            fontSize: 11,
+            color: "var(--text3)",
+            marginTop: 1,
+          }}
+        >
+          {hint}
+        </span>
+      </span>
+    </label>
+  );
+}
+
 function WallpaperFormModal({
   initial, categories, onClose, onSaved,
 }: {
@@ -391,10 +509,12 @@ function WallpaperFormModal({
 }) {
   const isEdit = !!initial;
   const [title, setTitle] = useState(initial?.title ?? "");
-  const [image, setImage] = useState(initial?.image ?? "");
-  const [mobileImage, setMobileImage] = useState(initial?.mobileImage ?? "");
+  const [image] = useState(initial?.image ?? "");
+  const [mobileImage] = useState(initial?.mobileImage ?? "");
   const [desktopFile, setDesktopFile] = useState<File | null>(null);
   const [mobileFile, setMobileFile] = useState<File | null>(null);
+  const [desktopPreviewUrl, setDesktopPreviewUrl] = useState<string | null>(null);
+  const [mobilePreviewUrl, setMobilePreviewUrl] = useState<string | null>(null);
   const [selectedSlugs, setSelectedSlugs] = useState<string[]>(() => {
     if (initial?.categorySlugs?.length) return [...initial.categorySlugs];
     if (initial?.categorySlug) return [initial.categorySlug];
@@ -416,6 +536,13 @@ function WallpaperFormModal({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    return () => {
+      if (desktopPreviewUrl) URL.revokeObjectURL(desktopPreviewUrl);
+      if (mobilePreviewUrl) URL.revokeObjectURL(mobilePreviewUrl);
+    };
+  }, [desktopPreviewUrl, mobilePreviewUrl]);
+
   const toggleCategory = (slug: string) => {
     setSelectedSlugs((prev) =>
       prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug],
@@ -425,6 +552,8 @@ function WallpaperFormModal({
   const onDesktopFileChange = async (f: File | null) => {
     setDesktopFile(f);
     setDetectedDesktopRes(null);
+    if (desktopPreviewUrl) URL.revokeObjectURL(desktopPreviewUrl);
+    setDesktopPreviewUrl(null);
     if (!f) return;
     try {
       const dims = await readImageDimensions(f);
@@ -437,6 +566,7 @@ function WallpaperFormModal({
       }
       setError(null);
       setDetectedDesktopRes(`${dims.width}×${dims.height}`);
+      setDesktopPreviewUrl(URL.createObjectURL(f));
     } catch {
       setError("Could not read desktop image dimensions.");
       setDesktopFile(null);
@@ -446,6 +576,8 @@ function WallpaperFormModal({
   const onMobileFileChange = async (f: File | null) => {
     setMobileFile(f);
     setDetectedMobileRes(null);
+    if (mobilePreviewUrl) URL.revokeObjectURL(mobilePreviewUrl);
+    setMobilePreviewUrl(null);
     if (!f) return;
     try {
       const dims = await readImageDimensions(f);
@@ -458,6 +590,7 @@ function WallpaperFormModal({
       }
       setError(null);
       setDetectedMobileRes(`${dims.width}×${dims.height}`);
+      setMobilePreviewUrl(URL.createObjectURL(f));
     } catch {
       setError("Could not read mobile image dimensions.");
       setMobileFile(null);
@@ -477,7 +610,6 @@ function WallpaperFormModal({
     const categoryLabels = selectedCats.map((c) => c.label);
     const sourceValue = source.trim() || DEFAULT_SOURCE;
 
-    // Edit → patch metadata; optionally replace the image file (old files deleted server-side).
     if (isEdit) {
       if (!title.trim()) {
         setError("Title is required.");
@@ -516,9 +648,6 @@ function WallpaperFormModal({
       return;
     }
 
-    // Add → upload the actual image file through the Sharp pipeline. Because the
-    // uploader is an admin, it publishes immediately (active, no approval).
-    // Resolution + download options come from the image itself (no manual field).
     if (!desktopFile) {
       setError("Please choose a desktop image file to upload.");
       return;
@@ -544,7 +673,6 @@ function WallpaperFormModal({
       if (username) fd.append("author", username);
       fd.append("isPremium", String(isPremium));
       await api.post("/uploads", fd);
-      // New publish — bust catalog tag (slug may not be known client-side yet).
       void bustWallpaperPageCache();
       onSaved();
     } catch (err) {
@@ -554,244 +682,321 @@ function WallpaperFormModal({
     }
   };
 
+  const desktopThumb =
+    desktopPreviewUrl || (isEdit ? imgSrc(image) || image : null);
+  const mobileThumb =
+    mobilePreviewUrl || (isEdit ? imgSrc(mobileImage) || mobileImage : null);
+
   return (
     <AdminModalOverlay>
       <form
         onSubmit={submit}
-        style={adminModalPanelStyle(520)}
+        style={adminModalPanelStyle(640, {
+          maxHeight: "min(88vh, 760px)",
+          padding: 0,
+          paddingRight: 0,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        })}
       >
-        <AdminModalCloseButton onClose={onClose} />
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>
-          {isEdit ? "Edit Wallpaper" : "Add Wallpaper"}
-        </h2>
-        <p style={{ fontSize: 12.5, color: "var(--text2)" }}>
-          {isEdit
-            ? "Update this wallpaper's details."
-            : "Upload desktop (required) and mobile (optional) images. Download sizes are detected automatically — no upscaling."}
-        </p>
-
-        {error ? (
-          <div style={{ marginTop: 12, background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.3)", color: "#f7a7a7", fontSize: 12.5, padding: "9px 12px", borderRadius: 9 }}>
-            {error}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            padding: "20px 24px 16px",
+            borderBottom: "1px solid var(--border)",
+            flexShrink: 0,
+          }}
+        >
+          <div style={{ paddingRight: 40 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 650, color: "var(--text)", margin: "0 0 4px" }}>
+              {isEdit ? "Edit Wallpaper" : "Add Wallpaper"}
+            </h2>
+            <p style={{ fontSize: 13, color: "var(--text2)", margin: 0, lineHeight: 1.4, maxWidth: 440 }}>
+              {isEdit
+                ? "Update this wallpaper's details."
+                : "Upload desktop (required) and mobile (optional) images. Download sizes are detected automatically — no upscaling."}
+            </p>
           </div>
-        ) : null}
+          <AdminModalCloseButton onClose={onClose} />
+        </div>
 
-        <label style={label}>Title <span style={{ color: "#ef4444" }}>*</span></label>
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="e.g. Sunset in Tokyo"
-          required
-          style={inputStyle}
-        />
-
-        <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <label style={label}>
-              Categories <span style={{ color: "#ef4444" }}>*</span>
-            </label>
+        <div
+          style={{
+            padding: "18px 24px",
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            flex: 1,
+            minHeight: 0,
+          }}
+        >
+          {error ? (
             <div
               style={{
-                ...inputStyle,
-                display: "flex",
-                flexDirection: "column",
-                gap: 6,
-                maxHeight: 200,
-                overflowY: "auto",
-                padding: "10px 12px",
+                background: "rgba(239,68,68,0.10)",
+                border: "1px solid rgba(239,68,68,0.3)",
+                color: "#f7a7a7",
+                fontSize: 12.5,
+                padding: "9px 12px",
+                borderRadius: 9,
               }}
             >
+              {error}
+            </div>
+          ) : null}
+
+          <div>
+            <label style={fieldLabel}>
+              Title <span style={{ color: "#ef4444" }}>*</span>
+            </label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g. Sunset in Tokyo"
+              required
+              style={inputStyle}
+            />
+          </div>
+
+          <div>
+            <label style={fieldLabel}>
+              Categories <span style={{ color: "#ef4444" }}>*</span>
+            </label>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
               {categories.length === 0 ? (
                 <span style={{ color: "var(--text3)", fontSize: 12 }}>No categories available</span>
               ) : (
                 categories.map((c) => {
                   const checked = selectedSlugs.includes(c.value);
+                  const isPrimary = checked && selectedSlugs[0] === c.value;
                   return (
-                    <label
+                    <button
                       key={c.value}
+                      type="button"
+                      onClick={() => toggleCategory(c.value)}
                       style={{
-                        display: "flex",
+                        display: "inline-flex",
                         alignItems: "center",
-                        gap: 8,
-                        fontSize: 13,
-                        color: "var(--text)",
+                        gap: 5,
+                        padding: "6px 12px",
+                        borderRadius: 999,
+                        border: checked
+                          ? "1px solid var(--brand)"
+                          : "1px solid var(--border2)",
+                        background: checked
+                          ? "rgba(5,223,139,0.12)"
+                          : "var(--bg3)",
+                        color: checked ? "var(--brand)" : "var(--text2)",
+                        fontSize: 12.5,
+                        fontWeight: 500,
                         cursor: "pointer",
                       }}
                     >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleCategory(c.value)}
-                      />
+                      {isPrimary ? (
+                        <span
+                          style={{
+                            width: 5,
+                            height: 5,
+                            borderRadius: "50%",
+                            background: "var(--brand)",
+                            display: "inline-block",
+                          }}
+                        />
+                      ) : null}
                       {c.label}
-                    </label>
+                    </button>
                   );
                 })
               )}
             </div>
-            <p style={{ fontSize: 11, color: "var(--text3)", marginTop: 4 }}>
-              Select one or more. The first category in the list that is checked is primary.
+            <p style={{ fontSize: 11.5, color: "var(--text3)", marginTop: 6 }}>
+              Select one or more — the first checked category is primary.
             </p>
           </div>
 
-          <div style={{ flex: 1, minWidth: 0 }}>
-            {isEdit ? (
-              <>
-                <label style={label}>Replace desktop image (optional)</label>
-                {image ? (
-                  <div
-                    style={{
-                      marginBottom: 8,
-                      borderRadius: 8,
-                      overflow: "hidden",
-                      border,
-                      background: "var(--bg3)",
-                      aspectRatio: "16 / 9",
-                      maxHeight: 120,
-                    }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={imgSrc(image) || image}
-                      alt="Current desktop wallpaper"
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                    />
-                  </div>
-                ) : null}
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png"
-                  onChange={(e) => void onDesktopFileChange(e.target.files?.[0] ?? null)}
-                  style={inputStyle}
-                />
-                <p style={{ fontSize: 11, color: "var(--text3)", marginTop: 4 }}>
-                  {desktopFile
-                    ? `New desktop file: ${desktopFile.name}`
-                    : "Leave empty to keep the current desktop image."}
-                </p>
-
-                <label style={{ ...label, marginTop: 16 }}>Replace mobile image (optional)</label>
-                {mobileImage ? (
-                  <div
-                    style={{
-                      marginBottom: 8,
-                      borderRadius: 8,
-                      overflow: "hidden",
-                      border,
-                      background: "var(--bg3)",
-                      aspectRatio: "9 / 16",
-                      maxHeight: 120,
-                      maxWidth: 68,
-                    }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={imgSrc(mobileImage) || mobileImage}
-                      alt="Current mobile wallpaper"
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                    />
-                  </div>
-                ) : null}
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png"
-                  onChange={(e) => void onMobileFileChange(e.target.files?.[0] ?? null)}
-                  style={inputStyle}
-                />
-                <p style={{ fontSize: 11, color: "var(--text3)", marginTop: 4 }}>
-                  {mobileFile
-                    ? `New mobile file: ${mobileFile.name}`
-                    : "Leave empty to keep the current mobile image."}
-                </p>
-              </>
-            ) : (
-              <>
-                <label style={label}>
-                  Desktop image <span style={{ color: "#ef4444" }}>*</span>
-                </label>
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png"
-                  onChange={(e) => void onDesktopFileChange(e.target.files?.[0] ?? null)}
-                  style={inputStyle}
-                />
-                {desktopFile ? (
-                  <p style={{ fontSize: 12, color: "var(--text2)", marginTop: 4 }}>{desktopFile.name}</p>
-                ) : null}
-
-                <label style={{ ...label, marginTop: 16 }}>Mobile image (optional)</label>
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png"
-                  onChange={(e) => void onMobileFileChange(e.target.files?.[0] ?? null)}
-                  style={inputStyle}
-                />
-                {mobileFile ? (
-                  <p style={{ fontSize: 12, color: "var(--text2)", marginTop: 4 }}>{mobileFile.name}</p>
-                ) : null}
-                <p style={{ fontSize: 11, color: "var(--text3)", marginTop: 4 }}>
-                  Min desktop 1920×1080; min mobile 1080×2400 when provided.
-                </p>
-              </>
-            )}
-
-            <label style={label}>Desktop resolution</label>
+          <div>
+            <label style={fieldLabel}>
+              {isEdit ? "Replace images (optional)" : "Desktop & mobile images"}
+            </label>
             <div
               style={{
-                ...inputStyle,
-                display: "flex",
-                alignItems: "center",
-                minHeight: 40,
-                color: detectedDesktopRes ? "var(--text)" : "var(--text3)",
-                cursor: "default",
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 14,
               }}
             >
-              {detectedDesktopRes || (isEdit ? "—" : "Detected from desktop image")}
+              <ImageDropzone
+                label={
+                  desktopFile?.name
+                    || (isEdit ? "Replace desktop image" : "Desktop image")
+                }
+                hint={
+                  isEdit && !desktopFile
+                    ? "Leave empty to keep current"
+                    : `Min ${DESKTOP_MIN.width}×${DESKTOP_MIN.height}`
+                }
+                thumbSrc={desktopThumb}
+                placeholder="desktop"
+                accept="image/jpeg,image/png"
+                onPick={(f) => void onDesktopFileChange(f)}
+              />
+              <ImageDropzone
+                label={
+                  mobileFile?.name
+                    || (isEdit ? "Replace mobile image" : "Mobile image (optional)")
+                }
+                hint={
+                  isEdit && !mobileFile
+                    ? "Leave empty to keep current"
+                    : `Min ${MOBILE_MIN.width}×${MOBILE_MIN.height}`
+                }
+                thumbSrc={mobileThumb}
+                placeholder="mobile"
+                accept="image/jpeg,image/png"
+                onPick={(f) => void onMobileFileChange(f)}
+              />
             </div>
+            {(detectedDesktopRes || detectedMobileRes) ? (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
+                {detectedDesktopRes ? (
+                  <span
+                    style={{
+                      fontSize: 11,
+                      color: "var(--text2)",
+                      background: "var(--bg3)",
+                      padding: "3px 8px",
+                      borderRadius: 5,
+                      border: "1px solid var(--border2)",
+                    }}
+                  >
+                    Desktop {detectedDesktopRes}
+                  </span>
+                ) : null}
+                {detectedMobileRes ? (
+                  <span
+                    style={{
+                      fontSize: 11,
+                      color: "var(--text2)",
+                      background: "var(--bg3)",
+                      padding: "3px 8px",
+                      borderRadius: 5,
+                      border: "1px solid var(--border2)",
+                    }}
+                  >
+                    Mobile {detectedMobileRes}
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
+            {!isEdit ? (
+              <p style={{ fontSize: 11.5, color: "var(--text3)", marginTop: 6 }}>
+                Desktop required · Mobile optional · JPG/PNG up to 25MB
+              </p>
+            ) : null}
+          </div>
 
-            <label style={label}>Mobile resolution</label>
-            <div
-              style={{
-                ...inputStyle,
-                display: "flex",
-                alignItems: "center",
-                minHeight: 40,
-                color: detectedMobileRes ? "var(--text)" : "var(--text3)",
-                cursor: "default",
-              }}
-            >
-              {detectedMobileRes || (isEdit ? "—" : "Detected from mobile image")}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 16,
+            }}
+          >
+            <div>
+              <label style={fieldLabel}>Tags (comma-separated)</label>
+              <input
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                placeholder="city, sunset"
+                style={inputStyle}
+              />
+            </div>
+            <div>
+              <label style={fieldLabel}>Source</label>
+              <input
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+                placeholder={DEFAULT_SOURCE}
+                style={inputStyle}
+              />
             </div>
           </div>
+
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 9,
+              fontSize: 13,
+              color: "var(--text)",
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={isPremium}
+              onChange={(e) => setIsPremium(e.target.checked)}
+              style={{ width: 16, height: 16, accentColor: "var(--brand)" }}
+            />
+            Premium wallpaper
+          </label>
         </div>
 
-        <label style={label}>Tags (comma-separated)</label>
-        <input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="city, sunset" style={inputStyle} />
-
-        <label style={label}>Source</label>
-        <input
-          value={source}
-          onChange={(e) => setSource(e.target.value)}
-          placeholder={DEFAULT_SOURCE}
-          style={inputStyle}
-        />
-
-        <label style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 14, fontSize: 13, color: "var(--text)", cursor: "pointer" }}>
-          <input type="checkbox" checked={isPremium} onChange={(e) => setIsPremium(e.target.checked)} />
-          Premium wallpaper
-        </label>
-
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 20 }}>
-          <button type="button" onClick={onClose} style={{ padding: "9px 16px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: "pointer", border, background: "var(--bg3)", color: "var(--text2)" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 10,
+            padding: "16px 24px",
+            borderTop: "1px solid var(--border)",
+            flexShrink: 0,
+          }}
+        >
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              padding: "9px 18px",
+              borderRadius: 8,
+              fontSize: 13.5,
+              fontWeight: 600,
+              cursor: "pointer",
+              border,
+              background: "var(--bg3)",
+              color: "var(--text2)",
+            }}
+          >
             Cancel
           </button>
-          <button type="submit" disabled={busy} style={{ padding: "9px 18px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: busy ? "default" : "pointer", border: "none", background: "var(--brand)", color: "#04120c", opacity: busy ? 0.7 : 1, display: "inline-flex", alignItems: "center", gap: 6 }}>
-            <Upload size={14} /> {busy ? "Saving…" : isEdit ? "Save changes" : "Publish"}
+          <button
+            type="submit"
+            disabled={busy}
+            style={{
+              padding: "9px 18px",
+              borderRadius: 8,
+              fontSize: 13.5,
+              fontWeight: 600,
+              cursor: busy ? "default" : "pointer",
+              border: "none",
+              background: "var(--brand)",
+              color: "#04120c",
+              opacity: busy ? 0.7 : 1,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <Upload size={14} />
+            {busy ? "Saving…" : isEdit ? "Save changes" : "Publish"}
           </button>
         </div>
       </form>
     </AdminModalOverlay>
   );
-};
+}
 
 export default WallpapersPage;

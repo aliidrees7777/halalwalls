@@ -94,14 +94,34 @@ function UploadDropzone({
       type="button"
       onClick={onPick}
       className={cn(
-        "group relative flex shrink-0 flex-col items-center justify-center gap-4 overflow-hidden rounded-[1.5rem] bg-hw-input p-6 text-center",
+        "group relative flex flex-col items-center justify-center overflow-hidden bg-hw-input text-center",
         isDesktop
-          ? "h-[412px] w-full lg:w-[733px]"
-          : "h-[412px] w-full max-w-[263px]",
+          ? // Mobile left (“for Desktop”) — Figma 221.82×258.64. lg+ unchanged.
+            "h-[258.64px] w-[221.82px] shrink-0 gap-[11.3px] rounded-[24.8659px] p-0 lg:h-[412px] lg:w-[733px] lg:gap-4 lg:rounded-[1.5rem] lg:p-6"
+          : // Mobile right (“for Mobile”) — Figma 132.82×258.76. lg+ unchanged.
+            "h-[258.76px] w-[132.82px] shrink-0 gap-[11.3px] rounded-[24.8659px] p-0 lg:h-[412px] lg:w-full lg:max-w-[263px] lg:gap-4 lg:rounded-[1.5rem] lg:p-6",
       )}
     >
+      {/* Mobile dashed border — both boxes use Figma 2.26px stroke */}
       <svg
-        className="pointer-events-none absolute inset-0 h-full w-full text-black dark:text-[#909098]"
+        className="pointer-events-none absolute inset-0 h-full w-full text-black dark:text-[rgba(144,144,152,0.7)] lg:hidden"
+        preserveAspectRatio="none"
+      >
+        <rect
+          x="1.13"
+          y="1.13"
+          width="calc(100% - 2.26px)"
+          height="calc(100% - 2.26px)"
+          rx="24.8659"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.26054"
+          strokeDasharray="12 8"
+        />
+      </svg>
+      {/* Desktop (lg+) dashed border — unchanged */}
+      <svg
+        className="pointer-events-none absolute inset-0 hidden h-full w-full text-black dark:text-[#909098] lg:block"
         preserveAspectRatio="none"
       >
         <rect
@@ -130,47 +150,92 @@ function UploadDropzone({
             unoptimized
             className={cn(
               "w-auto rounded-lg object-contain",
-              isDesktop ? "max-h-[60%]" : "max-h-[55%] max-w-[85%]",
+              isDesktop
+                ? "max-h-[50%] lg:max-h-[60%]"
+                : "max-h-[45%] max-w-[85%] lg:max-h-[55%]",
             )}
           />
-          <p className="max-w-full truncate px-2 text-sm text-hw-foreground">
+          <p
+            className={cn(
+              "max-w-full truncate text-hw-foreground",
+              isDesktop
+                ? "px-2 text-[12.4px] lg:text-sm"
+                : "px-1 text-[9.3px] lg:px-2 lg:text-sm",
+            )}
+          >
             {fileName}
           </p>
-          <p className="text-xs text-hw-muted">Click to choose a different image</p>
+          <p
+            className={cn(
+              "text-hw-muted",
+              isDesktop
+                ? "text-[10.86px] lg:text-xs"
+                : "text-[8.15px] lg:text-xs",
+            )}
+          >
+            Click to choose a different image
+          </p>
         </>
       ) : (
-        <>
+        <div
+          className={cn(
+            "relative z-[1] flex flex-col items-center",
+            isDesktop
+              ? "w-[113.26px] gap-[12.41px] lg:w-auto lg:gap-4"
+              : "w-[84.95px] gap-[9.31px] lg:w-auto lg:gap-4",
+          )}
+        >
           <span
             className={cn(
               "grid place-items-center rounded-full bg-[#2F4577] transition-transform group-hover:scale-105",
-              isDesktop ? "size-[72px]" : "size-[56px]",
+              isDesktop
+                ? "size-[53.53px] lg:size-[72px]"
+                : "size-[40.15px] lg:size-[56px]",
             )}
           >
             <Plus
-              className={cn("text-white", isDesktop ? "size-9" : "size-7")}
-              strokeWidth={2.5}
+              className={cn(
+                "text-white",
+                isDesktop
+                  ? "size-[17.75px] lg:size-9"
+                  : "size-[13.31px] lg:size-7",
+              )}
+              strokeWidth={isDesktop ? 2.3 : 1.74}
             />
           </span>
-          <span
+          <div
             className={cn(
-              "font-medium text-hw-depw",
-              isDesktop ? "text-[17px] lg:text-2xl" : "text-[15px] lg:text-[18px]",
+              "flex flex-col items-center",
+              isDesktop
+                ? "w-full gap-[4.65px] lg:gap-2"
+                : "w-full gap-[3.49px] lg:gap-1",
             )}
           >
-            Choose Wallpaper{" "}
-            <span className="font-normal">
-              ({isDesktop ? "for Desktop" : "for Mobile"})
+            <span
+              className={cn(
+                "font-medium text-hw-depw",
+                isDesktop
+                  ? "text-center text-[12.4121px] leading-[18px] lg:text-2xl lg:leading-normal"
+                  : "text-center text-[9.30907px] leading-[14px] lg:text-[18px] lg:leading-normal",
+              )}
+            >
+              Choose Wallpaper{" "}
+              <span className="font-normal">
+                ({isDesktop ? "for Desktop" : "for Mobile"})
+              </span>
             </span>
-          </span>
-          <span
-            className={cn(
-              "font-normal text-hw-depw",
-              isDesktop ? "text-[15px] lg:text-[21px]" : "text-[13px] lg:text-base",
-            )}
-          >
-            JPG or PNG, up to 25MB
-          </span>
-        </>
+            <span
+              className={cn(
+                "font-normal text-hw-depw",
+                isDesktop
+                  ? "text-center text-[10.8606px] leading-[13px] opacity-60 lg:text-[21px] lg:leading-normal lg:opacity-100"
+                  : "text-center text-[8.14544px] leading-[10px] opacity-60 lg:text-base lg:leading-normal lg:opacity-100",
+              )}
+            >
+              JPG or PNG, up to 25MB
+            </span>
+          </div>
+        </div>
       )}
     </button>
   );
@@ -403,8 +468,8 @@ export function UploadForm() {
 
       {/* Dropzone + don't-publish — horizontal padding (mobile); desktop unchanged */}
       <div className="flex flex-col gap-7 max-lg:px-4">
-        <div className="flex flex-col items-center gap-[34px]">
-          <div className="flex w-full flex-col items-center justify-center gap-8 lg:flex-row lg:items-start lg:gap-[50px]">
+        <div className="flex flex-col items-center gap-4 lg:gap-[34px]">
+          <div className="flex w-full flex-row items-stretch justify-center gap-3 lg:items-start lg:gap-[50px]">
             <input
               ref={desktopInputRef}
               type="file"
@@ -438,7 +503,7 @@ export function UploadForm() {
               onPick={() => mobileInputRef.current?.click()}
             />
           </div>
-          <p className="text-center text-[18px] leading-[35px] text-[#b2aca2] opacity-70">
+          <p className="px-1 text-center text-[12px] leading-5 text-[#b2aca2] opacity-70 lg:text-[18px] lg:leading-[35px]">
             &ldquo;Required resolutions: Desktop minimum 1920&times;1080; Mobile
             minimum 1080&times;2400.&rdquo;
           </p>

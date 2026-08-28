@@ -52,6 +52,8 @@ export interface WallpaperDetail extends Wallpaper {
   mobileHeight?: number | null;
   mobileOriginalResolution?: string;
   mobileOriginalSizeMB?: number;
+  /** Dedicated mobile display WebP (preview on phones when present). */
+  mobileImage?: string | null;
   mobileOriginalUrl?: string | null;
   /** Keys of sizes offered for this wallpaper (same + below only). */
   resolutions?: string[];
