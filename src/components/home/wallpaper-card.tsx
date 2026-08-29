@@ -4,11 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Heart } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Wallpaper } from "@/types/wallpaper";
 import { useFavorite } from "@/hooks/use-favorite";
+import { useDevicePreviewSrc } from "@/hooks/use-device-preview-src";
 import { cn } from "@/lib/utils";
-import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
+import { shouldUnoptimizeMedia } from "@/lib/media-url";
 
 interface WallpaperCardProps {
   wallpaper: Wallpaper;
@@ -21,7 +22,11 @@ export function WallpaperCard({ wallpaper }: WallpaperCardProps) {
     wallpaper.favoritesCount ?? 0
   );
   const [loaded, setLoaded] = useState(false);
-  const imageSrc = resolveMediaUrl(wallpaper.image);
+  const imageSrc = useDevicePreviewSrc(wallpaper.image, wallpaper.mobileImage);
+
+  useEffect(() => {
+    setLoaded(false);
+  }, [imageSrc]);
 
   // Carry browse resolution onto the detail page so the primary download
   // matches the sidebar filter the user picked on the homepage.

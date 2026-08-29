@@ -14,7 +14,8 @@ import {
   normalizeResKey,
 } from "@/lib/download-resolution";
 import type { DownloadResolution, WallpaperDetail } from "@/types/wallpaper";
-import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
+import { useDevicePreviewSrc } from "@/hooks/use-device-preview-src";
+import { shouldUnoptimizeMedia } from "@/lib/media-url";
 import { isHttpUrl, parseSourceUrl } from "@/lib/source-url";
 import download from "../../../public/download.svg";
 import link from "../../../public/link.svg";
@@ -49,11 +50,7 @@ export function DownloadMain({ wallpaper }: DownloadMainProps) {
   }, []);
 
   // Preview: mobile image on phones when uploaded; otherwise desktop image.
-  const previewRaw =
-    isMobileViewport && wallpaper.mobileImage
-      ? wallpaper.mobileImage
-      : wallpaper.image;
-  const imageSrc = resolveMediaUrl(previewRaw);
+  const imageSrc = useDevicePreviewSrc(wallpaper.image, wallpaper.mobileImage);
 
   useEffect(() => {
     setLoaded(false);

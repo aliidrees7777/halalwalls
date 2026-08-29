@@ -18,6 +18,8 @@ export interface Wallpaper {
   slug: string;
   title: string;
   image: string;
+  /** Dedicated mobile display WebP when uploaded; used for phone grid/detail preview. */
+  mobileImage?: string | null;
   category: FilterId;
   resolution: string;
   isFavorite?: boolean;

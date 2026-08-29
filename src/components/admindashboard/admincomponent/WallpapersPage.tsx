@@ -423,6 +423,11 @@ function ImageDropzone({
         cursor: "pointer",
         position: "relative",
         minHeight: 64,
+        minWidth: 0,
+        width: "100%",
+        maxWidth: "100%",
+        overflow: "hidden",
+        boxSizing: "border-box",
       }}
     >
       <input
@@ -470,7 +475,7 @@ function ImageDropzone({
           )}
         </span>
       )}
-      <span style={{ minWidth: 0 }}>
+      <span style={{ minWidth: 0, flex: 1, overflow: "hidden" }}>
         <span
           style={{
             display: "block",
@@ -490,6 +495,9 @@ function ImageDropzone({
             fontSize: 11,
             color: "var(--text3)",
             marginTop: 1,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           {hint}
@@ -727,11 +735,13 @@ function WallpaperFormModal({
           style={{
             padding: "18px 24px",
             overflowY: "auto",
+            overflowX: "hidden",
             display: "flex",
             flexDirection: "column",
             gap: 16,
             flex: 1,
             minHeight: 0,
+            minWidth: 0,
           }}
         >
           {error ? (
@@ -825,8 +835,9 @@ function WallpaperFormModal({
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
+                gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 220px), 1fr))",
                 gap: 14,
+                minWidth: 0,
               }}
             >
               <ImageDropzone
@@ -902,11 +913,12 @@ function WallpaperFormModal({
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 200px), 1fr))",
               gap: 16,
+              minWidth: 0,
             }}
           >
-            <div>
+            <div style={{ minWidth: 0 }}>
               <label style={fieldLabel}>Tags (comma-separated)</label>
               <input
                 value={tags}
@@ -915,7 +927,7 @@ function WallpaperFormModal({
                 style={inputStyle}
               />
             </div>
-            <div>
+            <div style={{ minWidth: 0 }}>
               <label style={fieldLabel}>Source</label>
               <input
                 value={source}

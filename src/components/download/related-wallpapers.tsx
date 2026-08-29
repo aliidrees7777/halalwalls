@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Wallpaper } from "@/types/wallpaper";
-import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
+import { useDevicePreviewSrc } from "@/hooks/use-device-preview-src";
+import { shouldUnoptimizeMedia } from "@/lib/media-url";
 import { cn } from "@/lib/utils";
 
 interface RelatedWallpapersProps {
@@ -26,7 +27,7 @@ function WallpaperThumb({
   className?: string;
   sizes?: string;
 }) {
-  const src = resolveMediaUrl(wallpaper.image);
+  const src = useDevicePreviewSrc(wallpaper.image, wallpaper.mobileImage);
   return (
     <Link
       href={`/wallpaper/${wallpaper.slug}`}
