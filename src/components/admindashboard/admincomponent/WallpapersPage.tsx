@@ -776,7 +776,20 @@ function WallpaperFormModal({
             <label style={fieldLabel}>
               Categories <span style={{ color: "#ef4444" }}>*</span>
             </label>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignContent: "flex-start",
+                gap: 7,
+                /* ~3 chip rows (pad 6+6 + ~15 line + borders) + 2 gaps */
+                maxHeight: 104,
+                overflowY: "auto",
+                overflowX: "hidden",
+                padding: 2,
+                margin: -2,
+              }}
+            >
               {categories.length === 0 ? (
                 <span style={{ color: "var(--text3)", fontSize: 12 }}>No categories available</span>
               ) : (
