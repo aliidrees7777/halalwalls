@@ -104,9 +104,10 @@ export function ProfilePage() {
 
   return (
     <>
+      <SiteHeader />
+
       {/* Mobile — Figma Menu and Profile & Body @ 412px */}
       <div className="min-h-screen bg-hw-bg md:hidden">
-        <SiteHeader />
         <ProfileBanner user={profileUser} />
 
         <div className="flex flex-col items-center gap-[60px] pt-[30px]">
@@ -165,7 +166,6 @@ export function ProfilePage() {
 
       {/* Desktop — Figma My Account @ node 901:6475 */}
       <div className="hidden min-h-screen bg-hw-bg md:block">
-        <SiteHeader />
         <main className="mx-auto max-w-[1650px] px-4 py-8 lg:px-6 lg:py-10">
           <motion.h1
             initial={{ opacity: 0, y: -8 }}
