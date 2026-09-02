@@ -3,11 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Heart } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Wallpaper } from "@/types/wallpaper";
 import { useFavorite } from "@/hooks/use-favorite";
+import { useDevicePreviewSrc } from "@/hooks/use-device-preview-src";
 import { cn } from "@/lib/utils";
-import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
+import { shouldUnoptimizeMedia } from "@/lib/media-url";
 
 type UploadStatus = "active" | "pending" | "hidden";
 
@@ -40,8 +41,14 @@ export function ProfileCarouselThumb({
 }: ProfileCarouselThumbProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
-  const imageSrc = resolveMediaUrl(wallpaper.image);
+  // Mobile profile carousel only (parent is md:hidden) — show mobile asset when present.
+  const imageSrc = useDevicePreviewSrc(wallpaper.image, wallpaper.mobileImage);
   const status = wallpaper.status;
+
+  useEffect(() => {
+    setLoaded(false);
+    setFailed(false);
+  }, [imageSrc]);
   const isPublished = !status || status === "active";
   const { isFavorite: favorited, toggle } = useFavorite(
     wallpaper.id,

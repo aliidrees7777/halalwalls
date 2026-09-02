@@ -37,7 +37,6 @@ const D = {
   avatarLeft: 40.72 * S, // ≈ 76
   avatarTop: 33.85 * S, // ≈ 63
   avatarBorder: 1.437 * S, // ≈ 2.7 → use 3
-  avatarGlow: 5.749 * S, // ≈ 10.7
   badgeLeft: 38.8 * S, // ≈ 72
   badgeGap: 3.833 * S, // ≈ 7.1
   badgePx: 9.581 * S, // ≈ 17.8
@@ -232,9 +231,6 @@ export function DesktopProfileBanner({
             height: D.avatar,
             borderWidth: 3,
             borderColor: accent,
-            boxShadow: isPremium
-              ? `0 0 ${D.avatarGlow}px rgba(255,215,0,0.6)`
-              : `0 0 ${D.avatarGlow}px rgba(156,163,175,0.45)`,
           }}
         >
           {avatarSrc ? (

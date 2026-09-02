@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Wallpaper } from "@/types/wallpaper";
 import { useFavorite } from "@/hooks/use-favorite";
+import { useDevicePreviewSrc } from "@/hooks/use-device-preview-src";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl, shouldUnoptimizeMedia } from "@/lib/media-url";
 
@@ -17,6 +18,11 @@ interface ProfileWallpaperThumbProps {
   index?: number;
   /** Extra classes for the media frame (e.g. mobile portrait favorites cards). */
   mediaClassName?: string;
+  /**
+   * When true, phones/tablets (< lg) show `mobileImage` if present.
+   * Leave false on desktop profile grids so those stay desktop-only.
+   */
+  preferMobilePreview?: boolean;
 }
 
 function StatusPill({ status }: { status?: UploadStatus }) {
@@ -40,16 +46,25 @@ export function ProfileWallpaperThumb({
   wallpaper,
   index = 0,
   mediaClassName,
+  preferMobilePreview = false,
 }: ProfileWallpaperThumbProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
-  const imageSrc = resolveMediaUrl(wallpaper.image);
+  const deviceSrc = useDevicePreviewSrc(wallpaper.image, wallpaper.mobileImage);
+  const imageSrc = preferMobilePreview
+    ? deviceSrc
+    : resolveMediaUrl(wallpaper.image);
   const status = wallpaper.status;
   const isPublished = !status || status === "active";
   const { isFavorite: favorited, toggle } = useFavorite(
     wallpaper.id,
     wallpaper.favoritesCount ?? 0,
   );
+
+  useEffect(() => {
+    setLoaded(false);
+    setFailed(false);
+  }, [imageSrc]);
 
   const media = (
     <div

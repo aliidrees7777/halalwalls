@@ -136,7 +136,7 @@ export function HomePage() {
       >
         <div className="lp-container !px-3 lg:!px-[var(--lp-gutter)]">
           <WallpaperSearch value={search} onChange={setSearch} />
-          <div className="mt-[var(--lp-search-gap)] mx-0 pb-[var(--lp-search-band-pb)] lg:mx-5">
+          <div className="mt-[var(--lp-search-gap)] mx-0 pb-6 lg:mx-5 lg:pb-[var(--lp-search-band-pb)]">
             <FilterPills />
           </div>
         </div>
@@ -162,7 +162,7 @@ export function HomePage() {
               }}
             />
 
-            <MobileAppBanner className="mt-4" />
+            <MobileAppBanner className="mt-2" />
           </div>
         </div>
       </div>

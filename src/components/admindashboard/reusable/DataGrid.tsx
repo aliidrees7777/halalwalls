@@ -50,7 +50,13 @@ export function DataGrid<T extends Row>({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+    <div
+      className={
+        image
+          ? "grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6"
+          : "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+      }
+    >
       {rows.map((row) => {
         const titleText =
           (titleKey && row[titleKey] != null ? String(row[titleKey]) : null) ||
@@ -60,7 +66,7 @@ export function DataGrid<T extends Row>({
         return (
           <div
             key={rowId(row)}
-            className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg3)] transition-colors hover:border-[var(--border2)]"
+            className="min-w-0 overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg3)] transition-colors hover:border-[var(--border2)]"
           >
             {image ? (
               <div
@@ -84,19 +90,19 @@ export function DataGrid<T extends Row>({
                 ) : null}
               </div>
             ) : null}
-            <div className="p-3">
-              <div className="mb-2">
+            <div className="min-w-0 p-3">
+              <div className="mb-2 min-w-0">
                 {titleCol?.cell && !image ? (
                   titleCol.cell(row)
                 ) : (
-                  <div className="wtitle">{titleText}</div>
+                  <div className="wtitle break-words">{titleText}</div>
                 )}
               </div>
               <div className="flex flex-col gap-1.5">
                 {metaCols.map((c) => (
-                  <div key={c.key} className="flex items-center justify-between gap-2 text-xs">
-                    <span className="text-[var(--text3)]">{c.header}</span>
-                    <span className="text-right text-[var(--text)]">
+                  <div key={c.key} className="flex items-start justify-between gap-3 text-xs">
+                    <span className="shrink-0 text-[var(--text3)]">{c.header}</span>
+                    <span className="min-w-0 max-w-[70%] text-right break-words text-[var(--text)]">
                       {c.cell ? c.cell(row) : String(row[c.key] ?? "")}
                     </span>
                   </div>

@@ -94,6 +94,7 @@ const SubscribersPage = () => {
     searchPlaceholder: "Search subscribers by name or email…",
     fetcher,
     rowId: (r) => String((r as unknown as Subscriber).id),
+    gridTitleKey: "subscriber",
     filters: [
       {
         key: "plan", placeholder: "All Plans",
@@ -115,16 +116,16 @@ const SubscribersPage = () => {
         cell: (r) => {
           const s = r as unknown as Subscriber;
           return (
-            <div className="flex items-center gap-3">
+            <div className="flex min-w-0 items-center gap-3">
               <div
                 className="grid size-9 shrink-0 place-items-center rounded-full text-sm font-bold"
                 style={{ background: "var(--brand-dim)", color: "var(--brand)" }}
               >
                 {(s.name || s.email || "?").charAt(0).toUpperCase()}
               </div>
-              <div>
-                <div className="wtitle">{s.name || "—"}</div>
-                <div className="uemail">{s.email}</div>
+              <div className="min-w-0">
+                <div className="wtitle truncate">{s.name || "—"}</div>
+                <div className="uemail break-all">{s.email}</div>
               </div>
             </div>
           );

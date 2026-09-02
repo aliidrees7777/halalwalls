@@ -59,8 +59,7 @@ export function AccountImageUpload({
         type="button"
         onClick={() => inputRef.current?.click()}
         className={cn(
-          "group relative block overflow-hidden bg-hw-card transition-all duration-200",
-          "hover:border-hw-green/40 hover:shadow-[0_0_20px_rgba(0,255,163,0.08)]",
+          "relative block overflow-hidden bg-hw-card",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hw-green/50",
           variant === "avatar"
             ? "h-[100px] w-[100px] rounded-full sm:h-[163px] sm:w-[163px]"
@@ -72,13 +71,13 @@ export function AccountImageUpload({
           src={upgradeAvatarUrl(src, variant === "avatar" ? 512 : 1280) || src}
           alt={alt}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover"
           sizes={variant === "avatar" ? "326px" : "800px"}
           quality={95}
           unoptimized={shouldUnoptimizeMedia(src)}
         />
         <span
-          className="absolute inset-0 flex items-center justify-center bg-black/35 opacity-90 transition-opacity duration-200 group-hover:bg-black/45"
+          className="absolute inset-0 flex items-center justify-center bg-black/35 opacity-90"
           aria-hidden
         >
           <Image

@@ -64,6 +64,7 @@ export function FavoritesPage() {
                 key={wallpaper.id}
                 wallpaper={wallpaper}
                 index={index}
+                preferMobilePreview
                 mediaClassName="aspect-[124.2/276] rounded-[4px] md:aspect-[16/10] md:rounded-[var(--lp-card-radius)]"
               />
             ))}
